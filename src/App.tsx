@@ -95,18 +95,10 @@ export default function App() {
   const [dbErrorMessage, setDbErrorMessage] = useState("");
   const [currentUser, setCurrentUser] = useState<{ id: string; name: string; role: string } | null>(null);
 
-  // PIN Auth States
-  const [pinInput, setPinInput] = useState("");
-  const [setupPin, setSetupPin] = useState("");
-  const [setupConfirmPin, setSetupConfirmPin] = useState("");
-  const [setupQuestion, setSetupQuestion] = useState("Apa nama hewan peliharaan pertama Anda?");
-  const [setupAnswer, setSetupAnswer] = useState("");
-  const [loginLockedUntil, setLoginLockedUntil] = useState<number | null>(null);
-  const [lockoutCountdown, setLockoutCountdown] = useState(0);
-  const [showRecoveryFlow, setShowRecoveryFlow] = useState(false);
-  const [recoveryAnswerInput, setRecoveryAnswerInput] = useState("");
-  const [recoveryQuestionText, setRecoveryQuestionText] = useState("");
-  const [pinErrorText, setPinErrorText] = useState("");
+  // Download Progress States
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [downloadContentLength, setDownloadContentLength] = useState(0);
+  const [downloadedBytes, setDownloadedBytes] = useState(0);
 
   // Dashboard Data States
   const [activeTab, setActiveTab] = useState<"home" | "members" | "accounting" | "feasibility" | "sync" | "settings">("home");
@@ -216,17 +208,9 @@ export default function App() {
     async function loadDatabase() {
       try {
         await initDb();
-        const db = await getDb();
-
-        const users = await db.select<any[]>("SELECT * FROM local_users");
-        if (users.length === 0) {
-          setAppState("setup");
-        } else {
-          if (users[0].recovery_question) {
-            setRecoveryQuestionText(users[0].recovery_question);
-          }
-          setAppState("login");
-        }
+        // Skip setup/login wizard screens - load main panel directly
+        setCurrentUser({ id: "usr-001", name: "Slamet Riyadi", role: "admin" });
+        setAppState("main");
       } catch (err: any) {
         console.error(err);
         setDbErrorMessage(err.message || String(err));
@@ -235,33 +219,6 @@ export default function App() {
     }
     setTimeout(loadDatabase, 800);
   }, []);
-
-  // Lockout Timer Hook
-  useEffect(() => {
-    let timer: any;
-    if (loginLockedUntil) {
-      const remaining = Math.ceil((loginLockedUntil - Date.now()) / 1000);
-      if (remaining > 0) {
-        setLockoutCountdown(remaining);
-        timer = setInterval(() => {
-          const rem = Math.ceil((loginLockedUntil - Date.now()) / 1000);
-          if (rem <= 0) {
-            setLoginLockedUntil(null);
-            setLockoutCountdown(0);
-            setPinErrorText("");
-            clearInterval(timer);
-          } else {
-            setLockoutCountdown(rem);
-          }
-        }, 1000);
-      } else {
-        setLoginLockedUntil(null);
-      }
-    }
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [loginLockedUntil]);
 
   // Load Main Panel States Hook
   useEffect(() => {
@@ -410,104 +367,7 @@ export default function App() {
     }
   }
 
-  // Auth Operations
-  const handleSetupPinSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (setupPin.length !== 6 || setupConfirmPin.length !== 6) {
-      setPinErrorText("PIN harus 6 digit angka.");
-      return;
-    }
-    if (setupPin !== setupConfirmPin) {
-      setPinErrorText("Konfirmasi PIN tidak cocok.");
-      return;
-    }
-    if (!setupAnswer.trim()) {
-      setPinErrorText("Jawaban pemulihan harus diisi.");
-      return;
-    }
 
-    try {
-      const db = await getDb();
-      const userId = "usr-001";
-      await db.execute(
-        `INSERT INTO local_users (id, cooperative_id, name, role, pin_hash, recovery_question, recovery_answer_hash)
-         VALUES (?, 'kdp-001', 'Slamet Riyadi', 'admin', ?, ?, ?)`,
-        [userId, setupPin, setupQuestion, setupAnswer.trim().toLowerCase()]
-      );
-
-      setCurrentUser({ id: userId, name: "Slamet Riyadi", role: "admin" });
-      setAppState("main");
-    } catch (err: any) {
-      setPinErrorText(`Setup gagal: ${err.message || err}`);
-    }
-  };
-
-  const handleLoginSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (loginLockedUntil && Date.now() < loginLockedUntil) {
-      return;
-    }
-
-    try {
-      const db = await getDb();
-      const users = await db.select<any[]>("SELECT * FROM local_users WHERE id = 'usr-001'");
-      if (users.length === 0) {
-        setAppState("setup");
-        return;
-      }
-
-      const matchUser = users[0];
-      if (pinInput === matchUser.pin_hash) {
-        await db.execute("UPDATE local_users SET failed_attempts = 0, locked_until = NULL WHERE id = ?", [matchUser.id]);
-        setCurrentUser({ id: matchUser.id, name: matchUser.name, role: matchUser.role });
-        setAppState("main");
-        setPinInput("");
-        setPinErrorText("");
-      } else {
-        const newAttempts = matchUser.failed_attempts + 1;
-        if (newAttempts >= 5) {
-          const lockTime = Date.now() + 60000;
-          await db.execute("UPDATE local_users SET failed_attempts = ?, locked_until = ? WHERE id = ?", [
-            newAttempts,
-            String(lockTime),
-            matchUser.id,
-          ]);
-          setLoginLockedUntil(lockTime);
-          setPinErrorText("Terlalu banyak percobaan salah. Terkunci 60 detik.");
-        } else {
-          await db.execute("UPDATE local_users SET failed_attempts = ? WHERE id = ?", [newAttempts, matchUser.id]);
-          setPinErrorText(`PIN salah. Sisa percobaan: ${5 - newAttempts}`);
-        }
-        setPinInput("");
-      }
-    } catch (err: any) {
-      setPinErrorText(`Login Error: ${err.message || err}`);
-    }
-  };
-
-  const handleRecoverySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const db = await getDb();
-      const users = await db.select<any[]>("SELECT * FROM local_users WHERE id = 'usr-001'");
-      if (users.length > 0) {
-        const adminUser = users[0];
-        if (recoveryAnswerInput.trim().toLowerCase() === adminUser.recovery_answer_hash) {
-          await db.execute(
-            "UPDATE local_users SET pin_hash = '123456', failed_attempts = 0, locked_until = NULL WHERE id = ?",
-            [adminUser.id]
-          );
-          setPinErrorText("PIN direset menjadi default '123456'. Harap segera ubah di Settings.");
-          setShowRecoveryFlow(false);
-          setRecoveryAnswerInput("");
-        } else {
-          setPinErrorText("Jawaban pemulihan salah.");
-        }
-      }
-    } catch (err: any) {
-      setPinErrorText(`Recovery Error: ${err.message || err}`);
-    }
-  };
 
   // Profile Save
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -1005,46 +865,43 @@ export default function App() {
     }, 1000);
   };
 
-  // Change PIN
-  const handlePinChangeSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const oldPin = (e.currentTarget as any).oldPin.value;
-    const newPin = (e.currentTarget as any).newPin.value;
-    const confirmPin = (e.currentTarget as any).confirmPin.value;
 
-    if (newPin.length !== 6 || oldPin.length !== 6) {
-      alert("Error: PIN harus 6 digit.");
-      return;
-    }
-    if (newPin !== confirmPin) {
-      alert("Error: Konfirmasi PIN baru tidak cocok.");
-      return;
-    }
-
-    try {
-      const db = await getDb();
-      const users = await db.select<any[]>("SELECT pin_hash FROM local_users WHERE id = 'usr-001'");
-      if (users.length > 0 && users[0].pin_hash === oldPin) {
-        await db.execute("UPDATE local_users SET pin_hash = ? WHERE id = 'usr-001'", [newPin]);
-        alert("PIN berhasil diperbarui!");
-        (e.currentTarget as any).reset();
-      } else {
-        alert("Error: PIN lama salah.");
-      }
-    } catch (err) {
-      alert(`Update PIN Gagal: ${err}`);
-    }
-  };
 
   // OTA Updates
   const checkUpdateCenter = async () => {
     setIsUpdateChecking(true);
     setUpdateStatusText("Memeriksa pembaruan...");
+    setDownloadProgress(0);
+    setDownloadContentLength(0);
+    setDownloadedBytes(0);
     try {
       const update = await check();
       if (update) {
         setUpdateStatusText(`Mengunduh update v${update.version}...`);
-        await update.downloadAndInstall();
+        
+        let bytesDownloaded = 0;
+        let size = 0;
+
+        await update.downloadAndInstall((event) => {
+          switch (event.event) {
+            case "Started":
+              size = event.data.contentLength ?? 0;
+              setDownloadContentLength(size);
+              break;
+            case "Progress":
+              bytesDownloaded += event.data.chunkLength;
+              setDownloadedBytes(bytesDownloaded);
+              if (size > 0) {
+                const pct = Math.round((bytesDownloaded / size) * 105) / 1.05; // clamp rounding
+                setDownloadProgress(Math.min(100, Math.round(pct)));
+              }
+              break;
+            case "Finished":
+              setUpdateStatusText("Unduhan selesai. Menginstal...");
+              break;
+          }
+        });
+
         setUpdateStatusText("Relaunching...");
         await relaunch();
       } else {
@@ -1143,148 +1000,7 @@ export default function App() {
     );
   }
 
-  // First Launch wizard setup
-  if (appState === "setup") {
-    return (
-      <div className="flex h-screen items-center justify-center bg-slate-950 text-white">
-        <form className="w-full max-w-md p-8 bg-slate-900/60 border border-slate-800 rounded-2xl shadow-xl text-center backdrop-blur-xl" onSubmit={handleSetupPinSubmit}>
-          <div className="text-3xl font-extrabold bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-transparent mb-2">KDKMP</div>
-          <h2 className="text-xl font-bold mb-1">Buat PIN Baru</h2>
-          <p className="text-slate-400 text-xs mb-6">Atur PIN 6 digit untuk mengamankan data koperasi lokal.</p>
 
-          <div className="flex flex-col gap-4 w-full mb-6 text-left">
-            <div>
-              <label>PIN (6 Digit)</label>
-              <Input
-                type="password"
-                placeholder="••••••"
-                maxLength={6}
-                value={setupPin}
-                onChange={(e) => setSetupPin(e.target.value.replace(/\D/g, ""))}
-                className="text-center text-xl tracking-[0.25em] bg-slate-950 border-slate-800"
-              />
-            </div>
-            <div>
-              <label>Konfirmasi PIN</label>
-              <Input
-                type="password"
-                placeholder="••••••"
-                maxLength={6}
-                value={setupConfirmPin}
-                onChange={(e) => setSetupConfirmPin(e.target.value.replace(/\D/g, ""))}
-                className="text-center text-xl tracking-[0.25em] bg-slate-950 border-slate-800"
-              />
-            </div>
-            <div>
-              <label>Pertanyaan Pemulihan</label>
-              <Select value={setupQuestion} onValueChange={setSetupQuestion}>
-                <SelectTrigger className="w-full bg-slate-950 border-slate-800">
-                  <SelectValue placeholder="Pilih Pertanyaan" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-950 border-slate-800 text-white">
-                  <SelectItem value="Apa nama hewan peliharaan pertama Anda?">Apa nama hewan peliharaan pertama Anda?</SelectItem>
-                  <SelectItem value="Di mana kota kelahiran ibu Anda?">Di mana kota kelahiran ibu Anda?</SelectItem>
-                  <SelectItem value="Apa nama SD pertama Anda?">Apa nama SD pertama Anda?</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label>Jawaban Pemulihan</label>
-              <Input
-                type="text"
-                placeholder="Ketik jawaban"
-                value={setupAnswer}
-                onChange={(e) => setSetupAnswer(e.target.value)}
-                className="bg-slate-950 border-slate-800"
-              />
-            </div>
-          </div>
-
-          {pinErrorText && <p className="text-rose-400 text-sm mb-4">{pinErrorText}</p>}
-          <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600">Simpan & Mulai</Button>
-        </form>
-      </div>
-    );
-  }
-
-  // Keypad Lockscreen
-  if (appState === "login") {
-    return (
-      <div className="flex h-screen items-center justify-center bg-slate-950 text-white">
-        {!showRecoveryFlow ? (
-          <form className="w-full max-w-md p-8 bg-slate-900/60 border border-slate-800 rounded-2xl shadow-xl text-center backdrop-blur-xl" onSubmit={handleLoginSubmit}>
-            <div className="text-3xl font-extrabold bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-transparent mb-2">KDKMP</div>
-            <h2 className="text-xl font-bold mb-1">Masukkan PIN Anda</h2>
-            <p className="text-slate-400 text-xs mb-6">Sistem Informasi KDKMP Koperasi Maju Bersama</p>
-
-            <Input
-              type="password"
-              placeholder="••••••"
-              maxLength={6}
-              value={pinInput}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, "");
-                setPinInput(val);
-                if (val.length === 6) {
-                  setTimeout(() => {
-                    setPinInput((current) => {
-                      if (current.length === 6) {
-                        handleLoginSubmit();
-                      }
-                      return current;
-                    });
-                  }, 100);
-                }
-              }}
-              disabled={!!loginLockedUntil}
-              className="text-center text-3xl tracking-[0.4em] bg-slate-950 border-slate-800 py-6 mb-6 mx-auto w-4/5"
-              autoFocus
-            />
-
-            {pinErrorText && <p className="text-rose-400 text-sm mb-4">{pinErrorText}</p>}
-            {loginLockedUntil && (
-              <p className="text-rose-400 font-semibold text-sm mb-4">
-                Kunci aktif. Tunggu {lockoutCountdown} detik...
-              </p>
-            )}
-
-            <Button type="submit" disabled={!!loginLockedUntil} className="w-full bg-emerald-500 hover:bg-emerald-600">Login</Button>
-            <p
-              onClick={() => setShowRecoveryFlow(true)}
-              className="text-sky-400 hover:text-sky-300 text-sm cursor-pointer mt-6 inline-block"
-            >
-              Lupa PIN?
-            </p>
-          </form>
-        ) : (
-          <form className="w-full max-w-md p-8 bg-slate-900/60 border border-slate-800 rounded-2xl shadow-xl text-center backdrop-blur-xl" onSubmit={handleRecoverySubmit}>
-            <h2 className="text-xl font-bold mb-1">Pemulihan PIN</h2>
-            <p className="text-slate-300 text-sm text-left my-4">
-              <strong>Pertanyaan Keamanan:</strong> {recoveryQuestionText}
-            </p>
-
-            <Input
-              type="text"
-              placeholder="Masukkan jawaban Anda..."
-              value={recoveryAnswerInput}
-              onChange={(e) => setRecoveryAnswerInput(e.target.value)}
-              className="bg-slate-950 border-slate-800 mb-6"
-              autoFocus
-            />
-
-            {pinErrorText && <p className="text-rose-400 text-sm mb-4">{pinErrorText}</p>}
-
-            <div className="flex gap-4">
-              <Button type="button" onClick={() => setShowRecoveryFlow(false)} className="flex-1 bg-slate-800 hover:bg-slate-700 text-white">
-                Batal
-              </Button>
-              <Button type="submit" className="flex-1 bg-emerald-500 hover:bg-emerald-600">Verifikasi</Button>
-            </div>
-          </form>
-        )}
-      </div>
-    );
-  }
 
   // Dashboard Main Panel layout
   return (
@@ -2517,32 +2233,8 @@ export default function App() {
                 <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 mt-6">Simpan Profil</Button>
               </form>
 
-              {/* Keamanan PIN */}
-              <Card className="glass-panel text-white border-slate-800/80">
-                <CardHeader>
-                  <CardTitle className="text-white text-base">Keamanan PIN Akses</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handlePinChangeSubmit} className="space-y-4">
-                    <div>
-                      <label>PIN Lama</label>
-                      <Input type="password" name="oldPin" maxLength={6} required className="bg-slate-950 border-slate-800" />
-                    </div>
-                    <div>
-                      <label>PIN Baru</label>
-                      <Input type="password" name="newPin" maxLength={6} required className="bg-slate-950 border-slate-800" />
-                    </div>
-                    <div>
-                      <label>Konfirmasi PIN Baru</label>
-                      <Input type="password" name="confirmPin" maxLength={6} required className="bg-slate-950 border-slate-800" />
-                    </div>
-                    <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600">Perbarui PIN</Button>
-                  </form>
-                </CardContent>
-              </Card>
-
               {/* Pembaruan updates */}
-              <Card className="glass-panel text-white border-slate-800/80">
+              <Card className="glass-panel text-white border-slate-800/80 md:col-span-2">
                 <CardHeader>
                   <CardTitle className="text-white text-base">Pembaruan Sistem OTA</CardTitle>
                   <CardDescription className="text-slate-400">
@@ -2554,6 +2246,21 @@ export default function App() {
                     {isUpdateChecking ? "Checking..." : "Periksa Pembaruan Sekarang"}
                   </Button>
                   {updateStatusText && <span className="text-emerald-400 text-sm font-semibold block text-center">{updateStatusText}</span>}
+
+                  {downloadContentLength > 0 && (
+                    <div className="space-y-2 mt-4">
+                      <div className="flex justify-between text-xs text-slate-400">
+                        <span>Mengunduh: {(downloadedBytes / 1024 / 1024).toFixed(2)} MB / {(downloadContentLength / 1024 / 1024).toFixed(2)} MB</span>
+                        <span>{downloadProgress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-950 rounded-full h-2 border border-slate-800">
+                        <div
+                          className="bg-emerald-500 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${downloadProgress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
