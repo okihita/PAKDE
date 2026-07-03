@@ -1,15 +1,42 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
+import { check } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import "./App.css";
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
+  const [updateStatus, setUpdateStatus] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
     setGreetMsg(await invoke("greet", { name }));
+  }
+
+  async function checkForUpdates() {
+    setIsUpdating(true);
+    setUpdateStatus("Checking for updates...");
+    try {
+      const update = await check();
+      if (update) {
+        setUpdateStatus(`Installing update v${update.version}...`);
+        await update.downloadAndInstall();
+        setUpdateStatus("Relaunching application...");
+        await relaunch();
+      } else {
+        setUpdateStatus("Application is up to date!");
+        setTimeout(() => setUpdateStatus(""), 3000);
+      }
+    } catch (error) {
+      console.error(error);
+      setUpdateStatus(`Update failed: ${error}`);
+      setTimeout(() => setUpdateStatus(""), 5000);
+    } finally {
+      setIsUpdating(false);
+    }
   }
 
   return (
@@ -44,6 +71,13 @@ function App() {
         <button type="submit">Greet</button>
       </form>
       <p>{greetMsg}</p>
+
+      <div style={{ marginTop: "2rem" }}>
+        <button onClick={checkForUpdates} disabled={isUpdating}>
+          {isUpdating ? "Checking..." : "Check for Updates"}
+        </button>
+        {updateStatus && <p style={{ fontSize: "0.9rem", color: "#646cff" }}>{updateStatus}</p>}
+      </div>
     </main>
   );
 }
