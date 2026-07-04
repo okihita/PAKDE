@@ -48,6 +48,8 @@
     "groups": {
       "dashboard": "Dashboard",
       "analitik": "Analitik",
+      "bisnis": "Bisnis",
+      "learn": "Belajar",
       "komunitas": "Komunitas",
       "keuangan": "Keuangan",
       "sistem": "Sistem"
@@ -61,8 +63,11 @@
       "event": "Buat Acara",
       "accounting": "Akuntansi SAK EP",
       "feasibility": "Kelayakan Finansial",
-      "sync": "Sinkronisasi Data",
-      "settings": "Pengaturan"
+      "equipment": "Peralatan",
+      "sales": "Penjualan & Vendor",
+      "development": "Ekspansi & Pengembangan",
+      "learn": "Belajar & Kuis",
+      "planners": "Koleksi Planner"
     },
     "healthScore": "HEALTH SCORE",
     "rag": "RAG",
@@ -421,6 +426,41 @@
       "note": "Acara akan muncul di Kalender setelah disimpan",
       "save": "Simpan Acara"
     }
+  },
+  "equipment": {
+    "table": {
+      "name": "Nama Alat",
+      "amount": "Jumlah",
+      "condition": "Kondisi",
+      "lastMaintenance": "Perawatan Terakhir",
+      "value": "Nilai (Rp)"
+    }
+  },
+  "sales": {
+    "table": {
+      "name": "Nama",
+      "category": "Kategori",
+      "contact": "Kontak",
+      "phone": "Telepon",
+      "transactions": "Transaksi"
+    }
+  },
+  "development": {
+    "table": {
+      "project": "Proyek",
+      "status": "Status",
+      "progress": "Progress",
+      "budget": "Anggaran (Rp)",
+      "target": "Target"
+    }
+  },
+  "learn": {
+    "lessonsDone": "{{done}}/{{total}} pelajaran selesai"
+  },
+  "planners": {
+    "description": "Koleksi planner siap cetak untuk membantu operasional koperasi Anda.",
+    "pages": "{{n}} hlm",
+    "pdf": "PDF"
   },
   "toast": {
     "profileSaveSuccess": "Profil Koperasi berhasil disimpan!",

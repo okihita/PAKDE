@@ -48,6 +48,8 @@
     "groups": {
       "dashboard": "Dashboard",
       "analitik": "Analytics",
+      "bisnis": "Business",
+      "learn": "Learn",
       "komunitas": "Community",
       "keuangan": "Finance",
       "sistem": "System"
@@ -62,7 +64,12 @@
       "accounting": "SAK EP Accounting",
       "feasibility": "Financial Feasibility",
       "sync": "Data Synchronization",
-      "settings": "Settings"
+      "settings": "Settings",
+      "equipment": "Equipment",
+      "sales": "Sales & Vendors",
+      "development": "Expansion & Development",
+      "learn": "Learn & Quiz",
+      "planners": "Planner Collection"
     },
     "healthScore": "HEALTH SCORE",
     "rag": "RAG",
@@ -421,6 +428,41 @@
       "note": "Event will appear on the Calendar after saving",
       "save": "Save Event"
     }
+  },
+  "equipment": {
+    "table": {
+      "name": "Equipment Name",
+      "amount": "Qty",
+      "condition": "Condition",
+      "lastMaintenance": "Last Maintenance",
+      "value": "Value (Rp)"
+    }
+  },
+  "sales": {
+    "table": {
+      "name": "Name",
+      "category": "Category",
+      "contact": "Contact",
+      "phone": "Phone",
+      "transactions": "Transactions"
+    }
+  },
+  "development": {
+    "table": {
+      "project": "Project",
+      "status": "Status",
+      "progress": "Progress",
+      "budget": "Budget (Rp)",
+      "target": "Target"
+    }
+  },
+  "learn": {
+    "lessonsDone": "{{done}}/{{total}} lessons completed"
+  },
+  "planners": {
+    "description": "Printable planner collection to support your cooperative operations.",
+    "pages": "{{n}} pgs",
+    "pdf": "PDF"
   },
   "toast": {
     "profileSaveSuccess": "Cooperative profile saved successfully!",

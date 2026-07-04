@@ -9,6 +9,11 @@ import Dashboard from "@/features/Dashboard";
 import Statistics from "@/features/Statistics";
 import Leveling from "@/features/Leveling";
 import Members from "@/features/Members";
+import Equipment from "@/features/Equipment";
+import Sales from "@/features/Sales";
+import Development from "@/features/Development";
+import Learn from "@/features/Learn";
+import Planners from "@/features/Planners";
 import Accounting from "@/features/Accounting";
 import Feasibility from "@/features/Feasibility";
 import Ranking from "@/features/Ranking";
@@ -35,6 +40,11 @@ function AppContent() {
     | "statistics"
     | "peringkat"
     | "leveling"
+    | "equipment"
+    | "sales"
+    | "development"
+    | "learn"
+    | "planners"
     | "members"
     | "event"
     | "accounting"
@@ -152,6 +162,11 @@ function AppContent() {
         )}
         {activeTab === "peringkat" && <Ranking coopProfile={coopProfile} />}
         {activeTab === "leveling" && <Leveling healthScore={coopProfile?.health_score ?? 0} />}
+        {activeTab === "equipment" && <Equipment />}
+        {activeTab === "sales" && <Sales />}
+        {activeTab === "development" && <Development />}
+        {activeTab === "learn" && <Learn />}
+        {activeTab === "planners" && <Planners />}
         {activeTab === "members" && <Members />}
         {activeTab === "event" && <CreateEvent />}
         {activeTab === "accounting" && <Accounting />}

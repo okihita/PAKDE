@@ -21,6 +21,11 @@ import {
   Wallet,
   Cog,
   CalendarPlus,
+  Wrench,
+  Handshake,
+  Building2,
+  BookOpen,
+  FileText,
 } from "lucide-react";
 import { getCurrentLevel } from "@/data/leveling";
 import type { CooperativeProfile, EwsAlert } from "@/types";
@@ -33,6 +38,11 @@ interface SidebarProps {
       | "statistics"
       | "peringkat"
       | "leveling"
+      | "equipment"
+      | "sales"
+      | "development"
+      | "learn"
+      | "planners"
       | "members"
       | "event"
       | "accounting"
@@ -109,6 +119,25 @@ export default function Sidebar({
         { id: "statistics", icon: BarChart3, label: t("sidebar.nav.statistics") },
         { id: "peringkat", icon: Medal, label: t("sidebar.nav.peringkat") },
         { id: "leveling", icon: Trophy, label: t("sidebar.nav.leveling") },
+      ],
+    },
+    {
+      id: "bisnis",
+      icon: TrendingUp,
+      label: t("sidebar.groups.bisnis"),
+      items: [
+        { id: "equipment", icon: Wrench, label: t("sidebar.nav.equipment") },
+        { id: "sales", icon: Handshake, label: t("sidebar.nav.sales") },
+        { id: "development", icon: Building2, label: t("sidebar.nav.development") },
+      ],
+    },
+    {
+      id: "learn",
+      icon: BookOpen,
+      label: t("sidebar.groups.learn"),
+      items: [
+        { id: "learn", icon: BookOpen, label: t("sidebar.nav.learn") },
+        { id: "planners", icon: FileText, label: t("sidebar.nav.planners") },
       ],
     },
     {
