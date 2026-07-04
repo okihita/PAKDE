@@ -14,7 +14,9 @@ import {
   UserCheck,
   Sun,
   Moon,
+  Shield,
 } from "lucide-react";
+import { getCurrentLevel } from "@/data/leveling";
 import type { CooperativeProfile, EwsAlert } from "@/types";
 
 interface SidebarProps {
@@ -24,6 +26,7 @@ interface SidebarProps {
   ) => void;
   coopProfile: CooperativeProfile | null;
   ewsAlerts: EwsAlert[];
+  memberCount: number;
   currentUser: { name: string; role: string } | null;
   appTheme: "dark" | "light";
   onThemeToggle: () => void;
@@ -34,12 +37,15 @@ export default function Sidebar({
   onTabChange,
   coopProfile,
   ewsAlerts,
+  memberCount,
   currentUser,
   appTheme,
   onThemeToggle,
 }: SidebarProps) {
   const { t } = useTranslation();
   const criticalAlerts = ewsAlerts.filter((a) => a.level === "critical").length;
+  const healthScore = coopProfile?.health_score ?? 0;
+  const currentLevel = healthScore > 0 ? getCurrentLevel(healthScore) : null;
 
   const NAV_ITEMS = [
     { id: "home" as const, icon: LayoutDashboard, label: t("sidebar.nav.home") },
@@ -55,15 +61,76 @@ export default function Sidebar({
   return (
     <aside className="w-64 border-r border-border bg-sidebar flex flex-col justify-between print:hidden">
       <div>
-        <div className="px-6 py-6 border-b border-border flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-black tracking-widest text-emerald-400">{t("splash.brand")}</span>
-            <span className="text-xs font-mono text-muted-foreground">|</span>
-            <span className="text-xs font-mono text-foreground">{coopProfile?.village ?? "DESA"}</span>
+        {/* ── Guild Header ── */}
+        <div className="px-5 pt-4 pb-3 border-b border-border space-y-3">
+          {/* Guild Banner Card */}
+          <div className="rounded-xl bg-card border border-border p-4 space-y-3">
+            {/* Title row: brand + tier badge */}
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Shield className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <h2 className="text-sm font-bold text-foreground truncate">{coopProfile?.name ?? "..."}</h2>
+              </div>
+              {currentLevel && (
+                <span
+                  className={`text-xxxs font-black px-2 py-0.5 rounded-full shrink-0 ${currentLevel.bgClass} ${currentLevel.textClass} border border-current/20`}
+                >
+                  {`Lv.${currentLevel.tier}`}
+                </span>
+              )}
+            </div>
+            {/* Tier name */}
+            {currentLevel && (
+              <p className="text-xxs font-mono text-muted-foreground uppercase tracking-wider">
+                {currentLevel.labelId} · {currentLevel.labelEn}
+              </p>
+            )}
+            {/* Health / XP Bar */}
+            {healthScore > 0 && (
+              <div className="space-y-1">
+                <div className="flex justify-between text-xxxs font-mono">
+                  <span className="text-muted-foreground">{t("sidebar.healthScore")}</span>
+                  <span className="text-emerald-400 font-bold">{healthScore}%</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+                  <div className="h-full rounded-full bg-emerald-500" style={{ width: `${healthScore}%` }} />
+                </div>
+              </div>
+            )}
+            {/* Stats row */}
+            <div className="flex items-center gap-2 text-xxs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Users className="h-3 w-3 shrink-0" />
+                <span>{memberCount}</span>
+              </span>
+              <span className="text-border">|</span>
+              <span className="text-xxxs font-mono truncate">
+                {coopProfile?.village}
+                {coopProfile?.regency ? `, ${coopProfile.regency}` : ""}
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5 mt-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-[pulse_2s_infinite]" />
-            <span className="text-xxs font-mono text-muted-foreground">{t("sidebar.connected")}</span>
+
+          {/* User Profile Row */}
+          <div className="flex items-center gap-3 px-1">
+            <div className="w-9 h-9 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/30">
+              <UserCheck className="h-4 w-4 text-emerald-400" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-foreground truncate">{currentUser?.name}</p>
+              <p className="text-xxs text-muted-foreground truncate">{currentUser?.role}</p>
+            </div>
+            <button
+              onClick={onThemeToggle}
+              className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0"
+              title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {appTheme === "dark" ? (
+                <Sun className="h-3.5 w-3.5 text-muted-foreground hover:text-amber-400 transition-colors" />
+              ) : (
+                <Moon className="h-3.5 w-3.5 text-muted-foreground hover:text-blue-400 transition-colors" />
+              )}
+            </button>
           </div>
         </div>
 
@@ -122,27 +189,6 @@ export default function Sidebar({
             </div>
           </div>
         )}
-
-        <div className="flex items-center gap-3 px-2 py-2">
-          <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-            <UserCheck className="h-4 w-4 text-emerald-400" />
-          </div>
-          <div className="text-xxs">
-            <p className="font-bold text-foreground">{currentUser?.name}</p>
-            <p className="text-muted-foreground">{currentUser?.role}</p>
-          </div>
-          <button
-            onClick={onThemeToggle}
-            className="p-1 rounded hover:bg-sidebar-ring transition-colors ml-auto"
-            title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {appTheme === "dark" ? (
-              <Sun className="h-3 w-3 text-muted-foreground hover:text-amber-400 transition-colors" />
-            ) : (
-              <Moon className="h-3 w-3 text-muted-foreground hover:text-blue-400 transition-colors" />
-            )}
-          </button>
-        </div>
       </div>
     </aside>
   );

@@ -13,7 +13,7 @@ import Accounting from "@/features/Accounting";
 import Feasibility from "@/features/Feasibility";
 import Sync from "@/features/Sync";
 import Settings from "@/features/Settings";
-import { getErrorMessage, type CooperativeProfile, type EwsAlert } from "@/types";
+import { getErrorMessage, type CooperativeProfile, type EwsAlert, type CountRow } from "@/types";
 
 type FontLevel = "small" | "normal" | "large" | "xlarge";
 const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
@@ -40,6 +40,7 @@ function AppContent() {
   });
   const [coopProfile, setCoopProfile] = useState<CooperativeProfile | null>(null);
   const [ewsAlerts, setEwsAlerts] = useState<EwsAlert[]>([]);
+  const [memberCount, setMemberCount] = useState(0);
 
   // DB init
   useEffect(() => {
@@ -109,6 +110,8 @@ function AppContent() {
         if (profile.length > 0) setCoopProfile(profile[0]);
         const alerts = await db.select<EwsAlert[]>("SELECT * FROM ews_alerts ORDER BY triggered_at DESC LIMIT 5");
         setEwsAlerts(alerts);
+        const count = await db.select<CountRow[]>("SELECT COUNT(*) as count FROM members");
+        if (count.length > 0) setMemberCount(count[0].count);
       } catch (e) {
         console.error(e);
       }
@@ -125,6 +128,7 @@ function AppContent() {
         onTabChange={setActiveTab}
         coopProfile={coopProfile}
         ewsAlerts={ewsAlerts}
+        memberCount={memberCount}
         currentUser={currentUser}
         appTheme={appTheme}
         onThemeToggle={() => setAppTheme((t) => (t === "dark" ? "light" : "dark"))}

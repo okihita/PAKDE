@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Search, Plus, Trash2, Edit2 } from "lucide-react";
+import { Search, Plus, Trash2, Edit2, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,17 +7,29 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useMembers } from "@/hooks/useMembers";
-import { useEffect } from "react";
+import { seedMockMembers } from "@/data/seed-members";
+import { useEffect, useState } from "react";
 
 export default function Members() {
   const { t } = useTranslation();
   const m = useMembers();
+  const [seeding, setSeeding] = useState(false);
 
   const statusOptions = [
     { value: "semua", label: t("members.filterAll") },
     { value: "aktif", label: t("members.filterActive") },
     { value: "nonaktif", label: t("members.filterInactive") },
   ];
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    try {
+      await seedMockMembers();
+      await m.loadMembersData();
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   useEffect(() => {
     m.loadMembersData();
@@ -31,12 +43,21 @@ export default function Members() {
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
             {t("members.title")}
           </CardTitle>
-          <Button
-            onClick={m.openAddMemberModal}
-            className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
-          >
-            <Plus className="h-3 w-3 mr-1" /> {t("members.addButton")}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleSeed}
+              disabled={seeding}
+              className="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 font-bold text-xs h-8 border border-amber-600/20"
+            >
+              <Sprout className="h-3 w-3 mr-1" /> {seeding ? "..." : "Mock 50"}
+            </Button>
+            <Button
+              onClick={m.openAddMemberModal}
+              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+            >
+              <Plus className="h-3 w-3 mr-1" /> {t("members.addButton")}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex gap-3 mb-4">
