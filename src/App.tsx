@@ -7,6 +7,7 @@ import DbErrorScreen from "@/features/DbErrorScreen";
 import Sidebar from "@/features/Sidebar";
 import Dashboard from "@/features/Dashboard";
 import Statistics from "@/features/Statistics";
+import Leveling from "@/features/Leveling";
 import Members from "@/features/Members";
 import Accounting from "@/features/Accounting";
 import Feasibility from "@/features/Feasibility";
@@ -28,7 +29,7 @@ function AppContent() {
   });
 
   const [activeTab, setActiveTab] = useState<
-    "home" | "members" | "accounting" | "feasibility" | "statistics" | "sync" | "settings"
+    "home" | "statistics" | "leveling" | "members" | "accounting" | "feasibility" | "sync" | "settings"
   >("home");
   const [appTheme] = useState<"dark" | "light">("dark");
   const [fontSizeSetting, setFontSizeSetting] = useState<FontLevel>(() => {
@@ -121,6 +122,7 @@ function AppContent() {
         {activeTab === "statistics" && (
           <Statistics coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
         )}
+        {activeTab === "leveling" && <Leveling healthScore={coopProfile?.health_score ?? 0} />}
         {activeTab === "members" && <Members />}
         {activeTab === "accounting" && <Accounting />}
         {activeTab === "feasibility" && <Feasibility />}

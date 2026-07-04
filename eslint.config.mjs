@@ -40,10 +40,12 @@ export default tseslint.config(
       local: { rules: localRules },
     },
     rules: {
-      // File size
-      "local/max-lines-per-file": ["error", { max: 500 }],
+      // File size (exclude data files — they're inherently large)
+      "local/max-lines-per-file": ["error", { max: 500, skip: ["src/data/"] }],
       // Labels & i18n
       "local/no-hardcoded-labels": "error",
+      // Scalable fonts (no px)
+      "local/no-arbitrary-px-font-size": "error",
       // TypeScript strictness
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/consistent-type-imports": [

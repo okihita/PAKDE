@@ -47,10 +47,11 @@
     "connected": "Connected to local.db",
     "nav": {
       "home": "Home",
+      "leveling": "Leveling",
+      "statistics": "Summary",
       "members": "Member Database",
       "accounting": "SAK EP Accounting",
       "feasibility": "Financial Feasibility",
-      "statistics": "Statistics",
       "sync": "Data Synchronization",
       "settings": "Settings"
     },
@@ -363,6 +364,10 @@
       "fontXLarge": "X-LARGE",
       "fontHint": "Cmd/Ctrl + +/- to zoom, Cmd/Ctrl + 0 to reset"
     }
+  },
+  "leveling": {
+    "level": "Level {{n}}",
+    "active": "ACTIVE"
   },
   "toast": {
     "profileSaveSuccess": "Cooperative profile saved successfully!",

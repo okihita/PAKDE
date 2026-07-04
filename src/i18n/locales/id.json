@@ -47,10 +47,11 @@
     "connected": "Connected to local.db",
     "nav": {
       "home": "Beranda",
+      "statistics": "Rangkuman",
+      "leveling": "Leveling",
       "members": "Database Anggota",
       "accounting": "Akuntansi SAK EP",
       "feasibility": "Kelayakan Finansial",
-      "statistics": "Statistik",
       "sync": "Sinkronisasi Data",
       "settings": "Pengaturan"
     },
@@ -363,6 +364,10 @@
       "fontXLarge": "SANGAT BESAR",
       "fontHint": "Cmd/Ctrl + +/- untuk zoom, Cmd/Ctrl + 0 untuk reset"
     }
+  },
+  "leveling": {
+    "level": "Level {{n}}",
+    "active": "AKTIF"
   },
   "toast": {
     "profileSaveSuccess": "Profil Koperasi berhasil disimpan!",

@@ -27,6 +27,7 @@ export default {
             max: { type: "number", default: 500 },
             skipBlankLines: { type: "boolean", default: false },
             skipComments: { type: "boolean", default: false },
+            skip: { type: "array", items: { type: "string" }, default: [] },
           },
           additionalProperties: false,
         },
@@ -35,9 +36,16 @@ export default {
     create(context) {
       const [options = {}] = context.options;
       const max = options.max ?? 500;
+      const skipPaths = options.skip ?? [];
 
       return {
         "Program:exit"(node) {
+          const filename = context.filename ?? context.getFilename();
+          // Skip if filename matches any skip path
+          for (const p of skipPaths) {
+            if (filename.includes(p)) return;
+          }
+
           const { start, end } = node.loc;
           if (!end) return;
 
@@ -122,6 +130,56 @@ export default {
         JSXText: checkJSXText,
         CallExpression: checkCallExpression,
         JSXAttribute: checkJSXAttribute,
+      };
+    },
+  },
+
+  // ── No arbitrary px font sizes ──────────────────────────────────
+  "no-arbitrary-px-font-size": {
+    meta: {
+      type: "suggestion",
+      docs: {
+        description: "Disallow `text-[Npx]` Tailwind classes. Use `text-xxxs`, `text-xxs`, `text-xs`, etc. (rem-based) instead so fonts scale with zoom.",
+      },
+    },
+    create(context) {
+      const PX_PATTERN = /text-\[\d+px\]/;
+
+      function checkStringLiteral(node, value) {
+        if (typeof value !== "string") return;
+        if (!PX_PATTERN.test(value)) return;
+        context.report({
+          node,
+          message: `Arbitrary px font-size "${value.match(PX_PATTERN)?.[0]}" won't scale with zoom. Use a rem-based class instead.`,
+        });
+      }
+
+      return {
+        Literal(node) {
+          // Check className string literals
+          const parent = node.parent;
+          if (parent?.type === "JSXAttribute" && parent.name?.name === "className") {
+            checkStringLiteral(node, node.value);
+          }
+          // Template literals with string value
+          if (node.type === "Literal" && typeof node.value === "string" && node.value.includes("text-[")) {
+            checkStringLiteral(node, node.value);
+          }
+        },
+        TemplateLiteral(node) {
+          // Check template literals in className (e.g. className={`...`})
+          const parent = node.parent;
+          if (parent?.type === "JSXAttribute" && parent.name?.name === "className") {
+            for (const quasis of node.quasis) {
+              if (PX_PATTERN.test(quasis.value.raw)) {
+                context.report({
+                  node: quasis,
+                  message: `Arbitrary px font-size "${quasis.value.raw.match(PX_PATTERN)?.[0]}" won't scale with zoom. Use a rem-based class instead.`,
+                });
+              }
+            }
+          }
+        },
       };
     },
   },
