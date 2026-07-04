@@ -94,6 +94,7 @@
     "timeEvening": "evening",
     "todo": "Daily Quests",
     "todoWeekly": "Weekly Quests",
+    "todoMain": "Main Quests",
     "harian": "Daily",
     "mingguan": "Weekly",
     "addTodo": "Add a task...",

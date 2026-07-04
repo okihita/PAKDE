@@ -3,13 +3,14 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Circle, Plus, Bell, Newspaper, GripHorizontal } from "lucide-react";
+import { CheckCircle2, Circle, Plus, Newspaper, GripHorizontal } from "lucide-react";
 import { NEWS_ITEMS, type NewsItem } from "@/data/news";
 
 import { DndContext, type DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CalendarWidget from "./DashboardCalendar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Todo {
   id: string;
@@ -35,6 +36,12 @@ const WEEKLY_DEFAULTS: Todo[] = [
   { id: "weekly-5", text: "Cek laporan keuangan di modul Akuntansi", done: false },
   { id: "weekly-6", text: "Tinjau alert EWS dan ambil tindakan", done: false },
   { id: "weekly-7", text: "Evaluasi kelayakan finansial koperasi", done: false },
+];
+
+const MAIN_DEFAULTS: Todo[] = [
+  { id: "main-1", text: "Laporan SHU bulan ini harus disetor sebelum tanggal 10", done: false },
+  { id: "main-2", text: "Rapat Anggota Tahunan: persiapkan agenda", done: false },
+  { id: "main-3", text: "Cek outstanding pinjaman anggota aktif", done: false },
 ];
 
 function useTodoList(key: string, defaults: Todo[] = []) {
@@ -95,13 +102,22 @@ function useNewsRead() {
 // ── Card order (drag-and-drop) ───────────────────────────────────
 
 const CARD_ORDER_KEY = "pakde-card-order";
-const DEFAULT_CARDS = ["tugas", "reminders", "calendar", "news"];
+const DEFAULT_CARDS = ["mainquest", "tugas", "calendar", "news"];
 
 function useCardOrder() {
   const [items, setItems] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(CARD_ORDER_KEY);
-      return saved ? JSON.parse(saved) : DEFAULT_CARDS;
+      if (saved) {
+        const parsed: string[] = JSON.parse(saved);
+        // Merge any new default cards not yet in stored order
+        for (const id of DEFAULT_CARDS) {
+          if (!parsed.includes(id)) parsed.push(id);
+        }
+        // Remove obsolete cards no longer in DEFAULT_CARDS
+        return parsed.filter((id) => DEFAULT_CARDS.includes(id));
+      }
+      return DEFAULT_CARDS;
     } catch {
       return DEFAULT_CARDS;
     }
@@ -157,10 +173,12 @@ export default function Dashboard() {
   const { items: cardOrder, onDragEnd } = useCardOrder();
   const daily = useTodoList("pakde-todos-daily");
   const weekly = useTodoList("pakde-todos-weekly", WEEKLY_DEFAULTS);
+  const main = useTodoList("pakde-todos-main", MAIN_DEFAULTS);
   const { readIds, markRead, markAllRead } = useNewsRead();
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [newTask, setNewTask] = useState("");
   const unreadCount = NEWS_ITEMS.filter((n) => !readIds.has(n.id)).length;
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   const activeList = tab === "daily" ? daily : weekly;
 
@@ -174,6 +192,49 @@ export default function Dashboard() {
   };
 
   const cardContents: Record<string, React.ReactNode> = {
+    mainquest: (
+      <Card className="bg-card border-border text-foreground">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+              <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+              {t("beranda.todoMain")}
+            </CardTitle>
+            {main.doneCount > 0 && (
+              <button
+                onClick={main.removeDone}
+                className="text-xxxs font-mono text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {t("beranda.clearDone", { n: main.doneCount })}
+              </button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-1 max-h-64 overflow-y-auto">
+            {main.items.length === 0 && (
+              <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.noTasks")}</p>
+            )}
+            {main.items.map((todo) => (
+              <div
+                key={todo.id}
+                className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-secondary cursor-pointer group"
+                onClick={() => main.toggleItem(todo.id)}
+              >
+                {todo.done ? (
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                ) : (
+                  <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
+                )}
+                <span className={`text-xs ${todo.done ? "text-muted-foreground line-through" : "text-foreground"}`}>
+                  {todo.text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    ),
     tugas: (
       <Card className="bg-card border-border text-foreground">
         <CardHeader className="pb-3 space-y-0">
@@ -250,30 +311,6 @@ export default function Dashboard() {
         </CardContent>
       </Card>
     ),
-    reminders: (
-      <Card className="bg-card border-border text-foreground">
-        <CardHeader>
-          <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-            <Bell className="h-3 w-3 text-amber-400" />
-            {t("beranda.reminders")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {[
-              { icon: "📋", text: "Laporan SHU bulan ini harus disetor sebelum tanggal 10" },
-              { icon: "📅", text: "Rapat Anggota Tahunan: persiapkan agenda" },
-              { icon: "💰", text: "Cek outstanding pinjaman anggota aktif" },
-            ].map((r, i) => (
-              <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                <span className="text-xs">{r.icon}</span>
-                <span>{r.text}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    ),
     calendar: <CalendarWidget t={t} />,
     news: (
       <Card className="bg-card border-border text-foreground">
@@ -299,7 +336,7 @@ export default function Dashboard() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-2">
             {NEWS_ITEMS.length === 0 && (
               <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.news.noNews")}</p>
             )}
@@ -308,8 +345,11 @@ export default function Dashboard() {
               return (
                 <div
                   key={item.id}
-                  className={`border-b border-border pb-3 last:border-b-0 last:pb-0 ${isUnread ? "cursor-pointer" : ""}`}
-                  onClick={() => isUnread && markRead(item.id)}
+                  className="border-b border-border pb-2 last:border-b-0 last:pb-0 cursor-pointer py-1.5 px-2 rounded hover:bg-secondary transition-colors -mx-2"
+                  onClick={() => {
+                    setSelectedNews(item);
+                    if (isUnread) markRead(item.id);
+                  }}
                 >
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <div className="flex items-center gap-1.5 min-w-0">
@@ -322,7 +362,7 @@ export default function Dashboard() {
                       {t(`beranda.news.source${item.source.charAt(0).toUpperCase() + item.source.slice(1)}`)}
                     </span>
                   </div>
-                  <p className="text-xxs text-muted-foreground leading-relaxed ml-4">{item.content}</p>
+                  <p className="text-xxs text-muted-foreground leading-relaxed ml-4 line-clamp-2">{item.content}</p>
                   <p className="text-xxxs font-mono text-muted-foreground mt-1 ml-4">
                     {new Date(item.timestamp).toLocaleDateString(undefined, {
                       day: "numeric",
@@ -352,6 +392,38 @@ export default function Dashboard() {
           </div>
         </SortableContext>
       </DndContext>
+
+      {/* News Detail Dialog */}
+      <Dialog open={!!selectedNews} onOpenChange={(o) => !o && setSelectedNews(null)}>
+        <DialogContent className="bg-card border-border text-foreground max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-sm font-bold text-foreground">{selectedNews?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-xxxs font-mono px-1.5 py-0.5 rounded ${selectedNews ? SOURCE_BADGE[selectedNews.source] : ""}`}
+              >
+                {selectedNews
+                  ? t(
+                      `beranda.news.source${selectedNews.source.charAt(0).toUpperCase() + selectedNews.source.slice(1)}`,
+                    )
+                  : ""}
+              </span>
+              <span className="text-xxxs font-mono">
+                {selectedNews
+                  ? new Date(selectedNews.timestamp).toLocaleDateString(undefined, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : ""}
+              </span>
+            </div>
+            <p className="leading-relaxed">{selectedNews?.content}</p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
