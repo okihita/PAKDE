@@ -4,6 +4,7 @@ import {
   Users,
   Receipt,
   TrendingUp,
+  BarChart3,
   RefreshCw,
   Settings,
   AlertTriangle,
@@ -16,7 +17,7 @@ import type { CooperativeProfile, EwsAlert } from "@/types";
 
 interface SidebarProps {
   activeTab: string;
-  onTabChange: (tab: "home" | "members" | "accounting" | "feasibility" | "sync" | "settings") => void;
+  onTabChange: (tab: "home" | "members" | "accounting" | "feasibility" | "statistics" | "sync" | "settings") => void;
   coopProfile: CooperativeProfile | null;
   ewsAlerts: EwsAlert[];
   currentUser: { name: string; role: string } | null;
@@ -31,6 +32,7 @@ export default function Sidebar({ activeTab, onTabChange, coopProfile, ewsAlerts
     { id: "members" as const, icon: Users, label: t("sidebar.nav.members") },
     { id: "accounting" as const, icon: Receipt, label: t("sidebar.nav.accounting") },
     { id: "feasibility" as const, icon: TrendingUp, label: t("sidebar.nav.feasibility") },
+    { id: "statistics" as const, icon: BarChart3, label: t("sidebar.nav.statistics") },
     { id: "sync" as const, icon: RefreshCw, label: t("sidebar.nav.sync") },
     { id: "settings" as const, icon: Settings, label: t("sidebar.nav.settings") },
   ];

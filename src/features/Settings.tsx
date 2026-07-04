@@ -12,6 +12,8 @@ import type { CooperativeProfile } from "@/types";
 interface Props {
   coopProfile: CooperativeProfile | null;
   setCoopProfile: (v: CooperativeProfile) => void;
+  fontSizeSetting: "small" | "normal" | "large" | "xlarge";
+  setFontSizeSetting: (v: "small" | "normal" | "large" | "xlarge") => void;
 }
 
 const i18nFieldKeys: Record<string, string> = {
@@ -27,7 +29,7 @@ const i18nFieldKeys: Record<string, string> = {
   email: "email",
 };
 
-export default function Settings({ coopProfile, setCoopProfile }: Props) {
+export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting, setFontSizeSetting }: Props) {
   const { t, i18n } = useTranslation();
   const [lang, setLang] = useState(i18n.language);
   const u = useUpdater();
@@ -194,15 +196,21 @@ export default function Settings({ coopProfile, setCoopProfile }: Props) {
               <label className="text-slate-500 font-mono text-[9px] uppercase">
                 {t("settings.preferences.fontSize")}
               </label>
-              <Select defaultValue="normal">
+              <Select
+                value={fontSizeSetting}
+                onValueChange={(val) => setFontSizeSetting(val as "small" | "normal" | "large" | "xlarge")}
+              >
                 <SelectTrigger className="w-full bg-slate-950 border-slate-900 text-xs h-8 text-slate-300">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0b101c] border-slate-900 text-white text-xs">
+                  <SelectItem value="small">{t("settings.preferences.fontSmall")}</SelectItem>
                   <SelectItem value="normal">{t("settings.preferences.fontNormal")}</SelectItem>
                   <SelectItem value="large">{t("settings.preferences.fontLarge")}</SelectItem>
+                  <SelectItem value="xlarge">{t("settings.preferences.fontXLarge")}</SelectItem>
                 </SelectContent>
               </Select>
+              <p className="text-[9px] text-slate-600 font-mono">{t("settings.preferences.fontHint")}</p>
             </div>
           </CardContent>
         </Card>

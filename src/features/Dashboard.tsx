@@ -1,65 +1,224 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, Info } from "lucide-react";
-import type { CooperativeProfile, EwsAlert } from "@/types";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  CheckCircle2,
+  Circle,
+  Plus,
+  Bell,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Sun,
+  Moon,
+  Sunrise,
+} from "lucide-react";
+import type { CooperativeProfile } from "@/types";
 
 interface Props {
   coopProfile: CooperativeProfile | null;
-  ewsAlerts: EwsAlert[];
   currentUser: { name: string; role: string } | null;
 }
 
-const LEVEL_STYLE: Record<string, string> = {
-  info: "text-blue-400 bg-blue-500/10",
-  warning: "text-amber-400 bg-amber-500/10",
-  critical: "text-rose-400 bg-rose-500/10",
+interface Todo {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
+const STORAGE_KEY = "pakde-todos";
+
+function getGreetingTime(): "morning" | "afternoon" | "evening" {
+  const h = new Date().getHours();
+  if (h < 12) return "morning";
+  if (h < 17) return "afternoon";
+  return "evening";
+}
+
+const GREETING_ICON = {
+  morning: Sunrise,
+  afternoon: Sun,
+  evening: Moon,
 };
 
-const LEVEL_ICON: Record<string, typeof Info> = {
-  info: Info,
-  warning: AlertTriangle,
-  critical: AlertTriangle,
-};
+const DAYS_SHORT = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-export default function Dashboard({ coopProfile, ewsAlerts, currentUser }: Props) {
+function useTodos() {
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
+
+  const addTodo = (text: string) => {
+    setTodos((prev) => [...prev, { id: crypto.randomUUID(), text, done: false }]);
+  };
+
+  const toggleTodo = (id: string) => {
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+  };
+
+  const removeDone = () => {
+    setTodos((prev) => prev.filter((t) => !t.done));
+  };
+
+  return { todos, addTodo, toggleTodo, removeDone };
+}
+
+function CalendarWidget({ t }: { t: (key: string) => string }) {
+  const today = new Date();
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  const prevMonth = () => {
+    if (viewMonth === 0) {
+      setViewMonth(11);
+      setViewYear((y) => y - 1);
+    } else {
+      setViewMonth((m) => m - 1);
+    }
+  };
+
+  const nextMonth = () => {
+    if (viewMonth === 11) {
+      setViewMonth(0);
+      setViewYear((y) => y + 1);
+    } else {
+      setViewMonth((m) => m + 1);
+    }
+  };
+
+  const cells: (number | null)[] = [];
+  // leading blanks
+  for (let i = 0; i < firstDay; i++) {
+    cells.push(null);
+  }
+  // days of current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push(d);
+  }
+
+  const isToday = (d: number) =>
+    d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+
+  return (
+    <Card className="bg-[#0b101c]/90 border-slate-900 text-slate-300">
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
+        <CardTitle className="text-xs font-mono tracking-widest text-slate-400 uppercase flex items-center gap-2">
+          <CalendarDays className="h-3 w-3" />
+          {t("beranda.calendar")}
+        </CardTitle>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono text-slate-400">
+            {MONTHS[viewMonth]} {viewYear}
+          </span>
+          <div className="flex gap-0.5">
+            <button
+              onClick={prevMonth}
+              className="p-0.5 rounded hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+            >
+              <ChevronLeft className="h-3 w-3" />
+            </button>
+            <button
+              onClick={nextMonth}
+              className="p-0.5 rounded hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+            >
+              <ChevronRight className="h-3 w-3" />
+            </button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-7 gap-0">
+          {DAYS_SHORT.map((d) => (
+            <div key={d} className="text-center text-[9px] font-mono text-slate-600 py-1">
+              {t(`beranda.${d}`)}
+            </div>
+          ))}
+          {cells.map((d, i) => (
+            <div
+              key={i}
+              className={`text-center text-[10px] font-mono py-1.5 rounded ${
+                d === null
+                  ? "text-transparent"
+                  : isToday(d)
+                    ? "bg-emerald-500/20 text-emerald-400 font-bold"
+                    : "text-slate-400 hover:bg-slate-800"
+              }`}
+            >
+              {d ?? "."}
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function Dashboard({ coopProfile, currentUser }: Props) {
   const { t } = useTranslation();
+  const { todos, addTodo, toggleTodo, removeDone } = useTodos();
+  const [newTask, setNewTask] = useState("");
+  const greeting = getGreetingTime();
+  const GreetingIcon = GREETING_ICON[greeting];
 
-  const activeAlerts = ewsAlerts.filter((a) => a.is_active === 1);
-  const ragScore = coopProfile?.health_score ?? 0;
+  const handleAdd = () => {
+    const text = newTask.trim();
+    if (!text) return;
+    addTodo(text);
+    setNewTask("");
+  };
 
-  const pendItems = [
-    { label: t("dashboard.simpanan"), value: 320 },
-    { label: t("dashboard.pinjaman"), value: 580 },
-    { label: t("dashboard.unitUsaha"), value: 210 },
-    { label: t("dashboard.lainLain"), value: 165 },
-  ];
-
-  const bebanItems = [
-    { label: t("dashboard.operasional"), value: 180 },
-    { label: t("dashboard.bunga"), value: 95 },
-    { label: t("dashboard.penyusutan"), value: 45 },
-    { label: t("dashboard.lainLain"), value: 60 },
-  ];
-
-  const maxBar = Math.max(...pendItems.map((d) => d.value), ...bebanItems.map((d) => d.value));
+  const doneCount = todos.filter((t) => t.done).length;
 
   return (
     <div className="flex-1 overflow-auto p-6 space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* ── COLUMN 1 ──────────────────────────────────────────── */}
-
         <div className="space-y-6">
+          {/* Greeting */}
           <Card className="bg-[#0b101c]/90 border-slate-900 text-slate-300">
             <CardHeader>
-              <CardTitle className="text-xs font-mono tracking-widest text-slate-400 uppercase">
-                {t("dashboard.welcome")}
+              <CardTitle className="text-xs font-mono tracking-widest text-slate-400 uppercase flex items-center gap-2">
+                <GreetingIcon className="h-3 w-3 text-amber-400" />
+                {t("beranda.welcome")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {currentUser && (
                 <div>
-                  <p className="text-sm font-bold text-white">{currentUser.name}</p>
+                  <p className="text-sm font-bold text-white">
+                    {t("beranda.greeting", {
+                      time: t(`beranda.time${greeting.charAt(0).toUpperCase() + greeting.slice(1)}`),
+                      name: currentUser.name,
+                    })}
+                  </p>
                   <p className="text-[10px] text-slate-500">{currentUser.role}</p>
                 </div>
               )}
@@ -67,140 +226,107 @@ export default function Dashboard({ coopProfile, ewsAlerts, currentUser }: Props
                 <div className="space-y-1 pt-2 border-t border-slate-900">
                   <p className="text-sm font-semibold text-emerald-400">{coopProfile.name}</p>
                   <p className="text-[10px] font-mono text-slate-500">
-                    {t("dashboard.legalId")}: {coopProfile.legal_id}
-                  </p>
-                  <p className="text-[10px] font-mono text-slate-500">
-                    {coopProfile.regency}, {coopProfile.province}
+                    {coopProfile.village}, {coopProfile.regency}
                   </p>
                 </div>
               )}
             </CardContent>
           </Card>
 
+          {/* Reminders */}
           <Card className="bg-[#0b101c]/90 border-slate-900 text-slate-300">
-            <CardHeader className="pb-2">
+            <CardHeader>
               <CardTitle className="text-xs font-mono tracking-widest text-slate-400 uppercase flex items-center gap-2">
-                <AlertTriangle className="h-3 w-3 text-amber-400" />
-                {t("dashboard.ewAlerts")}
+                <Bell className="h-3 w-3 text-amber-400" />
+                {t("beranda.reminders")}
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-slate-900 hover:bg-transparent">
-                    <TableHead className="text-[10px] font-mono text-slate-500 py-2 pl-4">
-                      {t("dashboard.level")}
-                    </TableHead>
-                    <TableHead className="text-[10px] font-mono text-slate-500 py-2">
-                      {t("dashboard.indicator")}
-                    </TableHead>
-                    <TableHead className="text-[10px] font-mono text-slate-500 py-2">
-                      {t("dashboard.message")}
-                    </TableHead>
-                    <TableHead className="text-[10px] font-mono text-slate-500 py-2 pr-4 text-right">
-                      {t("dashboard.time")}
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {activeAlerts.length === 0 && (
-                    <TableRow className="border-slate-900 hover:bg-transparent">
-                      <TableCell colSpan={4} className="text-[10px] text-slate-600 py-4 text-center">
-                        {t("dashboard.noAlerts")}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                  {activeAlerts.map((a) => {
-                    const Icon = LEVEL_ICON[a.level] ?? Info;
-                    return (
-                      <TableRow key={a.id} className="border-slate-900 hover:bg-[#0e1326]">
-                        <TableCell className="py-2 pl-4">
-                          <span
-                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold ${LEVEL_STYLE[a.level]}`}
-                          >
-                            <Icon className="h-2.5 w-2.5" />
-                            {a.level.toUpperCase()}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-[10px] font-mono text-slate-300 py-2">{a.indicator}</TableCell>
-                        <TableCell className="text-[10px] font-mono text-slate-400 py-2">{a.message}</TableCell>
-                        <TableCell className="text-[10px] font-mono text-slate-500 py-2 pr-4 text-right">
-                          {a.triggered_at}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+            <CardContent>
+              <div className="space-y-2">
+                {[
+                  { icon: "📋", text: "Laporan SHU bulan ini harus disetor sebelum tanggal 10" },
+                  { icon: "📅", text: "Rapat Anggota Tahunan: persiapkan agenda" },
+                  { icon: "💰", text: "Cek outstanding pinjaman anggota aktif" },
+                ].map((r, i) => (
+                  <div key={i} className="flex items-start gap-2 text-[11px] text-slate-400">
+                    <span className="text-xs">{r.icon}</span>
+                    <span>{r.text}</span>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
+
+          {/* Calendar */}
+          <CalendarWidget t={t} />
         </div>
 
         {/* ── COLUMN 2 ──────────────────────────────────────────── */}
 
         <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { label: t("dashboard.totalMembers"), value: "328", accent: "text-white" },
-              { label: t("dashboard.totalAssets"), value: "Rp 1,275M", accent: "text-emerald-400" },
-              { label: t("dashboard.shuAnnual"), value: "Rp 178M", accent: "text-emerald-400" },
-              {
-                label: t("dashboard.healthScore"),
-                value: ragScore > 0 ? `${ragScore}%` : "--",
-                accent: ragScore >= 70 ? "text-emerald-400" : "text-amber-400",
-              },
-            ].map(({ label, value, accent }) => (
-              <Card key={label} className="bg-[#0b101c]/90 border-slate-900 text-slate-300">
-                <CardContent className="p-4">
-                  <p className="text-[10px] font-mono text-slate-500 mb-1">{label}</p>
-                  <p className={`text-lg font-black font-mono ${accent}`}>{value}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
+          {/* Todo List */}
           <Card className="bg-[#0b101c]/90 border-slate-900 text-slate-300">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs font-mono tracking-widest text-slate-400 uppercase">
-                {t("dashboard.incomeExpense")}
-              </CardTitle>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xs font-mono tracking-widest text-slate-400 uppercase flex items-center gap-2">
+                  <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                  {t("beranda.todo")}
+                </CardTitle>
+                {doneCount > 0 && (
+                  <button
+                    onClick={removeDone}
+                    className="text-[9px] font-mono text-slate-600 hover:text-slate-400 transition-colors"
+                  >
+                    {t("beranda.clearDone", { n: doneCount })}
+                  </button>
+                )}
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-[10px] font-mono text-emerald-400 mb-2">{t("dashboard.income")}</p>
-                  <div className="space-y-1.5">
-                    {pendItems.map((d) => (
-                      <div key={d.label} className="flex items-center gap-2">
-                        <span className="text-[9px] font-mono text-slate-500 w-20 text-right">{d.label}</span>
-                        <div className="flex-1 h-3 bg-slate-900 rounded-sm overflow-hidden">
-                          <div
-                            className="h-full bg-emerald-500/70 rounded-sm"
-                            style={{ width: `${(d.value / maxBar) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-[9px] font-mono text-emerald-300 w-12 text-right">{d.value}M</span>
-                      </div>
-                    ))}
+            <CardContent className="space-y-3">
+              {/* Add task */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAdd();
+                }}
+                className="flex gap-2"
+              >
+                <Input
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                  placeholder={t("beranda.addTodo")}
+                  className="flex-1 bg-slate-950 border-slate-900 text-xs h-8 text-slate-300 placeholder:text-slate-600"
+                />
+                <Button
+                  type="submit"
+                  size="icon"
+                  className="h-8 w-8 bg-emerald-500 hover:bg-emerald-600 text-slate-950"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                </Button>
+              </form>
+
+              {/* Task list */}
+              <div className="space-y-1 max-h-64 overflow-y-auto">
+                {todos.length === 0 && (
+                  <p className="text-[10px] text-slate-600 text-center py-4">{t("beranda.noTasks")}</p>
+                )}
+                {todos.map((todo) => (
+                  <div
+                    key={todo.id}
+                    className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-slate-900/50 cursor-pointer group"
+                    onClick={() => toggleTodo(todo.id)}
+                  >
+                    {todo.done ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                    ) : (
+                      <Circle className="h-3.5 w-3.5 text-slate-600 shrink-0 group-hover:text-slate-400 transition-colors" />
+                    )}
+                    <span className={`text-[11px] ${todo.done ? "text-slate-600 line-through" : "text-slate-300"}`}>
+                      {todo.text}
+                    </span>
                   </div>
-                </div>
-                <div>
-                  <p className="text-[10px] font-mono text-rose-400 mb-2">{t("dashboard.expense")}</p>
-                  <div className="space-y-1.5">
-                    {bebanItems.map((d) => (
-                      <div key={d.label} className="flex items-center gap-2">
-                        <span className="text-[9px] font-mono text-slate-500 w-20 text-right">{d.label}</span>
-                        <div className="flex-1 h-3 bg-slate-900 rounded-sm overflow-hidden">
-                          <div
-                            className="h-full bg-rose-500/70 rounded-sm"
-                            style={{ width: `${(d.value / maxBar) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-[9px] font-mono text-rose-300 w-12 text-right">{d.value}M</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>

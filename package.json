@@ -8,11 +8,11 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "lint": "eslint .",
+    "lint": "tsc --noEmit && eslint . && prettier --check \"src/**/*.{ts,tsx,css,json}\"",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
-    "check": "tsc --noEmit && eslint . && prettier --check \"src/**/*.{ts,tsx,css,json}\"",
+    "check": "pnpm lint",
     "prepare": "husky"
   },
   "dependencies": {

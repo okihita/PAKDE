@@ -6,12 +6,18 @@ import SplashScreen from "@/features/SplashScreen";
 import DbErrorScreen from "@/features/DbErrorScreen";
 import Sidebar from "@/features/Sidebar";
 import Dashboard from "@/features/Dashboard";
+import Statistics from "@/features/Statistics";
 import Members from "@/features/Members";
 import Accounting from "@/features/Accounting";
 import Feasibility from "@/features/Feasibility";
 import Sync from "@/features/Sync";
 import Settings from "@/features/Settings";
 import { getErrorMessage, type CooperativeProfile, type EwsAlert } from "@/types";
+
+type FontLevel = "small" | "normal" | "large" | "xlarge";
+const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
+const FONT_LEVEL_DEFAULT: FontLevel = "normal";
+
 function AppContent() {
   const [appState, setAppState] = useState<"splash" | "main" | "db_error">("splash");
   const [dbErrorMessage, setDbErrorMessage] = useState("");
@@ -21,11 +27,14 @@ function AppContent() {
     role: "Ketua Koperasi",
   });
 
-  const [activeTab, setActiveTab] = useState<"home" | "members" | "accounting" | "feasibility" | "sync" | "settings">(
-    "home",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "home" | "members" | "accounting" | "feasibility" | "statistics" | "sync" | "settings"
+  >("home");
   const [appTheme] = useState<"dark" | "light">("dark");
-  const [fontSizeSetting] = useState<"normal" | "large">("normal");
+  const [fontSizeSetting, setFontSizeSetting] = useState<FontLevel>(() => {
+    const saved = localStorage.getItem("pakde-font-size") as FontLevel | null;
+    return saved && FONT_LEVELS.includes(saved) ? saved : FONT_LEVEL_DEFAULT;
+  });
   const [coopProfile, setCoopProfile] = useState<CooperativeProfile | null>(null);
   const [ewsAlerts, setEwsAlerts] = useState<EwsAlert[]>([]);
 
@@ -41,6 +50,41 @@ function AppContent() {
         setAppState("db_error");
       }
     })();
+  }, []);
+
+  // Sync font-size setting to <html> and persist
+  useEffect(() => {
+    document.documentElement.setAttribute("data-font-size", fontSizeSetting);
+    localStorage.setItem("pakde-font-size", fontSizeSetting);
+  }, [fontSizeSetting]);
+
+  // Keyboard shortcuts: Cmd/Ctrl + +/-/0 to zoom font
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only fire when Cmd (mac) or Ctrl (windows/linux) is held
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+
+      if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        setFontSizeSetting((prev) => {
+          const idx = FONT_LEVELS.indexOf(prev);
+          return idx < FONT_LEVELS.length - 1 ? FONT_LEVELS[idx + 1] : prev;
+        });
+      } else if (e.key === "-") {
+        e.preventDefault();
+        setFontSizeSetting((prev) => {
+          const idx = FONT_LEVELS.indexOf(prev);
+          return idx > 0 ? FONT_LEVELS[idx - 1] : prev;
+        });
+      } else if (e.key === "0") {
+        e.preventDefault();
+        setFontSizeSetting(FONT_LEVEL_DEFAULT);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Load dashboard data on mount
@@ -63,9 +107,7 @@ function AppContent() {
   if (appState === "db_error") return <DbErrorScreen message={dbErrorMessage} />;
 
   return (
-    <div
-      className={`app-container flex min-h-screen text-slate-300 bg-[#070b14] ${appTheme} font-${fontSizeSetting} antialiased`}
-    >
+    <div className={`app-container flex min-h-screen text-slate-300 bg-[#070b14] ${appTheme} antialiased`}>
       <Sidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -75,14 +117,22 @@ function AppContent() {
       />
 
       <main className="flex-1 p-6 overflow-y-auto max-h-screen">
-        {activeTab === "home" && (
-          <Dashboard coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
+        {activeTab === "home" && <Dashboard coopProfile={coopProfile} currentUser={currentUser} />}
+        {activeTab === "statistics" && (
+          <Statistics coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
         )}
         {activeTab === "members" && <Members />}
         {activeTab === "accounting" && <Accounting />}
         {activeTab === "feasibility" && <Feasibility />}
         {activeTab === "sync" && <Sync />}
-        {activeTab === "settings" && <Settings coopProfile={coopProfile} setCoopProfile={setCoopProfile} />}
+        {activeTab === "settings" && (
+          <Settings
+            coopProfile={coopProfile}
+            setCoopProfile={setCoopProfile}
+            fontSizeSetting={fontSizeSetting}
+            setFontSizeSetting={setFontSizeSetting}
+          />
+        )}
       </main>
     </div>
   );

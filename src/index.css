@@ -81,6 +81,19 @@
 }
 
 @layer base {
+  html {
+    font-size: 19px;
+  }
+  html[data-font-size="small"] {
+    font-size: 16px;
+  }
+  html[data-font-size="large"] {
+    font-size: 22px;
+  }
+  html[data-font-size="xlarge"] {
+    font-size: 25px;
+  }
+
   * {
     @apply border-border;
   }

@@ -46,10 +46,11 @@
   "sidebar": {
     "connected": "Connected to local.db",
     "nav": {
-      "home": "Dashboard",
+      "home": "Home",
       "members": "Member Database",
       "accounting": "SAK EP Accounting",
       "feasibility": "Financial Feasibility",
+      "statistics": "Statistics",
       "sync": "Data Synchronization",
       "settings": "Settings"
     },
@@ -82,6 +83,28 @@
     "operasional": "Operational",
     "bunga": "Interest",
     "penyusutan": "Depreciation"
+  },
+  "beranda": {
+    "welcome": "Welcome",
+    "greeting": "Good {{time}}, {{name}}",
+    "timeMorning": "morning",
+    "timeAfternoon": "afternoon",
+    "timeEvening": "evening",
+    "todo": "Today's Tasks",
+    "addTodo": "Add a task...",
+    "noTasks": "No tasks yet. Add something to do today!",
+    "reminders": "Reminders",
+    "noReminders": "No reminders",
+    "calendar": "Calendar",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun",
+    "today": "Today",
+    "clearDone": "Clear {{n}} done"
   },
   "members": {
     "title": "Member Database",
@@ -334,8 +357,11 @@
       "themeDark": "🌙 DARK MODE",
       "themeLight": "☀️ LIGHT MODE",
       "fontSize": "Font Scale",
+      "fontSmall": "SMALL",
       "fontNormal": "NORMAL",
-      "fontLarge": "LARGE"
+      "fontLarge": "LARGE",
+      "fontXLarge": "X-LARGE",
+      "fontHint": "Cmd/Ctrl + +/- to zoom, Cmd/Ctrl + 0 to reset"
     }
   },
   "toast": {
