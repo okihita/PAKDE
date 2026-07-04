@@ -9,8 +9,6 @@ import {
   RefreshCw,
   Settings,
   AlertTriangle,
-  CheckCircle2,
-  Database,
   UserCheck,
   Sun,
   Moon,
@@ -49,7 +47,7 @@ export default function Sidebar({
   const healthScore = coopProfile?.health_score ?? 0;
   const currentLevel = healthScore > 0 ? getCurrentLevel(healthScore) : null;
 
-  const NAV_ITEMS = [
+  const MAIN_NAV_ITEMS = [
     { id: "home" as const, icon: LayoutDashboard, label: t("sidebar.nav.home") },
     { id: "statistics" as const, icon: BarChart3, label: t("sidebar.nav.statistics") },
     { id: "peringkat" as const, icon: Medal, label: t("sidebar.nav.peringkat") },
@@ -57,6 +55,9 @@ export default function Sidebar({
     { id: "members" as const, icon: Users, label: t("sidebar.nav.members") },
     { id: "accounting" as const, icon: Receipt, label: t("sidebar.nav.accounting") },
     { id: "feasibility" as const, icon: TrendingUp, label: t("sidebar.nav.feasibility") },
+  ];
+
+  const BOTTOM_NAV_ITEMS = [
     { id: "sync" as const, icon: RefreshCw, label: t("sidebar.nav.sync") },
     { id: "settings" as const, icon: Settings, label: t("sidebar.nav.settings") },
   ];
@@ -138,7 +139,7 @@ export default function Sidebar({
         </div>
 
         <nav className="p-4 space-y-1">
-          {NAV_ITEMS.map(({ id, icon: Icon, label }) => (
+          {MAIN_NAV_ITEMS.map(({ id, icon: Icon, label }) => (
             <div
               key={id}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all text-xs font-semibold ${
@@ -155,21 +156,23 @@ export default function Sidebar({
         </nav>
       </div>
 
-      <div className="border-t border-border p-4 space-y-4">
-        {(coopProfile?.health_score ?? 0) > 0 && (
-          <div className="px-3 py-3 rounded-xl bg-card border border-border">
-            <div className="flex items-center gap-2 mb-2">
-              <Database className="h-3 w-3 text-emerald-400" />
-              <span className="text-xxs font-mono text-muted-foreground">{t("sidebar.healthScore")}</span>
+      <div className="border-t border-border p-4 space-y-2">
+        <nav className="space-y-1">
+          {BOTTOM_NAV_ITEMS.map(({ id, icon: Icon, label }) => (
+            <div
+              key={id}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all text-xs font-semibold ${
+                activeTab === id
+                  ? "bg-emerald-500/10 text-emerald-400 border-[0.5px] border-emerald-500/20"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+              onClick={() => onTabChange(id)}
+            >
+              <Icon className="h-4 w-4" />
+              <span>{label}</span>
             </div>
-            <div className="flex items-end gap-2">
-              <span className="text-xl font-black text-emerald-400 font-mono">{coopProfile?.health_score}%</span>
-              <span className="text-xxxs text-muted-foreground mb-1">
-                {t("sidebar.rag")}: {coopProfile?.rag_status}
-              </span>
-            </div>
-          </div>
-        )}
+          ))}
+        </nav>
 
         {criticalAlerts > 0 && (
           <div className="px-3 py-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
@@ -178,17 +181,6 @@ export default function Sidebar({
               <span className="text-xxs font-mono text-rose-300">
                 {t("sidebar.criticalAlerts", { count: criticalAlerts })}
               </span>
-            </div>
-          </div>
-        )}
-
-        {(ewsAlerts.filter((a) => a.level === "warning").length > 0 ||
-          ewsAlerts.length === 0 ||
-          criticalAlerts === 0) && (
-          <div className="px-3 py-3 rounded-xl bg-card border border-border">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-              <span className="text-xxs font-mono text-muted-foreground">{t("sidebar.systemNormal")}</span>
             </div>
           </div>
         )}
