@@ -92,7 +92,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
                 { key: "email" },
               ].map(({ key }) => (
                 <div key={key} className="space-y-1">
-                  <label className="text-slate-500 font-mono text-[9px] uppercase">
+                  <label className="text-slate-500 font-mono text-xxxs uppercase">
                     {t(`settings.profileFields.${i18nFieldKeys[key]}`)}
                   </label>
                   <Input
@@ -117,9 +117,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
             <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               {t("settings.updater.title")}
             </CardTitle>
-            <CardDescription className="text-[10px] text-slate-500">
-              {t("settings.updater.description")}
-            </CardDescription>
+            <CardDescription className="text-xxs text-slate-500">{t("settings.updater.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 pt-2 text-xs">
             <Button
@@ -135,7 +133,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
               </span>
             )}
             {u.downloadContentLength > 0 && (
-              <div className="space-y-2 font-mono text-[10px]">
+              <div className="space-y-2 font-mono text-xxs">
                 <div className="flex justify-between text-slate-400">
                   <span>
                     {`${t("settings.updater.progress")}: ${(u.downloadedBytes / 1024 / 1024).toFixed(2)} MB / ${(u.downloadContentLength / 1024 / 1024).toFixed(2)} MB`}
@@ -161,7 +159,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 text-xs">
             <div className="space-y-1">
-              <label className="text-slate-500 font-mono text-[9px] uppercase">
+              <label className="text-slate-500 font-mono text-xxxs uppercase">
                 {t("settings.preferences.language")}
               </label>
               <Select
@@ -181,7 +179,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
               </Select>
             </div>
             <div className="space-y-1">
-              <label className="text-slate-500 font-mono text-[9px] uppercase">{t("settings.preferences.theme")}</label>
+              <label className="text-slate-500 font-mono text-xxxs uppercase">{t("settings.preferences.theme")}</label>
               <Select defaultValue="dark">
                 <SelectTrigger className="w-full bg-slate-950 border-slate-900 text-xs h-8 text-slate-300">
                   <SelectValue />
@@ -193,7 +191,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
               </Select>
             </div>
             <div className="space-y-1">
-              <label className="text-slate-500 font-mono text-[9px] uppercase">
+              <label className="text-slate-500 font-mono text-xxxs uppercase">
                 {t("settings.preferences.fontSize")}
               </label>
               <Select
@@ -210,7 +208,7 @@ export default function Settings({ coopProfile, setCoopProfile, fontSizeSetting,
                   <SelectItem value="xlarge">{t("settings.preferences.fontXLarge")}</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-[9px] text-slate-600 font-mono">{t("settings.preferences.fontHint")}</p>
+              <p className="text-xxxs text-slate-600 font-mono">{t("settings.preferences.fontHint")}</p>
             </div>
           </CardContent>
         </Card>

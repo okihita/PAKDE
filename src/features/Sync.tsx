@@ -19,7 +19,7 @@ export default function Sync() {
       <Card className="bg-[#0b101c]/90 border-slate-900">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t("sync.title")}</CardTitle>
-          <CardDescription className="text-[10px] text-slate-500">{t("sync.description")}</CardDescription>
+          <CardDescription className="text-xxs text-slate-500">{t("sync.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Button
@@ -47,23 +47,19 @@ export default function Sync() {
           <Table>
             <TableHeader>
               <TableRow className="border-slate-900 hover:bg-transparent">
-                <TableHead className="text-[10px] font-mono text-slate-500">{t("sync.tableHeaders.id")}</TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">
-                  {t("sync.tableHeaders.direction")}
-                </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">
-                  {t("sync.tableHeaders.startedAt")}
-                </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">{t("sync.tableHeaders.status")}</TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">{t("sync.tableHeaders.entries")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("sync.tableHeaders.id")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("sync.tableHeaders.direction")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("sync.tableHeaders.startedAt")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("sync.tableHeaders.status")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("sync.tableHeaders.entries")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {s.syncHistoryList.map((hist) => (
                 <TableRow key={hist.id} className="border-slate-900 hover:bg-[#0e1326]">
-                  <TableCell className="text-[10px] font-mono text-slate-400">{hist.id}</TableCell>
-                  <TableCell className="text-[10px] font-mono text-slate-300 uppercase">{hist.direction}</TableCell>
-                  <TableCell className="text-[10px] font-mono text-slate-400">{hist.started_at}</TableCell>
+                  <TableCell className="text-xxs font-mono text-slate-400">{hist.id}</TableCell>
+                  <TableCell className="text-xxs font-mono text-slate-300 uppercase">{hist.direction}</TableCell>
+                  <TableCell className="text-xxs font-mono text-slate-400">{hist.started_at}</TableCell>
                   <TableCell>
                     <span
                       className={`font-mono text-xs font-bold ${hist.status === "success" ? "text-emerald-400" : "text-rose-400"}`}

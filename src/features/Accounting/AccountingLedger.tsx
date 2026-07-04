@@ -25,7 +25,7 @@ export default function AccountingLedger({
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <span className="text-[10px] font-mono text-slate-500">{t("accounting.ledger.selectLabel")}</span>
+        <span className="text-xxs font-mono text-slate-500">{t("accounting.ledger.selectLabel")}</span>
         <Select value={selectedCode} onValueChange={setSelectedCode}>
           <SelectTrigger className="w-80 bg-slate-950 border-slate-900 text-xs h-8">
             <SelectValue />
@@ -54,22 +54,22 @@ export default function AccountingLedger({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-900 hover:bg-transparent">
-            <TableHead className="text-[9px] font-mono text-slate-500">
+            <TableHead className="text-xxxs font-mono text-slate-500">
               {t("accounting.ledger.tableHeaders.date")}
             </TableHead>
-            <TableHead className="text-[9px] font-mono text-slate-500">
+            <TableHead className="text-xxxs font-mono text-slate-500">
               {t("accounting.ledger.tableHeaders.number")}
             </TableHead>
-            <TableHead className="text-[9px] font-mono text-slate-500">
+            <TableHead className="text-xxxs font-mono text-slate-500">
               {t("accounting.ledger.tableHeaders.description")}
             </TableHead>
-            <TableHead className="text-[9px] font-mono text-slate-500 text-right">
+            <TableHead className="text-xxxs font-mono text-slate-500 text-right">
               {t("accounting.ledger.tableHeaders.debit")}
             </TableHead>
-            <TableHead className="text-[9px] font-mono text-slate-500 text-right">
+            <TableHead className="text-xxxs font-mono text-slate-500 text-right">
               {t("accounting.ledger.tableHeaders.kredit")}
             </TableHead>
-            <TableHead className="text-[9px] font-mono text-slate-500 text-right">
+            <TableHead className="text-xxxs font-mono text-slate-500 text-right">
               {t("accounting.ledger.tableHeaders.balance")}
             </TableHead>
           </TableRow>
@@ -84,16 +84,16 @@ export default function AccountingLedger({
           )}
           {entries.map((e, i) => (
             <TableRow key={i} className="border-slate-900 hover:bg-[#0e1326]">
-              <TableCell className="text-[9px] font-mono text-slate-400">{e.date}</TableCell>
-              <TableCell className="text-[9px] font-mono text-slate-300">{e.number}</TableCell>
-              <TableCell className="text-[9px] font-mono text-slate-500">{e.entry_desc}</TableCell>
-              <TableCell className="text-[9px] font-mono text-emerald-300 text-right">
+              <TableCell className="text-xxxs font-mono text-slate-400">{e.date}</TableCell>
+              <TableCell className="text-xxxs font-mono text-slate-300">{e.number}</TableCell>
+              <TableCell className="text-xxxs font-mono text-slate-500">{e.entry_desc}</TableCell>
+              <TableCell className="text-xxxs font-mono text-emerald-300 text-right">
                 {e.debit > 0 ? `Rp ${e.debit.toLocaleString()}` : ""}
               </TableCell>
-              <TableCell className="text-[9px] font-mono text-rose-300 text-right">
+              <TableCell className="text-xxxs font-mono text-rose-300 text-right">
                 {e.credit > 0 ? `Rp ${e.credit.toLocaleString()}` : ""}
               </TableCell>
-              <TableCell className="text-[9px] font-mono text-white font-bold text-right">
+              <TableCell className="text-xxxs font-mono text-white font-bold text-right">
                 Rp {e.runningBalance.toLocaleString()}
               </TableCell>
             </TableRow>

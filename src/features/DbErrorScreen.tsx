@@ -11,7 +11,7 @@ export default function DbErrorScreen({ message }: { message: string }) {
         <AlertTriangle className="h-12 w-12 text-rose-500 mx-auto mb-4" />
         <h2 className="text-xl font-bold text-rose-900 mb-1">{t("dbError.title")}</h2>
         <p className="text-slate-400 text-xs mb-6">{t("dbError.message")}</p>
-        <div className="bg-rose-500/5 border border-rose-500/10 p-4 rounded-xl text-rose-400 text-left font-mono text-[11px] mb-6 overflow-x-auto">
+        <div className="bg-rose-500/5 border border-rose-500/10 p-4 rounded-xl text-rose-400 text-left font-mono text-xs mb-6 overflow-x-auto">
           <code>{message}</code>
         </div>
         <Button variant="destructive" className="w-full" onClick={() => window.location.reload()}>

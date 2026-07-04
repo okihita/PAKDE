@@ -28,31 +28,31 @@ export default function Accounting() {
         <TabsList className="bg-[#090e1a] border border-slate-900 text-slate-400 mb-6 p-0.5 rounded-lg flex w-fit print:hidden">
           <TabsTrigger
             value="coa"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("accounting.tabs.coa")}
           </TabsTrigger>
           <TabsTrigger
             value="journal"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("accounting.tabs.journal")}
           </TabsTrigger>
           <TabsTrigger
             value="ledger"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("accounting.tabs.ledger")}
           </TabsTrigger>
           <TabsTrigger
             value="neraca"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("accounting.tabs.neraca")}
           </TabsTrigger>
           <TabsTrigger
             value="labarugi"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("accounting.tabs.labarugi")}
           </TabsTrigger>

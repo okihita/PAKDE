@@ -48,7 +48,7 @@ export default function Sidebar({ activeTab, onTabChange, coopProfile, ewsAlerts
           </div>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-[pulse_2s_infinite]" />
-            <span className="text-[10px] font-mono text-slate-400">{t("sidebar.connected")}</span>
+            <span className="text-xxs font-mono text-slate-400">{t("sidebar.connected")}</span>
           </div>
         </div>
 
@@ -75,11 +75,11 @@ export default function Sidebar({ activeTab, onTabChange, coopProfile, ewsAlerts
           <div className="px-3 py-3 rounded-xl bg-[#0b101c] border border-slate-900">
             <div className="flex items-center gap-2 mb-2">
               <Database className="h-3 w-3 text-emerald-400" />
-              <span className="text-[10px] font-mono text-slate-400">{t("sidebar.healthScore")}</span>
+              <span className="text-xxs font-mono text-slate-400">{t("sidebar.healthScore")}</span>
             </div>
             <div className="flex items-end gap-2">
               <span className="text-xl font-black text-emerald-400 font-mono">{coopProfile?.health_score}%</span>
-              <span className="text-[9px] text-slate-500 mb-1">
+              <span className="text-xxxs text-slate-500 mb-1">
                 {t("sidebar.rag")}: {coopProfile?.rag_status}
               </span>
             </div>
@@ -90,7 +90,7 @@ export default function Sidebar({ activeTab, onTabChange, coopProfile, ewsAlerts
           <div className="px-3 py-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-3 w-3 text-rose-400" />
-              <span className="text-[10px] font-mono text-rose-300">
+              <span className="text-xxs font-mono text-rose-300">
                 {t("sidebar.criticalAlerts", { count: criticalAlerts })}
               </span>
             </div>
@@ -103,7 +103,7 @@ export default function Sidebar({ activeTab, onTabChange, coopProfile, ewsAlerts
           <div className="px-3 py-3 rounded-xl bg-[#0b101c] border border-slate-900">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-              <span className="text-[10px] font-mono text-slate-400">{t("sidebar.systemNormal")}</span>
+              <span className="text-xxs font-mono text-slate-400">{t("sidebar.systemNormal")}</span>
             </div>
           </div>
         )}
@@ -112,7 +112,7 @@ export default function Sidebar({ activeTab, onTabChange, coopProfile, ewsAlerts
           <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
             <UserCheck className="h-4 w-4 text-emerald-400" />
           </div>
-          <div className="text-[10px]">
+          <div className="text-xxs">
             <p className="font-bold text-slate-300">{currentUser?.name}</p>
             <p className="text-slate-500">{currentUser?.role}</p>
           </div>

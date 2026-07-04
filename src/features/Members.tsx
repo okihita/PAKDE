@@ -66,24 +66,20 @@ export default function Members() {
           <Table>
             <TableHeader>
               <TableRow className="border-slate-900 hover:bg-transparent">
-                <TableHead className="text-[10px] font-mono text-slate-500">{t("members.tableHeaders.nik")}</TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">{t("members.tableHeaders.name")}</TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">
-                  {t("members.tableHeaders.gender")}
-                </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500">
-                  {t("members.tableHeaders.status")}
-                </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500 text-right">
+                <TableHead className="text-xxs font-mono text-slate-500">{t("members.tableHeaders.nik")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("members.tableHeaders.name")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("members.tableHeaders.gender")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500">{t("members.tableHeaders.status")}</TableHead>
+                <TableHead className="text-xxs font-mono text-slate-500 text-right">
                   {t("members.tableHeaders.pokok")}
                 </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500 text-right">
+                <TableHead className="text-xxs font-mono text-slate-500 text-right">
                   {t("members.tableHeaders.wajib")}
                 </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500 text-right">
+                <TableHead className="text-xxs font-mono text-slate-500 text-right">
                   {t("members.tableHeaders.outstanding")}
                 </TableHead>
-                <TableHead className="text-[10px] font-mono text-slate-500 text-right w-16">
+                <TableHead className="text-xxs font-mono text-slate-500 text-right w-16">
                   {t("members.tableHeaders.action")}
                 </TableHead>
               </TableRow>
@@ -98,23 +94,23 @@ export default function Members() {
               )}
               {m.filteredMembers.map((mbr) => (
                 <TableRow key={mbr.id} className="border-slate-900 hover:bg-[#0e1326]">
-                  <TableCell className="text-[10px] font-mono text-slate-300">{mbr.nik}</TableCell>
+                  <TableCell className="text-xxs font-mono text-slate-300">{mbr.nik}</TableCell>
                   <TableCell className="text-xs text-white font-semibold">{mbr.name}</TableCell>
-                  <TableCell className="text-[10px] font-mono text-slate-400">{mbr.gender}</TableCell>
+                  <TableCell className="text-xxs font-mono text-slate-400">{mbr.gender}</TableCell>
                   <TableCell>
                     <span
-                      className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded ${mbr.status === "aktif" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-500 bg-slate-800"}`}
+                      className={`text-xxxs font-mono font-bold px-2 py-0.5 rounded ${mbr.status === "aktif" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-500 bg-slate-800"}`}
                     >
                       {mbr.status.toUpperCase()}
                     </span>
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono text-emerald-300 text-right">
+                  <TableCell className="text-xxs font-mono text-emerald-300 text-right">
                     Rp {mbr.savings_pokok.toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono text-emerald-300 text-right">
+                  <TableCell className="text-xxs font-mono text-emerald-300 text-right">
                     Rp {mbr.savings_wajib.toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-[10px] font-mono text-rose-300 text-right">
+                  <TableCell className="text-xxs font-mono text-rose-300 text-right">
                     Rp {mbr.loan_outstanding.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right">
@@ -155,7 +151,7 @@ export default function Members() {
             </DialogHeader>
             <div className="grid grid-cols-2 gap-3 py-4 text-xs">
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">{t("members.form.labels.nik")}</label>
+                <label className="text-slate-500 font-mono text-xxxs uppercase">{t("members.form.labels.nik")}</label>
                 <Input
                   value={m.memberFormValues.nik}
                   onChange={(e) => m.setMemberFormValues({ ...m.memberFormValues, nik: e.target.value })}
@@ -164,7 +160,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">{t("members.form.labels.name")}</label>
+                <label className="text-slate-500 font-mono text-xxxs uppercase">{t("members.form.labels.name")}</label>
                 <Input
                   value={m.memberFormValues.name}
                   onChange={(e) => m.setMemberFormValues({ ...m.memberFormValues, name: e.target.value })}
@@ -172,7 +168,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.gender")}
                 </label>
                 <Select
@@ -189,7 +185,7 @@ export default function Members() {
                 </Select>
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.placeOfBirth")}
                 </label>
                 <Input
@@ -199,7 +195,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.dateOfBirth")}
                 </label>
                 <Input
@@ -210,7 +206,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.occupation")}
                 </label>
                 <Input
@@ -220,7 +216,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.education")}
                 </label>
                 <Input
@@ -230,7 +226,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">{t("members.form.labels.rtRw")}</label>
+                <label className="text-slate-500 font-mono text-xxxs uppercase">{t("members.form.labels.rtRw")}</label>
                 <div className="flex gap-2">
                   <Input
                     placeholder={t("members.form.labels.rt")}
@@ -247,7 +243,7 @@ export default function Members() {
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.hamlet")}
                 </label>
                 <Input
@@ -257,7 +253,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.memberStatus")}
                 </label>
                 <Select
@@ -276,7 +272,7 @@ export default function Members() {
                 </Select>
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.savingsPokok")}
                 </label>
                 <Input
@@ -289,7 +285,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.savingsWajib")}
                 </label>
                 <Input
@@ -302,7 +298,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.savingsSukarela")}
                 </label>
                 <Input
@@ -315,7 +311,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.totalLoan")}
                 </label>
                 <Input
@@ -326,7 +322,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.outstandingLoan")}
                 </label>
                 <Input
@@ -339,7 +335,7 @@ export default function Members() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("members.form.labels.loanStatus")}
                 </label>
                 <Input

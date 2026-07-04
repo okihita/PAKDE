@@ -135,7 +135,7 @@ function CalendarWidget({ t }: { t: (key: string) => string }) {
           {t("beranda.calendar")}
         </CardTitle>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono text-slate-400">
+          <span className="text-xxs font-mono text-slate-400">
             {MONTHS[viewMonth]} {viewYear}
           </span>
           <div className="flex gap-0.5">
@@ -157,14 +157,14 @@ function CalendarWidget({ t }: { t: (key: string) => string }) {
       <CardContent>
         <div className="grid grid-cols-7 gap-0">
           {DAYS_SHORT.map((d) => (
-            <div key={d} className="text-center text-[9px] font-mono text-slate-600 py-1">
+            <div key={d} className="text-center text-xxxs font-mono text-slate-600 py-1">
               {t(`beranda.${d}`)}
             </div>
           ))}
           {cells.map((d, i) => (
             <div
               key={i}
-              className={`text-center text-[10px] font-mono py-1.5 rounded ${
+              className={`text-center text-xxs font-mono py-1.5 rounded ${
                 d === null
                   ? "text-transparent"
                   : isToday(d)
@@ -219,13 +219,13 @@ export default function Dashboard({ coopProfile, currentUser }: Props) {
                       name: currentUser.name,
                     })}
                   </p>
-                  <p className="text-[10px] text-slate-500">{currentUser.role}</p>
+                  <p className="text-xxs text-slate-500">{currentUser.role}</p>
                 </div>
               )}
               {coopProfile && (
                 <div className="space-y-1 pt-2 border-t border-slate-900">
                   <p className="text-sm font-semibold text-emerald-400">{coopProfile.name}</p>
-                  <p className="text-[10px] font-mono text-slate-500">
+                  <p className="text-xxs font-mono text-slate-500">
                     {coopProfile.village}, {coopProfile.regency}
                   </p>
                 </div>
@@ -248,7 +248,7 @@ export default function Dashboard({ coopProfile, currentUser }: Props) {
                   { icon: "📅", text: "Rapat Anggota Tahunan: persiapkan agenda" },
                   { icon: "💰", text: "Cek outstanding pinjaman anggota aktif" },
                 ].map((r, i) => (
-                  <div key={i} className="flex items-start gap-2 text-[11px] text-slate-400">
+                  <div key={i} className="flex items-start gap-2 text-xs text-slate-400">
                     <span className="text-xs">{r.icon}</span>
                     <span>{r.text}</span>
                   </div>
@@ -275,7 +275,7 @@ export default function Dashboard({ coopProfile, currentUser }: Props) {
                 {doneCount > 0 && (
                   <button
                     onClick={removeDone}
-                    className="text-[9px] font-mono text-slate-600 hover:text-slate-400 transition-colors"
+                    className="text-xxxs font-mono text-slate-600 hover:text-slate-400 transition-colors"
                   >
                     {t("beranda.clearDone", { n: doneCount })}
                   </button>
@@ -309,7 +309,7 @@ export default function Dashboard({ coopProfile, currentUser }: Props) {
               {/* Task list */}
               <div className="space-y-1 max-h-64 overflow-y-auto">
                 {todos.length === 0 && (
-                  <p className="text-[10px] text-slate-600 text-center py-4">{t("beranda.noTasks")}</p>
+                  <p className="text-xxs text-slate-600 text-center py-4">{t("beranda.noTasks")}</p>
                 )}
                 {todos.map((todo) => (
                   <div
@@ -322,7 +322,7 @@ export default function Dashboard({ coopProfile, currentUser }: Props) {
                     ) : (
                       <Circle className="h-3.5 w-3.5 text-slate-600 shrink-0 group-hover:text-slate-400 transition-colors" />
                     )}
-                    <span className={`text-[11px] ${todo.done ? "text-slate-600 line-through" : "text-slate-300"}`}>
+                    <span className={`text-xs ${todo.done ? "text-slate-600 line-through" : "text-slate-300"}`}>
                       {todo.text}
                     </span>
                   </div>

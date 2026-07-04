@@ -37,11 +37,11 @@ function computeReports(coaAccounts: CoaAccount[]) {
 function Row({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <TableRow className="border-slate-900">
-      <TableCell className={`text-[10px] font-mono py-1.5 ${accent ? "font-bold text-white pl-6" : "text-slate-400"}`}>
+      <TableCell className={`text-xxs font-mono py-1.5 ${accent ? "font-bold text-white pl-6" : "text-slate-400"}`}>
         {label}
       </TableCell>
       <TableCell
-        className={`text-[10px] font-mono text-right py-1.5 ${accent ? "font-bold text-white" : "text-slate-300"}`}
+        className={`text-xxs font-mono text-right py-1.5 ${accent ? "font-bold text-white" : "text-slate-300"}`}
       >
         {value}
       </TableCell>
@@ -63,17 +63,17 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
         <Table>
           <TableHeader>
             <TableRow className="border-slate-900 hover:bg-transparent">
-              <TableHead className="text-[9px] font-mono text-slate-500 py-1">
+              <TableHead className="text-xxxs font-mono text-slate-500 py-1">
                 {t("accounting.reports.neraca.account")}
               </TableHead>
-              <TableHead className="text-[9px] font-mono text-slate-500 py-1 text-right">
+              <TableHead className="text-xxxs font-mono text-slate-500 py-1 text-right">
                 {t("accounting.reports.neraca.balance")}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow className="border-slate-900">
-              <TableCell className="text-[9px] font-mono text-emerald-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-emerald-400 font-bold py-1" colSpan={2}>
                 {t("accounting.reports.neraca.aset")}
               </TableCell>
             </TableRow>
@@ -86,7 +86,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-slate-900">
-              <TableCell className="text-[9px] font-mono text-amber-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-amber-400 font-bold py-1" colSpan={2}>
                 {t("accounting.reports.neraca.kewajiban")}
               </TableCell>
             </TableRow>
@@ -99,7 +99,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-slate-900">
-              <TableCell className="text-[9px] font-mono text-blue-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-blue-400 font-bold py-1" colSpan={2}>
                 {t("accounting.reports.neraca.ekuitas")}
               </TableCell>
             </TableRow>
@@ -112,10 +112,10 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-slate-900 bg-emerald-500/5">
-              <TableCell className="text-[9px] font-mono text-white font-bold py-1">
+              <TableCell className="text-xxxs font-mono text-white font-bold py-1">
                 {t("accounting.reports.neraca.totalLiabilitiesEquity")}
               </TableCell>
-              <TableCell className="text-[9px] font-mono text-white font-bold py-1 text-right">
+              <TableCell className="text-xxxs font-mono text-white font-bold py-1 text-right">
                 Rp {(r.totalLiabilities + r.totalEquity).toLocaleString()}
               </TableCell>
             </TableRow>
@@ -131,17 +131,17 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
         <Table>
           <TableHeader>
             <TableRow className="border-slate-900 hover:bg-transparent">
-              <TableHead className="text-[9px] font-mono text-slate-500 py-1">
+              <TableHead className="text-xxxs font-mono text-slate-500 py-1">
                 {t("accounting.reports.neraca.account")}
               </TableHead>
-              <TableHead className="text-[9px] font-mono text-slate-500 py-1 text-right">
+              <TableHead className="text-xxxs font-mono text-slate-500 py-1 text-right">
                 {t("accounting.reports.neraca.balance")}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow className="border-slate-900">
-              <TableCell className="text-[9px] font-mono text-emerald-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-emerald-400 font-bold py-1" colSpan={2}>
                 {t("accounting.reports.labarugi.pendapatan")}
               </TableCell>
             </TableRow>
@@ -154,7 +154,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-slate-900">
-              <TableCell className="text-[9px] font-mono text-rose-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-rose-400 font-bold py-1" colSpan={2}>
                 {t("accounting.reports.labarugi.beban")}
               </TableCell>
             </TableRow>
@@ -169,10 +169,10 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
             <Row label={t("accounting.reports.labarugi.shuGross")} value={r.shuKotor.toLocaleString()} accent />
             <Row label={t("accounting.reports.labarugi.tax")} value={r.tax.toLocaleString()} />
             <TableRow className="border-slate-900 bg-emerald-500/5">
-              <TableCell className="text-[9px] font-mono text-white font-bold py-1">
+              <TableCell className="text-xxxs font-mono text-white font-bold py-1">
                 {t("accounting.reports.labarugi.shuNet")}
               </TableCell>
-              <TableCell className="text-[9px] font-mono text-emerald-400 font-bold py-1 text-right">
+              <TableCell className="text-xxxs font-mono text-emerald-400 font-bold py-1 text-right">
                 Rp {r.shuBersih.toLocaleString()}
               </TableCell>
             </TableRow>

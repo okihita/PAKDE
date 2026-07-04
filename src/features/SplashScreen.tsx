@@ -20,7 +20,7 @@ export default function SplashScreen() {
           <div className="bg-emerald-500 h-full w-2/3 animate-[pulse_1.5s_infinite] rounded-full" />
         </div>
       </div>
-      <p className="absolute bottom-8 text-slate-600 font-mono text-[10px]">{t("splash.version")}</p>
+      <p className="absolute bottom-8 text-slate-600 font-mono text-xxs">{t("splash.version")}</p>
     </div>
   );
 }

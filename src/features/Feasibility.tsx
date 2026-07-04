@@ -21,13 +21,13 @@ export default function Feasibility() {
         <TabsList className="bg-[#090e1a] border border-slate-900 text-slate-400 mb-6 p-0.5 rounded-lg flex w-fit">
           <TabsTrigger
             value="calculator"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("feasibility.tabs.calculator")}
           </TabsTrigger>
           <TabsTrigger
             value="sensitivity"
-            className="text-[10px] data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
           >
             {t("feasibility.tabs.sensitivity")}
           </TabsTrigger>
@@ -50,7 +50,7 @@ export default function Feasibility() {
                   { label: t("feasibility.calculator.opportunityCost"), key: "opportunityCost" as const },
                 ].map(({ label, key }) => (
                   <div key={key} className="space-y-1">
-                    <label className="text-slate-500 font-mono text-[9px] uppercase">{label}</label>
+                    <label className="text-slate-500 font-mono text-xxxs uppercase">{label}</label>
                     <Input
                       type={key === "cashFlows" ? "text" : "number"}
                       value={f.feasibilityParams[key]}
@@ -109,7 +109,7 @@ export default function Feasibility() {
                       key={label}
                       className={`p-3 rounded-xl border ${pass === false ? "border-rose-500/20 bg-rose-500/5" : pass === true ? "border-emerald-500/20 bg-emerald-500/5" : "border-slate-900 bg-[#0a0f1a]"}`}
                     >
-                      <p className="text-[9px] font-mono text-slate-500">{label}</p>
+                      <p className="text-xxxs font-mono text-slate-500">{label}</p>
                       <p
                         className={`text-sm font-black font-mono mt-1 ${accent ? `text-${accent}-400` : "text-white"}`}
                       >
@@ -117,7 +117,7 @@ export default function Feasibility() {
                       </p>
                       {pass !== undefined && (
                         <span
-                          className={`text-[8px] font-mono font-bold ${pass ? "text-emerald-400" : "text-rose-400"}`}
+                          className={`text-xxxs font-mono font-bold ${pass ? "text-emerald-400" : "text-rose-400"}`}
                         >
                           {pass ? t("feasibility.calculator.pass") : t("feasibility.calculator.fail")}
                         </span>
@@ -179,7 +179,7 @@ export default function Feasibility() {
                     <div key={label} className="p-3 rounded-xl border border-slate-900 bg-[#0a0f1a]">
                       <div className="flex items-center gap-1 mb-1">
                         <Info className="h-2.5 w-2.5 text-slate-600" />
-                        <p className="text-[9px] font-mono text-slate-500">{label}</p>
+                        <p className="text-xxxs font-mono text-slate-500">{label}</p>
                       </div>
                       <p className={`text-sm font-black font-mono ${accent ? `text-${accent}-400` : "text-white"}`}>
                         {value}

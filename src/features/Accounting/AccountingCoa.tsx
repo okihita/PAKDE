@@ -45,19 +45,15 @@ export default function AccountingCoa({
       <Table>
         <TableHeader>
           <TableRow className="border-slate-900 hover:bg-transparent">
-            <TableHead className="text-[10px] font-mono text-slate-500 w-20">
+            <TableHead className="text-xxs font-mono text-slate-500 w-20">
               {t("accounting.coa.tableHeaders.code")}
             </TableHead>
-            <TableHead className="text-[10px] font-mono text-slate-500">
-              {t("accounting.coa.tableHeaders.name")}
-            </TableHead>
-            <TableHead className="text-[10px] font-mono text-slate-500">
-              {t("accounting.coa.tableHeaders.type")}
-            </TableHead>
-            <TableHead className="text-[10px] font-mono text-slate-500">
+            <TableHead className="text-xxs font-mono text-slate-500">{t("accounting.coa.tableHeaders.name")}</TableHead>
+            <TableHead className="text-xxs font-mono text-slate-500">{t("accounting.coa.tableHeaders.type")}</TableHead>
+            <TableHead className="text-xxs font-mono text-slate-500">
               {t("accounting.coa.tableHeaders.normalBalance")}
             </TableHead>
-            <TableHead className="text-[10px] font-mono text-slate-500 text-right">
+            <TableHead className="text-xxs font-mono text-slate-500 text-right">
               {t("accounting.coa.tableHeaders.balance")}
             </TableHead>
           </TableRow>
@@ -65,12 +61,12 @@ export default function AccountingCoa({
         <TableBody>
           {coaAccounts.map((a) => (
             <TableRow key={a.code} className="border-slate-900 hover:bg-[#0e1326]">
-              <TableCell className="text-[10px] font-mono text-slate-300">{a.code}</TableCell>
+              <TableCell className="text-xxs font-mono text-slate-300">{a.code}</TableCell>
               <TableCell className="text-xs text-white">{a.name}</TableCell>
-              <TableCell className="text-[10px] font-mono text-slate-400">{a.type}</TableCell>
-              <TableCell className="text-[10px] font-mono text-slate-400">{a.normal_balance}</TableCell>
+              <TableCell className="text-xxs font-mono text-slate-400">{a.type}</TableCell>
+              <TableCell className="text-xxs font-mono text-slate-400">{a.normal_balance}</TableCell>
               <TableCell
-                className={`text-[10px] font-mono font-bold text-right ${a.balance >= 0 ? "text-emerald-300" : "text-rose-300"}`}
+                className={`text-xxs font-mono font-bold text-right ${a.balance >= 0 ? "text-emerald-300" : "text-rose-300"}`}
               >
                 Rp {a.balance.toLocaleString()}
               </TableCell>
@@ -87,7 +83,7 @@ export default function AccountingCoa({
             </DialogHeader>
             <div className="space-y-3 py-4 text-xs">
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.coa.modal.codeLabel")}
                 </label>
                 <Input
@@ -97,7 +93,7 @@ export default function AccountingCoa({
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.coa.modal.nameLabel")}
                 </label>
                 <Input
@@ -107,7 +103,7 @@ export default function AccountingCoa({
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.coa.modal.typeLabel")}
                 </label>
                 <Select
@@ -127,7 +123,7 @@ export default function AccountingCoa({
                 </Select>
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.coa.modal.balanceTypeLabel")}
                 </label>
                 <Select
@@ -146,7 +142,7 @@ export default function AccountingCoa({
                 </Select>
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.coa.modal.initialBalanceLabel")}
                 </label>
                 <Input

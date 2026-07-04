@@ -58,24 +58,24 @@ export default function AccountingJournal({
               <CalendarDays className="h-3 w-3" />
               <span className="text-white font-bold">{entry.number}</span>
               <span className="text-slate-500">— {entry.date}</span>
-              <span className="ml-auto text-[9px] text-slate-600">{entry.category}</span>
+              <span className="ml-auto text-xxxs text-slate-600">{entry.category}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0 pb-3">
-            <p className="text-[10px] text-slate-400 mb-2">{entry.description}</p>
+            <p className="text-xxs text-slate-400 mb-2">{entry.description}</p>
             <Table>
               <TableHeader>
                 <TableRow className="border-slate-900 hover:bg-transparent">
-                  <TableHead className="text-[9px] font-mono text-slate-500 py-1">
+                  <TableHead className="text-xxxs font-mono text-slate-500 py-1">
                     {t("accounting.journal.tableHeaders.account")}
                   </TableHead>
-                  <TableHead className="text-[9px] font-mono text-slate-500 py-1">
+                  <TableHead className="text-xxxs font-mono text-slate-500 py-1">
                     {t("accounting.journal.tableHeaders.name")}
                   </TableHead>
-                  <TableHead className="text-[9px] font-mono text-slate-500 py-1 text-right">
+                  <TableHead className="text-xxxs font-mono text-slate-500 py-1 text-right">
                     {t("accounting.journal.tableHeaders.debit")}
                   </TableHead>
-                  <TableHead className="text-[9px] font-mono text-slate-500 py-1 text-right">
+                  <TableHead className="text-xxxs font-mono text-slate-500 py-1 text-right">
                     {t("accounting.journal.tableHeaders.kredit")}
                   </TableHead>
                 </TableRow>
@@ -83,12 +83,12 @@ export default function AccountingJournal({
               <TableBody>
                 {entry.lines.map((line, i) => (
                   <TableRow key={i} className="border-slate-900">
-                    <TableCell className="text-[9px] font-mono text-slate-300 py-1">{line.account_code}</TableCell>
-                    <TableCell className="text-[9px] font-mono text-slate-500 py-1">{line.name}</TableCell>
-                    <TableCell className="text-[9px] font-mono text-emerald-300 py-1 text-right">
+                    <TableCell className="text-xxxs font-mono text-slate-300 py-1">{line.account_code}</TableCell>
+                    <TableCell className="text-xxxs font-mono text-slate-500 py-1">{line.name}</TableCell>
+                    <TableCell className="text-xxxs font-mono text-emerald-300 py-1 text-right">
                       Rp {line.debit.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-[9px] font-mono text-rose-300 py-1 text-right">
+                    <TableCell className="text-xxxs font-mono text-rose-300 py-1 text-right">
                       Rp {line.credit.toLocaleString()}
                     </TableCell>
                   </TableRow>
@@ -111,7 +111,7 @@ export default function AccountingJournal({
             </DialogHeader>
             <div className="grid grid-cols-2 gap-3 py-4 text-xs">
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.journal.modal.numberLabel")}
                 </label>
                 <Input
@@ -121,7 +121,7 @@ export default function AccountingJournal({
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.journal.modal.dateLabel")}
                 </label>
                 <Input
@@ -132,7 +132,7 @@ export default function AccountingJournal({
                 />
               </div>
               <div className="space-y-1 col-span-2">
-                <label className="text-slate-500 font-mono text-[9px] uppercase">
+                <label className="text-slate-500 font-mono text-xxxs uppercase">
                   {t("accounting.journal.modal.descLabel")}
                 </label>
                 <Input
@@ -144,7 +144,7 @@ export default function AccountingJournal({
             </div>
 
             <div className="space-y-1 text-xs mt-2">
-              <label className="text-slate-500 font-mono text-[9px] uppercase">
+              <label className="text-slate-500 font-mono text-xxxs uppercase">
                 {t("accounting.journal.modal.linesLabel")}
               </label>
               {journalForm.lines.map((line, i) => (
