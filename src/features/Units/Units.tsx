@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useUnits } from "@/hooks/useUnits";
-import { Building2, Plus, Sparkles, Power, Activity, Code } from "lucide-react";
+import { Building2, Plus, Sparkles, Power, Activity } from "lucide-react";
 import DevDocStripe from "@/components/DevDocStripe";
 import readmeContent from "./README.md?raw";
 import "./Units.css";
@@ -20,14 +20,6 @@ export default function Units() {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
-  const [showSchema, setShowSchema] = useState(false);
-  const [schemaData, setSchemaData] = useState<Array<{ name: string; sql: string }>>([]);
-
-  const handleOpenSchema = async () => {
-    const data = await u.getDatabaseSchema();
-    setSchemaData(data);
-    setShowSchema(true);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,16 +50,6 @@ export default function Units() {
           </div>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          {import.meta.env.DEV && (
-            <Button
-              onClick={handleOpenSchema}
-              variant="outline"
-              className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 font-bold text-xs h-9 px-4 flex items-center gap-1.5"
-            >
-              <Code className="h-4 w-4" />
-              {t("units.viewSchema")}
-            </Button>
-          )}
           <Button
             onClick={() => setIsOpen(true)}
             className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 px-4 flex items-center gap-1.5"
@@ -223,26 +205,6 @@ export default function Units() {
               </Button>
             </div>
           </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Schema View dialog */}
-      <Dialog open={showSchema} onOpenChange={(open) => !open && setShowSchema(false)}>
-        <DialogContent className="bg-card border-border text-foreground max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-sm font-bold text-foreground">{t("units.schemaTitle")}</DialogTitle>
-            <DialogDescription className="text-xxs text-muted-foreground">{t("units.schemaDesc")}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            {schemaData.map((table) => (
-              <div key={table.name} className="space-y-1.5">
-                <span className="text-xxs font-mono font-bold text-emerald-400">{table.name}</span>
-                <pre className="text-xxs font-mono bg-sidebar border border-border text-foreground p-3 rounded-lg overflow-x-auto select-all leading-normal">
-                  {table.sql}
-                </pre>
-              </div>
-            ))}
-          </div>
         </DialogContent>
       </Dialog>
     </div>
