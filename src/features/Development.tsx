@@ -1,103 +1,340 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Building2 } from "lucide-react";
-
-const PROJECTS = [
-  { name: "Pembangunan Unit Penggilingan", status: "Berjalan", budget: 250000000, progress: 65, target: "2026-12" },
-  { name: "Ekspansi Gudang Penyimpanan", status: "Perencanaan", budget: 120000000, progress: 15, target: "2027-03" },
-  { name: "Pengembangan Aplikasi PAKDE Mobile", status: "Berjalan", budget: 85000000, progress: 45, target: "2026-10" },
-  { name: "Kerjasama dengan 10 Mitra Baru", status: "Berjalan", budget: 0, progress: 70, target: "2026-09" },
-  {
-    name: "Program Digitalisasi Unit Simpan Pinjam",
-    status: "Selesai",
-    budget: 60000000,
-    progress: 100,
-    target: "2026-06",
-  },
-  {
-    name: "Pembukaan Unit Usaha Baru (Air Minum)",
-    status: "Perencanaan",
-    budget: 180000000,
-    progress: 10,
-    target: "2027-06",
-  },
-  {
-    name: "Pelatihan 50 Anggota Bidang Digital Marketing",
-    status: "Berjalan",
-    budget: 25000000,
-    progress: 55,
-    target: "2026-08",
-  },
-  { name: "Renovasi Kantor Koperasi", status: "Selesai", budget: 95000000, progress: 100, target: "2026-05" },
-];
-
-const STATUS_STYLE: Record<string, string> = {
-  Berjalan: "bg-blue-500/10 text-blue-400",
-  Selesai: "bg-emerald-500/10 text-emerald-400",
-  Perencanaan: "bg-amber-500/10 text-amber-400",
-};
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/useToast";
+import {
+  Building2,
+  Database,
+  Globe,
+  Activity,
+  CheckCircle2,
+  RefreshCw,
+  Sparkles,
+  FileText,
+  AlertTriangle,
+  Play,
+} from "lucide-react";
 
 export default function Development() {
   const { t } = useTranslation();
+  const toast = useToast();
+
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisStep, setAnalysisStep] = useState(0);
+  const [analysisCompleted, setAnalysisCompleted] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Simulation steps interval
+  useEffect(() => {
+    if (!isAnalyzing) return;
+
+    const stepInterval = setInterval(() => {
+      setAnalysisStep((prev) => {
+        if (prev >= 4) {
+          clearInterval(stepInterval);
+          return 4;
+        }
+        return prev + 1;
+      });
+    }, 1200);
+
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 2;
+      });
+    }, 90);
+
+    return () => {
+      clearInterval(stepInterval);
+      clearInterval(progressInterval);
+    };
+  }, [isAnalyzing]);
+
+  // Handle analysis completion
+  useEffect(() => {
+    if (progress === 100 && isAnalyzing) {
+      const timeout = setTimeout(() => {
+        setIsAnalyzing(false);
+        setAnalysisCompleted(true);
+        toast.success(t("development.simulation.success"));
+      }, 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [progress, isAnalyzing, toast, t]);
+
+  const handleStartAnalysis = () => {
+    setAnalysisCompleted(false);
+    setProgress(0);
+    setAnalysisStep(1);
+    setIsAnalyzing(true);
+  };
+
+  const handleReset = () => {
+    setAnalysisCompleted(false);
+    setIsAnalyzing(false);
+    setAnalysisStep(0);
+    setProgress(0);
+  };
+
+  const handleExport = () => {
+    toast.success(t("development.simulation.exportSuccess"));
+  };
+
   return (
-    <div className="flex-1 overflow-auto p-6">
-      <Card className="bg-card border-border">
-        <CardHeader>
+    <div className="flex-1 overflow-auto p-6 space-y-6 max-w-4xl mx-auto">
+      {/* Header section */}
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+          <Building2 className="h-5 w-5 text-amber-400" />
+        </div>
+        <div>
+          <h1 className="text-sm font-bold text-foreground">{t("development.title")}</h1>
+          <p className="text-xxs text-muted-foreground">{t("development.description")}</p>
+        </div>
+      </div>
+
+      {/* Stepper Workflow section */}
+      <Card className="bg-card border-border overflow-hidden">
+        <CardHeader className="pb-4">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Building2 className="h-3.5 w-3.5 text-amber-400" /> {t("sidebar.nav.development")}
+            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+            {t("development.workflow.title")}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("development.table.project")}
-                </TableHead>
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("development.table.status")}
-                </TableHead>
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("development.table.progress")}
-                </TableHead>
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("development.table.budget")}
-                </TableHead>
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("development.table.target")}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {PROJECTS.map((p, i) => (
-                <TableRow key={i} className="border-border hover:bg-secondary">
-                  <TableCell className="text-xs font-medium text-foreground">{p.name}</TableCell>
-                  <TableCell className="text-xs">
-                    <span
-                      className={`text-xxxs font-bold px-1.5 py-0.5 rounded ${STATUS_STYLE[p.status] ?? "text-muted-foreground"}`}
-                    >
-                      {p.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-xs">
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full rounded-full bg-emerald-500" style={{ width: `${p.progress}%` }} />
-                      </div>
-                      <span className="text-xxxs font-mono text-muted-foreground">{p.progress}%</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs font-mono text-foreground">
-                    {p.budget > 0 ? p.budget.toLocaleString("id-ID") : "—"}
-                  </TableCell>
-                  <TableCell className="text-xs font-mono text-muted-foreground">{p.target}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+            {/* Step 1 */}
+            <div
+              className={`p-4 rounded-xl border transition-all ${
+                analysisStep >= 1 ? "border-emerald-500/30 bg-emerald-500/5" : "border-border bg-input/20"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Database className={`h-4 w-4 ${analysisStep >= 1 ? "text-emerald-400" : "text-muted-foreground"}`} />
+                {analysisStep > 1 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+              </div>
+              <p className={`text-xxs font-bold ${analysisStep >= 1 ? "text-emerald-400" : "text-foreground"}`}>
+                {t("development.workflow.step1.title")}
+              </p>
+              <p className="text-xxxs text-muted-foreground mt-1 leading-normal">
+                {t("development.workflow.step1.desc")}
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div
+              className={`p-4 rounded-xl border transition-all ${
+                analysisStep >= 2 ? "border-emerald-500/30 bg-emerald-500/5" : "border-border bg-input/20"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Globe className={`h-4 w-4 ${analysisStep >= 2 ? "text-emerald-400" : "text-muted-foreground"}`} />
+                {analysisStep > 2 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+              </div>
+              <p className={`text-xxs font-bold ${analysisStep >= 2 ? "text-emerald-400" : "text-foreground"}`}>
+                {t("development.workflow.step2.title")}
+              </p>
+              <p className="text-xxxs text-muted-foreground mt-1 leading-normal">
+                {t("development.workflow.step2.desc")}
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div
+              className={`p-4 rounded-xl border transition-all ${
+                analysisStep >= 3 ? "border-emerald-500/30 bg-emerald-500/5" : "border-border bg-input/20"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Sparkles className={`h-4 w-4 ${analysisStep >= 3 ? "text-emerald-400" : "text-muted-foreground"}`} />
+                {analysisStep > 3 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+              </div>
+              <p className={`text-xxs font-bold ${analysisStep >= 3 ? "text-emerald-400" : "text-foreground"}`}>
+                {t("development.workflow.step3.title")}
+              </p>
+              <p className="text-xxxs text-muted-foreground mt-1 leading-normal">
+                {t("development.workflow.step3.desc")}
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div
+              className={`p-4 rounded-xl border transition-all ${
+                analysisStep >= 4 ? "border-emerald-500/30 bg-emerald-500/5" : "border-border bg-input/20"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <FileText className={`h-4 w-4 ${analysisStep >= 4 ? "text-emerald-400" : "text-muted-foreground"}`} />
+                {analysisCompleted && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+              </div>
+              <p className={`text-xxs font-bold ${analysisStep >= 4 ? "text-emerald-400" : "text-foreground"}`}>
+                {t("development.workflow.step4.title")}
+              </p>
+              <p className="text-xxxs text-muted-foreground mt-1 leading-normal">
+                {t("development.workflow.step4.desc")}
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
+
+      {/* Main Interactive Screen */}
+      {!isAnalyzing && !analysisCompleted && (
+        <Card className="bg-card border-border border-dashed py-8">
+          <CardContent className="flex flex-col items-center justify-center text-center space-y-4 max-w-md mx-auto">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
+              <Sparkles className="h-6 w-6 text-emerald-400 animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-foreground">{t("development.simulation.ctaTitle")}</h3>
+              <p className="text-xxs text-muted-foreground leading-relaxed">{t("development.simulation.ctaDesc")}</p>
+            </div>
+            <Button
+              onClick={handleStartAnalysis}
+              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 px-6 flex items-center gap-2"
+            >
+              <Play className="h-3.5 w-3.5 fill-current" />
+              {t("development.simulation.button")}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Analysis Diagnostic Console */}
+      {isAnalyzing && (
+        <Card className="bg-sidebar border-border font-mono">
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <span className="text-xxs font-bold text-emerald-400 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block" />
+                {t("development.simulation.analyzing")}
+              </span>
+              <span className="text-xxs text-muted-foreground">{progress}%</span>
+            </div>
+
+            {/* Simulated log stream */}
+            <div className="space-y-2 h-20 overflow-hidden text-xxxs text-foreground">
+              {analysisStep >= 1 && (
+                <p className="flex items-center gap-2 text-emerald-400">
+                  <span>✔</span>
+                  {t("development.simulation.states.1")}
+                </p>
+              )}
+              {analysisStep >= 2 && (
+                <p className="flex items-center gap-2 text-emerald-400">
+                  <span>✔</span>
+                  {t("development.simulation.states.2")}
+                </p>
+              )}
+              {analysisStep >= 3 && (
+                <p className="flex items-center gap-2 text-emerald-400 animate-pulse">
+                  <span>✔</span>
+                  {t("development.simulation.states.3")}
+                </p>
+              )}
+              {analysisStep >= 4 && (
+                <p className="flex items-center gap-2 text-emerald-400">
+                  <span>✔</span>
+                  {t("development.simulation.states.4")}
+                </p>
+              )}
+            </div>
+
+            {/* Progress bar */}
+            <div className="h-1 bg-border rounded-full overflow-hidden">
+              <div className="h-full bg-emerald-500 transition-all duration-100" style={{ width: `${progress}%` }} />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AI Recommendation Result Page */}
+      {analysisCompleted && (
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="bg-card border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 via-card to-transparent overflow-hidden">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <span className="text-xxxs font-mono font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                  {t("development.preview.badge")}
+                </span>
+                <h3 className="text-sm font-bold text-foreground mt-2">{t("development.preview.title")}</h3>
+              </div>
+              <span className="text-xxs font-mono font-black text-emerald-400">
+                {t("development.preview.suitability")}
+              </span>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 rounded-xl bg-input/40 border border-border">
+                <p className="text-xs font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                  {t("development.preview.unitName")}
+                </p>
+                <p className="text-xxs text-muted-foreground mt-1.5 leading-relaxed">
+                  {t("development.preview.reason")}
+                </p>
+              </div>
+
+              {/* Financial calculations grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-border bg-input/20">
+                  <span className="text-xxxs font-mono text-muted-foreground uppercase text-gray-400">
+                    {t("development.preview.metrics.enpvLabel")}
+                  </span>
+                  <p className="text-xs font-bold font-mono mt-1 text-emerald-400">
+                    {t("development.preview.metrics.enpv")}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg border border-border bg-input/20">
+                  <span className="text-xxxs font-mono text-muted-foreground uppercase text-gray-400">
+                    {t("development.preview.metrics.eirrLabel")}
+                  </span>
+                  <p className="text-xs font-bold font-mono mt-1 text-emerald-400">
+                    {t("development.preview.metrics.eirr")}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg border border-border bg-input/20">
+                  <span className="text-xxxs font-mono text-muted-foreground uppercase text-gray-400">
+                    {t("development.preview.metrics.ebcrLabel")}
+                  </span>
+                  <p className="text-xs font-bold font-mono mt-1 text-emerald-400">
+                    {t("development.preview.metrics.ebcr")}
+                  </p>
+                </div>
+              </div>
+
+              {/* Warnings and next actions */}
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-border">
+                <Button
+                  onClick={handleExport}
+                  className="w-full md:w-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 px-5 flex items-center justify-center gap-2"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  {t("development.simulation.export")}
+                </Button>
+                <Button
+                  onClick={handleReset}
+                  variant="outline"
+                  className="w-full md:w-auto border-border text-muted-foreground font-bold text-xs h-9 px-5 flex items-center justify-center gap-2"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  {t("development.simulation.reset")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Federated Warning alert */}
+      <div className="flex gap-2.5 p-3 rounded-xl border border-amber-500/10 bg-amber-500/5 text-xxs text-amber-400/80 leading-normal">
+        <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+        <span>{t("development.preview.alert")}</span>
+      </div>
     </div>
   );
 }

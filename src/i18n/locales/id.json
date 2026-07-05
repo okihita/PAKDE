@@ -448,12 +448,58 @@
     }
   },
   "development": {
-    "table": {
-      "project": "Proyek",
-      "status": "Status",
-      "progress": "Progress",
-      "budget": "Anggaran (Rp)",
-      "target": "Target"
+    "title": "Ekspansi Bisnis & Unit Baru",
+    "description": "Dapatkan rekomendasi berbasis data untuk memperluas koperasi Anda dan membuka unit usaha baru dengan kelayakan tinggi.",
+    "workflow": {
+      "title": "Alur Kerja Rekomendasi Ekspansi",
+      "step1": {
+        "title": "1. Pengumpulan Data",
+        "desc": "Mengumpulkan data kesehatan keuangan, demografi anggota, dan riwayat transaksi dari database lokal."
+      },
+      "step2": {
+        "title": "2. Analisis Regional",
+        "desc": "Mengagregasikan tren permintaan, harga komoditas, dan kebutuhan desa di tingkat kabupaten/provinsi."
+      },
+      "step3": {
+        "title": "3. Skrining Kelayakan",
+        "desc": "Menghasilkan profil risiko RAG serta estimasi ENPV dan EIRR untuk usulan unit (misal: apotek, toko pupuk)."
+      },
+      "step4": {
+        "title": "4. Presentasi RAT",
+        "desc": "Mengekspor laporan kelayakan terstruktur yang siap diajukan untuk pemungutan suara di Rapat Anggota Tahunan (RAT)."
+      }
+    },
+    "preview": {
+      "title": "Pratinjau Rekomendasi (Fitur Mendatang)",
+      "badge": "Analisis AI",
+      "unitName": "Unit Penyediaan Pupuk & Benih Tani",
+      "reason": "Berdasarkan kenaikan transaksi tani anggota sebesar 34% dan kelangkaan distributor bersertifikasi di desa Anda.",
+      "metrics": {
+        "enpv": "Est. ENPV: Rp 120.000.000",
+        "eirr": "Est. EIRR: 24.5%",
+        "ebcr": "Est. EBCR: 1,62",
+        "enpvLabel": "Proyeksi ENPV",
+        "eirrLabel": "EIRR Proyek",
+        "ebcrLabel": "Rasio Manfaat-Biaya"
+      },
+      "suitability": "Kesesuaian Tinggi (92%)",
+      "alert": "Layar ini akan menampilkan rekomendasi langsung setelah Jaringan Sinkronisasi Federasi aktif pada Fase 2."
+    },
+    "simulation": {
+      "ctaTitle": "Analisis Potensi Koperasi",
+      "ctaDesc": "Jalankan simulasi diagnostik untuk melihat bagaimana sistem mengagregasikan data lokal dan regional koperasi guna merekomendasikan ekspansi usaha.",
+      "button": "Jalankan Diagnostik & Analisis Kelayakan",
+      "analyzing": "Menjalankan Sistem Diagnostik...",
+      "states": {
+        "1": "Mengagregasi transaksi lokal & profil demografis anggota...",
+        "2": "Mengambil indeks pasar kabupaten regional & harga komoditas...",
+        "3": "Menghitung ENPV, EIRR proyek, dan profil risiko RAG...",
+        "4": "Menyusun laporan kelayakan untuk pemungutan suara RAT..."
+      },
+      "success": "Analisis selesai! Rekomendasi ekspansi ditemukan.",
+      "reset": "Mulai Ulang Simulasi",
+      "export": "Ekspor Laporan Kelayakan untuk RAT",
+      "exportSuccess": "Laporan Studi Kelayakan berhasil disusun dan diekspor."
     }
   },
   "learn": {
