@@ -1,3 +1,6 @@
+import DevDocStripe from "@/components/DevDocStripe";
+import readmeContent from "./README.md?raw";
+import "./Sync.css";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -16,6 +19,7 @@ export default function Sync() {
 
   return (
     <div className="space-y-6">
+      <DevDocStripe content={readmeContent} />
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">

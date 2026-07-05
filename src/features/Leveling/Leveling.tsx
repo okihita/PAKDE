@@ -1,3 +1,6 @@
+import DevDocStripe from "@/components/DevDocStripe";
+import readmeContent from "./README.md?raw";
+import "./Leveling.css";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data/leveling";
@@ -131,6 +134,7 @@ function LevelCard({
 
               return (
                 <div key={aspect.aspectId} className="bg-input/50 rounded-lg p-3 border border-border">
+                  <DevDocStripe content={readmeContent} />
                   <div className="flex items-center gap-2 mb-2">
                     <AspectIcon className="h-3.5 w-3.5 text-muted-foreground" />
                     <span className="text-xxxs font-mono font-bold text-muted-foreground uppercase tracking-wider">

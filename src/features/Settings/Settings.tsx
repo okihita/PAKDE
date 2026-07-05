@@ -1,3 +1,6 @@
+import DevDocStripe from "@/components/DevDocStripe";
+import readmeContent from "./README.md?raw";
+import "./Settings.css";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -79,6 +82,7 @@ export default function Settings({
 
   return (
     <div className="space-y-6">
+      <DevDocStripe content={readmeContent} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-card border-border md:col-span-2">
           <CardHeader>

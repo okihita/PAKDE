@@ -1,3 +1,6 @@
+import DevDocStripe from "@/components/DevDocStripe";
+import readmeContent from "./README.md?raw";
+import "./Accounting.css";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +23,7 @@ export default function Accounting() {
 
   return (
     <div className="space-y-4">
+      <DevDocStripe content={readmeContent} />
       <Tabs
         value={a.accountingTab}
         onValueChange={(val) => a.setAccountingTab(val as typeof a.accountingTab)}

@@ -1,3 +1,6 @@
+import DevDocStripe from "@/components/DevDocStripe";
+import readmeContent from "./README.md?raw";
+import "./SplashScreen.css";
 import { useTranslation } from "react-i18next";
 
 export default function SplashScreen() {
@@ -5,6 +8,7 @@ export default function SplashScreen() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-background text-foreground text-center">
+      <DevDocStripe content={readmeContent} />
       <div className="flex flex-col items-center gap-5">
         <div className="relative">
           <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full" />

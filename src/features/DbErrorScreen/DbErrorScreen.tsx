@@ -1,3 +1,6 @@
+import DevDocStripe from "@/components/DevDocStripe";
+import readmeContent from "./README.md?raw";
+import "./DbErrorScreen.css";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +10,7 @@ export default function DbErrorScreen({ message }: { message: string }) {
 
   return (
     <div className="flex h-screen items-center justify-center bg-background text-foreground">
+      <DevDocStripe content={readmeContent} />
       <div className="w-full max-w-md p-8 bg-input border border-rose-500/30 rounded-2xl shadow-2xl text-center">
         <AlertTriangle className="h-12 w-12 text-rose-500 mx-auto mb-4" />
         <h2 className="text-xl font-bold text-rose-900 mb-1">{t("dbError.title")}</h2>
