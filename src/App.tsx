@@ -38,7 +38,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState<
     | "home"
     | "statistics"
-    | "peringkat"
+    | "ranking"
     | "leveling"
     | "equipment"
     | "sales"
@@ -160,7 +160,7 @@ function AppContent() {
         {activeTab === "statistics" && (
           <Statistics coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
         )}
-        {activeTab === "peringkat" && <Ranking coopProfile={coopProfile} />}
+        {activeTab === "ranking" && <Ranking coopProfile={coopProfile} />}
         {activeTab === "leveling" && <Leveling healthScore={coopProfile?.health_score ?? 0} />}
         {activeTab === "equipment" && <Equipment />}
         {activeTab === "sales" && <Sales />}

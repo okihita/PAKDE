@@ -36,7 +36,7 @@ interface SidebarProps {
     tab:
       | "home"
       | "statistics"
-      | "peringkat"
+      | "ranking"
       | "leveling"
       | "equipment"
       | "sales"
@@ -117,7 +117,7 @@ export default function Sidebar({
       label: t("sidebar.groups.analitik"),
       items: [
         { id: "statistics", icon: BarChart3, label: t("sidebar.nav.statistics") },
-        { id: "peringkat", icon: Medal, label: t("sidebar.nav.peringkat") },
+        { id: "ranking", icon: Medal, label: t("sidebar.nav.ranking") },
         { id: "leveling", icon: Trophy, label: t("sidebar.nav.leveling") },
       ],
     },
