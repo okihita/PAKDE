@@ -139,6 +139,19 @@ export function useUnits() {
     }
   };
 
+  // Get raw SQLite master table schema DDL definitions
+  const getDatabaseSchema = async () => {
+    try {
+      const db = await getDb();
+      return await db.select<Array<{ name: string; sql: string }>>(
+        "SELECT name, sql FROM sqlite_master WHERE type = 'table' AND sql IS NOT NULL ORDER BY name ASC",
+      );
+    } catch (err) {
+      console.error("Failed to query schema:", err);
+      return [];
+    }
+  };
+
   return {
     activeUnitIds,
     categoriesList,
@@ -146,5 +159,6 @@ export function useUnits() {
     loadUnitsData,
     toggleUnitStatus,
     createBusinessUnit,
+    getDatabaseSchema,
   };
 }
