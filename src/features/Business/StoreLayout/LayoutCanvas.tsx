@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { Stage, Layer, Rect, Line, Text, Group, Circle } from "react-konva";
 import type Konva from "konva";
 import type { LayoutZone, InventoryItem } from "@/types";
-import { MousePointer2, Square, Box, Eraser } from "lucide-react";
+import { MousePointer2, Square, Box, Eraser, ZoomIn, ZoomOut, Maximize } from "lucide-react";
 import "./index.css";
 
 const CELL = 60;
@@ -105,24 +105,43 @@ export default function LayoutCanvas({
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // Fit canvas
-  useEffect(() => {
-    const fit = () => {
-      if (!containerRef.current || !stageRef.current) return;
-      const cw = containerRef.current.clientWidth;
-      const ch = containerRef.current.clientHeight;
-      stageRef.current.width(cw);
-      stageRef.current.height(ch);
-      const s = Math.min(cw / gridPxW, ch / gridPxH, 1) * 0.85;
-      setScale(s);
-      setOffset({ x: (cw - gridPxW * s) / 2, y: (ch - gridPxH * s) / 2 });
-    };
-    fit();
-    window.addEventListener("resize", fit);
-    return () => window.removeEventListener("resize", fit);
+  // Fit canvas to container
+  const doFit = useCallback(() => {
+    if (!containerRef.current || !stageRef.current) return;
+    const cw = containerRef.current.clientWidth;
+    const ch = containerRef.current.clientHeight;
+    stageRef.current.width(cw);
+    stageRef.current.height(ch);
+    const s = Math.min(cw / gridPxW, ch / gridPxH, 1) * 0.85;
+    setScale(s);
+    setOffset({ x: (cw - gridPxW * s) / 2, y: (ch - gridPxH * s) / 2 });
   }, [gridPxW, gridPxH]);
 
-  // Zoom
+  // Fit canvas on mount / resize / grid change
+  useEffect(() => {
+    doFit();
+    window.addEventListener("resize", doFit);
+    return () => window.removeEventListener("resize", doFit);
+  }, [doFit]);
+
+  // Zoom in/out relative to viewport centre
+  const doZoom = useCallback(
+    (direction: 1 | -1) => {
+      const stage = stageRef.current;
+      if (!stage || !containerRef.current) return;
+      const cx = containerRef.current.clientWidth / 2;
+      const cy = containerRef.current.clientHeight / 2;
+      let ns = scale + direction * ZOOM_STEP;
+      if (ns < MIN_ZOOM) ns = MIN_ZOOM;
+      if (ns > MAX_ZOOM) ns = MAX_ZOOM;
+      const mp = { x: (cx - offset.x) / scale, y: (cy - offset.y) / scale };
+      setScale(ns);
+      setOffset({ x: cx - mp.x * ns, y: cy - mp.y * ns });
+    },
+    [scale, offset],
+  );
+
+  // Mouse-wheel zoom (centered on cursor)
   const handleWheel = useCallback(
     (e: Konva.KonvaEventObject<WheelEvent>) => {
       e.evt.preventDefault();
@@ -278,7 +297,7 @@ export default function LayoutCanvas({
       style={{ width: "100%", height: "100%" }}
     >
       {/* ── Toolbar ── */}
-      <div className="absolute top-2 left-2 z-10 flex items-stretch gap-1">
+      <div className="absolute top-2 left-2 right-2 z-10 flex flex-wrap items-stretch gap-1">
         <div className="flex bg-slate-900/90 border border-slate-800 rounded-lg overflow-hidden">
           {([
             ["select", MousePointer2],
@@ -298,6 +317,33 @@ export default function LayoutCanvas({
               <span className="hidden sm:inline capitalize">{tool}</span>
             </button>
           ))}
+        </div>
+
+        {/* Zoom controls */}
+        <div className="flex bg-slate-900/90 border border-slate-800 rounded-lg overflow-hidden">
+          <button
+            onClick={() => doZoom(-1)}
+            disabled={scale <= MIN_ZOOM}
+            className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors border-r border-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Zoom out"
+          >
+            <ZoomOut className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={doFit}
+            className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors border-r border-slate-800"
+            title="Fit to screen"
+          >
+            <Maximize className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => doZoom(1)}
+            disabled={scale >= MAX_ZOOM}
+            className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Zoom in"
+          >
+            <ZoomIn className="h-3.5 w-3.5" />
+          </button>
         </div>
 
         {/* Zone color picker — only when zone tool active */}

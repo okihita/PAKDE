@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 import "@/i18n"; // initialize i18next before render
 import { initDb, getDb } from "@/db";
 import { ToastProvider } from "@/hooks/useToast";
@@ -249,7 +250,12 @@ function AppContent() {
           onSwitchProfile={handleSwitchProfile}
         />
 
-        <main className="flex-1 p-6 overflow-y-auto max-h-full overscroll-contain">
+        <main
+          className={cn(
+            "flex-1 max-h-full overscroll-contain",
+            activeTab === "storelayout" ? "overflow-hidden p-0" : "overflow-y-auto p-6",
+          )}
+        >
         {activeTab === "home" && <Dashboard />}
         {activeTab === "statistics" && (
           <Statistics coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
