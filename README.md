@@ -1,67 +1,115 @@
-# Tauri + React + Typescript
+# 💼 PAKDE (Platform Aplikasi & Keuangan Koperasi Desa)
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+> A modern, offline-first, compliant desktop application designed to digitize and empower Indonesian Village Cooperatives (*Koperasi Desa*).
 
-## 🚀 Hackathon Release & Installation Guide
-
-To install and run the application, download the installer for your operating system from the [Releases](https://github.com/okihita/PAKDE-tauri/releases) tab.
+[![Tauri](https://img.shields.io/badge/Tauri-2.0-blue?style=flat-square&logo=tauri)](https://tauri.app/)
+[![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Rust](https://img.shields.io/badge/Rust-2021-orange?style=flat-square&logo=rust)](https://www.rust-lang.org/)
+[![SAK EP Compliant](https://img.shields.io/badge/SAK_EP-Compliant-success?style=flat-square)](#)
 
 ---
 
-### 💻 macOS Installation & Gatekeeper Workaround
+## 💡 The Idea
 
-Since this is a hackathon development build and does not have an Apple Developer signature, macOS Gatekeeper will block it by default with the message: *\"Apple could not verify 'pakde-tauri' is free of malware...\"*.
+In Indonesia, village cooperatives (*Koperasi Desa*) play a critical role in local economies but often suffer from manual, paper-based bookkeeping, lack of financial transparency, and poor network connectivity. 
 
-You can easily bypass this using one of the two methods below:
+**PAKDE** is a desktop application that acts as an **offline-first local node** for individual cooperatives. Written in React, TypeScript, and Rust (via Tauri) and backed by a local SQLite database, PAKDE allows cooperatives in remote regions with unstable internet to record membership, manage business units, and automatically generate standard-compliant financial statements without dependency on the cloud.
 
-#### Method 1: Right-Click (UI Workaround)
-1. Open the downloaded `.dmg` file and drag the app into your **Applications** folder.
-2. In Finder, navigate to your **Applications** folder.
-3. **Right-click (or Control-click)** the app icon and select **Open** from the context menu.
-4. A warning dialog will appear, but it will now include an **Open** button. Click **Open** to run the app.
-*(You only need to do this once. Future opens will work normally by double-clicking).*
+---
 
-#### Method 2: Command Line (Fastest)
-If you prefer the terminal, remove the macOS quarantine attribute after dragging the app to Applications:
-```bash
-xattr -cr /Applications/pakde-tauri.app
+## ⭐ The North Star: Federated Node Network
+
+The long-term vision of PAKDE is a **Federated Node Network** that bridges individual local operations with regional and national oversight.
+
 ```
-Then, double-click the app to launch it normally.
+┌───────────────────────────────────────────────────────────────┐
+│                    NATIONAL DASHBOARD                         │
+│       (Web app: aggregate analytics across all nodes)         │
+│             Hosted on a central API server                    │
+└───────────────────────┬───────────────────────────────────────┘
+                        │ HTTPS (REST API)
+                        ▼
+┌───────────────────────────────────────────────────────────────┐
+│                 CENTRAL API SERVER                            │
+│  • Cooperative registration & auth                            │
+│  • Accepts periodic sync payloads from each node              │
+│  • Computes national aggregates & leaderboards                │
+└──────┬──────────┬──────────┬──────────┬──────────┬────────────┘
+       │          │          │          │          │
+       ▼          ▼          ▼          ▼          ▼
+   ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐
+   │Kop 1 │  │Kop 2 │  │Kop 3 │  │Kop 4 │  │Kop N │
+   │Desa A│  │Desa B│  │Desa C│  │Desa D│  │...   │
+   └──────┘  └──────┘  └──────┘  └──────┘  └──────┘
+    SQLite     SQLite     SQLite     SQLite     SQLite
+   (Local)    (Local)    (Local)    (Local)    (Local)
+```
+
+### Key Pillars of the Federated Network
+* **Zero PII Cloud Exposure:** Cooperatives only sync anonymous, high-level aggregates (RAG health scores, total member count, asset volume) to the central server. Personally Identifiable Information (PII) never leaves the local machine in plaintext.
+* **Dual-Payload Syncing:**
+  1. *Public Aggregates:* Derived statistics sent in plaintext to update the public National Dashboard and ranking leaderboards.
+  2. *Zero-Knowledge Backups:* A client-side encrypted (AES-256-GCM) backup of the full SQLite database is sent to the cloud for disaster recovery. Only the cooperative holds the decryption passphrase.
+* **National Analytics & Rankings:** A central web dashboard aggregates regional performance, enabling governments and financial institutions to monitor cooperative health (Red-Amber-Green status) in real-time.
 
 ---
 
-### 🪟 Windows Installation
+## ✨ Key Features
 
-1. Download the `.msi` or `.exe` installer from the Releases page.
-2. Run the installer. 
-3. If Windows SmartScreen blocks execution (shows a blue banner saying *\"Windows protected your PC\"*):
-   * Click **More info**.
-   * Click **Run anyway**.
+### 📦 1. Offline-First SQLite Local Node
+* Runs entirely locally on desktop (Windows, macOS) using Tauri.
+* Decrypts and queries the local SQLite database using device-bound hardware keys via SQLCipher.
+* Operates seamlessly in zero-connectivity areas, caching sync logs for when network access becomes available.
+
+### 📊 2. SAK EP Compliant Accounting
+* Full double-entry bookkeeping journal.
+* Automated generation of compliant financial reports (Balance Sheet, Income Statements, and Annual Profit/SHU distribution).
+* Designed for compliance with the Indonesian *Standar Akuntansi Keuangan Entitas Privat* (SAK EP) framework.
+
+### 🏆 3. Aspect-Based Gamified Leveling
+* Interactive leveling system guiding cooperatives through 5 developmental tiers: **Pioneer** (*Rintisan*), **Beginner** (*Pemula*), **Growing** (*Bertumbuh*), **Productive** (*Produktif*), and **Established** (*Mapan*).
+* Quests split into six key operational aspects:
+  * **Membership** (*Keanggotaan*)
+  * **Financial** (*Keuangan*)
+  * **Governance** (*Tata Kelola*)
+  * **Compliance** (*Kepatuhan*)
+  * **Business Units** (*Unit Usaha*)
+  * **Technology** (*Teknologi*)
+
+### 🛒 4. Business Units & Store Layout Planner
+* Manage cooperative stores (*Waserda*), equipment inventory, vendors, and sales logs.
+* Visual **Store Layout Planner** powered by Konva.js to design and optimize store shelf arrangements.
+
+### 🤝 5. Community & Social Impact Tracking
+* Manage the cooperative's member directory, track attendance/participation in meetings, and monitor social impact programs (environmental, educational, and charity events).
+
+### 🔒 6. Cryptographic Integrity & Anti-Tampering
+* **HMAC-SHA256 Verification:** Local progress and curriculum advancement are signed cryptographically using the Web Crypto API to prevent local file-based level hacking.
+* **Deterministic Replay Log Validation:** Server-side synchronization replays chronological action logs to verify that achievements and XP gains are legitimate before publishing to the national leaderboard.
 
 ---
 
-## Recommended IDE Setup
+## 🚀 Hackathon Quickstart
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+Please refer to [INSTALLATION.md](file:///Users/okihita/ArcaneSanctum/PAKDE/PAKDE-tauri/INSTALLATION.md) for pre-built installers (macOS Gatekeeper workarounds, Windows SmartScreen bypasses) and instructions on running the development environment from source.
 
 ---
 
-## 🔒 Security Architecture (Offline & Online Sync)
+## 🛠️ Technology Stack
 
-To support offline-capable learning features while preventing users from tampering with local files (modifying levels, XP, or achievements), the application implements a multi-tiered security model:
+* **Frontend:** React 19, TypeScript 5.8, Tailwind CSS v4, Zustand (state management)
+* **Visual Components:** Radix UI primitives, Lucide Icons, Konva.js (for store layout Canvas)
+* **Desktop Runtime:** Tauri v2 (Rust backend)
+* **Local Database:** SQLite (SQLCipher binding)
+* **Styling & Fonts:** JetBrains Mono, Space Grotesk (typography)
 
-### 1. Cryptographic Local Storage Verification (HMAC-SHA256)
-- Offline progress (completed curriculum lessons) is persisted in the local workspace.
-- To prevent manual manipulation of LocalStorage parameters, each progression update is cryptographically signed using the standard Web Crypto API (`window.crypto.subtle`) with **HMAC-SHA256**.
-- The signature is calculated using a secret salt. When loading progress on boot, the app recalculates the signature. If a user manually alters their progress values, the signatures mismatch, and the app resets the tampered values to default.
+---
 
-### 2. SQLCipher Database Encryption
-- Production SQLite databases (`kdkmp.db`) will be compiled with **SQLCipher** bindings in the Tauri Rust backend.
-- The raw database file is encrypted on disk. The decryption key is generated at runtime combining a compiled binary salt and a hardware-specific device identifier.
-- Any attempt to open the SQLite file using external browsers without the key results in unreadable binary noise.
+## 💻 Recommended IDE Setup
 
-### 3. Server-Side Action-Log Validation (Deterministic Replay)
-- When the manager goes online to sync achievements and rankings, the client does not send absolute levels or scores.
-- Instead, the client uploads a chronological **Lesson Action Log** (lesson ID, timestamps, answer options selected, and time-taken metrics).
-- The online server recalculates the score and unlocks deterministically. Any anomalous action metrics (e.g., finishing a 10-question quiz in 0.2 seconds) are automatically flagged as tampered.
-
+* **IDE:** [VS Code](https://code.visualstudio.com/)
+* **Recommended Extensions:**
+  * [Tauri VS Code Extension](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode)
+  * [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+  * [Prettier - Code Formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
