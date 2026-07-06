@@ -149,7 +149,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
 
       <div className="relative z-10 w-full max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
         {/* Header section */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-2 p-6 rounded-2xl bg-slate-950/70 border border-emerald-500/10 backdrop-blur-md max-w-lg mx-auto shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
           <div className="flex justify-center mb-1">
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
               <Shield className="h-6 w-6 text-emerald-400 animate-pulse" />
@@ -176,7 +176,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                 <Card
                   key={p.id}
                   onClick={() => onProfileSelect(p)}
-                  className="bg-slate-900/60 border-emerald-500/10 backdrop-blur-md cursor-pointer hover-glow-card transition-all duration-200 flex flex-col justify-between min-h-48 p-5 hover:scale-[1.01] select-none"
+                  className="bg-slate-950/85 border-emerald-500/20 backdrop-blur-md cursor-pointer hover-glow-card transition-all duration-200 flex flex-col justify-between min-h-48 p-5 hover:scale-[1.01] select-none shadow-[0_4px_25px_rgba(0,0,0,0.4)]"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -221,7 +221,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
             {/* "+ Create New" item card */}
             <Card
               onClick={() => setShowCreateModal(true)}
-              className="bg-slate-900/40 border-dashed border-emerald-500/20 backdrop-blur-sm hover:border-emerald-500/40 hover:bg-emerald-500/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-48 p-5 hover:scale-[1.01] select-none"
+              className="bg-slate-950/60 border-dashed border-emerald-500/20 backdrop-blur-sm hover:border-emerald-400/40 hover:bg-emerald-500/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-48 p-5 hover:scale-[1.01] select-none shadow-[0_4px_25px_rgba(0,0,0,0.3)]"
             >
               <div className="w-10 h-10 rounded-full bg-emerald-500/5 flex items-center justify-center mb-3 group-hover:bg-emerald-500/10 transition-colors">
                 <Plus className="h-5 w-5 text-emerald-400" />
