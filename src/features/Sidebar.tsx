@@ -28,6 +28,7 @@ import {
   FileText,
   HeartHandshake,
   LogOut,
+  MapPin,
 } from "lucide-react";
 import { getCurrentLevel } from "@/data/leveling";
 import type { CooperativeProfile, EwsAlert } from "@/types";
@@ -43,6 +44,7 @@ interface SidebarProps {
       | "units"
       | "equipment"
       | "sales"
+      | "storelayout"
       | "development"
       | "learn"
       | "planners"
@@ -136,6 +138,7 @@ export default function Sidebar({
         { id: "units", icon: Building2, label: t("sidebar.nav.units") },
         { id: "equipment", icon: Wrench, label: t("sidebar.nav.equipment") },
         { id: "sales", icon: Handshake, label: t("sidebar.nav.sales") },
+        { id: "storelayout", icon: MapPin, label: t("sidebar.nav.storeLayout") },
         { id: "development", icon: Building2, label: t("sidebar.nav.development") },
       ],
     },

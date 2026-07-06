@@ -34,11 +34,14 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "i18next": "^26.3.4",
+    "konva": "^10.3.0",
     "lucide-react": "^1.23.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^17.0.8",
-    "tailwind-merge": "^3.6.0"
+    "react-konva": "^19.2.5",
+    "tailwind-merge": "^3.6.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

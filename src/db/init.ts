@@ -3,6 +3,21 @@ import { getDb } from "./index";
 export async function initDb(): Promise<void> {
   const db = await getDb();
 
+  // SQLite FK enforcement is OFF by default — must enable per connection
+  await db.execute("PRAGMA foreign_keys = ON;");
+
+  // ── Migration helper: check if column exists, add if missing ──
+  async function ensureColumn(table: string, columnDef: string, columnName: string) {
+    const cols = await db.select<Array<{ name: string }>>(
+      `PRAGMA table_info(${table});`,
+    );
+    const exists = cols.some((c: { name: string }) => c.name === columnName);
+    if (!exists) {
+      console.log(`[initDb] Adding missing column: ${table}.${columnName}`);
+      await db.execute(`ALTER TABLE ${table} ADD COLUMN ${columnDef};`);
+    }
+  }
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS cooperatives (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, legal_id TEXT, status TEXT DEFAULT 'aktif',
@@ -141,6 +156,42 @@ export async function initDb(): Promise<void> {
   `);
 
   await db.execute(`
+    CREATE TABLE IF NOT EXISTS store_layouts (
+      id TEXT PRIMARY KEY,
+      cooperative_id TEXT NOT NULL DEFAULT 'kdp-001',
+      name TEXT NOT NULL,
+      grid_width INTEGER DEFAULT 20,
+      grid_height INTEGER DEFAULT 15,
+      cell_size REAL DEFAULT 1.0,
+      canvas_data TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (cooperative_id) REFERENCES cooperatives(id)
+    );
+  `);
+
+  // Column migrations for tables that may pre-date schema additions
+  await ensureColumn("store_layouts", "cell_size REAL DEFAULT 1.0", "cell_size");
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS layout_zones (
+      id TEXT PRIMARY KEY,
+      layout_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      zone_type TEXT DEFAULT 'shelf',
+      x REAL NOT NULL,
+      y REAL NOT NULL,
+      width REAL NOT NULL,
+      height REAL NOT NULL,
+      rows INTEGER DEFAULT 4,
+      cols INTEGER DEFAULT 3,
+      color TEXT DEFAULT '#4CAF50',
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (layout_id) REFERENCES store_layouts(id) ON DELETE CASCADE
+    );
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS inventory_items (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -149,11 +200,19 @@ export async function initDb(): Promise<void> {
       unit TEXT NOT NULL,
       cost_price REAL DEFAULT 0,
       selling_price REAL DEFAULT 0,
+      zone_id TEXT,
+      shelf_row INTEGER,
+      shelf_col INTEGER,
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now')),
-      FOREIGN KEY (category_id) REFERENCES categories(id)
+      FOREIGN KEY (category_id) REFERENCES categories(id),
+      FOREIGN KEY (zone_id) REFERENCES layout_zones(id) ON DELETE SET NULL
     );
   `);
+
+  await ensureColumn("inventory_items", "zone_id TEXT", "zone_id");
+  await ensureColumn("inventory_items", "shelf_row INTEGER", "shelf_row");
+  await ensureColumn("inventory_items", "shelf_col INTEGER", "shelf_col");
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales_transactions (

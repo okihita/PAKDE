@@ -12,6 +12,7 @@ import Members from "@/features/Community/Members/Members";
 import Units from "@/features/Business/Units/Units";
 import Equipment from "@/features/Business/Equipment/Equipment";
 import Sales from "@/features/Business/Sales/Sales";
+import StoreLayout from "@/features/Business/StoreLayout/StoreLayout";
 import Development from "@/features/Business/Development/Development";
 import Learn from "@/features/Education/Learn/Learn";
 import Planners from "@/features/Education/Planners/Planners";
@@ -24,6 +25,7 @@ import Participation from "@/features/Community/Participation/Participation";
 import Sync from "@/features/System/Sync/Sync";
 import Settings from "@/features/System/Settings/Settings";
 import ProfileSelect from "@/features/System/ProfileSelect/ProfileSelect";
+import DevConsole from "@/components/DevConsole";
 import { getErrorMessage, type CooperativeProfile, type EwsAlert, type CountRow } from "@/types";
 
 type FontLevel = "small" | "normal" | "large" | "xlarge";
@@ -48,6 +50,7 @@ function AppContent() {
     | "units"
     | "equipment"
     | "sales"
+    | "storelayout"
     | "development"
     | "learn"
     | "planners"
@@ -256,6 +259,7 @@ function AppContent() {
         {activeTab === "units" && <Units onTabChange={setActiveTab} />}
         {activeTab === "equipment" && <Equipment />}
         {activeTab === "sales" && <Sales />}
+        {activeTab === "storelayout" && <StoreLayout />}
         {activeTab === "development" && <Development />}
         {activeTab === "learn" && <Learn />}
         {activeTab === "planners" && <Planners />}
@@ -298,6 +302,7 @@ export default function App() {
         style={{ backgroundImage: 'url("/background.jpg")' }}
       />
       <AppContent />
+      <DevConsole />
     </ToastProvider>
   );
 }

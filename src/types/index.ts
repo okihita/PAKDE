@@ -181,8 +181,38 @@ export interface InventoryItem {
   unit: string;
   cost_price: number;
   selling_price: number;
+  zone_id?: string | null;
+  shelf_row?: number | null;
+  shelf_col?: number | null;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface StoreLayout {
+  id: string;
+  cooperative_id: string;
+  name: string;
+  grid_width: number;
+  grid_height: number;
+  cell_size: number;
+  canvas_data?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface LayoutZone {
+  id: string;
+  layout_id: string;
+  name: string;
+  zone_type: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rows: number;
+  cols: number;
+  color: string;
+  created_at?: string;
 }
 
 export interface SalesTransaction {

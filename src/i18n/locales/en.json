@@ -70,6 +70,7 @@
       "units": "Business Units",
       "equipment": "Equipment",
       "sales": "Sales & Vendors",
+      "storeLayout": "Store Layout",
       "development": "Expansion & Development",
       "learn": "Learn & Quiz",
       "planners": "Planner Collection"
@@ -527,6 +528,44 @@
       "deleteConfirm": "Are you sure you want to delete this product?",
       "deleteFailed": "Failed to delete item from database.",
       "saveFailed": "Failed to save product in database."
+    }
+  },
+  "storeLayout": {
+    "title": "Store Layout & Floor Plan",
+    "newLayout": "New Layout",
+    "dialogNew": "Create Store Layout",
+    "layoutName": "Layout Name",
+    "layoutNamePlaceholder": "e.g., Main Warehouse",
+    "roomWidth": "Room Width",
+    "roomDepth": "Room Depth",
+    "cellSize": "Cell",
+    "cellLabel": "cell",
+    "grid": "grid",
+    "gridPreview": "Grid",
+    "create": "Create Layout",
+    "empty": "No store layouts yet. Create one to start designing your cooperative store floor plan.",
+    "created": "Created",
+    "rows": "Rows",
+    "cols": "Cols",
+    "color": "Zone Color",
+    "bins": "Shelf Bins",
+    "areaDefaultName": "Area {{n}}",
+    "shelfDefaultName": "Shelf {{n}}",
+    "tools": {
+      "select": "Select",
+      "zone": "Zone",
+      "shelf": "Shelf",
+      "erase": "Erase"
+    },
+    "assignItem": "Assign Item",
+    "selectItem": "Select inventory item...",
+    "emptyBin": "Empty",
+    "toast": {
+      "layoutCreated": "Store layout created successfully.",
+      "layoutCreateFailed": "Failed to create store layout.",
+      "layoutDeleted": "Store layout deleted.",
+      "layoutDeleteFailed": "Failed to delete store layout.",
+      "zonesSaveFailed": "Failed to save shelf layout."
     }
   },
   "development": {

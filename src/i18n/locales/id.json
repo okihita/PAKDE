@@ -70,6 +70,7 @@
       "units": "Unit Usaha",
       "equipment": "Peralatan",
       "sales": "Penjualan & Vendor",
+      "storeLayout": "Tata Letak Toko",
       "development": "Ekspansi & Pengembangan",
       "learn": "Belajar & Kuis",
       "planners": "Koleksi Planner"
@@ -527,6 +528,44 @@
       "deleteConfirm": "Apakah Anda yakin ingin menghapus produk ini?",
       "deleteFailed": "Gagal menghapus produk dari database.",
       "saveFailed": "Gagal menyimpan produk ke database."
+    }
+  },
+  "storeLayout": {
+    "title": "Tata Letak Toko & Denah",
+    "newLayout": "Buat Tata Letak",
+    "dialogNew": "Buat Tata Letak Toko",
+    "layoutName": "Nama Tata Letak",
+    "layoutNamePlaceholder": "misal: Gudang Utama",
+    "roomWidth": "Lebar Ruangan",
+    "roomDepth": "Panjang Ruangan",
+    "cellSize": "Sel",
+    "cellLabel": "sel",
+    "grid": "grid",
+    "gridPreview": "Grid",
+    "create": "Buat Tata Letak",
+    "empty": "Belum ada tata letak toko. Buat satu untuk mulai mendesain denah toko koperasi Anda.",
+    "created": "Dibuat",
+    "rows": "Baris",
+    "cols": "Kolom",
+    "color": "Warna Zona",
+    "bins": "Petak Rak",
+    "areaDefaultName": "Area {{n}}",
+    "shelfDefaultName": "Rak {{n}}",
+    "tools": {
+      "select": "Pilih",
+      "zone": "Zona",
+      "shelf": "Rak",
+      "erase": "Hapus"
+    },
+    "assignItem": "Pasang Barang",
+    "selectItem": "Pilih barang inventaris...",
+    "emptyBin": "Kosong",
+    "toast": {
+      "layoutCreated": "Tata letak toko berhasil dibuat.",
+      "layoutCreateFailed": "Gagal membuat tata letak toko.",
+      "layoutDeleted": "Tata letak toko dihapus.",
+      "layoutDeleteFailed": "Gagal menghapus tata letak toko.",
+      "zonesSaveFailed": "Gagal menyimpan tata letak rak."
     }
   },
   "development": {
