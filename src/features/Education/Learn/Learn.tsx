@@ -1,13 +1,14 @@
 import DevDocStripe from "@/components/DevDocStripe";
 import readmeContent from "./README.md?raw";
 import "./Learn.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, CheckCircle2, Lock, Star, Trophy, ArrowRight, ArrowLeft } from "lucide-react";
 
 import { MODULES, CONNECTIONS, type ModuleDef } from "./curriculum";
+import { loadProgress, saveProgress } from "./secureStorage";
 
 const TEXT_START_LESSON = "Start";
 const TEXT_LOCKED_MSG = "Prerequisites required:";
@@ -22,7 +23,14 @@ export default function Learn() {
   const [activeLesson, setActiveLesson] = useState<{ modIdx: number; lesIdx: number } | null>(null);
   const [questionIdx, setQuestionIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
-  const [lessonDone, setLessonDone] = useState<Set<string>>(new Set(["mod1-0", "mod1-1", "mod1-2"]));
+  const [lessonDone, setLessonDone] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    (async () => {
+      const loaded = await loadProgress();
+      setLessonDone(new Set(loaded));
+    })();
+  }, []);
 
   const allDone = Array.from(lessonDone);
   const totalLessons = MODULES.reduce((sum, m) => sum + m.lessons.length, 0);
@@ -46,7 +54,11 @@ export default function Learn() {
     } else if (activeLesson) {
       // Mark lesson done
       const key = `${activeLesson.modIdx}-${activeLesson.lesIdx}`;
-      setLessonDone((prev) => new Set(prev).add(key));
+      setLessonDone((prev) => {
+        const next = new Set(prev).add(key);
+        saveProgress(Array.from(next)).catch(console.error);
+        return next;
+      });
     }
   };
 

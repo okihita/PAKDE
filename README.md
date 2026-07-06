@@ -44,3 +44,24 @@ Then, double-click the app to launch it normally.
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
+---
+
+## 🔒 Security Architecture (Offline & Online Sync)
+
+To support offline-capable learning features while preventing users from tampering with local files (modifying levels, XP, or achievements), the application implements a multi-tiered security model:
+
+### 1. Cryptographic Local Storage Verification (HMAC-SHA256)
+- Offline progress (completed curriculum lessons) is persisted in the local workspace.
+- To prevent manual manipulation of LocalStorage parameters, each progression update is cryptographically signed using the standard Web Crypto API (`window.crypto.subtle`) with **HMAC-SHA256**.
+- The signature is calculated using a secret salt. When loading progress on boot, the app recalculates the signature. If a user manually alters their progress values, the signatures mismatch, and the app resets the tampered values to default.
+
+### 2. SQLCipher Database Encryption
+- Production SQLite databases (`kdkmp.db`) will be compiled with **SQLCipher** bindings in the Tauri Rust backend.
+- The raw database file is encrypted on disk. The decryption key is generated at runtime combining a compiled binary salt and a hardware-specific device identifier.
+- Any attempt to open the SQLite file using external browsers without the key results in unreadable binary noise.
+
+### 3. Server-Side Action-Log Validation (Deterministic Replay)
+- When the manager goes online to sync achievements and rankings, the client does not send absolute levels or scores.
+- Instead, the client uploads a chronological **Lesson Action Log** (lesson ID, timestamps, answer options selected, and time-taken metrics).
+- The online server recalculates the score and unlocks deterministically. Any anomalous action metrics (e.g., finishing a 10-question quiz in 0.2 seconds) are automatically flagged as tampered.
+
