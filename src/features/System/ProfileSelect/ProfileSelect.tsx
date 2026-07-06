@@ -141,19 +141,25 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-center items-center min-h-screen bg-background p-6">
-      <div className="w-full max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div
+      className="flex-1 flex flex-col justify-center items-center min-h-screen relative overflow-hidden p-6 bg-cover bg-center"
+      style={{ backgroundImage: "url('/background.jpg')" }}
+    >
+      {/* Cinematic dark overlay with blur and vignette */}
+      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px] bg-gradient-to-b from-slate-950/50 via-slate-950/85 to-slate-950" />
+
+      <div className="relative z-10 w-full max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
         {/* Header section */}
         <div className="text-center space-y-2">
           <div className="flex justify-center mb-1">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-              <Shield className="h-6 w-6 text-emerald-400" />
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+              <Shield className="h-6 w-6 text-emerald-400 animate-pulse" />
             </div>
           </div>
           <h1 className="text-3xl font-black text-foreground tracking-wider font-mono">
             {t("profileSelect.title")}
           </h1>
-          <p className="text-xxs font-mono text-muted-foreground max-w-md mx-auto leading-relaxed">
+          <p className="text-xxs font-mono text-slate-300 max-w-md mx-auto leading-relaxed">
             {t("profileSelect.subtitle")}
           </p>
         </div>
@@ -171,7 +177,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                 <Card
                   key={p.id}
                   onClick={() => onProfileSelect(p)}
-                  className="bg-card border-border cursor-pointer hover-glow-card transition-all duration-200 flex flex-col justify-between min-h-48 p-5 hover:scale-[1.01] select-none"
+                  className="bg-slate-900/60 border-emerald-500/10 backdrop-blur-md cursor-pointer hover-glow-card transition-all duration-200 flex flex-col justify-between min-h-48 p-5 hover:scale-[1.01] select-none"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -189,7 +195,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       </h3>
                       <p className="text-xxs text-muted-foreground flex items-center gap-1">
                         <MapPin className="h-3 w-3 text-muted-foreground/80 shrink-0" />
-                        <span className="truncate">{p.regency}, {p.province}</span>
+                        <span className="truncate text-slate-300">{p.regency}, {p.province}</span>
                       </p>
                     </div>
                   </div>
@@ -216,7 +222,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
             {/* "+ Create New" item card */}
             <Card
               onClick={() => setShowCreateModal(true)}
-              className="bg-card border-dashed border-border/60 hover:border-emerald-500/40 hover:bg-emerald-500/3 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-48 p-5 hover:scale-[1.01] select-none"
+              className="bg-slate-900/40 border-dashed border-emerald-500/20 backdrop-blur-sm hover:border-emerald-500/40 hover:bg-emerald-500/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-48 p-5 hover:scale-[1.01] select-none"
             >
               <div className="w-10 h-10 rounded-full bg-emerald-500/5 flex items-center justify-center mb-3 group-hover:bg-emerald-500/10 transition-colors">
                 <Plus className="h-5 w-5 text-emerald-400" />
