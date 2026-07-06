@@ -39,6 +39,85 @@ A dedicated purchase order (PO) workflow for cooperative procurement. Complement
 
 ---
 
+## Architecture: Local Server & Multi-Cashier Sync
+
+### Problem
+
+A cooperative store (Waserda) on market day has 3–5 staff serving customers simultaneously. One desktop running PAKDE becomes a bottleneck. But there is no reliable internet in the village, and setting up a full server rack is absurd. The solution must work over **LAN/WiFi only**, with zero cloud dependency, on commodity hardware already in the cooperative office.
+
+### Simple Plan
+
+```
+                     ┌─────────────────────┐
+                     │   Local PAKDE Node   │
+                     │  (acts as "server")  │
+                     │   Tauri + embedded   │
+                     │   HTTP + SQLite      │
+                     └──────────┬──────────┘
+                                │ LAN / WiFi
+              ┌─────────────────┼─────────────────┐
+              ▼                 ▼                  ▼
+        ┌──────────┐      ┌──────────┐       ┌──────────┐
+        │ Cashier 1│      │ Cashier 2│       │ Cashier 3│
+        │ (thin UI)│      │ (thin UI)│       │ (thin UI)│
+        │ Browser  │      │ Browser  │       │ Browser  │
+        └──────────┘      └──────────┘       └──────────┘
+```
+
+**Node (Server):**
+- One machine runs PAKDE in "server mode" — a lightweight embedded HTTP server (Actix-web or tiny_http inside Tauri)
+- Serves SQLite database as the single source of truth
+- Exposes a REST API for POS transactions, inventory lookups, member queries
+- Runs on `http://192.168.1.x:9876` (local IP, discoverable via mDNS broadcast)
+
+**Cashier Clients (Thin UI):**
+- Any device with a browser (cheap laptops, tablets, even phones)
+- Loads a minimal POS-only web UI served by the node
+- No installation. No app. Just a URL.
+- Performs checkout, stock lookups, member credit checks
+- All writes go to the node's SQLite via REST calls
+
+**Why This Works for Rural Conditions:**
+- Only ONE machine needs PAKDE installed — the cooperative's existing office desktop
+- Cashiers use whatever devices are available (BYOD, zero setup)
+- No internet required — everything runs on the local LAN
+- All data stays on one SQLite file — no distributed consistency headaches
+- If the WiFi router dies, the desktop still works as a single-cashier fallback
+
+### Transaction Queue (Offline Cashier Mode)
+
+What if a cashier's device disconnects mid-transaction? Two-tier resilience:
+
+**Tier 1 — LAN Reconnect (seconds):**
+- Thin client queues the transaction in browser LocalStorage
+- Retries POST to node every 2 seconds
+- On reconnect, flushes queue in order
+
+**Tier 2 — Node Failover (minutes):**
+- If the node itself goes down (power outage, reboot), cashier browsers cache 50–100 transactions in IndexedDB
+- Display a yellow banner: "Offline — transactions queued locally"
+- On node recovery, bulk-upload the queue via `/sync/bulk` endpoint
+- Conflict resolution: node's timestamp wins for inventory stock; cashier's timestamp wins for sales records (sales happened, even if server didn't see them)
+
+### Implementation Phases
+
+| Phase | Deliverable | Effort |
+|-------|------------|--------|
+| **1 — Embedded Server** | Tauri sidecar or in-process HTTP server (Actix-web on a separate thread). Serves static POS UI and REST API. | 1–2 days |
+| **2 — Thin POS Client** | Standalone HTML/JS page served by the node. Login-less (trust LAN). Product search, cart, checkout, receipt print. | 2–3 days |
+| **3 — mDNS Discovery** | Node advertises `_pakde._tcp.local.` Cashiers open browser, see auto-discovered node URL. | 0.5 day |
+| **4 — Offline Queue** | LocalStorage queue + IndexedDB fallback. Bulk sync endpoint on node. Conflict resolution rules. | 1–2 days |
+
+### Open Questions
+
+- Should the thin client support the full PAKDE UI or only POS checkout?
+- Auth model for thin clients: trust LAN vs. PIN vs. member login?
+- Printer integration: receipt printing from browser via `window.print()` or ESC/POS raw?
+- Does SQLite handle 3–5 concurrent writers over REST without WAL issues? (Probably fine with WAL mode + serialized writes at the API layer.)
+- Should the node auto-elect on LAN if two machines run PAKDE? (Later — start with manual designation.)
+
+---
+
 ## Ideas
 
 - Barcode/QR scanner integration for inventory (camera-based)
