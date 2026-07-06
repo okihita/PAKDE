@@ -1,0 +1,108 @@
+// Web Audio API Retro 8-bit Synthesizer for Profile Selector
+class RetroAudioEngine {
+  private ctx: AudioContext | null = null;
+  public enabled = true;
+
+  constructor() {
+    const saved = localStorage.getItem("pakde-splash-sfx");
+    this.enabled = saved !== "false";
+  }
+
+  private init() {
+    if (!this.ctx) {
+      const WebkitAudioContext = (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+      const AudioCtx = window.AudioContext || WebkitAudioContext;
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
+    }
+  }
+
+  playBleep(frequency = 750, duration = 0.015, type: OscillatorType = "sine") {
+    if (!this.enabled) return;
+    try {
+      this.init();
+      const ctx = this.ctx;
+      if (!ctx || ctx.state === "suspended") return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch {
+      // AudioContext fails to initialize if user hasn't interacted yet.
+    }
+  }
+
+  playChime() {
+    if (!this.enabled) return;
+    try {
+      this.init();
+      const ctx = this.ctx;
+      if (!ctx || ctx.state === "suspended") return;
+      const now = ctx.currentTime;
+      // Soft, pleasant C-major arpeggio (C5 -> E5 -> G5 -> C6) using triangle wave for warmth
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, idx) => {
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+        gain.gain.setValueAtTime(0.0, now + idx * 0.05);
+        gain.gain.linearRampToValueAtTime(0.04, now + idx * 0.05 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.05);
+        osc.stop(now + idx * 0.05 + 0.25);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  playHoverChime() {
+    if (!this.enabled) return;
+    try {
+      this.init();
+      const ctx = this.ctx;
+      if (!ctx || ctx.state === "suspended") return;
+      const now = ctx.currentTime;
+      // Ultra-short soft click slide
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(800, now + 0.06);
+      gain.gain.setValueAtTime(0.015, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(now + 0.07);
+    } catch {
+      // fails silently if context suspended
+    }
+  }
+
+  resume() {
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume().catch(() => {});
+    }
+  }
+
+  toggleSound(forceState?: boolean): boolean {
+    this.enabled = forceState !== undefined ? forceState : !this.enabled;
+    localStorage.setItem("pakde-splash-sfx", this.enabled.toString());
+    return this.enabled;
+  }
+}
+
+export const sfx = new RetroAudioEngine();
