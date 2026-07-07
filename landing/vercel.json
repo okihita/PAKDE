@@ -1,6 +1,4 @@
 {
   "framework": "nextjs",
-  "buildCommand": "pnpm build",
-  "installCommand": "pnpm install --ignore-workspace",
-  "outputDirectory": "out"
+  "installCommand": "pnpm install --ignore-workspace"
 }
