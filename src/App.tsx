@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import "@/i18n"; // initialize i18next before render
 import { initDb, getDb } from "@/db";
 import { ToastProvider } from "@/hooks/useToast";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { IconProvider } from "@/components/IconContext";
 import { usePaletteInit } from "@/hooks/usePalette";
 import SplashScreen from "@/features/System/SplashScreen/SplashScreen";
@@ -85,18 +86,6 @@ function AppContent() {
     (async () => {
       try {
         await initDb();
-        const db = await getDb();
-        const lastProfileId = localStorage.getItem("pakde-active-profile-id");
-        if (lastProfileId) {
-          const profile = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE id = ?", [
-            lastProfileId,
-          ]);
-          if (profile.length > 0) {
-            setCoopProfile(profile[0]);
-            setAppState("main");
-            return;
-          }
-        }
         setAppState("profile_select");
       } catch (err: unknown) {
         console.error(err);
@@ -183,11 +172,22 @@ function AppContent() {
     setAppState("profile_select");
   };
 
+  const handleTitlebarMouseDown = (e: React.MouseEvent) => {
+    // Only respond to left mouse button
+    if (e.buttons !== 1) return;
+    // Double-click → toggle maximize; single click → start dragging
+    if (e.detail === 2) {
+      getCurrentWindow().toggleMaximize();
+    } else {
+      getCurrentWindow().startDragging();
+    }
+  };
+
   const titleBar = (
     <div
       className="bg-brand flex items-center justify-center border-b border-brand/80 relative z-50 select-none shrink-0"
       style={{ height: "38px" }}
-      data-tauri-drag-region
+      onMouseDown={handleTitlebarMouseDown}
     >
       <span className="text-xxs font-mono font-black text-brand-foreground tracking-widest uppercase pointer-events-none">
         {TITLEBAR_TEXT}

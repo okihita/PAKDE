@@ -1,7 +1,18 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
-import { Buildings, Plus, MapPin, SpeakerLow, SpeakerX, MusicNotes, CheckCircle, XCircle } from "@phosphor-icons/react";
+import {
+  Buildings,
+  Plus,
+  MapPin,
+  SpeakerLow,
+  SpeakerX,
+  MusicNotes,
+  CheckCircle,
+  XCircle,
+  ShieldCheck,
+  GameController,
+} from "@phosphor-icons/react";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 import { sfx } from "./sfx";
@@ -16,8 +27,23 @@ const TEXT_UNIT_PUPUK = "Sales";
 const TEXT_UNIT_SP = "Simpan Pinjam";
 const TEXT_UNIT_TOKO = "Toko Desa";
 const LOGOTYPE = "PAKDE";
-const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.coop";
+const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.vercel.app";
 const BTN_CLOSE = "Close";
+const HERO_TITLE = "Mulai Perjalanan Koperasi Anda";
+const HERO_SUBTITLE = "Pilih jalur Anda — kelola koperasi nyata atau jelajahi akun demo.";
+const REAL_TITLE = "Koperasi Saya";
+const REAL_DESC = "Daftarkan koperasi baru atau masuk ke akun yang sudah ada.";
+const REAL_REGISTER = "Daftar Baru";
+const REAL_LOGIN = "Sudah punya akun?";
+const LOGIN_LINK = "Masuk";
+const COOP_LIST_HEADING = "Koperasi Anda";
+const COOP_COUNT_SUFFIX = "koperasi";
+const DEMO_TITLE = "Coba Demo";
+const DEMO_DESC = "Koperasi Maju Bersama — 50 anggota · 3 unit usaha · 16 modul siap dijelajahi.";
+const DEMO_ACTION = "Mulai Demo";
+const DEMO_BADGE = "🎮 Mode Eksplorasi";
+const REAL_BADGE = "🏆 Mulai dari 0";
+const OR_TEXT = "atau";
 
 const SLIDESHOW_IMAGES = [
   "/Gemini_Generated_Image_4tfb4o4tfb4o4tfb.png",
@@ -46,6 +72,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   const [musicOn, setMusicOn] = useState(bgMusic.enabled);
   const [demoSeeded, setDemoSeeded] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [showCoopList, setShowCoopList] = useState(false);
 
   // Slideshow loop
   useEffect(() => {
@@ -66,9 +93,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
       try {
         setLoading(true);
         await loadProfiles();
-        if (import.meta.env.DEV) {
-          setDemoSeeded(await isDemoSeeded());
-        }
+        setDemoSeeded(await isDemoSeeded());
       } catch (e) {
         console.error(e);
       } finally {
@@ -111,19 +136,34 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
     sfx.playBleep(700, 0.012);
   };
 
-  const handleDevToggle = async () => {
+  const handleRealHover = () => {
+    sfx.playSoftThud(100, 0.15);
+  };
+
+  const handleDemoToggle = async () => {
     try {
+      const db = await getDb();
       if (demoSeeded) {
         await clearDemoCooperative();
-        setDevResult({ open: true, ok: true, message: "Demo data cleared successfully." });
+        setDevResult({ open: true, ok: true, message: "Demo account removed." });
+        await loadProfiles();
+        setDemoSeeded(false);
       } else {
         await seedDemoCooperative();
-        setDevResult({ open: true, ok: true, message: "Demo data seeded successfully." });
+        const rows = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE id = 'kdp-001'");
+        if (rows.length > 0) {
+          sfx.playChime();
+          setTimeout(() => {
+            onProfileSelect(rows[0]);
+          }, 280);
+          return;
+        }
+        setDevResult({ open: true, ok: true, message: "Demo account created." });
+        await loadProfiles();
+        setDemoSeeded(true);
       }
-      await loadProfiles();
-      setDemoSeeded(!demoSeeded);
     } catch (e) {
-      console.error("[Seed Demo] Failed:", e);
+      console.error("[Demo] Failed:", e);
       setDevResult({ open: true, ok: false, message: e instanceof Error ? e.message : String(e) });
     }
   };
@@ -190,126 +230,215 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         </div>
       </div>
 
-      {/* Middle: Profile Cards or Empty State */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 w-full max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-3 duration-300">
+      {/* Middle: Hero Two-Box + optional cooperative list */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 w-full max-w-5xl mx-auto overflow-y-auto">
         {loading ? (
           <div className="text-center py-12 text-xxs font-mono text-brand animate-pulse">{t("common.loading")}</div>
-        ) : profiles.length === 0 ? (
-          <div className="text-center space-y-5">
-            <div className="w-16 h-16 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-center mx-auto shadow-sm">
-              <Buildings className="h-8 w-8 text-slate-500" />
-            </div>
-            <div className="space-y-1.5 max-w-xs mx-auto">
-              <h2 className="text-sm font-bold text-foreground tracking-wide">{t("profileSelect.emptyTitle")}</h2>
-              <p className="text-xxs font-mono text-slate-400 leading-relaxed">{t("profileSelect.emptyDesc")}</p>
-            </div>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              onMouseEnter={handleCardHover}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand/10 border border-brand/25 hover:bg-brand/20 hover:border-brand/40 text-success text-xxs font-mono font-bold uppercase tracking-wider transition-all duration-200"
-            >
-              <Plus className="h-4 w-4" />
-              {t("profileSelect.createBtn")}
-            </button>
-          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-            {profiles.map((p) => {
-              const activeUnits = getBusinessUnits(p.business_units);
-              const isHealthy = p.health_score >= 70;
-              const isCritical = p.health_score < 40;
-
-              return (
-                <Card
-                  key={p.id}
-                  onClick={() => handleCardClick(p)}
-                  onMouseEnter={handleCardHover}
-                  className="bg-slate-950/90 border-slate-800 hover:border-brand/40 backdrop-blur-md cursor-pointer hover:shadow-[0_8px_30px_hsl(var(--brand) / 0.08)] transition-all duration-200 flex flex-col justify-between min-h-52 p-5 hover:scale-[1.01] select-none shadow-xl relative"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center border border-success/20 shrink-0">
-                        <Buildings className="h-4.5 w-4.5 text-success" />
-                      </div>
-                      <span className="text-xxxs font-mono font-bold text-success uppercase border border-brand/25 px-2 py-0.5 rounded bg-success/20">
-                        {p.id}
-                      </span>
-                    </div>
-
-                    <div className="space-y-1">
-                      <h3 className="text-xs font-bold text-foreground line-clamp-1 leading-tight tracking-wide">
-                        {p.name}
-                      </h3>
-                      <p className="text-xxs text-slate-400 flex items-center gap-1">
-                        <MapPin className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-                        <span className="truncate">
-                          {p.regency}, {p.province}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Subtle Gamified Specs Section (Health bar and Unit tags) */}
-                  <div className="space-y-3 pt-4 border-t border-slate-900 font-sans">
-                    {/* Cooperative Health Progress Bar */}
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center text-xxxs font-mono text-slate-400">
-                        <span className="uppercase">{t("profileSelect.health")}</span>
-                        <span
-                          className={`font-bold ${isHealthy ? "text-success" : isCritical ? "text-danger" : "text-warning"}`}
-                        >
-                          {p.health_score}%
-                        </span>
-                      </div>
-                      <div className="h-1 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-300 ${
-                            isHealthy ? "bg-brand" : isCritical ? "bg-danger" : "bg-warning"
-                          }`}
-                          style={{ width: `${p.health_score}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Active units list */}
-                    <div className="flex flex-wrap gap-1.5 pt-0.5">
-                      {activeUnits.map((unit) => {
-                        let label = "";
-                        if (unit === "unit_pupuk") label = TEXT_UNIT_PUPUK;
-                        else if (unit === "unit_simpan_pinjam") label = TEXT_UNIT_SP;
-                        else if (unit === "unit_toko_desa") label = TEXT_UNIT_TOKO;
-                        return (
-                          <span
-                            key={unit}
-                            className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded-xs bg-slate-900 border border-slate-800 text-slate-400 uppercase tracking-wider"
-                          >
-                            {label}
-                          </span>
-                        );
-                      })}
-                      {activeUnits.length === 0 && (
-                        <span className="text-xxxs font-mono text-slate-600 italic">{t("profileSelect.units")}: 0</span>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-
-            {/* "+ Create New" item card */}
-            <Card
-              onClick={() => setShowCreateModal(true)}
-              onMouseEnter={handleCardHover}
-              className="bg-slate-950/60 border-dashed border-slate-800 hover:border-brand/35 hover:bg-success/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-52 p-5 hover:scale-[1.01] select-none shadow-md"
-            >
-              <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center mb-3 group-hover:bg-slate-800 border border-slate-800 transition-colors shadow-sm">
-                <Plus className="h-5 w-5 text-success" />
+          <>
+            {/* ── Two-Box always visible ── */}
+            <div className="w-full max-w-3xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{HERO_TITLE}</h2>
+                <p className="text-xs text-slate-500 max-w-md mx-auto">{HERO_SUBTITLE}</p>
               </div>
-              <span className="text-xxs font-mono font-bold text-success uppercase tracking-wider">
-                {t("profileSelect.createBtn")}
-              </span>
-            </Card>
-          </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                {/* Left: Real Account */}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && setShowCreateModal(true)}
+                  onClick={(e) => {
+                    // If clicking the "Masuk" link, don't fire the card click
+                    if ((e.target as HTMLElement).closest("[data-login-link]")) return;
+                    handleUserInteraction();
+                    if (profiles.length > 0) {
+                      setShowCoopList((prev) => !prev);
+                    } else {
+                      sfx.playChime();
+                      setShowCreateModal(true);
+                    }
+                  }}
+                  onMouseEnter={handleRealHover}
+                  className="group relative w-full sm:w-72 rounded-2xl border-2 border-slate-700 bg-slate-900/80 backdrop-blur-md p-6 cursor-pointer hover:border-brand/60 hover:bg-slate-900/95 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(16,185,129,0.12)] transition-all duration-300 text-left focus:outline-none focus:ring-2 focus:ring-brand/50"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
+                      <ShieldCheck className="h-5 w-5 text-brand" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">{REAL_TITLE}</h3>
+                      <p className="text-xxxs text-slate-500 mt-0.5">{REAL_BADGE}</p>
+                    </div>
+                  </div>
+                  <p className="text-xxs text-slate-400 leading-relaxed mb-5">{REAL_DESC}</p>
+                  <div
+                    className="rounded-lg bg-brand/10 border border-brand/25 px-4 py-2.5 text-xs font-bold text-brand text-center group-hover:bg-brand/20 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUserInteraction();
+                      sfx.playChime();
+                      setShowCreateModal(true);
+                    }}
+                  >
+                    {REAL_REGISTER}
+                  </div>
+                  <p className="mt-3 text-xxxs text-slate-600 text-center">
+                    {REAL_LOGIN}{" "}
+                    <span
+                      data-login-link
+                      className="text-slate-500 underline cursor-pointer hover:text-slate-400 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUserInteraction();
+                        setShowCoopList((prev) => !prev);
+                      }}
+                    >
+                      {LOGIN_LINK}
+                    </span>
+                  </p>
+                </div>
+
+                {/* "atau" divider */}
+                <span className="text-xxs font-mono font-bold text-slate-600 uppercase tracking-widest">{OR_TEXT}</span>
+
+                {/* Right: Demo Account */}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && handleDemoToggle()}
+                  onClick={() => {
+                    handleUserInteraction();
+                    handleDemoToggle();
+                  }}
+                  onMouseEnter={handleCardHover}
+                  className="group relative w-full sm:w-72 rounded-2xl border-2 border-amber-800/50 bg-amber-950/30 backdrop-blur-md p-6 cursor-pointer hover:border-amber-600/60 hover:bg-amber-950/50 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(245,158,11,0.12)] transition-all duration-300 text-left focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
+                      <GameController className="h-5 w-5 text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-amber-200">{DEMO_TITLE}</h3>
+                      <p className="text-xxxs text-amber-600 mt-0.5">{DEMO_BADGE}</p>
+                    </div>
+                  </div>
+                  <p className="text-xxs text-amber-300/70 leading-relaxed mb-5">{DEMO_DESC}</p>
+                  <div className="rounded-lg bg-amber-500/10 border border-amber-500/25 px-4 py-2.5 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
+                    {DEMO_ACTION}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Cooperative list (shown when "Masuk" clicked) ── */}
+            {showCoopList && profiles.length > 0 && (
+              <div className="w-full mt-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">{COOP_LIST_HEADING}</h3>
+                  <span className="text-xxs text-slate-600">
+                    {profiles.length} {COOP_COUNT_SUFFIX}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                  {profiles.map((p) => {
+                    const activeUnits = getBusinessUnits(p.business_units);
+                    const isHealthy = p.health_score >= 70;
+                    const isCritical = p.health_score < 40;
+
+                    return (
+                      <Card
+                        key={p.id}
+                        onClick={() => handleCardClick(p)}
+                        onMouseEnter={handleCardHover}
+                        className="bg-slate-950/90 border-slate-800 hover:border-brand/40 backdrop-blur-md cursor-pointer hover:shadow-[0_8px_30px_hsl(var(--brand) / 0.08)] transition-all duration-200 flex flex-col justify-between min-h-52 p-5 hover:scale-[1.01] select-none shadow-xl relative"
+                      >
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center border border-success/20 shrink-0">
+                              <Buildings className="h-4.5 w-4.5 text-success" />
+                            </div>
+                            <span className="text-xxxs font-mono font-bold text-success uppercase border border-brand/25 px-2 py-0.5 rounded bg-success/20">
+                              {p.id}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1">
+                            <h3 className="text-xs font-bold text-foreground line-clamp-1 leading-tight tracking-wide">
+                              {p.name}
+                            </h3>
+                            <p className="text-xxs text-slate-400 flex items-center gap-1">
+                              <MapPin className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                              <span className="truncate">
+                                {p.regency}, {p.province}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3 pt-4 border-t border-slate-900 font-sans">
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-xxxs font-mono text-slate-400">
+                              <span className="uppercase">{t("profileSelect.health")}</span>
+                              <span
+                                className={`font-bold ${isHealthy ? "text-success" : isCritical ? "text-danger" : "text-warning"}`}
+                              >
+                                {p.health_score}%
+                              </span>
+                            </div>
+                            <div className="h-1 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-300 ${
+                                  isHealthy ? "bg-brand" : isCritical ? "bg-danger" : "bg-warning"
+                                }`}
+                                style={{ width: `${p.health_score}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1.5 pt-0.5">
+                            {activeUnits.map((unit) => {
+                              let label = "";
+                              if (unit === "unit_pupuk") label = TEXT_UNIT_PUPUK;
+                              else if (unit === "unit_simpan_pinjam") label = TEXT_UNIT_SP;
+                              else if (unit === "unit_toko_desa") label = TEXT_UNIT_TOKO;
+                              return (
+                                <span
+                                  key={unit}
+                                  className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded-xs bg-slate-900 border border-slate-800 text-slate-400 uppercase tracking-wider"
+                                >
+                                  {label}
+                                </span>
+                              );
+                            })}
+                            {activeUnits.length === 0 && (
+                              <span className="text-xxxs font-mono text-slate-600 italic">
+                                {t("profileSelect.units")}: 0
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+
+                  <Card
+                    onClick={() => setShowCreateModal(true)}
+                    onMouseEnter={handleCardHover}
+                    className="bg-slate-950/60 border-dashed border-slate-800 hover:border-brand/35 hover:bg-success/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-52 p-5 hover:scale-[1.01] select-none shadow-md"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center mb-3 border border-slate-800 transition-colors shadow-sm">
+                      <Plus className="h-5 w-5 text-success" />
+                    </div>
+                    <span className="text-xxs font-mono font-bold text-success uppercase tracking-wider">
+                      {t("profileSelect.createBtn")}
+                    </span>
+                  </Card>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -319,52 +448,39 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         <span className="text-xxs font-mono text-slate-600">{FOOTER_COPYRIGHT}</span>
       </div>
 
-      {import.meta.env.DEV && (
-        <div className="absolute bottom-4 left-4 z-20">
-          <button
-            onClick={handleDevToggle}
-            className="px-2.5 py-1.5 rounded-md bg-amber-950/60 border border-amber-800/50 text-amber-500 text-xxxs font-mono uppercase tracking-wider hover:bg-amber-900/60 hover:border-amber-700/50 transition-colors shadow-md backdrop-blur-md"
-          >
-            {demoSeeded ? "Clear Seed" : "Seed Demo"}
-          </button>
-        </div>
-      )}
-
       <CreateProfileDialog
         open={showCreateModal}
         onOpenChange={setShowCreateModal}
         onProfileCreated={handleCreateCreated}
       />
 
-      {/* Dev-only result popup */}
-      {import.meta.env.DEV && (
-        <Dialog open={devResult.open} onOpenChange={(open) => setDevResult((prev) => ({ ...prev, open }))}>
-          <DialogContent className="bg-slate-900 border max-w-sm shadow-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-sm font-bold">
-                {devResult.ok ? (
-                  <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
-                ) : (
-                  <XCircle className="h-5 w-5 text-danger flex-shrink-0" />
-                )}
-                <span className={devResult.ok ? "text-success" : "text-danger"}>
-                  {devResult.ok ? "Success" : "Error"}
-                </span>
-              </DialogTitle>
-            </DialogHeader>
-            <p className="text-xs text-slate-300 font-mono leading-relaxed py-2">{devResult.message}</p>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setDevResult((prev) => ({ ...prev, open: false }))}
-                className="border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8.5"
-              >
-                {BTN_CLOSE}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* Result popup */}
+      <Dialog open={devResult.open} onOpenChange={(open) => setDevResult((prev) => ({ ...prev, open }))}>
+        <DialogContent className="bg-slate-900 border max-w-sm shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-sm font-bold">
+              {devResult.ok ? (
+                <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+              ) : (
+                <XCircle className="h-5 w-5 text-danger flex-shrink-0" />
+              )}
+              <span className={devResult.ok ? "text-success" : "text-danger"}>
+                {devResult.ok ? "Success" : "Error"}
+              </span>
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-xs text-slate-300 font-mono leading-relaxed py-2">{devResult.message}</p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDevResult((prev) => ({ ...prev, open: false }))}
+              className="border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8.5"
+            >
+              {BTN_CLOSE}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
