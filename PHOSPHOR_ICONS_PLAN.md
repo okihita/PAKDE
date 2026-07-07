@@ -1,6 +1,6 @@
 # Phosphor Icons Migration Plan
 
-Replace `lucide-react` with `@phosphor-icons/react` across the entire PAKDE codebase.
+Replace `lucide-react` with `@phosphor-icons/react` across the entire PAKDE codebase. Icons are centrally managed through a Settings-driven context — users can globally switch between **Bold / Regular / Fill / Duotone** weights and set a universal accent color from the Settings page. No per-file hardcoded styles.
 
 ---
 
@@ -20,10 +20,12 @@ The **6-weight system** is the killer feature. With lucide we had one visual wei
 
 ---
 
-## Weight Decision
+## Weight Strategy
 
-| Context | Phosphor Weight | Rationale |
-|---------|----------------|-----------|
+Weights are **globally controlled** from the Settings page via `IconContext`. The table below documents the **default recommended weight** for each icon context — these ship as the out-of-the-box experience. Users can override everything from Settings at any time.
+
+| Context | Default Weight | Rationale |
+|---------|---------------|-----------|
 | Sidebar nav icons | **Bold** | Navigation needs visual weight to anchor the page |
 | Feature page headers | **Bold** | Section titles need presence |
 | Action buttons (primary) | **Bold** | Save, Create, Delete — need to pop |
@@ -35,7 +37,9 @@ The **6-weight system** is the killer feature. With lucide we had one visual wei
 | Template picker icons | **Regular** | Cards already have visual weight |
 | Table cell icons | **Regular** | Dense data, avoid visual noise |
 
-**Rule of thumb:** If the icon is the ONLY visual element in a button or label, use Bold. If it's accompanying text, use Regular.
+**Override rules:** Any icon can receive `weight="fill"` or `weight="duotone"` as a per-instance prop. This bypasses the global setting for that specific icon. The global setting acts as the fallback for every icon that doesn't specify its own weight.
+
+**Color strategy:** Icons inherit `currentColor` from CSS by default (same behavior as lucide today). When the user picks a custom accent color in Settings, all icons without an explicit Tailwind `text-*` class use that color. Explicit `text-*` classes always win (local beats global).
 
 ---
 
@@ -220,53 +224,287 @@ Each lucide icon mapped to its Phosphor equivalent with weight.
 
 ---
 
-## Implementation Steps
+## Centralized Icon Management — Settings-Driven Architecture
 
-1. **Install** `@phosphor-icons/react`
+### Goal
+
+Every icon in PAKDE must be styleable from one place: the Settings page. Users can globally switch between **Bold**, **Regular (outline)**, **Fill**, and **Duotone** icon weights, as well as set a universal **icon accent color**. No per-file hardcoded weights. No scattered `className` overrides. One setting. Every icon obeys.
+
+### Architecture
+
+```
+Settings Page ──(user picks)──► localStorage ──(boot read)──► IconContext.Provider
+                                                                  │
+                                            ┌─────────────────────┤
+                                            ▼                     ▼
+                                       <Sidebar />           <StoreLayout />
+                                       icons auto-weight      icons auto-weight
+                                       from context           from context
+```
+
+Three pieces:
+1. **`src/components/IconContext.tsx`** — React Context + Provider wrapping Phosphor's built-in `IconContext`
+2. **`src/components/PAKDEIcon.tsx`** — a thin wrapper component every feature imports instead of raw Phosphor icons
+3. **Settings page integration** — weight selector + color picker in `src/features/System/Settings/Settings.tsx`
+
+### 1. IconContext Provider (`src/components/IconContext.tsx`)
+
+```tsx
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { IconContext as PhosphorContext } from "@phosphor-icons/react";
+
+type IconWeight = "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
+
+interface IconSettings {
+  weight: IconWeight;
+  color: string;
+  size: number;
+}
+
+const DEFAULT_SETTINGS: IconSettings = {
+  weight: "regular",
+  color: "currentColor",   // inherits from parent text color
+  size: 16,
+};
+
+const STORAGE_KEY = "pakde-icon-settings";
+
+function loadSettings(): IconSettings {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return DEFAULT_SETTINGS;
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+
+function saveSettings(s: IconSettings) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+
+// Internal context for the settings state (so Settings page can read/write)
+const IconSettingsCtx = createContext<{
+  settings: IconSettings;
+  setWeight: (w: IconWeight) => void;
+  setColor: (c: string) => void;
+  setSize: (n: number) => void;
+} | null>(null);
+
+export function useIconSettings() {
+  const ctx = useContext(IconSettingsCtx);
+  if (!ctx) throw new Error("useIconSettings must be used within IconProvider");
+  return ctx;
+}
+
+export function IconProvider({ children }: { children: ReactNode }) {
+  const [settings, setSettings] = useState<IconSettings>(loadSettings);
+
+  useEffect(() => {
+    saveSettings(settings);
+  }, [settings]);
+
+  const setWeight = (w: IconWeight) => setSettings((s) => ({ ...s, weight: w }));
+  const setColor = (c: string) => setSettings((s) => ({ ...s, color: c }));
+  const setSize = (n: number) => setSettings((s) => ({ ...s, size: n }));
+
+  return (
+    <IconSettingsCtx.Provider value={{ settings, setWeight, setColor, setSize }}>
+      <PhosphorContext.Provider
+        value={{
+          weight: settings.weight,
+          color: settings.color,
+          size: settings.size,
+          mirrored: false,
+        }}
+      >
+        {children}
+      </PhosphorContext.Provider>
+    </IconSettingsCtx.Provider>
+  );
+}
+```
+
+### 2. PAKDEIcon Wrapper (`src/components/PAKDEIcon.tsx`)
+
+Every feature file imports `<PAKDEIcon>` instead of raw Phosphor icons. It automatically respects the global context but allows per-instance overrides when needed (e.g., a red delete button icon always stays red).
+
+```tsx
+import { type IconWeight, type Icon as PhosphorBaseIcon } from "@phosphor-icons/react";
+import { useIconSettings } from "./IconContext";
+
+type PhosphorIconComponent = React.ForwardRefExoticComponent<
+  Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
+    weight?: IconWeight;
+    color?: string;
+    size?: number | string;
+    mirrored?: boolean;
+  } & React.RefAttributes<SVGSVGElement>
+>;
+
+interface PAKDEIconProps {
+  component: PhosphorIconComponent;
+  /** Override global weight for THIS icon only */
+  weight?: IconWeight;
+  /** Override global color for THIS icon only */
+  color?: string;
+  /** Override global size for THIS icon only */
+  size?: number;
+  className?: string;
+}
+
+export default function PAKDEIcon({ component: Icon, weight, color, size, className }: PAKDEIconProps) {
+  const { settings } = useIconSettings();
+  return (
+    <Icon
+      weight={weight ?? settings.weight}
+      color={color ?? settings.color}
+      size={size ?? settings.size}
+      className={className}
+    />
+  );
+}
+```
+
+**Usage pattern (replaces raw Phosphor import):**
+
+Before (with lucide):
+```tsx
+import { MapPin, Plus, Trash2 } from "lucide-react";
+// ...
+<MapPin className="h-3.5 w-3.5 text-amber-400" />
+```
+
+After (with PAKDEIcon):
+```tsx
+import PAKDEIcon from "@/components/PAKDEIcon";
+import { MapPin, Plus, Trash } from "@phosphor-icons/react";
+// ...
+<PAKDEIcon component={MapPin} className="h-3.5 w-3.5 text-amber-400" />
+```
+
+The `text-amber-400` Tailwind class still works because Phosphor's `color` defaults to `currentColor` — it inherits from the parent's text color. The global color setting only applies when no Tailwind text color class is present.
+
+### 3. Settings Page Integration
+
+Add a new section to `src/features/System/Settings/Settings.tsx`:
+
+```
+┌──────────────────────────────────────────────────┐
+│  🎨  Icon Style                                   │
+│                                                   │
+│  Weight                                           │
+│  ┌──────┬──────┬──────┬──────┬──────┬──────┐      │
+│  │ Thin │ Light│ Reg. │ Bold │ Fill │ Duo. │      │
+│  └──────┴──────┴──────┴──────┴──────┴──────┘      │
+│  (bold is selected — emerald border)              │
+│                                                   │
+│  Preview                                          │
+│  ┌──────────────────────────────────────────┐     │
+│  │  🏠 Home    👥 Members    📊 Accounting   │     │
+│  │  ⚙ Settings   🛒 Sales   🗺️ Store Layout │     │
+│  │  (all icons rendered in selected weight)  │     │
+│  └──────────────────────────────────────────┘     │
+│                                                   │
+│  Accent Color                                     │
+│  ┌────┬────┬────┬────┬────┬────┬────┬────┐       │
+│  │ ██ │ ██ │ ██ │ ██ │ ██ │ ██ │ ██ │ +  │       │
+│  └────┴────┴────┴────┴────┴────┴────┴────┘       │
+│  Emerald (default)   Amber   Rose   Blue   Custom │
+│                                                   │
+│  Size                                             │
+│  [ 12px ]  [ 14px ]  [ 16px ●]  [ 20px ]         │
+└──────────────────────────────────────────────────┘
+```
+
+**Preset color palette:**
+| Token | Hex | Use case |
+|-------|-----|----------|
+| Emerald | `#10b981` | Default (matches PAKDE brand) |
+| Amber | `#f59e0b` | Warm high-contrast |
+| Rose | `#f43f5e` | High visibility |
+| Blue | `#60a5fa` | Professional/corporate |
+| Slate | `#94a3b8` | Subtle/minimal |
+| Custom | (color input) | User-selected |
+
+The Settings page reads/writes via `useIconSettings()` hook. Changes are instant (localStorage + context update).
+
+### 4. Mounting in App.tsx
+
+```tsx
+import { IconProvider } from "@/components/IconContext";
+
+export default function App() {
+  return (
+    <ToastProvider>
+      <IconProvider>
+        <AppContent />
+      </IconProvider>
+    </ToastProvider>
+  );
+}
+```
+
+The `IconProvider` wraps the entire app below Toasts so that even error screens get consistent icons.
+
+### 5. Color Inheritance Strategy
+
+Phosphor icons use `color="currentColor"` by default (set by our `DEFAULT_SETTINGS`). This means:
+
+- **Normal flow:** Icon inherits color from its parent's Tailwind `text-*` class → no conflict, works exactly like lucide today
+- **Settings override:** User sets a custom color → every icon without an explicit `text-*` class uses that color → but any icon WITH a `text-*` class still wins (explicit beats global)
+- **Per-icon override:** `<PAKDEIcon component={...} color="hotpink" />` → that specific icon is hotpink, everything else follows the global rule
+
+**Priority chain:** Per-icon `color` prop > Tailwind `text-*` className > Global settings color > `currentColor` (CSS cascade)
+
+### 6. Migration Impact on Existing Code
+
+**What stays the same:**
+- Tailwind `className` props (`h-3.5 w-3.5 text-amber-400`) → unchanged
+- Icon sizes through Tailwind → unchanged  
+- Conditional color logic → unchanged
+
+**What changes:**
+- Import source: `"lucide-react"` → `"@phosphor-icons/react"`
+- Some icon names: `Trash2` → `Trash`, `TrendingUp` → `TrendUp`, etc.
+- Every `<IconName />` becomes `<PAKDEIcon component={IconName} />`
+- Problematic icons use their Phosphor native name (no aliases)
+
+**File count impact:** Every file that imports icons gets +1 import line for `PAKDEIcon`, and changes the JSX for each icon instance. Average 2-3 changed lines per icon. Total ~79 icons × ~2.5 lines = ~200 lines changed across ~30 files.
+
+---
+
+## Implementation Steps (Revised)
+
+1. **Install** `@phosphor-icons/react`:
    ```bash
    pnpm add @phosphor-icons/react
    ```
 
-2. **Create icon mapping alias file** at `src/components/icons.ts` that re-exports Phosphor icons with our preferred weights, and maps our problematic cases:
-   ```ts
-   // Re-exports from Phosphor with our default weights
-   export { ArrowLeft, MapPin, Users, Plus, X, Check, Trash, FileText, ... } from "@phosphor-icons/react";
-   
-   // Problematic mappings
-   export { SquaresFour as LayoutDashboard } from "@phosphor-icons/react";
-   export { Table as FileSpreadsheet } from "@phosphor-icons/react";
-   export { Plant as Sprout } from "@phosphor-icons/react";
-   export { Handshake as HeartHandshake } from "@phosphor-icons/react";
-   export { Hammer as Shovel } from "@phosphor-icons/react";
-   export { Chat as MessageSquare } from "@phosphor-icons/react";
-   ```
+2. **Create infrastructure** (Batch 0 — foundation):
+   - `src/components/IconContext.tsx` — Provider + settings hook + localStorage persistence
+   - `src/components/PAKDEIcon.tsx` — wrapper component
+   - Update `src/App.tsx` — mount `<IconProvider>`
+   - Update `src/features/System/Settings/Settings.tsx` — add icon style section with weight selector, color palette, size slider, and live preview
+   - Add i18n keys for the new settings section
 
-   Actually, we should use Phosphor's native names everywhere (clean cut). No aliases — just fix the imports to use the correct Phosphor icon name.
+3. **Migrate features in batches** (1-9, same order as documented above)
+   - Each batch: replace `lucide-react` imports → `@phosphor-icons/react` imports
+   - Wrap each icon instance in `<PAKDEIcon component={...} />`
+   - Handle name changes (`Trash2` → `Trash`, etc.)
+   - Run `tsc --noEmit` after each batch
 
-3. **Migrate in batches** (order above) — each batch is a separate commit
+4. **Remove** `lucide-react` from `package.json`
 
-4. **Remove** `lucide-react` from dependencies
-
-5. **Verify** `npx tsc --noEmit` after each batch
+5. **Verify visual consistency** — test each weight at every feature page
 
 ---
 
-## Risk Assessment
+## Estimated Effort (Revised)
 
-| Risk | Severity | Mitigation |
-|------|----------|------------|
-| Phosphor icons render slightly different sizes than lucide | Low | Both use SVG with viewBox. Phosphor's 16×16 base means slightly sharper at `h-3 h-3.5` sizes. We may need minor `className` adjustments on a few icons. |
-| Missing icon causes compile error | Low | All 79 icons have been mapped. 6 problematic ones have chosen approximations documented above. |
-| Bundle size increase | Very Low | Both are tree-shakable. Phosphor may actually be slightly smaller due to simpler SVG paths. |
-| Phosphor Bold weight looks too heavy | Low | Phosphor Bold is comparable to lucide's default weight (lucide is already chunky). If anything, Phosphor Regular may look too light — we can bump to Bold where needed. |
-
----
-
-## Estimated Effort
-
-- Install + alias file: **10 min**
+- Install + infrastructure (IconContext, PAKDEIcon, App.tsx, Settings): **45 min**
+- Settings page integration (UI + i18n): **30 min**
 - Batch 1-9 migration: **~2 hours** (each batch ~10-15 min)
-- Fixing import paths and cleanup: **20 min**
-- Testing visual consistency: **30 min**
+- Cleanup + final pass: **30 min**
 
-**Total: ~3 hours**
+**Total: ~3.5 hours**
