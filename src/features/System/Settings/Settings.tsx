@@ -259,10 +259,10 @@ export default function Settings({
                 </div>
                 {/* Live preview strip */}
                 <div className="flex items-center gap-1.5 text-xxxs font-mono">
-                  <span className="px-1.5 py-0.5 rounded bg-success/20 text-success">Success</span>
-                  <span className="px-1.5 py-0.5 rounded bg-warning/20 text-warning">Warning</span>
-                  <span className="px-1.5 py-0.5 rounded bg-danger/20 text-danger">Error</span>
-                  <span className="px-1.5 py-0.5 rounded bg-info/20 text-info">Info</span>
+                  <span className="px-1.5 py-0.5 rounded bg-success/20 text-success">{t("settings.preferences.previewSuccess")}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-warning/20 text-warning">{t("settings.preferences.previewWarning")}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-danger/20 text-danger">{t("settings.preferences.previewError")}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-info/20 text-info">{t("settings.preferences.previewInfo")}</span>
                 </div>
               </div>
             </div>

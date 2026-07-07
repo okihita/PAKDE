@@ -427,7 +427,11 @@
       "fontXLarge": "X-LARGE",
       "fontHint": "Cmd/Ctrl + +/- to zoom, Cmd/Ctrl + 0 to reset",
       "iconWeight": "Icon Weight",
-      "palette": "Cockpit Palette"
+      "palette": "Cockpit Palette",
+      "previewSuccess": "Success",
+      "previewWarning": "Warning",
+      "previewError": "Error",
+      "previewInfo": "Info"
     }
   },
   "palette": {

@@ -427,7 +427,11 @@
       "fontXLarge": "SANGAT BESAR",
       "fontHint": "Cmd/Ctrl + +/- untuk zoom, Cmd/Ctrl + 0 untuk reset",
       "iconWeight": "Bobot Ikon",
-      "palette": "Palet Kokpit"
+      "palette": "Palet Kokpit",
+      "previewSuccess": "Sukses",
+      "previewWarning": "Peringatan",
+      "previewError": "Error",
+      "previewInfo": "Info"
     }
   },
   "palette": {
