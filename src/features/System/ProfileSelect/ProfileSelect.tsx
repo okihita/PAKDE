@@ -19,6 +19,15 @@ const LOGOTYPE = "PAKDE";
 const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.coop";
 const BTN_CLOSE = "Close";
 
+const SLIDESHOW_IMAGES = [
+  "/Gemini_Generated_Image_4tfb4o4tfb4o4tfb.png",
+  "/Gemini_Generated_Image_htw32rhtw32rhtw3.png",
+  "/Gemini_Generated_Image_pxcvqwpxcvqwpxcv.png",
+  "/Gemini_Generated_Image_rllm0erllm0erllm.png",
+  "/Gemini_Generated_Image_tik8trtik8trtik8.png",
+];
+const SLIDE_INTERVAL_MS = 5000;
+
 interface ProfileSelectProps {
   onProfileSelect: (profile: CooperativeProfile) => void;
 }
@@ -36,6 +45,15 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   const [soundOn, setSoundOn] = useState(sfx.enabled);
   const [musicOn, setMusicOn] = useState(bgMusic.enabled);
   const [demoSeeded, setDemoSeeded] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  // Slideshow loop
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % SLIDESHOW_IMAGES.length);
+    }, SLIDE_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, []);
 
   const loadProfiles = async () => {
     const db = await getDb();
@@ -129,9 +147,19 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   return (
     <div
       onClick={handleUserInteraction}
-      className="flex-1 flex flex-col h-full w-full relative overflow-hidden bg-cover bg-center select-none"
-      style={{ backgroundImage: "url('/background.jpg')" }}
+      className="flex-1 flex flex-col h-full w-full relative overflow-hidden bg-slate-950 select-none"
     >
+      {/* Slideshow background */}
+      {SLIDESHOW_IMAGES.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+          style={{ opacity: i === slideIndex ? 1 : 0 }}
+        />
+      ))}
+
       {/* Dark blur overlay */}
       <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] bg-gradient-to-b from-slate-950/20 via-slate-950/50 to-slate-950/80 z-0" />
 

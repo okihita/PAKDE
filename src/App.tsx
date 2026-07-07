@@ -186,7 +186,7 @@ function AppContent() {
   const titleBar = (
     <div
       className="bg-brand flex items-center justify-center border-b border-brand/80 relative z-50 select-none shrink-0"
-      style={{ height: "30px" }}
+      style={{ height: "38px" }}
       data-tauri-drag-region
     >
       <span className="text-xxs font-mono font-black text-brand-foreground tracking-widest uppercase pointer-events-none">
