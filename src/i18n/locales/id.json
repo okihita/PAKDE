@@ -426,8 +426,19 @@
       "fontLarge": "BESAR",
       "fontXLarge": "SANGAT BESAR",
       "fontHint": "Cmd/Ctrl + +/- untuk zoom, Cmd/Ctrl + 0 untuk reset",
-      "iconWeight": "Bobot Ikon"
+      "iconWeight": "Bobot Ikon",
+      "palette": "Palet Kokpit"
     }
+  },
+  "palette": {
+    "emerald": "Emerald",
+    "ocean": "Laut",
+    "amber": "Amber",
+    "rose": "Mawar",
+    "slate": "Batu",
+    "forest": "Hutan",
+    "violet": "Ungu",
+    "highcontrast": "KT"
   },
   "leveling": {
     "level": "Level {{n}}",

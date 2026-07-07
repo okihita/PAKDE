@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { useUpdater } from "@/hooks/useUpdater";
 import { useToast } from "@/hooks/useToast";
 import { useIconSettings } from "@/components/IconContext";
+import { usePalette } from "@/hooks/usePalette";
+import { PALETTES } from "@/data/palettes";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 import { Moon, Sun, Globe, TextAa, Palette, PaintBucket, User, Buildings, ArrowsLeftRight } from "@phosphor-icons/react";
@@ -76,6 +78,7 @@ export default function Settings({
   const u = useUpdater();
   const toast = useToast();
   const { settings: iconSettings, setWeight } = useIconSettings();
+  const [activePalette, setPalette] = usePalette();
 
   if (!coopProfile) return <div className="text-muted-foreground text-xs">{t("common.loading")}</div>;
 
@@ -227,6 +230,40 @@ export default function Settings({
                     <span className="text-xxxs font-bold text-foreground">{opt.label}</span>
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Palette */}
+            <div className="space-y-2">
+              <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Palette className="h-3 w-3 text-slate-500" />
+                {t("settings.preferences.palette")}
+              </label>
+              <div className="space-y-2">
+                <div className="grid grid-cols-4 gap-2">
+                  {PALETTES.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setPalette(p.id)}
+                      className={`flex flex-col items-center gap-1.5 py-2.5 rounded-lg border-2 cursor-pointer transition-all ${
+                        activePalette.id === p.id ? bannerActive : bannerInactive
+                      }`}
+                    >
+                      <span
+                        className="w-5 h-5 rounded-full border border-white/20"
+                        style={{ backgroundColor: p.swatch }}
+                      />
+                      <span className="text-xxxs font-bold text-foreground">{t(p.i18nKey)}</span>
+                    </button>
+                  ))}
+                </div>
+                {/* Live preview strip */}
+                <div className="flex items-center gap-1.5 text-xxxs font-mono">
+                  <span className="px-1.5 py-0.5 rounded bg-success/20 text-success">Success</span>
+                  <span className="px-1.5 py-0.5 rounded bg-warning/20 text-warning">Warning</span>
+                  <span className="px-1.5 py-0.5 rounded bg-danger/20 text-danger">Error</span>
+                  <span className="px-1.5 py-0.5 rounded bg-info/20 text-info">Info</span>
+                </div>
               </div>
             </div>
           </CardContent>

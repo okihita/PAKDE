@@ -426,8 +426,19 @@
       "fontLarge": "LARGE",
       "fontXLarge": "X-LARGE",
       "fontHint": "Cmd/Ctrl + +/- to zoom, Cmd/Ctrl + 0 to reset",
-      "iconWeight": "Icon Weight"
+      "iconWeight": "Icon Weight",
+      "palette": "Cockpit Palette"
     }
+  },
+  "palette": {
+    "emerald": "Emerald",
+    "ocean": "Ocean",
+    "amber": "Amber",
+    "rose": "Rose",
+    "slate": "Slate",
+    "forest": "Forest",
+    "violet": "Violet",
+    "highcontrast": "HC"
   },
   "leveling": {
     "level": "Level {{n}}",

@@ -10,7 +10,7 @@ export interface Palette {
 export const PALETTES: Palette[] = [
   {
     id: "emerald",
-    i18nKey: "settings.palette.emerald",
+    i18nKey: "palette.emerald",
     swatch: "#10b981",
     vars: {
       "--brand": "160 84% 39%",
@@ -22,7 +22,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "ocean",
-    i18nKey: "settings.palette.ocean",
+    i18nKey: "palette.ocean",
     swatch: "#3b82f6",
     vars: {
       "--brand": "217 91% 60%",
@@ -34,7 +34,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "amber",
-    i18nKey: "settings.palette.amber",
+    i18nKey: "palette.amber",
     swatch: "#f59e0b",
     vars: {
       "--brand": "38 92% 50%",
@@ -46,7 +46,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "rose",
-    i18nKey: "settings.palette.rose",
+    i18nKey: "palette.rose",
     swatch: "#f43f5e",
     vars: {
       "--brand": "350 89% 60%",
@@ -58,7 +58,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "slate",
-    i18nKey: "settings.palette.slate",
+    i18nKey: "palette.slate",
     swatch: "#64748b",
     vars: {
       "--brand": "215 25% 47%",
@@ -70,7 +70,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "forest",
-    i18nKey: "settings.palette.forest",
+    i18nKey: "palette.forest",
     swatch: "#22c55e",
     vars: {
       "--brand": "142 71% 45%",
@@ -82,7 +82,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "violet",
-    i18nKey: "settings.palette.violet",
+    i18nKey: "palette.violet",
     swatch: "#8b5cf6",
     vars: {
       "--brand": "262 83% 66%",
@@ -94,7 +94,7 @@ export const PALETTES: Palette[] = [
   },
   {
     id: "highcontrast",
-    i18nKey: "settings.palette.highcontrast",
+    i18nKey: "palette.highcontrast",
     swatch: "#ffffff",
     vars: {
       "--brand": "0 0% 90%",
