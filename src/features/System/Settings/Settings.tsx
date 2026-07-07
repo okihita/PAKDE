@@ -4,11 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUpdater } from "@/hooks/useUpdater";
 import { useToast } from "@/hooks/useToast";
+import { useIconSettings } from "@/components/IconContext";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
+import { Moon, Sun, Globe, TextAa, Palette, PaintBucket } from "@phosphor-icons/react";
 
 interface Props {
   coopProfile: CooperativeProfile | null;
@@ -18,6 +19,32 @@ interface Props {
   appTheme: "dark" | "light";
   setAppTheme: (v: "dark" | "light") => void;
 }
+
+const FONT_LEVELS = [
+  { value: "small", label: "settings.preferences.fontSmall" },
+  { value: "normal", label: "settings.preferences.fontNormal" },
+  { value: "large", label: "settings.preferences.fontLarge" },
+  { value: "xlarge", label: "settings.preferences.fontXLarge" },
+] as const;
+
+const THEME_OPTIONS = [
+  { value: "dark", icon: Moon, label: "settings.preferences.themeDark" },
+  { value: "light", icon: Sun, label: "settings.preferences.themeLight" },
+] as const;
+
+const LANG_OPTIONS = [
+  { value: "id", flag: "🇮🇩", label: "settings.preferences.languageId" },
+  { value: "en", flag: "🇬🇧", label: "settings.preferences.languageEn" },
+] as const;
+
+const ICON_WEIGHTS = [
+  { value: "thin", label: "Thin" },
+  { value: "light", label: "Light" },
+  { value: "regular", label: "Regular" },
+  { value: "bold", label: "Bold" },
+  { value: "fill", label: "Fill" },
+  { value: "duotone", label: "Duotone" },
+] as const;
 
 const i18nFieldKeys: Record<string, string> = {
   name: "name",
@@ -44,6 +71,7 @@ export default function Settings({
   const [lang, setLang] = useState(i18n.language);
   const u = useUpdater();
   const toast = useToast();
+  const { settings: iconSettings, setWeight } = useIconSettings();
 
   if (!coopProfile) return <div className="text-muted-foreground text-xs">{t("common.loading")}</div>;
 
@@ -78,9 +106,15 @@ export default function Settings({
     }
   };
 
+  const bannerBase =
+    "flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl border-2 cursor-pointer transition-all text-center";
+  const bannerActive = "border-emerald-500/50 bg-emerald-500/10";
+  const bannerInactive = "border-slate-800 bg-slate-950/40 hover:border-slate-600 hover:bg-slate-900/60";
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* ── Cooperative Profile ── */}
         <Card className="bg-card border-border md:col-span-2">
           <CardHeader>
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
@@ -122,6 +156,107 @@ export default function Settings({
           </CardContent>
         </Card>
 
+        {/* ── Interface Preferences ── */}
+        <Card className="bg-card border-border md:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+              <Palette className="h-3.5 w-3.5 text-emerald-400" />
+              {t("settings.preferences.title")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-2">
+            {/* Language */}
+            <div className="space-y-2">
+              <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Globe className="h-3 w-3 text-slate-500" />
+                {t("settings.preferences.language")}
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {LANG_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      i18n.changeLanguage(opt.value);
+                      setLang(opt.value);
+                    }}
+                    className={`${bannerBase} ${lang === opt.value ? bannerActive : bannerInactive}`}
+                  >
+                    <span className="text-2xl">{opt.flag}</span>
+                    <span className="text-xxs font-bold text-foreground">{t(opt.label)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Theme */}
+            <div className="space-y-2">
+              <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <PaintBucket className="h-3 w-3 text-slate-500" />
+                {t("settings.preferences.theme")}
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {THEME_OPTIONS.map((opt) => {
+                  const Icon = opt.icon;
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => setAppTheme(opt.value)}
+                      className={`${bannerBase} ${appTheme === opt.value ? bannerActive : bannerInactive}`}
+                    >
+                      <Icon className="h-5 w-5" weight={appTheme === opt.value ? "fill" : "regular"} />
+                      <span className="text-xxs font-bold text-foreground">{t(opt.label)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Font Size */}
+            <div className="space-y-2">
+              <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <TextAa className="h-3 w-3 text-slate-500" />
+                {t("settings.preferences.fontSize")}
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {FONT_LEVELS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setFontSizeSetting(opt.value)}
+                    className={`py-2 px-1 rounded-lg border-2 cursor-pointer transition-all text-center ${
+                      fontSizeSetting === opt.value ? bannerActive : bannerInactive
+                    }`}
+                  >
+                    <span className="text-xxs font-bold text-foreground">{t(opt.label)}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xxxs text-muted-foreground font-mono">{t("settings.preferences.fontHint")}</p>
+            </div>
+
+            {/* Icon Weight */}
+            <div className="space-y-2">
+              <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Palette className="h-3 w-3 text-slate-500" />
+                {t("settings.preferences.iconWeight")}
+              </label>
+              <div className="grid grid-cols-6 gap-1.5">
+                {ICON_WEIGHTS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setWeight(opt.value)}
+                    className={`py-2 px-1 rounded-lg border-2 cursor-pointer transition-all text-center ${
+                      iconSettings.weight === opt.value ? bannerActive : bannerInactive
+                    }`}
+                  >
+                    <span className="text-xxxs font-bold text-foreground">{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ── Updater ── */}
         <Card className="bg-card border-border md:col-span-2">
           <CardHeader>
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
@@ -160,70 +295,6 @@ export default function Settings({
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-border md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              {t("settings.preferences.title")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 text-xs">
-            <div className="space-y-1">
-              <label className="text-muted-foreground font-mono text-xxxs uppercase">
-                {t("settings.preferences.language")}
-              </label>
-              <Select
-                value={lang}
-                onValueChange={(val) => {
-                  i18n.changeLanguage(val);
-                  setLang(val);
-                }}
-              >
-                <SelectTrigger className="w-full bg-input border-border text-xs h-8 text-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-border text-foreground text-xs">
-                  <SelectItem value="id">{t("settings.preferences.languageId")}</SelectItem>
-                  <SelectItem value="en">{t("settings.preferences.languageEn")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <label className="text-muted-foreground font-mono text-xxxs uppercase">
-                {t("settings.preferences.theme")}
-              </label>
-              <Select value={appTheme} onValueChange={(val) => setAppTheme(val as "dark" | "light")}>
-                <SelectTrigger className="w-full bg-input border-border text-xs h-8 text-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-border text-foreground text-xs">
-                  <SelectItem value="dark">{t("settings.preferences.themeDark")}</SelectItem>
-                  <SelectItem value="light">{t("settings.preferences.themeLight")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <label className="text-muted-foreground font-mono text-xxxs uppercase">
-                {t("settings.preferences.fontSize")}
-              </label>
-              <Select
-                value={fontSizeSetting}
-                onValueChange={(val) => setFontSizeSetting(val as "small" | "normal" | "large" | "xlarge")}
-              >
-                <SelectTrigger className="w-full bg-input border-border text-xs h-8 text-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-border text-foreground text-xs">
-                  <SelectItem value="small">{t("settings.preferences.fontSmall")}</SelectItem>
-                  <SelectItem value="normal">{t("settings.preferences.fontNormal")}</SelectItem>
-                  <SelectItem value="large">{t("settings.preferences.fontLarge")}</SelectItem>
-                  <SelectItem value="xlarge">{t("settings.preferences.fontXLarge")}</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xxxs text-muted-foreground font-mono">{t("settings.preferences.fontHint")}</p>
-            </div>
           </CardContent>
         </Card>
       </div>

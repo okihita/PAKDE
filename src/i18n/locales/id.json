@@ -420,7 +420,8 @@
       "fontNormal": "NORMAL",
       "fontLarge": "BESAR",
       "fontXLarge": "SANGAT BESAR",
-      "fontHint": "Cmd/Ctrl + +/- untuk zoom, Cmd/Ctrl + 0 untuk reset"
+      "fontHint": "Cmd/Ctrl + +/- untuk zoom, Cmd/Ctrl + 0 untuk reset",
+      "iconWeight": "Bobot Ikon"
     }
   },
   "leveling": {

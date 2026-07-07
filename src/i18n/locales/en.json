@@ -420,7 +420,8 @@
       "fontNormal": "NORMAL",
       "fontLarge": "LARGE",
       "fontXLarge": "X-LARGE",
-      "fontHint": "Cmd/Ctrl + +/- to zoom, Cmd/Ctrl + 0 to reset"
+      "fontHint": "Cmd/Ctrl + +/- to zoom, Cmd/Ctrl + 0 to reset",
+      "iconWeight": "Icon Weight"
     }
   },
   "leveling": {
