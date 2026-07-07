@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
-import { Buildings, Plus, MapPin, SpeakerLow, SpeakerX, MusicNotes } from "@phosphor-icons/react";
+import { Buildings, Plus, MapPin, SpeakerLow, SpeakerX, MusicNotes, CheckCircle, XCircle } from "@phosphor-icons/react";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 import { sfx } from "./sfx";
 import { bgMusic } from "./music";
 import CreateProfileDialog from "./CreateProfileDialog";
 import { seedDemoCooperative, clearDemoCooperative, isDemoSeeded } from "@/db/init";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 // Module-level constants to satisfy eslint no-hardcoded-labels rule
 const TEXT_UNIT_PUPUK = "Sales";
@@ -15,6 +17,7 @@ const TEXT_UNIT_SP = "Simpan Pinjam";
 const TEXT_UNIT_TOKO = "Toko Desa";
 const LOGOTYPE = "PAKDE";
 const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.coop";
+const BTN_CLOSE = "Close";
 
 interface ProfileSelectProps {
   onProfileSelect: (profile: CooperativeProfile) => void;
@@ -22,6 +25,11 @@ interface ProfileSelectProps {
 
 export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   const { t } = useTranslation();
+  const [devResult, setDevResult] = useState<{ open: boolean; ok: boolean; message: string }>({
+    open: false,
+    ok: true,
+    message: "",
+  });
   const [profiles, setProfiles] = useState<CooperativeProfile[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -86,13 +94,20 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   };
 
   const handleDevToggle = async () => {
-    if (demoSeeded) {
-      await clearDemoCooperative();
-    } else {
-      await seedDemoCooperative();
+    try {
+      if (demoSeeded) {
+        await clearDemoCooperative();
+        setDevResult({ open: true, ok: true, message: "Demo data cleared successfully." });
+      } else {
+        await seedDemoCooperative();
+        setDevResult({ open: true, ok: true, message: "Demo data seeded successfully." });
+      }
+      await loadProfiles();
+      setDemoSeeded(!demoSeeded);
+    } catch (e) {
+      console.error("[Seed Demo] Failed:", e);
+      setDevResult({ open: true, ok: false, message: e instanceof Error ? e.message : String(e) });
     }
-    await loadProfiles();
-    setDemoSeeded(!demoSeeded);
   };
 
   const handleCreateCreated = (newProfile: CooperativeProfile) => {
@@ -292,6 +307,36 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         onOpenChange={setShowCreateModal}
         onProfileCreated={handleCreateCreated}
       />
+
+      {/* Dev-only result popup */}
+      {import.meta.env.DEV && (
+        <Dialog open={devResult.open} onOpenChange={(open) => setDevResult((prev) => ({ ...prev, open }))}>
+          <DialogContent className="bg-slate-900 border max-w-sm shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-sm font-bold">
+                {devResult.ok ? (
+                  <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+                ) : (
+                  <XCircle className="h-5 w-5 text-danger flex-shrink-0" />
+                )}
+                <span className={devResult.ok ? "text-success" : "text-danger"}>
+                  {devResult.ok ? "Success" : "Error"}
+                </span>
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-xs text-slate-300 font-mono leading-relaxed py-2">{devResult.message}</p>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDevResult((prev) => ({ ...prev, open: false }))}
+                className="border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8.5"
+              >
+                {BTN_CLOSE}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export async function initDb(): Promise<void> {
     const cols = await db.select<Array<{ name: string }>>(`PRAGMA table_info(${table});`);
     const exists = cols.some((c: { name: string }) => c.name === columnName);
     if (!exists) {
-      console.log(`[initDb] Adding missing column: ${table}.${columnName}`);
+      console.warn(`[initDb] Adding missing column: ${table}.${columnName}`);
       await db.execute(`ALTER TABLE ${table} ADD COLUMN ${columnDef};`);
     }
   }
@@ -240,137 +240,151 @@ export async function initDb(): Promise<void> {
       FOREIGN KEY (item_id) REFERENCES inventory_items(id)
     );
   `);
+}
 
-  const coa = await db.select<Array<{ code: string }>>("SELECT * FROM coa_accounts LIMIT 1");
-  if (coa.length === 0) {
-    const accounts = [
-      { code: "1.1.01", name: "Kas", type: "aset", normal_balance: "debit", balance: 125000000 },
-      { code: "1.1.02", name: "Bank BRI", type: "aset", normal_balance: "debit", balance: 450000000 },
-      { code: "1.1.03", name: "Piutang Usaha", type: "aset", normal_balance: "debit", balance: 275000000 },
-      { code: "1.1.04", name: "Persediaan", type: "aset", normal_balance: "debit", balance: 50000000 },
-      { code: "1.2.01", name: "Tanah", type: "aset", normal_balance: "debit", balance: 200000000 },
-      { code: "1.2.02", name: "Bangunan", type: "aset", normal_balance: "debit", balance: 150000000 },
-      { code: "1.2.03", name: "Kendaraan", type: "aset", normal_balance: "debit", balance: 50000000 },
-      { code: "1.2.04", name: "Akumulasi Penyusutan", type: "aset", normal_balance: "kredit", balance: -25000000 },
-      { code: "1.2.05", name: "Peralatan", type: "aset", normal_balance: "debit", balance: 15000000 },
-      { code: "2.1.01", name: "Utang Usaha", type: "kewajiban", normal_balance: "kredit", balance: 300000000 },
-      { code: "2.1.02", name: "Utang Pajak", type: "kewajiban", normal_balance: "kredit", balance: 25000000 },
-      { code: "2.1.03", name: "Utang Bank", type: "kewajiban", normal_balance: "kredit", balance: 125000000 },
-      { code: "3.01", name: "Modal Koperasi", type: "ekuitas", normal_balance: "kredit", balance: 500000000 },
-      { code: "3.02", name: "SHU Berjalan", type: "ekuitas", normal_balance: "kredit", balance: 175000000 },
-      { code: "3.03", name: "Cadangan", type: "ekuitas", normal_balance: "kredit", balance: 140000000 },
-      { code: "4.01", name: "Pendapatan Jasa", type: "pendapatan", normal_balance: "kredit", balance: 89000000 },
-      { code: "4.02", name: "Pendapatan Unit Usaha", type: "pendapatan", normal_balance: "kredit", balance: 77000000 },
-      { code: "4.03", name: "Pendapatan Lain-lain", type: "pendapatan", normal_balance: "kredit", balance: 12000000 },
-      { code: "5.01", name: "Beban Gaji", type: "beban", normal_balance: "debit", balance: 72000000 },
-      { code: "5.02", name: "Beban Listrik", type: "beban", normal_balance: "debit", balance: 9600000 },
-      { code: "5.03", name: "Beban Penyusutan", type: "beban", normal_balance: "debit", balance: 12500000 },
-      { code: "5.04", name: "Beban Operasional", type: "beban", normal_balance: "debit", balance: 15000000 },
-      { code: "5.05", name: "Beban Lain-lain", type: "beban", normal_balance: "debit", balance: 8900000 },
-    ];
-    for (const acc of accounts) {
-      await db.execute(
-        `INSERT INTO coa_accounts (code, cooperative_id, name, type, normal_balance, balance)
-         VALUES (?, 'kdp-001', ?, ?, ?, ?)`,
-        [acc.code, acc.name, acc.type, acc.normal_balance, acc.balance],
-      );
-    }
+// ── Demo seed data functions (idempotent, scoped to kdp-001) ──
+
+async function seedDemoCoaAccounts(db: Awaited<ReturnType<typeof getDb>>): Promise<void> {
+  const existing = await db.select<Array<{ code: string }>>(
+    "SELECT code FROM coa_accounts WHERE cooperative_id = 'kdp-001' LIMIT 1",
+  );
+  if (existing.length > 0) return;
+
+  const accounts = [
+    { code: "1.1.01", name: "Kas", type: "aset", normal_balance: "debit", balance: 125000000 },
+    { code: "1.1.02", name: "Bank BRI", type: "aset", normal_balance: "debit", balance: 450000000 },
+    { code: "1.1.03", name: "Piutang Usaha", type: "aset", normal_balance: "debit", balance: 275000000 },
+    { code: "1.1.04", name: "Persediaan", type: "aset", normal_balance: "debit", balance: 50000000 },
+    { code: "1.2.01", name: "Tanah", type: "aset", normal_balance: "debit", balance: 200000000 },
+    { code: "1.2.02", name: "Bangunan", type: "aset", normal_balance: "debit", balance: 150000000 },
+    { code: "1.2.03", name: "Kendaraan", type: "aset", normal_balance: "debit", balance: 50000000 },
+    { code: "1.2.04", name: "Akumulasi Penyusutan", type: "aset", normal_balance: "kredit", balance: -25000000 },
+    { code: "1.2.05", name: "Peralatan", type: "aset", normal_balance: "debit", balance: 15000000 },
+    { code: "2.1.01", name: "Utang Usaha", type: "kewajiban", normal_balance: "kredit", balance: 300000000 },
+    { code: "2.1.02", name: "Utang Pajak", type: "kewajiban", normal_balance: "kredit", balance: 25000000 },
+    { code: "2.1.03", name: "Utang Bank", type: "kewajiban", normal_balance: "kredit", balance: 125000000 },
+    { code: "3.01", name: "Modal Koperasi", type: "ekuitas", normal_balance: "kredit", balance: 500000000 },
+    { code: "3.02", name: "SHU Berjalan", type: "ekuitas", normal_balance: "kredit", balance: 175000000 },
+    { code: "3.03", name: "Cadangan", type: "ekuitas", normal_balance: "kredit", balance: 140000000 },
+    { code: "4.01", name: "Pendapatan Jasa", type: "pendapatan", normal_balance: "kredit", balance: 89000000 },
+    { code: "4.02", name: "Pendapatan Unit Usaha", type: "pendapatan", normal_balance: "kredit", balance: 77000000 },
+    { code: "4.03", name: "Pendapatan Lain-lain", type: "pendapatan", normal_balance: "kredit", balance: 12000000 },
+    { code: "5.01", name: "Beban Gaji", type: "beban", normal_balance: "debit", balance: 72000000 },
+    { code: "5.02", name: "Beban Listrik", type: "beban", normal_balance: "debit", balance: 9600000 },
+    { code: "5.03", name: "Beban Penyusutan", type: "beban", normal_balance: "debit", balance: 12500000 },
+    { code: "5.04", name: "Beban Operasional", type: "beban", normal_balance: "debit", balance: 15000000 },
+    { code: "5.05", name: "Beban Lain-lain", type: "beban", normal_balance: "debit", balance: 8900000 },
+  ];
+  for (const acc of accounts) {
+    await db.execute(
+      `INSERT INTO coa_accounts (code, cooperative_id, name, type, normal_balance, balance)
+       VALUES (?, 'kdp-001', ?, ?, ?, ?)`,
+      [acc.code, acc.name, acc.type, acc.normal_balance, acc.balance],
+    );
   }
+}
 
-  const cats = await db.select<Array<{ id: string }>>("SELECT * FROM categories LIMIT 1");
-  if (cats.length === 0) {
-    const categoriesList = [
-      { id: "unit_apotek", name: "Unit Apotek", icon: "💊" },
-      { id: "unit_pupuk", name: "Unit Pupuk", icon: "🌱" },
-      { id: "unit_simpan_pinjam", name: "Unit Simpan Pinjam", icon: "💰" },
-      { id: "unit_penggilingan", name: "Penggilingan Padi", icon: "🌾" },
-      { id: "unit_pemasaran", name: "Pemasaran Hasil Tani", icon: "📦" },
-      { id: "operasional", name: "Operasional", icon: "⚙️" },
-      { id: "investasi", name: "Investasi", icon: "📈" },
-    ];
-    for (const cat of categoriesList) {
-      await db.execute("INSERT INTO categories (id, cooperative_id, name, icon) VALUES (?, 'kdp-001', ?, ?)", [
-        cat.id,
-        cat.name,
-        cat.icon,
-      ]);
-    }
+async function seedDemoCategories(db: Awaited<ReturnType<typeof getDb>>): Promise<void> {
+  const existing = await db.select<Array<{ id: string }>>(
+    "SELECT id FROM categories WHERE cooperative_id = 'kdp-001' LIMIT 1",
+  );
+  if (existing.length > 0) return;
+
+  const categories = [
+    { id: "unit_apotek", name: "Unit Apotek", icon: "💊" },
+    { id: "unit_pupuk", name: "Unit Pupuk", icon: "🌱" },
+    { id: "unit_simpan_pinjam", name: "Unit Simpan Pinjam", icon: "💰" },
+    { id: "unit_penggilingan", name: "Penggilingan Padi", icon: "🌾" },
+    { id: "unit_pemasaran", name: "Pemasaran Hasil Tani", icon: "📦" },
+    { id: "operasional", name: "Operasional", icon: "⚙️" },
+    { id: "investasi", name: "Investasi", icon: "📈" },
+  ];
+  for (const cat of categories) {
+    await db.execute("INSERT INTO categories (id, cooperative_id, name, icon) VALUES (?, 'kdp-001', ?, ?)", [
+      cat.id,
+      cat.name,
+      cat.icon,
+    ]);
   }
+}
 
-  const inv = await db.select<Array<{ id: string }>>("SELECT * FROM inventory_items LIMIT 1");
-  if (inv.length === 0) {
-    const items = [
-      {
-        id: "item_urea",
-        name: "Pupuk Urea Bersubsidi",
-        category_id: "unit_pupuk",
-        stock_quantity: 120,
-        unit: "sak",
-        cost_price: 110000,
-        selling_price: 150000,
-      },
-      {
-        id: "item_npk",
-        name: "Pupuk NPK Phonska",
-        category_id: "unit_pupuk",
-        stock_quantity: 85,
-        unit: "sak",
-        cost_price: 130000,
-        selling_price: 170000,
-      },
-      {
-        id: "item_benih",
-        name: "Benih Padi Ciherang 5kg",
-        category_id: "unit_pupuk",
-        stock_quantity: 50,
-        unit: "kantong",
-        cost_price: 65000,
-        selling_price: 85000,
-      },
-      {
-        id: "item_paracetamol",
-        name: "Paracetamol 500mg",
-        category_id: "unit_apotek",
-        stock_quantity: 200,
-        unit: "strip",
-        cost_price: 2500,
-        selling_price: 4500,
-      },
-      {
-        id: "item_amoxicillin",
-        name: "Amoxicillin 500mg",
-        category_id: "unit_apotek",
-        stock_quantity: 150,
-        unit: "strip",
-        cost_price: 5000,
-        selling_price: 9000,
-      },
-      {
-        id: "item_organik",
-        name: "Pupuk Organik Granul",
-        category_id: "unit_pupuk",
-        stock_quantity: 150,
-        unit: "sak",
-        cost_price: 70000,
-        selling_price: 90000,
-      },
-      {
-        id: "item_karung",
-        name: "Karung Plastik 50kg",
-        category_id: "unit_pemasaran",
-        stock_quantity: 500,
-        unit: "pcs",
-        cost_price: 1800,
-        selling_price: 3000,
-      },
-    ];
-    for (const item of items) {
-      await db.execute(
-        `INSERT INTO inventory_items (id, name, category_id, stock_quantity, unit, cost_price, selling_price)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [item.id, item.name, item.category_id, item.stock_quantity, item.unit, item.cost_price, item.selling_price],
-      );
-    }
+async function seedDemoInventoryItems(db: Awaited<ReturnType<typeof getDb>>): Promise<void> {
+  const existing = await db.select<Array<{ id: string }>>(
+    "SELECT id FROM inventory_items WHERE id LIKE 'item_%' LIMIT 1",
+  );
+  if (existing.length > 0) return;
+
+  const items = [
+    {
+      id: "item_urea",
+      name: "Pupuk Urea Bersubsidi",
+      category_id: "unit_pupuk",
+      stock_quantity: 120,
+      unit: "sak",
+      cost_price: 110000,
+      selling_price: 150000,
+    },
+    {
+      id: "item_npk",
+      name: "Pupuk NPK Phonska",
+      category_id: "unit_pupuk",
+      stock_quantity: 85,
+      unit: "sak",
+      cost_price: 130000,
+      selling_price: 170000,
+    },
+    {
+      id: "item_benih",
+      name: "Benih Padi Ciherang 5kg",
+      category_id: "unit_pupuk",
+      stock_quantity: 50,
+      unit: "kantong",
+      cost_price: 65000,
+      selling_price: 85000,
+    },
+    {
+      id: "item_paracetamol",
+      name: "Paracetamol 500mg",
+      category_id: "unit_apotek",
+      stock_quantity: 200,
+      unit: "strip",
+      cost_price: 2500,
+      selling_price: 4500,
+    },
+    {
+      id: "item_amoxicillin",
+      name: "Amoxicillin 500mg",
+      category_id: "unit_apotek",
+      stock_quantity: 150,
+      unit: "strip",
+      cost_price: 5000,
+      selling_price: 9000,
+    },
+    {
+      id: "item_organik",
+      name: "Pupuk Organik Granul",
+      category_id: "unit_pupuk",
+      stock_quantity: 150,
+      unit: "sak",
+      cost_price: 70000,
+      selling_price: 90000,
+    },
+    {
+      id: "item_karung",
+      name: "Karung Plastik 50kg",
+      category_id: "unit_pemasaran",
+      stock_quantity: 500,
+      unit: "pcs",
+      cost_price: 1800,
+      selling_price: 3000,
+    },
+  ];
+  for (const item of items) {
+    await db.execute(
+      `INSERT INTO inventory_items (id, name, category_id, stock_quantity, unit, cost_price, selling_price)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [item.id, item.name, item.category_id, item.stock_quantity, item.unit, item.cost_price, item.selling_price],
+    );
   }
 }
 
@@ -412,12 +426,48 @@ export async function seedDemoCooperative(): Promise<void> {
       DEMO_COOP.status,
     ],
   );
+
+  await seedDemoCoaAccounts(db);
+  await seedDemoCategories(db);
+  await seedDemoInventoryItems(db);
 }
 
 export async function clearDemoCooperative(): Promise<void> {
   const db = await getDb();
+
+  // Delete in dependency order (children before parents) to avoid FK constraint violations.
+  // This covers the case where the user has interacted with the demo co-op
+  // (created members, sales, journal entries, store layouts, etc.).
+
+  await db.execute(
+    `DELETE FROM sales_transaction_items WHERE transaction_id IN
+     (SELECT id FROM sales_transactions WHERE cooperative_id = ?)`,
+    [DEMO_COOP.id],
+  );
+  await db.execute("DELETE FROM sales_transactions WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute(
+    `DELETE FROM journal_lines WHERE journal_entry_id IN
+     (SELECT id FROM journal_entries WHERE cooperative_id = ?)`,
+    [DEMO_COOP.id],
+  );
+  await db.execute("DELETE FROM journal_entries WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute(
+    "DELETE FROM sensitivity_analyses WHERE financial_analysis_id IN (SELECT id FROM financial_analyses WHERE cooperative_id = ?)",
+    [DEMO_COOP.id],
+  );
+  await db.execute("DELETE FROM financial_analyses WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute(
+    "DELETE FROM layout_zones WHERE layout_id IN (SELECT id FROM store_layouts WHERE cooperative_id = ?)",
+    [DEMO_COOP.id],
+  );
+  await db.execute("DELETE FROM store_layouts WHERE cooperative_id = ?", [DEMO_COOP.id]);
   await db.execute("DELETE FROM inventory_items WHERE id LIKE 'item_%'");
   await db.execute("DELETE FROM categories WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM members WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM local_users WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM ews_alerts WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM ews_metrics WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM sync_history WHERE cooperative_id = ?", [DEMO_COOP.id]);
   await db.execute("DELETE FROM coa_accounts WHERE cooperative_id = ?", [DEMO_COOP.id]);
   await db.execute("DELETE FROM cooperatives WHERE id = ?", [DEMO_COOP.id]);
 }

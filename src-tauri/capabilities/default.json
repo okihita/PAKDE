@@ -10,6 +10,7 @@
     "process:allow-restart",
     "sql:default",
     "sql:allow-execute",
-    "fs:allow-appdata-write-recursive"
+    "fs:allow-appdata-write-recursive",
+    "fs:allow-appdata-read-recursive"
   ]
 }
