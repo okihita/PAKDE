@@ -380,6 +380,11 @@
     }
   },
   "settings": {
+    "userProfile": {
+      "title": "Profil Operator",
+      "name": "Nama",
+      "role": "Peran"
+    },
     "profileTitle": "Profil Organisasi Koperasi Desa",
     "profileFields": {
       "name": "Nama Koperasi",

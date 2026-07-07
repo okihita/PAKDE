@@ -288,6 +288,8 @@ function AppContent() {
               setFontSizeSetting={setFontSizeSetting}
               appTheme={appTheme}
               setAppTheme={setAppTheme}
+              currentUser={currentUser}
+              onSwitchProfile={handleSwitchProfile}
             />
           )}
         </main>
