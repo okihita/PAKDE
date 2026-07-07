@@ -8,9 +8,7 @@ export async function initDb(): Promise<void> {
 
   // ── Migration helper: check if column exists, add if missing ──
   async function ensureColumn(table: string, columnDef: string, columnName: string) {
-    const cols = await db.select<Array<{ name: string }>>(
-      `PRAGMA table_info(${table});`,
-    );
+    const cols = await db.select<Array<{ name: string }>>(`PRAGMA table_info(${table});`);
     const exists = cols.some((c: { name: string }) => c.name === columnName);
     if (!exists) {
       console.log(`[initDb] Adding missing column: ${table}.${columnName}`);
@@ -243,21 +241,6 @@ export async function initDb(): Promise<void> {
     );
   `);
 
-  // ── Seed default data ──────────────────────────────────────────
-
-  const cooperatives = await db.select<Array<{ id: string }>>("SELECT * FROM cooperatives LIMIT 1");
-  if (cooperatives.length === 0) {
-    await db.execute(`
-      INSERT INTO cooperatives (id, name, regency, province, level, business_units, officers, status)
-      VALUES (
-        'kdp-001', 'Koperasi Maju Bersama', 'Mojokerto', 'Jawa Timur', 'desa',
-        '["unit_apotek", "unit_pupuk", "unit_pemasaran"]',
-        '{"chairman": "Slamet Riyadi", "secretary": "Siti Rahmawati", "treasurer": "Ahmad Hidayat", "supervisor": "Drs. Suparman"}',
-        'aktif'
-      );
-    `);
-  }
-
   const coa = await db.select<Array<{ code: string }>>("SELECT * FROM coa_accounts LIMIT 1");
   if (coa.length === 0) {
     const accounts = [
@@ -317,20 +300,130 @@ export async function initDb(): Promise<void> {
   const inv = await db.select<Array<{ id: string }>>("SELECT * FROM inventory_items LIMIT 1");
   if (inv.length === 0) {
     const items = [
-      { id: "item_urea", name: "Pupuk Urea Bersubsidi", category_id: "unit_pupuk", stock_quantity: 120, unit: "sak", cost_price: 110000, selling_price: 150000 },
-      { id: "item_npk", name: "Pupuk NPK Phonska", category_id: "unit_pupuk", stock_quantity: 85, unit: "sak", cost_price: 130000, selling_price: 170000 },
-      { id: "item_benih", name: "Benih Padi Ciherang 5kg", category_id: "unit_pupuk", stock_quantity: 50, unit: "kantong", cost_price: 65000, selling_price: 85000 },
-      { id: "item_paracetamol", name: "Paracetamol 500mg", category_id: "unit_apotek", stock_quantity: 200, unit: "strip", cost_price: 2500, selling_price: 4500 },
-      { id: "item_amoxicillin", name: "Amoxicillin 500mg", category_id: "unit_apotek", stock_quantity: 150, unit: "strip", cost_price: 5000, selling_price: 9000 },
-      { id: "item_organik", name: "Pupuk Organik Granul", category_id: "unit_pupuk", stock_quantity: 150, unit: "sak", cost_price: 70000, selling_price: 90000 },
-      { id: "item_karung", name: "Karung Plastik 50kg", category_id: "unit_pemasaran", stock_quantity: 500, unit: "pcs", cost_price: 1800, selling_price: 3000 }
+      {
+        id: "item_urea",
+        name: "Pupuk Urea Bersubsidi",
+        category_id: "unit_pupuk",
+        stock_quantity: 120,
+        unit: "sak",
+        cost_price: 110000,
+        selling_price: 150000,
+      },
+      {
+        id: "item_npk",
+        name: "Pupuk NPK Phonska",
+        category_id: "unit_pupuk",
+        stock_quantity: 85,
+        unit: "sak",
+        cost_price: 130000,
+        selling_price: 170000,
+      },
+      {
+        id: "item_benih",
+        name: "Benih Padi Ciherang 5kg",
+        category_id: "unit_pupuk",
+        stock_quantity: 50,
+        unit: "kantong",
+        cost_price: 65000,
+        selling_price: 85000,
+      },
+      {
+        id: "item_paracetamol",
+        name: "Paracetamol 500mg",
+        category_id: "unit_apotek",
+        stock_quantity: 200,
+        unit: "strip",
+        cost_price: 2500,
+        selling_price: 4500,
+      },
+      {
+        id: "item_amoxicillin",
+        name: "Amoxicillin 500mg",
+        category_id: "unit_apotek",
+        stock_quantity: 150,
+        unit: "strip",
+        cost_price: 5000,
+        selling_price: 9000,
+      },
+      {
+        id: "item_organik",
+        name: "Pupuk Organik Granul",
+        category_id: "unit_pupuk",
+        stock_quantity: 150,
+        unit: "sak",
+        cost_price: 70000,
+        selling_price: 90000,
+      },
+      {
+        id: "item_karung",
+        name: "Karung Plastik 50kg",
+        category_id: "unit_pemasaran",
+        stock_quantity: 500,
+        unit: "pcs",
+        cost_price: 1800,
+        selling_price: 3000,
+      },
     ];
     for (const item of items) {
       await db.execute(
         `INSERT INTO inventory_items (id, name, category_id, stock_quantity, unit, cost_price, selling_price)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [item.id, item.name, item.category_id, item.stock_quantity, item.unit, item.cost_price, item.selling_price]
+        [item.id, item.name, item.category_id, item.stock_quantity, item.unit, item.cost_price, item.selling_price],
       );
     }
   }
+}
+
+// ── Dev-only seed helpers ──────────────────────────────────────
+
+const DEMO_COOP = {
+  id: "kdp-001",
+  name: "Koperasi Maju Bersama",
+  regency: "Mojokerto",
+  province: "Jawa Timur",
+  level: "desa",
+  business_units: JSON.stringify(["unit_apotek", "unit_pupuk", "unit_pemasaran"]),
+  officers: JSON.stringify({
+    chairman: "Slamet Riyadi",
+    secretary: "Siti Rahmawati",
+    treasurer: "Ahmad Hidayat",
+    supervisor: "Drs. Suparman",
+  }),
+  status: "aktif",
+};
+
+export async function seedDemoCooperative(): Promise<void> {
+  const db = await getDb();
+
+  const exists = await db.select<Array<{ id: string }>>("SELECT id FROM cooperatives WHERE id = ?", [DEMO_COOP.id]);
+  if (exists.length > 0) return;
+
+  await db.execute(
+    `INSERT INTO cooperatives (id, name, regency, province, level, business_units, officers, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      DEMO_COOP.id,
+      DEMO_COOP.name,
+      DEMO_COOP.regency,
+      DEMO_COOP.province,
+      DEMO_COOP.level,
+      DEMO_COOP.business_units,
+      DEMO_COOP.officers,
+      DEMO_COOP.status,
+    ],
+  );
+}
+
+export async function clearDemoCooperative(): Promise<void> {
+  const db = await getDb();
+  await db.execute("DELETE FROM inventory_items WHERE id LIKE 'item_%'");
+  await db.execute("DELETE FROM categories WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM coa_accounts WHERE cooperative_id = ?", [DEMO_COOP.id]);
+  await db.execute("DELETE FROM cooperatives WHERE id = ?", [DEMO_COOP.id]);
+}
+
+export async function isDemoSeeded(): Promise<boolean> {
+  const db = await getDb();
+  const rows = await db.select<Array<{ id: string }>>("SELECT id FROM cooperatives WHERE id = ?", [DEMO_COOP.id]);
+  return rows.length > 0;
 }

@@ -1117,8 +1117,6 @@
     "feasibilityCashFlowMismatch": "Gagal: Jumlah elemen arus kas tidak sesuai dengan Tahun Proyeksi."
   },
   "profileSelect": {
-    "title": "Selamat Datang di PAKDE",
-    "subtitle": "Pilih profil koperasi yang ingin dikelola, atau daftarkan pusat komando koperasi baru.",
     "createBtn": "Daftarkan Koperasi Baru",
     "status": "Status",
     "active": "Aktif",
@@ -1142,6 +1140,8 @@
     "fieldSupervisor": "Nama Pengawas",
     "validationError": "Kolom Nama, Kabupaten, dan Provinsi wajib diisi.",
     "switchProfile": "Ganti Profil Koperasi",
-    "switchProfileConfirm": "Apakah Anda yakin ingin keluar dari profil koperasi saat ini?"
+    "switchProfileConfirm": "Apakah Anda yakin ingin keluar dari profil koperasi saat ini?",
+    "emptyTitle": "Belum Ada Profil Koperasi",
+    "emptyDesc": "Buat pusat komando koperasi pertama Anda untuk mulai mengelola operasi."
   }
 }

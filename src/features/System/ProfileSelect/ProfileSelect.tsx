@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
-import { Buildings, Plus, Shield, MapPin, SpeakerLow, SpeakerX } from "@phosphor-icons/react";
+import { Buildings, Plus, MapPin, SpeakerLow, SpeakerX } from "@phosphor-icons/react";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 import { sfx } from "./sfx";
 import CreateProfileDialog from "./CreateProfileDialog";
+import { seedDemoCooperative, clearDemoCooperative, isDemoSeeded } from "@/db/init";
 
 // Module-level constants to satisfy eslint no-hardcoded-labels rule
 const TEXT_UNIT_PUPUK = "Sales";
 const TEXT_UNIT_SP = "Simpan Pinjam";
 const TEXT_UNIT_TOKO = "Toko Desa";
+const LOGOTYPE = "PAKDE";
+const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.coop";
 
 interface ProfileSelectProps {
   onProfileSelect: (profile: CooperativeProfile) => void;
@@ -22,13 +25,22 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [soundOn, setSoundOn] = useState(sfx.enabled);
+  const [demoSeeded, setDemoSeeded] = useState(false);
+
+  const loadProfiles = async () => {
+    const db = await getDb();
+    const list = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives ORDER BY created_at DESC");
+    setProfiles(list);
+  };
 
   useEffect(() => {
     (async () => {
       try {
-        const db = await getDb();
-        const list = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives ORDER BY created_at DESC");
-        setProfiles(list);
+        setLoading(true);
+        await loadProfiles();
+        if (import.meta.env.DEV) {
+          setDemoSeeded(await isDemoSeeded());
+        }
       } catch (e) {
         console.error(e);
       } finally {
@@ -63,6 +75,16 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
     sfx.playBleep(700, 0.012);
   };
 
+  const handleDevToggle = async () => {
+    if (demoSeeded) {
+      await clearDemoCooperative();
+    } else {
+      await seedDemoCooperative();
+    }
+    await loadProfiles();
+    setDemoSeeded(!demoSeeded);
+  };
+
   const handleCreateCreated = (newProfile: CooperativeProfile) => {
     setProfiles((prev) => [newProfile, ...prev]);
     setShowCreateModal(false);
@@ -82,7 +104,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   return (
     <div
       onClick={handleUserInteraction}
-      className="flex-1 flex flex-col justify-center items-center h-full w-full relative overflow-hidden p-6 bg-cover bg-center select-none"
+      className="flex-1 flex flex-col h-full w-full relative overflow-hidden bg-cover bg-center select-none"
       style={{ backgroundImage: "url('/background.jpg')" }}
     >
       {/* Dark blur overlay */}
@@ -99,26 +121,39 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         </button>
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-300">
-        {/* Clean Corporate Header */}
-        <div className="text-center space-y-2.5 p-6 rounded-2xl bg-slate-950/80 border border-slate-900 backdrop-blur-lg max-w-lg mx-auto shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
-          <div className="flex justify-center mb-1">
-            <div className="w-11 h-11 rounded-xl bg-success/10 flex items-center justify-center border border-success/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-              <Shield className="h-5.5 w-5.5 text-success" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-foreground tracking-wide font-sans">{t("profileSelect.title")}</h1>
-          <p className="text-xxs font-mono text-slate-400 max-w-xs mx-auto leading-relaxed">
-            {t("profileSelect.subtitle")}
-          </p>
+      {/* Top: Logotype Header */}
+      <div className="relative z-10 flex justify-center pt-12 animate-in fade-in slide-in-from-bottom-3 duration-300">
+        <div className="text-center p-6 rounded-2xl bg-slate-950/80 border border-slate-900 backdrop-blur-lg w-fit shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
+          <h1 className="text-8xl font-black bg-gradient-to-r from-brand to-teal-400 bg-clip-text text-transparent tracking-tight font-sans leading-none">
+            {LOGOTYPE}
+          </h1>
         </div>
+      </div>
 
+      {/* Middle: Profile Cards or Empty State */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 w-full max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-3 duration-300">
         {loading ? (
-          <div className="text-center py-12 text-xxs font-mono text-brand animate-pulse">
-            {t("common.loading")}
+          <div className="text-center py-12 text-xxs font-mono text-brand animate-pulse">{t("common.loading")}</div>
+        ) : profiles.length === 0 ? (
+          <div className="text-center space-y-5">
+            <div className="w-16 h-16 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-center mx-auto shadow-sm">
+              <Buildings className="h-8 w-8 text-slate-500" />
+            </div>
+            <div className="space-y-1.5 max-w-xs mx-auto">
+              <h2 className="text-sm font-bold text-foreground tracking-wide">{t("profileSelect.emptyTitle")}</h2>
+              <p className="text-xxs font-mono text-slate-400 leading-relaxed">{t("profileSelect.emptyDesc")}</p>
+            </div>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              onMouseEnter={handleCardHover}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand/10 border border-brand/25 hover:bg-brand/20 hover:border-brand/40 text-success text-xxs font-mono font-bold uppercase tracking-wider transition-all duration-200"
+            >
+              <Plus className="h-4 w-4" />
+              {t("profileSelect.createBtn")}
+            </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             {profiles.map((p) => {
               const activeUnits = getBusinessUnits(p.business_units);
               const isHealthy = p.health_score >= 70;
@@ -217,6 +252,23 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
           </div>
         )}
       </div>
+
+      {/* Bottom: Footer */}
+      <div className="relative z-10 flex flex-col items-center pb-8 space-y-0.5 animate-in fade-in duration-500">
+        <span className="text-xxs font-mono text-slate-500">{t("splash.version")}</span>
+        <span className="text-xxs font-mono text-slate-600">{FOOTER_COPYRIGHT}</span>
+      </div>
+
+      {import.meta.env.DEV && (
+        <div className="absolute bottom-4 left-4 z-20">
+          <button
+            onClick={handleDevToggle}
+            className="px-2.5 py-1.5 rounded-md bg-amber-950/60 border border-amber-800/50 text-amber-500 text-xxxs font-mono uppercase tracking-wider hover:bg-amber-900/60 hover:border-amber-700/50 transition-colors shadow-md backdrop-blur-md"
+          >
+            {demoSeeded ? "Clear Seed" : "Seed Demo"}
+          </button>
+        </div>
+      )}
 
       <CreateProfileDialog
         open={showCreateModal}

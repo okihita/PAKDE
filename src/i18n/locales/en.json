@@ -1117,8 +1117,6 @@
     "feasibilityCashFlowMismatch": "Error: Number of cash flow elements does not match projection years."
   },
   "profileSelect": {
-    "title": "Welcome to PAKDE",
-    "subtitle": "Select a cooperative profile to manage, or register a new cooperative command center.",
     "createBtn": "Register Cooperative",
     "status": "Status",
     "active": "Active",
@@ -1142,6 +1140,8 @@
     "fieldSupervisor": "Supervisor Name",
     "validationError": "Name, Regency, and Province fields are required.",
     "switchProfile": "Switch Profile",
-    "switchProfileConfirm": "Are you sure you want to exit the current cooperative profile?"
+    "switchProfileConfirm": "Are you sure you want to exit the current cooperative profile?",
+    "emptyTitle": "No Cooperative Profiles",
+    "emptyDesc": "Create your first cooperative command center to begin managing operations."
   }
 }
