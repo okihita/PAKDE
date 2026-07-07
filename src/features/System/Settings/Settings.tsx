@@ -113,7 +113,7 @@ export default function Settings({
   const bannerBase =
     "flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl border-2 cursor-pointer transition-all text-center";
   const bannerActive = "border-emerald-500/50 bg-emerald-500/10";
-  const bannerInactive = "border-slate-800 bg-slate-950/40 hover:border-slate-600 hover:bg-slate-900/60";
+  const bannerInactive = "border-border bg-muted/40 hover:border-muted-foreground/30 hover:bg-muted/70";
 
   const PROFILE_FIELDS = [
     { key: "name" },
