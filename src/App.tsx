@@ -4,6 +4,7 @@ import "@/i18n"; // initialize i18next before render
 import { initDb, getDb } from "@/db";
 import { ToastProvider } from "@/hooks/useToast";
 import { IconProvider } from "@/components/IconContext";
+import { usePaletteInit } from "@/hooks/usePalette";
 import SplashScreen from "@/features/System/SplashScreen/SplashScreen";
 import DbErrorScreen from "@/features/System/DbErrorScreen/DbErrorScreen";
 import Sidebar from "@/features/Sidebar";
@@ -35,6 +36,7 @@ const FONT_LEVEL_DEFAULT: FontLevel = "normal";
 const TITLEBAR_TEXT = "PAKDE";
 
 function AppContent() {
+  usePaletteInit();
   const [appState, setAppState] = useState<"splash" | "profile_select" | "main" | "db_error">("splash");
   const [dbErrorMessage, setDbErrorMessage] = useState("");
   const [currentUser] = useState<{ id: string; name: string; role: string }>({
