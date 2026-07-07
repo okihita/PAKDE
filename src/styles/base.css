@@ -1,0 +1,29 @@
+@layer base {
+  html {
+    font-size: 19px;
+    overscroll-behavior: none;
+    overflow: hidden;
+    height: 100%;
+  }
+  html[data-font-size="small"] {
+    font-size: 16px;
+  }
+  html[data-font-size="large"] {
+    font-size: 22px;
+  }
+  html[data-font-size="xlarge"] {
+    font-size: 25px;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    overflow: hidden;
+    height: 100%;
+  }
+}
