@@ -16,7 +16,7 @@ import { sfx } from "./sfx";
 import { bgMusic } from "./music";
 import CreateProfileDialog from "./CreateProfileDialog";
 import CooperativeCardList from "./CooperativeCardList";
-import { seedDemoCooperativeAtLevel, type DemoLevel } from "@/db/init";
+import { seedDemoCooperativeAtLevel, type DemoLevel } from "@/db/seed-demo";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
