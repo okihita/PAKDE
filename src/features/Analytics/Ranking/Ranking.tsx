@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trophy, Medal, TrendingUp, TrendingDown, Minus, Star } from "lucide-react";
+import { Trophy, Medal, TrendUp, TrendDown, Minus, Star } from "@phosphor-icons/react";
 import type { CooperativeProfile } from "@/types";
 
 interface Props {
@@ -133,8 +133,8 @@ function ragColor(status: string): string {
 }
 
 function TrendIcon({ trend }: { trend: "up" | "down" | "stable" }) {
-  if (trend === "up") return <TrendingUp className="h-3 w-3 text-emerald-400" />;
-  if (trend === "down") return <TrendingDown className="h-3 w-3 text-rose-400" />;
+  if (trend === "up") return <TrendUp className="h-3 w-3 text-emerald-400" />;
+  if (trend === "down") return <TrendDown className="h-3 w-3 text-rose-400" />;
   return <Minus className="h-3 w-3 text-muted-foreground" />;
 }
 

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, Users, CheckSquare, Wallet, Flame, Calendar, Award, Leaf, HeartHandshake } from "lucide-react";
+import { ChartBar, Users, CheckSquare, Wallet, Fire, Calendar, Medal, Leaf, Handshake } from "@phosphor-icons/react";
 import "./Participation.css";
 
 // Constants for i18n/linter rules bypass
@@ -83,7 +83,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
       {/* Header section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-          <BarChart3 className="h-5 w-5 text-emerald-400" />
+          <ChartBar className="h-5 w-5 text-emerald-400" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("participation.title")}</h1>
@@ -147,7 +147,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.activeStreak")}
             </span>
-            <Flame className="h-4 w-4 text-amber-400" />
+            <Fire className="h-4 w-4 text-amber-400" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_STREAK}</h3>
@@ -191,7 +191,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Award className="h-3.5 w-3.5 text-amber-400" />
+              <Medal className="h-3.5 w-3.5 text-amber-400" />
               {t("participation.tiersTitle")}
             </CardTitle>
           </CardHeader>
@@ -244,7 +244,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Award className="h-3.5 w-3.5 text-lime-400" />
+              <Medal className="h-3.5 w-3.5 text-lime-400" />
               {t("participation.progressTitle")}
             </CardTitle>
             <p className="text-xxxs text-muted-foreground mt-1 leading-relaxed">{t("participation.progressDesc")}</p>
@@ -285,7 +285,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Award className="h-3.5 w-3.5 text-blue-400" />
+              <Medal className="h-3.5 w-3.5 text-blue-400" />
               {t("participation.leaderboardTitle")}
             </CardTitle>
           </CardHeader>
@@ -334,7 +334,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
       <Card className="bg-card border-border">
         <CardHeader className="pb-3 border-b border-border/55">
           <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-            <Award className="h-3.5 w-3.5 text-amber-400" />
+            <Medal className="h-3.5 w-3.5 text-amber-400" />
             {t("participation.badgesTitle")}
           </CardTitle>
         </CardHeader>
@@ -364,7 +364,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
           {/* Health Badge */}
           <div className="p-3 rounded-xl bg-input/20 border border-border/40 text-center space-y-2">
             <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto">
-              <HeartHandshake className="h-5 w-5" />
+              <Handshake className="h-5 w-5" />
             </div>
             <div>
               <span className="text-xxs font-bold text-foreground block">{t("participation.badgeHealthTitle")}</span>

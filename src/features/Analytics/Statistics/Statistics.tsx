@@ -2,7 +2,7 @@ import "./Statistics.css";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, Info } from "lucide-react";
+import { Warning, Info } from "@phosphor-icons/react";
 import type { CooperativeProfile, EwsAlert } from "@/types";
 
 interface Props {
@@ -19,8 +19,8 @@ const LEVEL_STYLE: Record<string, string> = {
 
 const LEVEL_ICON: Record<string, typeof Info> = {
   info: Info,
-  warning: AlertTriangle,
-  critical: AlertTriangle,
+  warning: Warning,
+  critical: Warning,
 };
 
 export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Props) {
@@ -81,7 +81,7 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
           <Card className="bg-card border-border text-foreground hover-glow-card">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-                <AlertTriangle className="h-3 w-3 text-amber-400" />
+                <Warning className="h-3 w-3 text-amber-400" />
                 {t("dashboard.ewAlerts")}
               </CardTitle>
             </CardHeader>

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { History, FileText, Info } from "lucide-react";
+import { ClockCounterClockwise, FileText, Info } from "@phosphor-icons/react";
 import type { SalesTransaction, Member } from "@/types";
 
 const QUANTITY_PRICE_SEPARATOR = " x Rp ";
@@ -38,7 +38,7 @@ export default function SalesHistory({
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <History className="h-4 w-4 text-emerald-400" />
+            <ClockCounterClockwise className="h-4 w-4 text-emerald-400" />
             {t("sales.history.title")}
           </CardTitle>
         </CardHeader>

@@ -2,7 +2,7 @@ import "./Equipment.css";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Wrench } from "lucide-react";
+import { Wrench } from "@phosphor-icons/react";
 
 const EQUIPMENT = [
   { name: "Mesin Penggiling Padi", amount: 2, condition: "Baik", lastMaintenance: "2026-06-15", value: 45000000 },

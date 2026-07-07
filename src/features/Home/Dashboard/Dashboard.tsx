@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Circle, Plus, Newspaper, GripHorizontal } from "lucide-react";
+import { CheckCircle, Circle, Plus, Newspaper, DotsSixVertical } from "@phosphor-icons/react";
 import { NEWS_ITEMS, type NewsItem } from "@/data/news";
 
 import { DndContext, type DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
@@ -161,7 +161,7 @@ function SortableCard({ id, children, className }: { id: string; children: React
         {...attributes}
         {...listeners}
       >
-        <GripHorizontal className="h-3.5 w-3.5 text-muted-foreground" />
+        <DotsSixVertical className="h-3.5 w-3.5 text-muted-foreground" />
       </div>
     </div>
   );
@@ -198,7 +198,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+              <CheckCircle className="h-3 w-3 text-emerald-400" />
               {t("beranda.todoMain")}
             </CardTitle>
             {main.doneCount > 0 && (
@@ -223,7 +223,7 @@ export default function Dashboard() {
                 onClick={() => main.toggleItem(todo.id)}
               >
                 {todo.done ? (
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                 ) : (
                   <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
                 )}
@@ -241,7 +241,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3 space-y-0">
           <div className="flex items-center justify-between mb-2">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+              <CheckCircle className="h-3 w-3 text-emerald-400" />
               {tab === "daily" ? t("beranda.todo") : t("beranda.todoWeekly")}
             </CardTitle>
             {activeList.doneCount > 0 && (
@@ -299,7 +299,7 @@ export default function Dashboard() {
                 onClick={() => activeList.toggleItem(todo.id)}
               >
                 {todo.done ? (
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                 ) : (
                   <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
                 )}

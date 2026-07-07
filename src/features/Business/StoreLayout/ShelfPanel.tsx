@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { LayoutZone, InventoryItem } from "@/types";
 import type { CategoryRow } from "./StoreLayout";
-import { X, Trash2, Minus, Box } from "lucide-react";
+import { X, Trash, Minus, Cube } from "@phosphor-icons/react";
 
 interface ShelfPanelProps {
   zone: LayoutZone;
@@ -89,7 +89,7 @@ export default function ShelfPanel({
             className="h-6 w-6 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
             title={t("common.delete")}
           >
-            <Trash2 className="h-3 w-3" />
+            <Trash className="h-3 w-3" />
           </Button>
           <Button
             variant="ghost"
@@ -230,7 +230,7 @@ export default function ShelfPanel({
                     </span>
                   </>
                 ) : (
-                  <Box className="h-4 w-4 text-slate-600" />
+                  <Cube className="h-4 w-4 text-slate-600" />
                 )}
               </div>
             );

@@ -1,4 +1,4 @@
-import { Plus, Trash2, CalendarDays } from "lucide-react";
+import { Plus, Trash, Calendar } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,7 +55,7 @@ export default function AccountingJournal({
         <Card key={entry.id} className="bg-card border-border">
           <CardHeader className="py-3">
             <CardTitle className="text-xs font-mono flex items-center gap-3 text-muted-foreground">
-              <CalendarDays className="h-3 w-3" />
+              <Calendar className="h-3 w-3" />
               <span className="text-foreground font-bold">{entry.number}</span>
               <span className="text-muted-foreground">— {entry.date}</span>
               <span className="ml-auto text-xxxs text-muted-foreground">{entry.category}</span>
@@ -176,7 +176,7 @@ export default function AccountingJournal({
                       className="h-6 w-6 text-rose-400"
                       onClick={() => onRemoveLine(i)}
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash className="h-3 w-3" />
                     </Button>
                   )}
                 </div>

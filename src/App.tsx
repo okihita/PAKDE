@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import "@/i18n"; // initialize i18next before render
 import { initDb, getDb } from "@/db";
 import { ToastProvider } from "@/hooks/useToast";
+import { IconProvider } from "@/components/IconContext";
 import SplashScreen from "@/features/System/SplashScreen/SplashScreen";
 import DbErrorScreen from "@/features/System/DbErrorScreen/DbErrorScreen";
 import Sidebar from "@/features/Sidebar";
@@ -298,11 +299,13 @@ function AppContent() {
 export default function App() {
   return (
     <ToastProvider>
-      <div
-        className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat bg-fixed opacity-3 pointer-events-none"
-        style={{ backgroundImage: 'url("/background.jpg")' }}
-      />
-      <AppContent />
+      <IconProvider>
+        <div
+          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat bg-fixed opacity-3 pointer-events-none"
+          style={{ backgroundImage: 'url("/background.jpg")' }}
+        />
+        <AppContent />
+      </IconProvider>
     </ToastProvider>
   );
 }

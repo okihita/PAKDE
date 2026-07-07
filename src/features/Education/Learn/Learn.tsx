@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, CheckCircle2, Lock, Star, Trophy, ArrowRight, ArrowLeft } from "lucide-react";
+import { BookOpen, CheckCircle, Lock, Star, Trophy, ArrowRight, ArrowLeft } from "@phosphor-icons/react";
 
 import { MODULES, CONNECTIONS, type ModuleDef } from "./curriculum";
 import { loadProgress, saveProgress } from "./secureStorage";
@@ -209,7 +209,7 @@ export default function Learn() {
               /* Render Lesson Complete area */
               <Card className="bg-card border-border">
                 <CardContent className="p-8 text-center space-y-3">
-                  <CheckCircle2 className="h-12 w-12 text-emerald-400 mx-auto" />
+                  <CheckCircle className="h-12 w-12 text-emerald-400 mx-auto" />
                   <p className="text-sm font-bold text-foreground">{t("learn.lessonComplete")}</p>
                   <p className="text-xxs text-muted-foreground">
                     {t("learn.lessonCompleteDesc", { name: activeLessonDef?.name ?? "" })}
@@ -390,7 +390,7 @@ export default function Learn() {
                                   <p className="text-xs font-bold text-slate-200">{ls.name}</p>
                                 </div>
                                 {done ? (
-                                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                                  <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />
                                 ) : (
                                   <Button
                                     size="sm"

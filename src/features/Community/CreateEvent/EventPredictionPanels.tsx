@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Coins, Users, TrendingUp, ListChecks } from "lucide-react";
+import { Coins, Users, TrendUp, ListChecks } from "@phosphor-icons/react";
 import { formatIdr, type Prediction } from "./eventTemplates";
 
 interface Props {
@@ -14,7 +14,7 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
     <div className="space-y-3 pt-2">
       {/* Divider */}
       <div className="flex items-center gap-2 text-xxs font-mono text-slate-500 uppercase tracking-wider">
-        <TrendingUp className="h-3 w-3 text-emerald-400" />
+        <TrendUp className="h-3 w-3 text-emerald-400" />
         {t("event.prediction.heading")}
       </div>
 

@@ -10,7 +10,7 @@ import AccountingCoa from "./AccountingCoa";
 import AccountingJournal from "./AccountingJournal";
 import AccountingLedger from "./AccountingLedger";
 import AccountingReports from "./AccountingReports";
-import { FileDown, ShieldAlert, Sparkles, TrendingUp, Wallet, CheckSquare, Settings2, Play } from "lucide-react";
+import { FileArrowDown, ShieldWarning, Sparkle, TrendUp, Wallet, CheckSquare, GearSix, Play } from "@phosphor-icons/react";
 
 // Linter constants
 const RUNWAY_STATUS = "Sovereignty Status: Safe";
@@ -78,7 +78,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
         <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="text-xxs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
-              <Settings2 className="h-3.5 w-3.5" />
+              <GearSix className="h-3.5 w-3.5" />
               {t("accounting.tiers.selectLabel")}
             </span>
             <p className="text-xxxs text-muted-foreground leading-normal max-w-md">
@@ -158,7 +158,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <Card className="bg-card border-border">
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                  <Sparkle className="h-3.5 w-3.5 text-amber-400" />
                   {t("accounting.health.title")}
                 </CardTitle>
               </CardHeader>
@@ -202,7 +202,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <Card className="bg-card border-border">
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <ShieldAlert className="h-3.5 w-3.5 text-blue-400" />
+                  <ShieldWarning className="h-3.5 w-3.5 text-blue-400" />
                   {AR_AP_TITLE}
                 </CardTitle>
               </CardHeader>
@@ -226,7 +226,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <Card className="bg-card border-border md:col-span-2">
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+                    <TrendUp className="h-3.5 w-3.5 text-emerald-400" />
                     {RATIO_TITLE}
                   </CardTitle>
                 </CardHeader>
@@ -277,7 +277,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
                   )}
                   {auditComplete && (
                     <Button className="w-full bg-blue-500 hover:bg-blue-600 text-slate-950 font-bold text-xs h-8 flex items-center justify-center gap-1.5">
-                      <FileDown className="h-3 w-3" />
+                      <FileArrowDown className="h-3 w-3" />
                       {AUDIT_BTN_EXPORT}
                     </Button>
                   )}

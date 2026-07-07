@@ -4,17 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/useToast";
 import {
-  Building2,
+  Buildings,
   Database,
   Globe,
-  Activity,
-  CheckCircle2,
-  RefreshCw,
-  Sparkles,
+  Pulse,
+  CheckCircle,
+  ArrowsClockwise,
+  Sparkle,
   FileText,
-  AlertTriangle,
+  Warning,
   Play,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import "./Development.css";
 
 export default function Development() {
@@ -76,7 +76,7 @@ export default function Development() {
       {/* Header section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-          <Building2 className="h-5 w-5 text-amber-400" />
+          <Buildings className="h-5 w-5 text-amber-400" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("development.title")}</h1>
@@ -88,7 +88,7 @@ export default function Development() {
       <Card className="bg-card border-border overflow-hidden hover-glow-card">
         <CardHeader className="pb-4">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+            <Pulse className="h-3.5 w-3.5 text-emerald-400" />
             {t("development.workflow.title")}
           </CardTitle>
         </CardHeader>
@@ -102,7 +102,7 @@ export default function Development() {
             >
               <div className="flex items-center justify-between mb-2">
                 <Database className={`h-4 w-4 ${analysisStep >= 1 ? "text-emerald-400" : "text-muted-foreground"}`} />
-                {analysisStep > 1 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+                {analysisStep > 1 && <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 1 ? "text-emerald-400" : "text-foreground"}`}>
                 {t("development.workflow.step1.title")}
@@ -120,7 +120,7 @@ export default function Development() {
             >
               <div className="flex items-center justify-between mb-2">
                 <Globe className={`h-4 w-4 ${analysisStep >= 2 ? "text-emerald-400" : "text-muted-foreground"}`} />
-                {analysisStep > 2 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+                {analysisStep > 2 && <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 2 ? "text-emerald-400" : "text-foreground"}`}>
                 {t("development.workflow.step2.title")}
@@ -137,8 +137,8 @@ export default function Development() {
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <Sparkles className={`h-4 w-4 ${analysisStep >= 3 ? "text-emerald-400" : "text-muted-foreground"}`} />
-                {analysisStep > 3 && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+                <Sparkle className={`h-4 w-4 ${analysisStep >= 3 ? "text-emerald-400" : "text-muted-foreground"}`} />
+                {analysisStep > 3 && <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 3 ? "text-emerald-400" : "text-foreground"}`}>
                 {t("development.workflow.step3.title")}
@@ -156,7 +156,7 @@ export default function Development() {
             >
               <div className="flex items-center justify-between mb-2">
                 <FileText className={`h-4 w-4 ${analysisStep >= 4 ? "text-emerald-400" : "text-muted-foreground"}`} />
-                {analysisCompleted && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+                {analysisCompleted && <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 4 ? "text-emerald-400" : "text-foreground"}`}>
                 {t("development.workflow.step4.title")}
@@ -174,7 +174,7 @@ export default function Development() {
         <Card className="bg-card border-border border-dashed py-8">
           <CardContent className="flex flex-col items-center justify-center text-center space-y-4 max-w-md mx-auto">
             <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-emerald-400 animate-pulse" />
+              <Sparkle className="h-6 w-6 text-emerald-400 animate-pulse" />
             </div>
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-foreground">{t("development.simulation.ctaTitle")}</h3>
@@ -257,7 +257,7 @@ export default function Development() {
             <CardContent className="space-y-4">
               <div className="p-4 rounded-xl bg-input/40 border border-border">
                 <p className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                  <Sparkle className="h-3.5 w-3.5 text-amber-400" />
                   {t("development.preview.unitName")}
                 </p>
                 <p className="text-xxs text-muted-foreground mt-1.5 leading-relaxed">
@@ -307,7 +307,7 @@ export default function Development() {
                   variant="outline"
                   className="w-full md:w-auto border-border text-muted-foreground font-bold text-xs h-9 px-5 flex items-center justify-center gap-2"
                 >
-                  <RefreshCw className="h-3.5 w-3.5" />
+                  <ArrowsClockwise className="h-3.5 w-3.5" />
                   {t("development.simulation.reset")}
                 </Button>
               </div>
@@ -318,7 +318,7 @@ export default function Development() {
 
       {/* Federated Warning alert */}
       <div className="flex gap-2.5 p-3 rounded-xl border border-amber-500/10 bg-amber-500/5 text-xxs text-amber-400/80 leading-normal">
-        <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+        <Warning className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
         <span>{t("development.preview.alert")}</span>
       </div>
     </div>

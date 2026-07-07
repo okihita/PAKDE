@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
-import { Building2, Plus, Shield, MapPin, Volume2, VolumeX } from "lucide-react";
+import { Buildings, Plus, Shield, MapPin, SpeakerLow, SpeakerX } from "@phosphor-icons/react";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 import { sfx } from "./sfx";
@@ -95,7 +95,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
           className="p-2 bg-slate-900/80 border border-slate-800 rounded-lg hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-colors shadow-md backdrop-blur-md"
           title={soundOn ? "Mute SFX" : "Unmute SFX"}
         >
-          {soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-rose-400" />}
+          {soundOn ? <SpeakerLow className="h-4 w-4" /> : <SpeakerX className="h-4 w-4 text-rose-400" />}
         </button>
       </div>
 
@@ -134,7 +134,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
-                        <Building2 className="h-4.5 w-4.5 text-emerald-400" />
+                        <Buildings className="h-4.5 w-4.5 text-emerald-400" />
                       </div>
                       <span className="text-xxxs font-mono font-bold text-emerald-400 uppercase border border-emerald-500/25 px-2 py-0.5 rounded bg-emerald-950/20">
                         {p.id}

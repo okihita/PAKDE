@@ -1,4 +1,4 @@
-import { type LucideIcon } from "lucide-react";
+import type React from "react";
 import { EVENT_TEMPLATES } from "@/data/eventTemplates";
 
 export { EVENT_TEMPLATES };
@@ -7,7 +7,7 @@ export { EVENT_TEMPLATES };
 export interface EventTemplate {
   id: string;
   i18nKey: string;
-  icon: LucideIcon;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   category: "core" | "fun";
   importance: 1 | 2 | 3 | 4 | 5;
   baseCost: number;

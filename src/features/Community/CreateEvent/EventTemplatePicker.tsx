@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Clock, Sparkles } from "lucide-react";
+import { ArrowLeft, Clock, Sparkle } from "@phosphor-icons/react";
 import { EVENT_TEMPLATES, computePredictions, formatIdr, type EventTemplate, importanceStars } from "./eventTemplates";
 
 interface Props {
@@ -22,7 +22,7 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
       </button>
 
       <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-5">
-        <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+        <Sparkle className="h-3.5 w-3.5 text-amber-400" />
         {t("event.template.heading")}
       </h3>
 

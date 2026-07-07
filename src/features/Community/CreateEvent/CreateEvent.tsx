@@ -9,13 +9,13 @@ import {
   Clock,
   FileText,
   ArrowLeft,
-  CalendarDays,
-  Sparkles,
+  Calendar,
+  Sparkle,
   Users,
   Lightbulb,
   CheckSquare,
-  TrendingUp,
-} from "lucide-react";
+  TrendUp,
+} from "@phosphor-icons/react";
 import { computePredictions, importanceStars, type EventTemplate } from "./eventTemplates";
 import EventTemplatePicker from "./EventTemplatePicker";
 import EventPredictionPanels from "./EventPredictionPanels";
@@ -146,7 +146,7 @@ export default function CreateEvent() {
       <div className="flex-1 overflow-auto p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-            <CalendarDays className="h-3.5 w-3.5 text-amber-400" />
+            <Calendar className="h-3.5 w-3.5 text-amber-400" />
             {t("sidebar.nav.event")}
           </h3>
           {events.length > 0 && (
@@ -163,7 +163,7 @@ export default function CreateEvent() {
         {events.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
             <div className="w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6">
-              <CalendarDays className="h-9 w-9 text-amber-400/60" />
+              <Calendar className="h-9 w-9 text-amber-400/60" />
             </div>
             <h2 className="text-sm font-bold text-foreground mb-2">{t("event.empty.title")}</h2>
             <p className="text-xxs text-muted-foreground max-w-xs mb-8 leading-relaxed">
@@ -173,15 +173,15 @@ export default function CreateEvent() {
               onClick={openTemplates}
               className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 px-5"
             >
-              <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+              <Sparkle className="h-3.5 w-3.5 mr-1.5" />
               {t("event.empty.cta")}
             </Button>
             <div className="mt-10 grid grid-cols-2 gap-3 max-w-xs w-full">
               {[
-                { icon: CalendarDays, label: t("event.empty.hint1") },
+                { icon: Calendar, label: t("event.empty.hint1") },
                 { icon: MapPin, label: t("event.empty.hint2") },
                 { icon: Clock, label: t("event.empty.hint3") },
-                { icon: Sparkles, label: t("event.empty.hint4") },
+                { icon: Sparkle, label: t("event.empty.hint4") },
               ].map(({ icon: Icon, label }, i) => (
                 <div key={i} className="flex items-center gap-2 text-xxxs text-slate-500 font-mono">
                   <Icon className="h-3 w-3 text-slate-600" />
@@ -406,7 +406,7 @@ export default function CreateEvent() {
               {tmpl!.roiKeys.length > 0 && (
                 <div className="rounded-lg border border-blue-500/10 bg-blue-500/[0.03] p-3 space-y-1.5">
                   <h4 className="text-xxs font-mono font-bold text-blue-400 flex items-center gap-1.5">
-                    <TrendingUp className="h-3 w-3" />
+                    <TrendUp className="h-3 w-3" />
                     {t("event.rationale.roiTitle")}
                   </h4>
                   {tmpl!.roiKeys.map((key) => (

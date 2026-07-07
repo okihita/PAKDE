@@ -2,7 +2,7 @@ import "./Planners.css";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Printer } from "lucide-react";
+import { FileText, DownloadSimple, Printer } from "@phosphor-icons/react";
 
 const PLANNERS = [
   {
@@ -102,7 +102,7 @@ export default function Planners() {
                     size="sm"
                     className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xxs h-7"
                   >
-                    <Download className="h-3 w-3 mr-1" /> {t("planners.pdf")}
+                    <DownloadSimple className="h-3 w-3 mr-1" /> {t("planners.pdf")}
                   </Button>
                   <Button
                     size="sm"

@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
+import { CheckCircle, XCircle, Warning } from "@phosphor-icons/react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -74,7 +74,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             }`}
           >
             {t.type === "success" ? (
-              <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+              <CheckCircle className="h-4 w-4 flex-shrink-0" />
             ) : (
               <XCircle className="h-4 w-4 flex-shrink-0" />
             )}
@@ -88,7 +88,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <DialogContent className="bg-card border border-border text-foreground max-w-sm">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-sm font-bold text-slate-200">
-              <AlertTriangle className="h-4 w-4 text-amber-400" />
+              <Warning className="h-4 w-4 text-amber-400" />
               {t("common.confirm")}
             </DialogTitle>
           </DialogHeader>

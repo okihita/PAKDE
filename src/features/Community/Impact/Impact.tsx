@@ -4,16 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/useToast";
 import {
-  HeartHandshake,
+  Handshake,
   Users,
   Leaf,
-  Activity,
-  Sparkles,
-  TrendingUp,
-  MessageSquare,
+  Pulse,
+  Sparkle,
+  TrendUp,
+  Chat,
   Play,
-  CheckCircle2,
-} from "lucide-react";
+  CheckCircle,
+} from "@phosphor-icons/react";
 import "./Impact.css";
 
 interface FeedbackItem {
@@ -84,7 +84,7 @@ export default function Impact() {
       {/* Header section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-          <HeartHandshake className="h-5 w-5 text-emerald-400" />
+          <Handshake className="h-5 w-5 text-emerald-400" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("impact.title")}</h1>
@@ -114,7 +114,7 @@ export default function Impact() {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("impact.metrics.welfareTitle")}
             </span>
-            <TrendingUp className="h-4 w-4 text-blue-400" />
+            <TrendUp className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">+ 18.5%</h3>
@@ -140,7 +140,7 @@ export default function Impact() {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("impact.metrics.genderTitle")}
             </span>
-            <Sparkles className="h-4 w-4 text-amber-400" />
+            <Sparkle className="h-4 w-4 text-amber-400" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">45%</h3>
@@ -153,7 +153,7 @@ export default function Impact() {
       <Card className="bg-card border-border overflow-hidden">
         <CardHeader className="pb-3 border-b border-border/55">
           <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+            <Pulse className="h-3.5 w-3.5 text-emerald-400" />
             {t("impact.auditTitle")}
           </CardTitle>
           <p className="text-xxxs text-muted-foreground mt-1 leading-relaxed">{t("impact.auditDesc")}</p>
@@ -188,7 +188,7 @@ export default function Impact() {
             <div className="p-4 rounded-xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/5 via-card to-transparent flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-xxs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                  <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />
                   {t("impact.auditComplete")}
                 </span>
                 <p className="text-xs font-bold text-foreground mt-1">{t("impact.sroiVal")}</p>
@@ -209,7 +209,7 @@ export default function Impact() {
       <Card className="bg-card border-border">
         <CardHeader className="pb-3 border-b border-border/55">
           <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-            <MessageSquare className="h-3.5 w-3.5 text-blue-400" />
+            <Chat className="h-3.5 w-3.5 text-blue-400" />
             {t("impact.feedbackTitle")}
           </CardTitle>
         </CardHeader>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useUnits } from "@/hooks/useUnits";
-import { Building2, Plus, Sparkles, Power, Activity } from "lucide-react";
+import { Buildings, Plus, Sparkle, Power, Pulse } from "@phosphor-icons/react";
 import "./Units.css";
 
 interface UnitsProps {
@@ -42,7 +42,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-            <Building2 className="h-5 w-5 text-emerald-400" />
+            <Buildings className="h-5 w-5 text-emerald-400" />
           </div>
           <div>
             <h1 className="text-sm font-bold text-foreground">{t("units.title")}</h1>
@@ -63,7 +63,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       {/* Active Units list */}
       <div className="space-y-3">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Activity className="h-3.5 w-3.5 text-emerald-400" />
+          <Pulse className="h-3.5 w-3.5 text-emerald-400" />
           {t("units.active")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -201,7 +201,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       {/* Inactive Units list */}
       <div className="space-y-3 pt-4 border-t border-border">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+          <Buildings className="h-3.5 w-3.5 text-muted-foreground" />
           {t("units.inactive")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-75">
@@ -281,7 +281,7 @@ export default function Units({ onTabChange }: UnitsProps) {
                 type="submit"
                 className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8 px-4 flex items-center gap-1"
               >
-                <Sparkles className="h-3 w-3" />
+                <Sparkle className="h-3 w-3" />
                 {t("units.form.submit")}
               </Button>
             </div>

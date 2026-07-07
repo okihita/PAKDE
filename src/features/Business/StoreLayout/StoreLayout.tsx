@@ -9,7 +9,7 @@ import { useStoreLayout } from "@/hooks/useStoreLayout";
 import LayoutCanvas from "./LayoutCanvas";
 import ShelfPanel from "./ShelfPanel";
 import type { LayoutZone } from "@/types";
-import { MapPin, Plus, Trash2, ArrowLeft, Sparkles } from "lucide-react";
+import { MapPin, Plus, Trash, ArrowLeft, Sparkle } from "@phosphor-icons/react";
 
 export interface CategoryRow {
   id: string;
@@ -172,7 +172,7 @@ export default function StoreLayout() {
                         deleteLayout(layout.id);
                       }}
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                   <p className="text-xxxs font-mono text-slate-500">
@@ -281,7 +281,7 @@ export default function StoreLayout() {
                   type="submit"
                   className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
                 >
-                  <Sparkles className="h-3 w-3 mr-1" />
+                  <Sparkle className="h-3 w-3 mr-1" />
                   {t("storeLayout.create")}
                 </Button>
               </DialogFooter>

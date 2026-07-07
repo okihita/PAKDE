@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingCart, History, Package, Search, MinusCircle, PlusCircle, CreditCard, Trash2 } from "lucide-react";
+import { ShoppingCart, ClockCounterClockwise, Package, MagnifyingGlass, MinusCircle, PlusCircle, CreditCard, Trash } from "@phosphor-icons/react";
 import SalesHistory from "./SalesHistory";
 import SalesInventory from "./SalesInventory";
 import "./Sales.css";
@@ -97,7 +97,7 @@ export default function Sales() {
             value="history"
             className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 flex items-center gap-1.5"
           >
-            <History className="h-3.5 w-3.5" />
+            <ClockCounterClockwise className="h-3.5 w-3.5" />
             {t("sales.tabs.history")}
           </TabsTrigger>
           <TabsTrigger
@@ -116,7 +116,7 @@ export default function Sales() {
             <div className="lg:col-span-2 space-y-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <MagnifyingGlass className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                   <Input
                     placeholder={t("sales.checkout.searchProducts")}
                     value={productSearch}
@@ -250,7 +250,7 @@ export default function Sales() {
                             onClick={() => s.removeFromCart(c.item.id)}
                             className="p-1 pl-2 hover:text-rose-400 text-muted-foreground transition-colors"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </div>

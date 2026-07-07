@@ -1,6 +1,6 @@
 import "./Members.css";
 import { useTranslation } from "react-i18next";
-import { Search, Plus, Trash2, Edit2, Sprout } from "lucide-react";
+import { MagnifyingGlass, Plus, Trash, PencilSimple, Plant } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -50,7 +50,7 @@ export default function Members() {
               disabled={seeding}
               className="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 font-bold text-xs h-8 border border-amber-600/20"
             >
-              <Sprout className="h-3 w-3 mr-1" /> {seeding ? "..." : "Mock 50"}
+              <Plant className="h-3 w-3 mr-1" /> {seeding ? "..." : "Mock 50"}
             </Button>
             <Button
               onClick={m.openAddMemberModal}
@@ -63,7 +63,7 @@ export default function Members() {
         <CardContent>
           <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+              <MagnifyingGlass className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
               <Input
                 placeholder={t("members.searchPlaceholder")}
                 value={m.memberSearchQuery}
@@ -151,7 +151,7 @@ export default function Members() {
                         className="h-6 w-6 text-muted-foreground hover:text-foreground"
                         onClick={() => m.openEditMemberModal(mbr)}
                       >
-                        <Edit2 className="h-3 w-3" />
+                        <PencilSimple className="h-3 w-3" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -159,7 +159,7 @@ export default function Members() {
                         className="h-6 w-6 text-rose-400 hover:text-foreground"
                         onClick={() => m.handleDeleteMember(mbr)}
                       >
-                        <Trash2 className="h-3 w-3" />
+                        <Trash className="h-3 w-3" />
                       </Button>
                     </div>
                   </TableCell>

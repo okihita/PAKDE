@@ -1,19 +1,19 @@
 import {
-  Building2,
+  Buildings,
   GraduationCap,
   Users,
-  ShoppingBag,
-  FileSpreadsheet,
+  ShoppingBagOpen,
+  Table,
   Leaf,
-  Sparkles,
+  Sparkle,
   Trophy,
   Footprints,
   ShoppingCart,
-  Shovel,
+  Hammer,
   Bus,
-  Music,
+  MusicNotes,
   Stethoscope,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { type EventTemplate, r } from "@/features/Community/CreateEvent/eventTemplates";
 
 export const EVENT_TEMPLATES: EventTemplate[] = [
@@ -21,7 +21,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     id: "rat",
     i18nKey: "event.template.rat.label",
-    icon: Building2,
+    icon: Buildings,
     category: "core",
     importance: 5,
     baseCost: 8_000_000,
@@ -112,7 +112,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     id: "market",
     i18nKey: "event.template.market.label",
-    icon: ShoppingBag,
+    icon: ShoppingBagOpen,
     category: "core",
     importance: 3,
     baseCost: 1_000_000,
@@ -142,7 +142,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     id: "financial",
     i18nKey: "event.template.financial.label",
-    icon: FileSpreadsheet,
+    icon: Table,
     category: "core",
     importance: 4,
     baseCost: 500_000,
@@ -196,7 +196,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     id: "custom",
     i18nKey: "event.template.custom.label",
-    icon: Sparkles,
+    icon: Sparkle,
     category: "core",
     importance: 1,
     baseCost: 0,
@@ -330,7 +330,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     id: "gotongroyong",
     i18nKey: "event.template.gotongroyong.label",
-    icon: Shovel,
+    icon: Hammer,
     category: "fun",
     importance: 3,
     baseCost: 300_000,
@@ -399,7 +399,7 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
   {
     id: "festival",
     i18nKey: "event.template.festival.label",
-    icon: Music,
+    icon: MusicNotes,
     category: "fun",
     importance: 4,
     baseCost: 2_000_000,

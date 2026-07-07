@@ -1,35 +1,33 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  LayoutDashboard,
+  SquaresFour,
   Users,
-  Receipt,
-  TrendingUp,
-  BarChart3,
+  Note,
+  TrendUp,
+  ChartBar,
   Trophy,
-  RefreshCw,
-  Settings,
-  AlertTriangle,
+  ArrowsClockwise,
+  Gear,
+  Warning,
   UserCheck,
   Sun,
   Moon,
   Shield,
   Medal,
-  ChevronDown,
-  ChevronRight,
-  LineChart,
+  CaretDown,
+  CaretRight,
+  ChartLine,
   Wallet,
-  Cog,
   CalendarPlus,
   Wrench,
   Handshake,
-  Building2,
+  Buildings,
   BookOpen,
   FileText,
-  HeartHandshake,
-  LogOut,
+  SignOut,
   MapPin,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { getCurrentLevel } from "@/data/leveling";
 import type { CooperativeProfile, EwsAlert } from "@/types";
 
@@ -122,24 +120,24 @@ export default function Sidebar({
   const GROUPS: NavGroupDef[] = [
     {
       id: "analitik",
-      icon: LineChart,
+      icon: ChartLine,
       label: t("sidebar.groups.analitik"),
       items: [
-        { id: "statistics", icon: BarChart3, label: t("sidebar.nav.statistics") },
+        { id: "statistics", icon: ChartBar, label: t("sidebar.nav.statistics") },
         { id: "ranking", icon: Medal, label: t("sidebar.nav.ranking") },
         { id: "leveling", icon: Trophy, label: t("sidebar.nav.leveling") },
       ],
     },
     {
       id: "bisnis",
-      icon: TrendingUp,
+      icon: TrendUp,
       label: t("sidebar.groups.bisnis"),
       items: [
-        { id: "units", icon: Building2, label: t("sidebar.nav.units") },
+        { id: "units", icon: Buildings, label: t("sidebar.nav.units") },
         { id: "equipment", icon: Wrench, label: t("sidebar.nav.equipment") },
         { id: "sales", icon: Handshake, label: t("sidebar.nav.sales") },
         { id: "storelayout", icon: MapPin, label: t("sidebar.nav.storeLayout") },
-        { id: "development", icon: Building2, label: t("sidebar.nav.development") },
+        { id: "development", icon: Buildings, label: t("sidebar.nav.development") },
       ],
     },
     {
@@ -147,10 +145,10 @@ export default function Sidebar({
       icon: Users,
       label: t("sidebar.groups.komunitas"),
       items: [
-        { id: "participation", icon: BarChart3, label: t("sidebar.nav.participation") },
+        { id: "participation", icon: ChartBar, label: t("sidebar.nav.participation") },
         { id: "members", icon: Users, label: t("sidebar.nav.members") },
         { id: "event", icon: CalendarPlus, label: t("sidebar.nav.event") },
-        { id: "impact", icon: HeartHandshake, label: t("sidebar.nav.impact") },
+        { id: "impact", icon: Handshake, label: t("sidebar.nav.impact") },
       ],
     },
     {
@@ -158,8 +156,8 @@ export default function Sidebar({
       icon: Wallet,
       label: t("sidebar.groups.keuangan"),
       items: [
-        { id: "accounting", icon: Receipt, label: t("sidebar.nav.accounting") },
-        { id: "feasibility", icon: TrendingUp, label: t("sidebar.nav.feasibility") },
+        { id: "accounting", icon: Note, label: t("sidebar.nav.accounting") },
+        { id: "feasibility", icon: TrendUp, label: t("sidebar.nav.feasibility") },
       ],
     },
     {
@@ -173,16 +171,16 @@ export default function Sidebar({
     },
     {
       id: "sistem",
-      icon: Cog,
+      icon: Gear,
       label: t("sidebar.groups.sistem"),
       items: [
-        { id: "sync", icon: RefreshCw, label: t("sidebar.nav.sync") },
-        { id: "settings", icon: Settings, label: t("sidebar.nav.settings") },
+        { id: "sync", icon: ArrowsClockwise, label: t("sidebar.nav.sync") },
+        { id: "settings", icon: Gear, label: t("sidebar.nav.settings") },
       ],
     },
   ];
 
-  const HOME_ITEM: NavItemDef = { id: "home", icon: LayoutDashboard, label: t("sidebar.nav.home") };
+  const HOME_ITEM: NavItemDef = { id: "home", icon: SquaresFour, label: t("sidebar.nav.home") };
 
   function renderNavItem(item: NavItemDef, isChild = false) {
     const Icon = item.icon;
@@ -215,7 +213,7 @@ export default function Sidebar({
         >
           <GroupIcon className="h-3.5 w-3.5 shrink-0" />
           <span className="flex-1">{group.label}</span>
-          {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          {isCollapsed ? <CaretRight className="h-3 w-3" /> : <CaretDown className="h-3 w-3" />}
         </div>
         {/* Group items */}
         {!isCollapsed && group.items.map((item) => renderNavItem(item, true))}
@@ -296,7 +294,7 @@ export default function Sidebar({
               className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-rose-400"
               title={t("profileSelect.switchProfile")}
             >
-              <LogOut className="h-3.5 w-3.5" />
+              <SignOut className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
@@ -314,7 +312,7 @@ export default function Sidebar({
         <div className="border-t border-border p-4">
           <div className="px-3 py-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-3 w-3 text-rose-400" />
+              <Warning className="h-3 w-3 text-rose-400" />
               <span className="text-xxs font-mono text-rose-300">
                 {t("sidebar.criticalAlerts", { count: criticalAlerts })}
               </span>

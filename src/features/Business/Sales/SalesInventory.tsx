@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Plus, Trash2, Sparkles, LayoutGrid, List } from "lucide-react";
+import { Package, Plus, Trash, Sparkle, GridFour, List } from "@phosphor-icons/react";
 import type { InventoryItem } from "@/types";
 
 const TEXT_AISLE_HEADER = "Aisle: ";
@@ -127,7 +127,7 @@ export default function SalesInventory({
               className="h-7 w-7 rounded-md p-0"
               title={TEXT_TITLE_VISUAL}
             >
-              <LayoutGrid className="h-3.5 w-3.5" />
+              <GridFour className="h-3.5 w-3.5" />
             </Button>
           </div>
 
@@ -213,7 +213,7 @@ export default function SalesInventory({
                           onClick={() => onDeleteItem(item.id)}
                           className="h-7 w-7 text-rose-400 hover:text-foreground hover:bg-rose-500/10"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </TableCell>
@@ -319,7 +319,7 @@ export default function SalesInventory({
                               onClick={() => onDeleteItem(item.id)}
                               className="h-6.5 w-6.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 shrink-0"
                             >
-                              <Trash2 className="h-3 w-3" />
+                               <Trash className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
@@ -441,7 +441,7 @@ export default function SalesInventory({
                 type="submit"
                 className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
               >
-                <Sparkles className="h-3 w-3 mr-1" />
+                <Sparkle className="h-3 w-3 mr-1" />
                 {t("sales.inventory.submit")}
               </Button>
             </DialogFooter>

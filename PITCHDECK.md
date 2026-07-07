@@ -1,6 +1,6 @@
 # PAKDE — Pitch Deck
 
-Platform Aplikasi & Keuangan Koperasi Desa. An offline-first, SAK EP compliant desktop application to digitize and empower Indonesian Village Cooperatives.
+Pemantauan dan Asesmen Koperasi Desa. An offline-first, SAK EP compliant desktop application to digitize and empower Indonesian Village Cooperatives.
 
 ---
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarDays, ChevronLeft, ChevronRight, MapPin, Clock } from "lucide-react";
+import { Calendar, CaretLeft, CaretRight, MapPin, Clock } from "@phosphor-icons/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -209,7 +209,7 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
       <Card className="bg-card border-border text-foreground hover-glow-card">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-            <CalendarDays className="h-3 w-3" />
+            <Calendar className="h-3 w-3" />
             {t("beranda.calendar")}
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -221,13 +221,13 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
                 onClick={prevMonth}
                 className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ChevronLeft className="h-3 w-3" />
+                <CaretLeft className="h-3 w-3" />
               </button>
               <button
                 onClick={nextMonth}
                 className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ChevronRight className="h-3 w-3" />
+                <CaretRight className="h-3 w-3" />
               </button>
             </div>
           </div>
@@ -295,7 +295,7 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
           </DialogHeader>
           <div className="space-y-3 text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
-              <CalendarDays className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+              <Calendar className="h-3.5 w-3.5 text-amber-400 shrink-0" />
               <span>
                 {selectedEvent?.date} {selectedEvent ? MONTHS[selectedEvent.month] : ""} {selectedEvent?.year}
               </span>

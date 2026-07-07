@@ -5,18 +5,18 @@ import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Users,
-  TrendingUp,
+  TrendUp,
   ShieldCheck,
-  ClipboardCheck,
-  Building2,
+  ClipboardText,
+  Buildings,
   Monitor,
-  ChevronDown,
-  ChevronUp,
+  CaretDown,
+  CaretUp,
   Trophy,
   Star,
   Lock,
-  CheckCircle2,
-} from "lucide-react";
+  CheckCircle,
+} from "@phosphor-icons/react";
 
 interface Props {
   healthScore?: number;
@@ -24,10 +24,10 @@ interface Props {
 
 const ASPECT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Users,
-  TrendingUp,
+  TrendUp,
   ShieldCheck,
-  ClipboardCheck,
-  Building2,
+  ClipboardText,
+  Buildings,
   Monitor,
 };
 
@@ -35,7 +35,7 @@ function QuestItem({ done, text }: { done: boolean; text: string }) {
   return (
     <li className="flex items-start gap-1.5 text-xxs text-muted-foreground">
       {done ? (
-        <CheckCircle2 className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+        <CheckCircle className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
       ) : (
         <span className="text-slate-700 mt-0.5 shrink-0">◈</span>
       )}
@@ -114,9 +114,9 @@ function LevelCard({
               </div>
             </div>
             {open ? (
-              <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+              <CaretUp className="h-3.5 w-3.5 text-muted-foreground" />
             ) : (
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              <CaretDown className="h-3.5 w-3.5 text-muted-foreground" />
             )}
           </div>
         </div>
@@ -223,7 +223,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
               }`}
             >
               {isComplete ? (
-                <CheckCircle2 className={`h-3.5 w-3.5 ${level.textClass}`} />
+                <CheckCircle className={`h-3.5 w-3.5 ${level.textClass}`} />
               ) : (
                 <Icon className={`h-3.5 w-3.5 ${isActive ? level.textClass : "text-muted-foreground"}`} />
               )}
