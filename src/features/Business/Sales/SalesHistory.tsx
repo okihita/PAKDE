@@ -38,7 +38,7 @@ export default function SalesHistory({
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <ClockCounterClockwise className="h-4 w-4 text-emerald-400" />
+            <ClockCounterClockwise className="h-4 w-4 text-success" />
             {t("sales.history.title")}
           </CardTitle>
         </CardHeader>
@@ -82,8 +82,8 @@ export default function SalesHistory({
                     <span
                       className={`text-xxxs font-mono font-bold px-1.5 py-0.5 rounded ${
                         tx.payment_type === "cash"
-                          ? "text-emerald-400 bg-emerald-500/10"
-                          : "text-amber-400 bg-amber-500/10"
+                          ? "text-success bg-success/10"
+                          : "text-warning bg-warning/10"
                       }`}
                     >
                       {tx.payment_type.toUpperCase()}
@@ -143,7 +143,7 @@ export default function SalesHistory({
                 <div className="text-right">
                   <p className="text-muted-foreground uppercase">{t("sales.history.payment")}</p>
                   <p className="text-foreground">
-                    <span className="font-bold text-emerald-400 bg-emerald-500/10 px-1 py-0.5 rounded border border-emerald-500/20 text-xxs">
+                    <span className="font-bold text-success bg-success/10 px-1 py-0.5 rounded border border-success/20 text-xxs">
                       {selectedTx.payment_type.toUpperCase()}
                     </span>
                   </p>
@@ -183,12 +183,12 @@ export default function SalesHistory({
                   <span className="font-bold text-muted-foreground uppercase">
                     {t("sales.checkout.total")}
                   </span>
-                  <span className="text-sm font-black text-emerald-400">
+                  <span className="text-sm font-black text-success">
                     Rp {selectedTx.total_amount.toLocaleString("id-ID")}
                   </span>
                 </div>
                 <div className="p-2 rounded bg-input/20 border border-border/30 font-mono text-xxs text-muted-foreground">
-                  <span className="flex items-center gap-1 text-emerald-400/90">
+                  <span className="flex items-center gap-1 text-success/90">
                     <Info className="h-3 w-3" />
                     {t("sales.history.journalRef", {
                       num: selectedTx.journal_entry_id?.slice(-8),

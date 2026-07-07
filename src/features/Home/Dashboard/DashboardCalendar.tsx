@@ -248,15 +248,15 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
                     d === null
                       ? "text-transparent"
                       : isToday(d)
-                        ? "bg-emerald-500/20 text-emerald-400 font-bold"
+                        ? "bg-success/20 text-success font-bold"
                         : hasEvent
-                          ? "text-amber-300 font-bold"
+                          ? "text-warning/80 font-bold"
                           : "text-muted-foreground hover:bg-sidebar-ring"
                   }`}
                 >
                   {d ?? "."}
                   {hasEvent && (
-                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-amber-400" />
+                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-warning" />
                   )}
                 </div>
               );
@@ -277,7 +277,7 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
                       className="flex items-center gap-2 text-xxs py-1.5 px-2 rounded hover:bg-secondary cursor-pointer transition-colors"
                       onClick={() => setSelectedEvent(ev)}
                     >
-                      <span className="text-xxxs font-mono text-amber-400 shrink-0 w-6 text-right">{ev.date}</span>
+                      <span className="text-xxxs font-mono text-warning shrink-0 w-6 text-right">{ev.date}</span>
                       <span className="text-muted-foreground truncate">{ev.title}</span>
                     </div>
                   ))}
@@ -295,17 +295,17 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
           </DialogHeader>
           <div className="space-y-3 text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+              <Calendar className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>
                 {selectedEvent?.date} {selectedEvent ? MONTHS[selectedEvent.month] : ""} {selectedEvent?.year}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+              <Clock className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>{selectedEvent?.time}</span>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+              <MapPin className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>{selectedEvent?.location}</span>
             </div>
             <p className="pt-1 leading-relaxed border-t border-border">{selectedEvent?.description}</p>

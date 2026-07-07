@@ -127,21 +127,21 @@ const NASIONAL_MOCK: Omit<MockRankedCoop, "isOurs" | "trend">[] = [
 
 function ragColor(status: string): string {
   const s = status.toLowerCase();
-  if (s === "hijau" || s === "green") return "text-emerald-400 bg-emerald-500/10";
-  if (s === "kuning" || s === "yellow") return "text-amber-400 bg-amber-500/10";
-  return "text-rose-400 bg-rose-500/10";
+  if (s === "hijau" || s === "green") return "text-success bg-success/10";
+  if (s === "kuning" || s === "yellow") return "text-warning bg-warning/10";
+  return "text-danger bg-danger/10";
 }
 
 function TrendIcon({ trend }: { trend: "up" | "down" | "stable" }) {
-  if (trend === "up") return <TrendUp className="h-3 w-3 text-emerald-400" />;
-  if (trend === "down") return <TrendDown className="h-3 w-3 text-rose-400" />;
+  if (trend === "up") return <TrendUp className="h-3 w-3 text-success" />;
+  if (trend === "down") return <TrendDown className="h-3 w-3 text-danger" />;
   return <Minus className="h-3 w-3 text-muted-foreground" />;
 }
 
 function rankMedal(rank: number) {
-  if (rank === 1) return <Trophy className="h-4 w-4 text-amber-400" />;
+  if (rank === 1) return <Trophy className="h-4 w-4 text-warning" />;
   if (rank === 2) return <Medal className="h-4 w-4 text-slate-300" />;
-  if (rank === 3) return <Medal className="h-4 w-4 text-amber-700" />;
+  if (rank === 3) return <Medal className="h-4 w-4 text-warning" />;
   return <span className="text-xxs font-mono text-muted-foreground w-4 text-center">{rank}</span>;
 }
 
@@ -183,7 +183,7 @@ export default function Ranking({ coopProfile }: Props) {
             <TableRow
               key={c.rank}
               className={`border-border transition-colors ${
-                c.isOurs ? "bg-emerald-500/5 hover:bg-emerald-500/10" : "hover:bg-secondary"
+                c.isOurs ? "bg-success/5 hover:bg-success/10" : "hover:bg-secondary"
               }`}
             >
               <TableCell className="py-2">
@@ -191,9 +191,9 @@ export default function Ranking({ coopProfile }: Props) {
               </TableCell>
               <TableCell className="py-2">
                 <div className="flex items-center gap-2">
-                  {c.isOurs && <Star className="h-3 w-3 text-emerald-400 shrink-0" />}
+                  {c.isOurs && <Star className="h-3 w-3 text-success shrink-0" />}
                   <div className="min-w-0">
-                    <p className={`text-xs font-bold truncate ${c.isOurs ? "text-emerald-400" : "text-foreground"}`}>
+                    <p className={`text-xs font-bold truncate ${c.isOurs ? "text-success" : "text-foreground"}`}>
                       {c.name}
                     </p>
                     <p className="text-xxxs font-mono text-muted-foreground">{c.village}</p>
@@ -226,7 +226,7 @@ export default function Ranking({ coopProfile }: Props) {
           <Card key={lv.key} className="bg-card border-border">
             <CardContent className="p-4 flex flex-col items-center gap-1">
               <p className="text-xxs font-mono text-muted-foreground uppercase tracking-wider">{lv.label}</p>
-              <span className="text-2xl font-black text-emerald-400 font-mono">#{lv.rank}</span>
+              <span className="text-2xl font-black text-success font-mono">#{lv.rank}</span>
               <span className="text-xxxs font-mono text-muted-foreground">
                 {t("ranking.summary.from", { total: lv.total })}
               </span>
@@ -239,7 +239,7 @@ export default function Ranking({ coopProfile }: Props) {
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader className="pb-0">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Trophy className="h-3 w-3 text-amber-400" />
+            <Trophy className="h-3 w-3 text-warning" />
             {t("ranking.title")}
           </CardTitle>
         </CardHeader>

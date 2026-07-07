@@ -103,7 +103,7 @@ export default function SalesInventory({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Package className="h-3.5 w-3.5 text-emerald-400" />
+          <Package className="h-3.5 w-3.5 text-success" />
           {t("sales.inventory.title")}
         </h3>
         <div className="flex items-center gap-3">
@@ -138,7 +138,7 @@ export default function SalesInventory({
               }
               setShowAddModal(true);
             }}
-            className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8.5 px-4 flex items-center gap-1.5"
+            className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8.5 px-4 flex items-center gap-1.5"
           >
             <Plus className="h-4 w-4" />
             {t("sales.inventory.addItem")}
@@ -187,7 +187,7 @@ export default function SalesInventory({
                     <TableCell className="text-xxs font-mono text-muted-foreground text-right">
                       Rp {item.cost_price.toLocaleString("id-ID")}
                     </TableCell>
-                    <TableCell className="text-xxs font-mono text-emerald-400 font-semibold text-right">
+                    <TableCell className="text-xxs font-mono text-success font-semibold text-right">
                       Rp {item.selling_price.toLocaleString("id-ID")}
                     </TableCell>
                     <TableCell className="text-xxs font-mono text-foreground font-bold text-right">
@@ -211,7 +211,7 @@ export default function SalesInventory({
                           variant="ghost"
                           size="icon"
                           onClick={() => onDeleteItem(item.id)}
-                          className="h-7 w-7 text-rose-400 hover:text-foreground hover:bg-rose-500/10"
+                          className="h-7 w-7 text-danger hover:text-foreground hover:bg-danger/10"
                         >
                           <Trash className="h-3.5 w-3.5" />
                         </Button>
@@ -236,7 +236,7 @@ export default function SalesInventory({
             if (items.length === 0) return null;
             return (
               <div key={category.id} className="space-y-2">
-                <h4 className="text-xxxs font-mono font-bold text-emerald-400 uppercase tracking-widest px-1">
+                <h4 className="text-xxxs font-mono font-bold text-success uppercase tracking-widest px-1">
                   {category.icon} {TEXT_AISLE_HEADER} {category.name}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -249,23 +249,23 @@ export default function SalesInventory({
                     return (
                       <Card
                         key={item.id}
-                        className={`bg-slate-950/60 border-slate-900/80 p-4 flex flex-col justify-between min-h-36 hover:border-emerald-500/20 hover:shadow-[0_4px_20px_rgba(16,185,129,0.03)] transition-all duration-200 ${
-                          isOutOfStock ? "animate-pulse-border bg-rose-500/5" : ""
+                        className={`bg-slate-950/60 border-slate-900/80 p-4 flex flex-col justify-between min-h-36 hover:border-success/20 hover:shadow-[0_4px_20px_rgba(16,185,129,0.03)] transition-all duration-200 ${
+                          isOutOfStock ? "animate-pulse-border bg-danger/5" : ""
                         }`}
                       >
                         <div className="space-y-3.5">
                           <div className="flex justify-between items-start">
                             <span className="text-base shrink-0">{category.icon}</span>
                             {isOutOfStock ? (
-                              <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded bg-rose-500/10 border border-rose-500/20 text-rose-400 uppercase tracking-wider animate-pulse">
+                              <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded bg-danger/10 border border-danger/20 text-danger uppercase tracking-wider animate-pulse">
                                 {TEXT_OUT_OF_STOCK_STATUS}
                               </span>
                             ) : isLow ? (
-                              <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 uppercase tracking-wider">
+                              <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded bg-warning/10 border border-warning/20 text-warning uppercase tracking-wider">
                                 {TEXT_LOW_STOCK_STATUS}
                               </span>
                             ) : (
-                              <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 uppercase tracking-wider">
+                              <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded bg-success/10 border border-success/20 text-success uppercase tracking-wider">
                                 {TEXT_STABLE_STATUS}
                               </span>
                             )}
@@ -292,7 +292,7 @@ export default function SalesInventory({
                             <div className="h-1 rounded-full bg-slate-900 border border-slate-900/80 overflow-hidden">
                               <div
                                 className={`h-full rounded-full transition-all duration-300 ${
-                                  isOutOfStock ? "bg-rose-500" : isLow ? "bg-amber-500" : "bg-emerald-500"
+                                  isOutOfStock ? "bg-danger" : isLow ? "bg-warning" : "bg-brand"
                                 }`}
                                 style={{ width: `${stockPct}%` }}
                               />
@@ -317,7 +317,7 @@ export default function SalesInventory({
                               variant="ghost"
                               size="icon"
                               onClick={() => onDeleteItem(item.id)}
-                              className="h-6.5 w-6.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 shrink-0"
+                              className="h-6.5 w-6.5 text-danger hover:text-danger hover:bg-danger/10 shrink-0"
                             >
                                <Trash className="h-3 w-3" />
                             </Button>
@@ -439,7 +439,7 @@ export default function SalesInventory({
               </Button>
               <Button
                 type="submit"
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
               >
                 <Sparkle className="h-3 w-3 mr-1" />
                 {t("sales.inventory.submit")}
@@ -482,7 +482,7 @@ export default function SalesInventory({
               </Button>
               <Button
                 type="submit"
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
               >
                 {t("sales.inventory.restock")}
               </Button>

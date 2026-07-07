@@ -47,7 +47,7 @@ export default function AccountingLedger({
         </span>
         <span className="font-mono text-muted-foreground">
           {t("accounting.ledger.balanceEnd")}:{" "}
-          <span className="text-emerald-400 font-bold">Rp {balanceEnd.toLocaleString()}</span>
+          <span className="text-success font-bold">Rp {balanceEnd.toLocaleString()}</span>
         </span>
       </div>
 
@@ -87,10 +87,10 @@ export default function AccountingLedger({
               <TableCell className="text-xxxs font-mono text-muted-foreground">{e.date}</TableCell>
               <TableCell className="text-xxxs font-mono text-foreground">{e.number}</TableCell>
               <TableCell className="text-xxxs font-mono text-muted-foreground">{e.entry_desc}</TableCell>
-              <TableCell className="text-xxxs font-mono text-emerald-300 text-right">
+              <TableCell className="text-xxxs font-mono text-success text-right">
                 {e.debit > 0 ? `Rp ${e.debit.toLocaleString()}` : ""}
               </TableCell>
-              <TableCell className="text-xxxs font-mono text-rose-300 text-right">
+              <TableCell className="text-xxxs font-mono text-danger text-right">
                 {e.credit > 0 ? `Rp ${e.credit.toLocaleString()}` : ""}
               </TableCell>
               <TableCell className="text-xxxs font-mono text-foreground font-bold text-right">

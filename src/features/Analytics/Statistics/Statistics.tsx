@@ -12,9 +12,9 @@ interface Props {
 }
 
 const LEVEL_STYLE: Record<string, string> = {
-  info: "text-blue-400 bg-blue-500/10",
-  warning: "text-amber-400 bg-amber-500/10",
-  critical: "text-rose-400 bg-rose-500/10",
+  info: "text-info bg-info/10",
+  warning: "text-warning bg-warning/10",
+  critical: "text-danger bg-danger/10",
 };
 
 const LEVEL_ICON: Record<string, typeof Info> = {
@@ -66,7 +66,7 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
               )}
               {coopProfile && (
                 <div className="space-y-1 pt-2 border-t border-border">
-                  <p className="text-sm font-semibold text-emerald-400">{coopProfile.name}</p>
+                  <p className="text-sm font-semibold text-success">{coopProfile.name}</p>
                   <p className="text-xxs font-mono text-muted-foreground">
                     {t("dashboard.legalId")}: {coopProfile.legal_id}
                   </p>
@@ -81,7 +81,7 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
           <Card className="bg-card border-border text-foreground hover-glow-card">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-                <Warning className="h-3 w-3 text-amber-400" />
+                <Warning className="h-3 w-3 text-warning" />
                 {t("dashboard.ewAlerts")}
               </CardTitle>
             </CardHeader>
@@ -143,12 +143,12 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
           <div className="grid grid-cols-2 gap-4">
             {[
               { label: t("dashboard.totalMembers"), value: "328", accent: "text-foreground" },
-              { label: t("dashboard.totalAssets"), value: "Rp 1,275M", accent: "text-emerald-400" },
-              { label: t("dashboard.shuAnnual"), value: "Rp 178M", accent: "text-emerald-400" },
+              { label: t("dashboard.totalAssets"), value: "Rp 1,275M", accent: "text-success" },
+              { label: t("dashboard.shuAnnual"), value: "Rp 178M", accent: "text-success" },
               {
                 label: t("dashboard.healthScore"),
                 value: ragScore > 0 ? `${ragScore}%` : "--",
-                accent: ragScore >= 70 ? "text-emerald-400" : "text-amber-400",
+                accent: ragScore >= 70 ? "text-success" : "text-warning",
               },
             ].map(({ label, value, accent }) => (
               <Card key={label} className="bg-card border-border text-foreground">
@@ -169,35 +169,35 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <p className="text-xxs font-mono text-emerald-400 mb-2">{t("dashboard.income")}</p>
+                  <p className="text-xxs font-mono text-success mb-2">{t("dashboard.income")}</p>
                   <div className="space-y-1.5">
                     {pendItems.map((d) => (
                       <div key={d.label} className="flex items-center gap-2">
                         <span className="text-xxxs font-mono text-muted-foreground w-20 text-right">{d.label}</span>
                         <div className="flex-1 h-3 bg-muted rounded-sm overflow-hidden">
                           <div
-                            className="h-full bg-emerald-500/70 rounded-sm"
+                            className="h-full bg-brand/70 rounded-sm"
                             style={{ width: `${(d.value / maxBar) * 100}%` }}
                           />
                         </div>
-                        <span className="text-xxxs font-mono text-emerald-300 w-12 text-right">{d.value}M</span>
+                        <span className="text-xxxs font-mono text-success w-12 text-right">{d.value}M</span>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <p className="text-xxs font-mono text-rose-400 mb-2">{t("dashboard.expense")}</p>
+                  <p className="text-xxs font-mono text-danger mb-2">{t("dashboard.expense")}</p>
                   <div className="space-y-1.5">
                     {bebanItems.map((d) => (
                       <div key={d.label} className="flex items-center gap-2">
                         <span className="text-xxxs font-mono text-muted-foreground w-20 text-right">{d.label}</span>
                         <div className="flex-1 h-3 bg-muted rounded-sm overflow-hidden">
                           <div
-                            className="h-full bg-rose-500/70 rounded-sm"
+                            className="h-full bg-danger/70 rounded-sm"
                             style={{ width: `${(d.value / maxBar) * 100}%` }}
                           />
                         </div>
-                        <span className="text-xxxs font-mono text-rose-300 w-12 text-right">{d.value}M</span>
+                        <span className="text-xxxs font-mono text-danger w-12 text-right">{d.value}M</span>
                       </div>
                     ))}
                   </div>

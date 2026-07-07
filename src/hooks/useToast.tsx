@@ -69,8 +69,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={t.id}
             className={`pointer-events-auto flex items-center gap-2 px-4 py-3 rounded-xl border shadow-lg backdrop-blur-md text-xs font-semibold animate-slide-in ${
               t.type === "success"
-                ? "bg-emerald-950/90 border-emerald-500/30 text-emerald-300"
-                : "bg-rose-950/90 border-rose-500/30 text-rose-300"
+                ? "bg-success/90 border-success/30 text-success"
+                : "bg-danger/90 border-danger/30 text-danger"
             }`}
           >
             {t.type === "success" ? (
@@ -88,7 +88,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <DialogContent className="bg-card border border-border text-foreground max-w-sm">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-sm font-bold text-slate-200">
-              <Warning className="h-4 w-4 text-amber-400" />
+              <Warning className="h-4 w-4 text-warning" />
               {t("common.confirm")}
             </DialogTitle>
           </DialogHeader>
@@ -99,7 +99,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             </Button>
             <Button
               onClick={() => handleConfirm(true)}
-              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs"
+              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs"
             >
               {t("common.continue")}
             </Button>

@@ -23,7 +23,7 @@ const NEWS_READ_KEY = "pakde-news-read";
 
 const SOURCE_BADGE: Record<NewsItem["source"], string> = {
   kementerian: "bg-purple-500/10 text-purple-400",
-  provinsi: "bg-blue-500/10 text-blue-400",
+  provinsi: "bg-info/10 text-info",
   kabupaten: "bg-cyan-500/10 text-cyan-400",
 };
 
@@ -198,7 +198,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircle className="h-3 w-3 text-emerald-400" />
+              <CheckCircle className="h-3 w-3 text-success" />
               {t("beranda.todoMain")}
             </CardTitle>
             {main.doneCount > 0 && (
@@ -223,7 +223,7 @@ export default function Dashboard() {
                 onClick={() => main.toggleItem(todo.id)}
               >
                 {todo.done ? (
-                  <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <CheckCircle className="h-3.5 w-3.5 text-brand shrink-0" />
                 ) : (
                   <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
                 )}
@@ -241,7 +241,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3 space-y-0">
           <div className="flex items-center justify-between mb-2">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircle className="h-3 w-3 text-emerald-400" />
+              <CheckCircle className="h-3 w-3 text-success" />
               {tab === "daily" ? t("beranda.todo") : t("beranda.todoWeekly")}
             </CardTitle>
             {activeList.doneCount > 0 && (
@@ -283,7 +283,7 @@ export default function Dashboard() {
                 placeholder={t("beranda.addTodo")}
                 className="flex-1 bg-input border-border text-xs h-8 text-foreground placeholder:text-muted-foreground"
               />
-              <Button type="submit" size="icon" className="h-8 w-8 bg-emerald-500 hover:bg-emerald-600 text-slate-950">
+              <Button type="submit" size="icon" className="h-8 w-8 bg-brand hover:bg-brand text-brand-foreground">
                 <Plus className="h-3.5 w-3.5" />
               </Button>
             </form>
@@ -299,7 +299,7 @@ export default function Dashboard() {
                 onClick={() => activeList.toggleItem(todo.id)}
               >
                 {todo.done ? (
-                  <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <CheckCircle className="h-3.5 w-3.5 text-brand shrink-0" />
                 ) : (
                   <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
                 )}
@@ -318,10 +318,10 @@ export default function Dashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <Newspaper className="h-3 w-3 text-blue-400" />
+              <Newspaper className="h-3 w-3 text-info" />
               {t("beranda.news.title")}
               {unreadCount > 0 && (
-                <span className="text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400">
+                <span className="text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/10 text-info">
                   {t("beranda.news.unread", { n: unreadCount })}
                 </span>
               )}
@@ -354,7 +354,7 @@ export default function Dashboard() {
                 >
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <div className="flex items-center gap-1.5 min-w-0">
-                      {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-blue-400 shrink-0 mt-1.5" />}
+                      {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-info shrink-0 mt-1.5" />}
                       <h4 className={`text-xs font-bold ${isUnread ? "text-foreground" : "text-muted-foreground"}`}>
                         {item.title}
                       </h4>

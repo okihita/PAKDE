@@ -70,8 +70,8 @@ export default function Sales() {
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-            <ShoppingCart className="h-5 w-5 text-emerald-400" />
+          <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
+            <ShoppingCart className="h-5 w-5 text-success" />
           </div>
           <div>
             <h1 className="text-sm font-bold text-foreground">{t("sales.checkout.title")}</h1>
@@ -88,21 +88,21 @@ export default function Sales() {
         <TabsList className="bg-sidebar border border-border text-muted-foreground p-0.5 rounded-lg flex w-fit mb-6">
           <TabsTrigger
             value="checkout"
-            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 flex items-center gap-1.5"
+            className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success flex items-center gap-1.5"
           >
             <ShoppingCart className="h-3.5 w-3.5" />
             {t("sales.tabs.checkout")}
           </TabsTrigger>
           <TabsTrigger
             value="history"
-            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 flex items-center gap-1.5"
+            className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success flex items-center gap-1.5"
           >
             <ClockCounterClockwise className="h-3.5 w-3.5" />
             {t("sales.tabs.history")}
           </TabsTrigger>
           <TabsTrigger
             value="inventory"
-            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 flex items-center gap-1.5"
+            className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success flex items-center gap-1.5"
           >
             <Package className="h-3.5 w-3.5" />
             {t("sales.tabs.inventory")}
@@ -153,17 +153,17 @@ export default function Sales() {
                       className={`bg-card border-border select-none relative overflow-hidden transition-all duration-200 ${
                         isOutOfStock || availableQty <= 0
                           ? "opacity-55 grayscale cursor-not-allowed"
-                          : "cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/3 hover:scale-[1.01]"
+                          : "cursor-pointer hover:border-success/30 hover:bg-brand/3 hover:scale-[1.01]"
                       }`}
                     >
                       {cartQty > 0 && (
-                        <div className="absolute top-2 right-2 bg-emerald-500 text-slate-950 font-bold font-mono text-xxs w-5 h-5 rounded-full flex items-center justify-center shadow-lg ring-1 ring-emerald-400">
+                        <div className="absolute top-2 right-2 bg-brand text-brand-foreground font-bold font-mono text-xxs w-5 h-5 rounded-full flex items-center justify-center shadow-lg ring-1 ring-brand">
                           {cartQty}
                         </div>
                       )}
                       <CardHeader className="p-4 pb-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-xl w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/10">
+                          <span className="text-xl w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center shrink-0 border border-success/10">
                             {getCategoryIcon(p.category_id)}
                           </span>
                           <CardTitle className="text-xxs font-bold text-foreground line-clamp-2 leading-tight">
@@ -174,18 +174,18 @@ export default function Sales() {
                       <CardContent className="p-4 pt-1 space-y-2">
                         <div className="flex justify-between items-baseline font-mono">
                           <span className="text-xxxs text-muted-foreground uppercase">{t("sales.checkout.price")}</span>
-                          <span className="text-xs font-black text-emerald-400">
+                          <span className="text-xs font-black text-success">
                             Rp {p.selling_price.toLocaleString("id-ID")}
                           </span>
                         </div>
                         <div className="flex justify-between items-center text-xxxs text-muted-foreground font-mono">
                           <span>{t("sales.checkout.stock", { n: p.stock_quantity, unit: p.unit })}</span>
                           {isOutOfStock ? (
-                            <span className="text-rose-400 font-bold bg-rose-500/10 border border-rose-500/20 px-1 rounded">
+                            <span className="text-danger font-bold bg-danger/10 border border-danger/20 px-1 rounded">
                               {t("sales.checkout.outOfStock")}
                             </span>
                           ) : availableQty === 0 ? (
-                            <span className="text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20 px-1 rounded">
+                            <span className="text-warning font-bold bg-warning/10 border border-warning/20 px-1 rounded">
                               {MAX_CART_BADGE}
                             </span>
                           ) : null}
@@ -208,7 +208,7 @@ export default function Sales() {
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-muted-foreground uppercase flex justify-between items-center">
                     <span className="flex items-center gap-1.5">
-                      <ShoppingCart className="h-3.5 w-3.5 text-emerald-400" />
+                      <ShoppingCart className="h-3.5 w-3.5 text-success" />
                       {t("sales.checkout.cartTitle")}
                     </span>
                     <span className="font-mono text-xxs text-muted-foreground">
@@ -233,7 +233,7 @@ export default function Sales() {
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => s.updateCartQty(c.item.id, c.quantity - 1)}
-                            className="p-1 hover:text-emerald-400 text-muted-foreground transition-colors"
+                            className="p-1 hover:text-success text-muted-foreground transition-colors"
                           >
                             <MinusCircle className="h-4 w-4" />
                           </button>
@@ -242,13 +242,13 @@ export default function Sales() {
                           </span>
                           <button
                             onClick={() => s.updateCartQty(c.item.id, c.quantity + 1)}
-                            className="p-1 hover:text-emerald-400 text-muted-foreground transition-colors"
+                            className="p-1 hover:text-success text-muted-foreground transition-colors"
                           >
                             <PlusCircle className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => s.removeFromCart(c.item.id)}
-                            className="p-1 pl-2 hover:text-rose-400 text-muted-foreground transition-colors"
+                            className="p-1 pl-2 hover:text-danger text-muted-foreground transition-colors"
                           >
                             <Trash className="h-3.5 w-3.5" />
                           </button>
@@ -284,7 +284,7 @@ export default function Sales() {
                         </SelectContent>
                       </Select>
                       {selectedMemberId !== "walk-in" && (
-                        <p className="text-xxs font-mono text-amber-400 mt-1">
+                        <p className="text-xxs font-mono text-warning mt-1">
                           {t("sales.checkout.memberLoan", {
                             amount: `Rp ${(
                               s.membersList.find((mbr) => mbr.id === selectedMemberId)?.loan_outstanding ?? 0
@@ -322,7 +322,7 @@ export default function Sales() {
                           onClick={() => setPaymentType("cash")}
                           className={`flex-1 py-1.5 rounded-md text-xxs font-bold transition-all ${
                             paymentType === "cash"
-                              ? "bg-emerald-500/10 text-emerald-400 border-[0.5px] border-emerald-500/20"
+                              ? "bg-success/10 text-success border-[0.5px] border-success/20"
                               : "text-muted-foreground hover:text-foreground"
                           }`}
                         >
@@ -333,7 +333,7 @@ export default function Sales() {
                           onClick={() => setPaymentType("credit")}
                           className={`flex-1 py-1.5 rounded-md text-xxs font-bold transition-all ${
                             paymentType === "credit"
-                              ? "bg-emerald-500/10 text-emerald-400 border-[0.5px] border-emerald-500/20"
+                              ? "bg-success/10 text-success border-[0.5px] border-success/20"
                               : "text-muted-foreground hover:text-foreground"
                           }`}
                         >
@@ -341,7 +341,7 @@ export default function Sales() {
                         </button>
                       </div>
                       {paymentType === "credit" && selectedMemberId === "walk-in" && (
-                        <div className="p-2 rounded bg-amber-500/5 border border-amber-500/10 text-xxs font-mono text-amber-400">
+                        <div className="p-2 rounded bg-warning/5 border border-warning/10 text-xxs font-mono text-warning">
                           {t("sales.toast.memberRequiredForCredit")}
                         </div>
                       )}
@@ -354,7 +354,7 @@ export default function Sales() {
                       <span className="text-xxxs font-bold text-muted-foreground uppercase">
                         {t("sales.checkout.total")}
                       </span>
-                      <span className="text-base font-black text-emerald-400">
+                      <span className="text-base font-black text-success">
                         Rp {cartTotal.toLocaleString("id-ID")}
                       </span>
                     </div>
@@ -366,7 +366,7 @@ export default function Sales() {
                         s.cart.length === 0 ||
                         (paymentType === "credit" && selectedMemberId === "walk-in")
                       }
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9.5 flex items-center justify-center gap-1.5"
+                      className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9.5 flex items-center justify-center gap-1.5"
                     >
                       <CreditCard className="h-4 w-4" />
                       {s.isProcessing ? t("sales.checkout.processing") : t("sales.checkout.process")}

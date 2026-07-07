@@ -82,8 +82,8 @@ export default function Participation({ onTabChange }: ParticipationProps) {
     <div className="flex-1 overflow-auto p-6 space-y-6 max-w-4xl mx-auto">
       {/* Header section */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-          <ChartBar className="h-5 w-5 text-emerald-400" />
+        <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
+          <ChartBar className="h-5 w-5 text-success" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("participation.title")}</h1>
@@ -99,7 +99,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.attendanceTitle")}
             </span>
-            <Users className="h-4 w-4 text-emerald-400" />
+            <Users className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_ATTENDANCE}</h3>
@@ -115,7 +115,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.votingTitle")}
             </span>
-            <CheckSquare className="h-4 w-4 text-blue-400" />
+            <CheckSquare className="h-4 w-4 text-info" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_VOTING}</h3>
@@ -147,7 +147,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.activeStreak")}
             </span>
-            <Fire className="h-4 w-4 text-amber-400" />
+            <Fire className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_STREAK}</h3>
@@ -163,7 +163,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border md:col-span-2">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5 text-emerald-400" />
+              <Calendar className="h-3.5 w-3.5 text-success" />
               {t("participation.heatmapTitle")}
             </CardTitle>
             <p className="text-xxxs text-muted-foreground mt-1 leading-relaxed">{t("participation.heatmapDesc")}</p>
@@ -172,8 +172,8 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <div className="grid grid-cols-7 gap-2.5 max-w-[280px]">
               {HEATMAP_DAYS.map((d) => {
                 let colorClass = "bg-input/20 border-border/30";
-                if (d.level === "medium") colorClass = "bg-emerald-500/25 border-emerald-500/35";
-                if (d.level === "high") colorClass = "bg-emerald-500 border-emerald-500";
+                if (d.level === "medium") colorClass = "bg-brand/25 border-success/35";
+                if (d.level === "high") colorClass = "bg-brand border-success";
                 return (
                   <div
                     key={d.day}
@@ -191,7 +191,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Medal className="h-3.5 w-3.5 text-amber-400" />
+              <Medal className="h-3.5 w-3.5 text-warning" />
               {t("participation.tiersTitle")}
             </CardTitle>
           </CardHeader>
@@ -199,39 +199,39 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             {/* Super Member */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xxs font-mono">
-                <span className="text-amber-400 font-bold">{t("participation.tierSuper")}</span>
+                <span className="text-warning font-bold">{t("participation.tierSuper")}</span>
                 <span className="text-muted-foreground">
                   {TIER_COUNT_SUPER} ({TIER_RATIO_SUPER})
                 </span>
               </div>
               <div className="h-2 bg-input/40 rounded-full overflow-hidden border border-border">
-                <div className="h-full bg-amber-500 rounded-full" style={{ width: TIER_RATIO_SUPER }} />
+                <div className="h-full bg-warning rounded-full" style={{ width: TIER_RATIO_SUPER }} />
               </div>
             </div>
 
             {/* Active Member */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xxs font-mono">
-                <span className="text-emerald-400 font-bold">{t("participation.tierActive")}</span>
+                <span className="text-success font-bold">{t("participation.tierActive")}</span>
                 <span className="text-muted-foreground">
                   {TIER_COUNT_ACTIVE} ({TIER_RATIO_ACTIVE})
                 </span>
               </div>
               <div className="h-2 bg-input/40 rounded-full overflow-hidden border border-border">
-                <div className="h-full bg-emerald-500 rounded-full" style={{ width: TIER_RATIO_ACTIVE }} />
+                <div className="h-full bg-brand rounded-full" style={{ width: TIER_RATIO_ACTIVE }} />
               </div>
             </div>
 
             {/* Passive Member */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xxs font-mono">
-                <span className="text-rose-400 font-bold">{t("participation.tierPassive")}</span>
+                <span className="text-danger font-bold">{t("participation.tierPassive")}</span>
                 <span className="text-muted-foreground">
                   {TIER_COUNT_PASSIVE} ({TIER_RATIO_PASSIVE})
                 </span>
               </div>
               <div className="h-2 bg-input/40 rounded-full overflow-hidden border border-border">
-                <div className="h-full bg-rose-500 rounded-full" style={{ width: TIER_RATIO_PASSIVE }} />
+                <div className="h-full bg-danger rounded-full" style={{ width: TIER_RATIO_PASSIVE }} />
               </div>
             </div>
           </CardContent>
@@ -262,13 +262,13 @@ export default function Participation({ onTabChange }: ParticipationProps) {
 
             <div className="space-y-2 pt-2 border-t border-border/30 text-xxs font-mono">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="w-3.5 h-3.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xxxs font-bold">
+                <span className="w-3.5 h-3.5 rounded bg-success/10 border border-success/20 text-success flex items-center justify-center text-xxxs font-bold">
                   ✓
                 </span>
                 <span>{lpjText}</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="w-3.5 h-3.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xxxs font-bold">
+                <span className="w-3.5 h-3.5 rounded bg-success/10 border border-success/20 text-success flex items-center justify-center text-xxxs font-bold">
                   ✓
                 </span>
                 <span>{docsText}</span>
@@ -285,7 +285,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Medal className="h-3.5 w-3.5 text-blue-400" />
+              <Medal className="h-3.5 w-3.5 text-info" />
               {t("participation.leaderboardTitle")}
             </CardTitle>
           </CardHeader>
@@ -297,9 +297,9 @@ export default function Participation({ onTabChange }: ParticipationProps) {
                 .join("")
                 .slice(0, 2)
                 .toUpperCase();
-              let medalColor = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+              let medalColor = "bg-warning/10 text-warning border-warning/20";
               if (idx === 1) medalColor = "bg-slate-400/10 text-slate-300 border-slate-400/20";
-              if (idx === 2) medalColor = "bg-amber-700/10 text-amber-600 border-amber-700/20";
+              if (idx === 2) medalColor = "bg-warning/10 text-warning border-warning/20";
 
               return (
                 <div
@@ -314,13 +314,13 @@ export default function Participation({ onTabChange }: ParticipationProps) {
                     </span>
                     <button
                       onClick={() => handleMemberClick(c.name)}
-                      className="text-foreground hover:text-emerald-400 font-bold hover:underline"
+                      className="text-foreground hover:text-success font-bold hover:underline"
                     >
                       {c.name}
                     </button>
                   </div>
                   <div className="text-right font-mono text-xxxs">
-                    <span className="text-emerald-400 font-bold block">{c.xp}</span>
+                    <span className="text-success font-bold block">{c.xp}</span>
                     <span className="text-muted-foreground block mt-0.5">{c.streak}</span>
                   </div>
                 </div>
@@ -334,14 +334,14 @@ export default function Participation({ onTabChange }: ParticipationProps) {
       <Card className="bg-card border-border">
         <CardHeader className="pb-3 border-b border-border/55">
           <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-            <Medal className="h-3.5 w-3.5 text-amber-400" />
+            <Medal className="h-3.5 w-3.5 text-warning" />
             {t("participation.badgesTitle")}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Democracy Badge */}
           <div className="p-3 rounded-xl bg-input/20 border border-border/40 text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto">
+            <div className="w-10 h-10 rounded-full bg-info/10 text-info border border-info/20 flex items-center justify-center mx-auto">
               <Users className="h-5 w-5" />
             </div>
             <div>
@@ -363,7 +363,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
 
           {/* Health Badge */}
           <div className="p-3 rounded-xl bg-input/20 border border-border/40 text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto">
+            <div className="w-10 h-10 rounded-full bg-success/10 text-success border border-success/20 flex items-center justify-center mx-auto">
               <Handshake className="h-5 w-5" />
             </div>
             <div>

@@ -96,8 +96,8 @@ export default function Learn() {
       <Card className="bg-card border-border">
         <CardContent className="p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-amber-400" />
+            <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
+              <BookOpen className="h-5 w-5 text-warning" />
             </div>
             <div>
               <p className="text-sm font-bold text-foreground">{t("sidebar.nav.learn")}</p>
@@ -107,7 +107,7 @@ export default function Learn() {
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+            <Star className="h-4 w-4 text-warning fill-warning" />
             <span className="text-sm font-black text-foreground font-mono">{allDone.length * 10}</span>
           </div>
         </CardContent>
@@ -167,12 +167,12 @@ export default function Learn() {
 
                 let bgBorder = "bg-slate-950 border-slate-800 text-slate-400";
                 if (isCompleted) {
-                  bgBorder = "bg-emerald-950/20 border-emerald-500/40 text-emerald-400 font-bold";
+                  bgBorder = "bg-success/20 border-success/40 text-success font-bold";
                 } else if (isUnlocked) {
-                  bgBorder = "bg-slate-900 border-slate-700 text-slate-200 hover:border-emerald-500/30";
+                  bgBorder = "bg-slate-900 border-slate-700 text-slate-200 hover:border-success/30";
                 }
                 if (isSelected) {
-                  bgBorder += " ring-2 ring-emerald-500/50 border-emerald-500";
+                  bgBorder += " ring-2 ring-brand/50 border-success";
                 }
 
                 return (
@@ -188,9 +188,9 @@ export default function Learn() {
                       {!isUnlocked ? (
                         <Lock className="h-3 w-3 text-slate-500" />
                       ) : isCompleted ? (
-                        <Trophy className="h-3 w-3 text-emerald-400" />
+                        <Trophy className="h-3 w-3 text-success" />
                       ) : (
-                        <BookOpen className="h-3 w-3 text-amber-400 animate-pulse" />
+                        <BookOpen className="h-3 w-3 text-warning animate-pulse" />
                       )}
                       <span>{mod.id}</span>
                     </div>
@@ -209,7 +209,7 @@ export default function Learn() {
               /* Render Lesson Complete area */
               <Card className="bg-card border-border">
                 <CardContent className="p-8 text-center space-y-3">
-                  <CheckCircle className="h-12 w-12 text-emerald-400 mx-auto" />
+                  <CheckCircle className="h-12 w-12 text-success mx-auto" />
                   <p className="text-sm font-bold text-foreground">{t("learn.lessonComplete")}</p>
                   <p className="text-xxs text-muted-foreground">
                     {t("learn.lessonCompleteDesc", { name: activeLessonDef?.name ?? "" })}
@@ -217,7 +217,7 @@ export default function Learn() {
                   <Button
                     size="sm"
                     onClick={() => setActiveLesson(null)}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs animate-in fade-in duration-200"
+                    className="bg-brand hover:bg-brand text-brand-foreground text-xs animate-in fade-in duration-200"
                   >
                     {t("learn.backToModules")}
                   </Button>
@@ -246,7 +246,7 @@ export default function Learn() {
                       {activeLessonDef.questions.map((_, qi) => (
                         <div
                           key={qi}
-                          className={`h-1.5 w-5 rounded-full ${qi <= questionIdx ? "bg-emerald-500" : "bg-secondary"}`}
+                          className={`h-1.5 w-5 rounded-full ${qi <= questionIdx ? "bg-brand" : "bg-secondary"}`}
                         />
                       ))}
                     </div>
@@ -268,11 +268,11 @@ export default function Learn() {
                               selected === null
                                 ? "border-border hover:bg-secondary hover:border-muted-foreground"
                                 : isRight
-                                  ? "border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold"
+                                  ? "border-success bg-success/10 text-success font-bold"
                                   : isWrong
-                                    ? "border-rose-500 bg-rose-500/10 text-rose-400"
+                                    ? "border-danger bg-danger/10 text-danger"
                                     : isSelected && selected === ci
-                                      ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                                      ? "border-warning bg-warning/10 text-warning"
                                       : "border-border text-muted-foreground"
                             }`}
                           >
@@ -291,8 +291,8 @@ export default function Learn() {
                     <div
                       className={`p-3 rounded-lg text-xs border ${
                         isCorrect
-                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                          : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                          ? "bg-success/10 text-success border-success/20"
+                          : "bg-warning/10 text-warning border-warning/20"
                       }`}
                     >
                       <p className="font-bold mb-0.5">{isCorrect ? t("learn.correct") : t("learn.tryAgain")}</p>
@@ -315,7 +315,7 @@ export default function Learn() {
                       <Button
                         size="sm"
                         onClick={handleNext}
-                        className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xxs h-7"
+                        className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xxs h-7"
                       >
                         {questionIdx < activeLessonDef.questions.length - 1 ? (
                           <>
@@ -352,7 +352,7 @@ export default function Learn() {
                 <Card className="bg-card border-border animate-in fade-in duration-200">
                   <CardContent className="p-5 space-y-4">
                     <div className="border-b border-border pb-3.5 space-y-1">
-                      <span className="text-xxxs font-mono font-bold text-emerald-400 uppercase tracking-widest block font-bold">
+                      <span className="text-xxxs font-mono font-bold text-success uppercase tracking-widest block font-bold">
                         {selectedMod.id}
                       </span>
                       <h2 className="text-sm font-bold text-foreground">{selectedMod.title}</h2>
@@ -360,9 +360,9 @@ export default function Learn() {
                     </div>
 
                     {!isUnlocked ? (
-                      <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-xxs font-mono text-rose-400 rounded-lg space-y-1">
+                      <div className="p-3.5 bg-danger/10 border border-danger/20 text-xxs font-mono text-danger rounded-lg space-y-1">
                         <p className="font-bold flex items-center gap-1.5">
-                          <Lock className="h-3.5 w-3.5 text-rose-400" />
+                          <Lock className="h-3.5 w-3.5 text-danger" />
                           <span>{TEXT_LOCKED_MSG}</span>
                         </p>
                         <p className="text-xxxs opacity-80 leading-normal">{selectedMod.prerequisites.join(", ")}</p>
@@ -372,7 +372,7 @@ export default function Learn() {
                         <div className="flex justify-between items-center text-xxxs font-mono tracking-wider text-slate-400">
                           <span className="uppercase">{t("profileSelect.units")}</span>
                           {isCompleted && (
-                            <span className="text-emerald-400 font-bold tracking-widest">{TEXT_COMPLETED_STATUS}</span>
+                            <span className="text-success font-bold tracking-widest">{TEXT_COMPLETED_STATUS}</span>
                           )}
                         </div>
                         <div className="space-y-2.5">
@@ -381,7 +381,7 @@ export default function Learn() {
                             return (
                               <div
                                 key={lesIdx}
-                                className="p-3 bg-secondary/35 border border-border/60 hover:border-emerald-500/20 rounded-lg flex items-center justify-between hover:bg-secondary/60 transition-all select-none"
+                                className="p-3 bg-secondary/35 border border-border/60 hover:border-success/20 rounded-lg flex items-center justify-between hover:bg-secondary/60 transition-all select-none"
                               >
                                 <div className="space-y-0.5">
                                   <span className="text-xxxs font-mono text-slate-500">
@@ -390,12 +390,12 @@ export default function Learn() {
                                   <p className="text-xs font-bold text-slate-200">{ls.name}</p>
                                 </div>
                                 {done ? (
-                                  <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />
+                                  <CheckCircle className="h-4 w-4 text-success shrink-0" />
                                 ) : (
                                   <Button
                                     size="sm"
                                     onClick={() => handleSelectLesson(selectedModIdx, lesIdx)}
-                                    className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xxs h-7 px-3.5"
+                                    className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xxs h-7 px-3.5"
                                   >
                                     {TEXT_START_LESSON}
                                   </Button>

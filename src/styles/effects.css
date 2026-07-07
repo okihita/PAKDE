@@ -5,6 +5,6 @@
 }
 
 .hover-glow-card:hover {
-  border-color: rgba(16, 185, 129, 0.45) !important; /* emerald border glow */
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.1) !important; /* subtle emerald shadow glow */
+  border-color: hsl(var(--brand) / 0.45) !important;
+  box-shadow: 0 0 16px hsl(var(--brand) / 0.1) !important;
 }

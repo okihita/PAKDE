@@ -77,7 +77,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
       <Card className="bg-card border-border">
         <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-xxs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+            <span className="text-xxs font-mono font-bold text-success flex items-center gap-1.5">
               <GearSix className="h-3.5 w-3.5" />
               {t("accounting.tiers.selectLabel")}
             </span>
@@ -92,7 +92,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               onClick={() => onTierChange("simplified")}
               className={`px-3 py-1.5 rounded-md text-xxs font-bold transition-all ${
                 financeTier === "simplified"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  ? "bg-success/10 text-success border border-success/20"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -102,7 +102,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               onClick={() => onTierChange("standard")}
               className={`px-3 py-1.5 rounded-md text-xxs font-bold transition-all ${
                 financeTier === "standard"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  ? "bg-success/10 text-success border border-success/20"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -112,7 +112,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               onClick={() => onTierChange("advanced")}
               className={`px-3 py-1.5 rounded-md text-xxs font-bold transition-all ${
                 financeTier === "advanced"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  ? "bg-success/10 text-success border border-success/20"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -131,10 +131,10 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Wallet className="h-3.5 w-3.5 text-emerald-400" />
+                    <Wallet className="h-3.5 w-3.5 text-success" />
                     {t("accounting.runway.title")}
                   </span>
-                  <span className="text-xxxs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                  <span className="text-xxxs font-mono font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-full">
                     {RUNWAY_STATUS}
                   </span>
                 </CardTitle>
@@ -145,11 +145,11 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
                     <span className="text-xxs font-bold text-foreground">{RUNWAY_CASH_LABEL}</span>
                     <p className="text-xxxs text-muted-foreground leading-relaxed">{RUNWAY_DESC}</p>
                   </div>
-                  <div className="px-5 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center shrink-0">
-                    <span className="text-xxxs font-mono text-emerald-400 uppercase tracking-widest block">
+                  <div className="px-5 py-3 rounded-xl bg-success/10 border border-success/20 text-center shrink-0">
+                    <span className="text-xxxs font-mono text-success uppercase tracking-widest block">
                       {t("accounting.runway.months")}
                     </span>
-                    <span className="text-lg font-black text-emerald-400 font-mono block mt-1">{RUNWAY_VAL}</span>
+                    <span className="text-lg font-black text-success font-mono block mt-1">{RUNWAY_VAL}</span>
                   </div>
                 </div>
               </CardContent>
@@ -158,22 +158,22 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <Card className="bg-card border-border">
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <Sparkle className="h-3.5 w-3.5 text-amber-400" />
+                  <Sparkle className="h-3.5 w-3.5 text-warning" />
                   {t("accounting.health.title")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-5 space-y-3 font-mono text-xxxs">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">{RUNWAY_CASH_LABEL}</span>
-                  <span className="text-emerald-400 font-bold">{RUNWAY_CASH_VAL}</span>
+                  <span className="text-success font-bold">{RUNWAY_CASH_VAL}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">{t("accounting.health.status")}</span>
-                  <span className="text-emerald-400 font-bold">{t("accounting.health.excellent")}</span>
+                  <span className="text-success font-bold">{t("accounting.health.excellent")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">{t("accounting.health.score")}</span>
-                  <span className="text-emerald-400 font-bold">92 / 100</span>
+                  <span className="text-success font-bold">92 / 100</span>
                 </div>
               </CardContent>
             </Card>
@@ -202,18 +202,18 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <Card className="bg-card border-border">
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <ShieldWarning className="h-3.5 w-3.5 text-blue-400" />
+                  <ShieldWarning className="h-3.5 w-3.5 text-info" />
                   {AR_AP_TITLE}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-3 rounded-lg bg-input/20 border border-border/40 flex justify-between items-center text-xxs">
                   <span className="text-muted-foreground font-mono">{AR_LABEL}</span>
-                  <span className="text-blue-400 font-mono font-bold">{AR_VAL}</span>
+                  <span className="text-info font-mono font-bold">{AR_VAL}</span>
                 </div>
                 <div className="p-3 rounded-lg bg-input/20 border border-border/40 flex justify-between items-center text-xxs">
                   <span className="text-muted-foreground font-mono">{AP_LABEL}</span>
-                  <span className="text-amber-400 font-mono font-bold">{AP_VAL}</span>
+                  <span className="text-warning font-mono font-bold">{AP_VAL}</span>
                 </div>
               </CardContent>
             </Card>
@@ -226,26 +226,26 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <Card className="bg-card border-border md:col-span-2">
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                    <TrendUp className="h-3.5 w-3.5 text-emerald-400" />
+                    <TrendUp className="h-3.5 w-3.5 text-success" />
                     {RATIO_TITLE}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-5 grid grid-cols-2 gap-4 font-mono text-xxxs">
                   <div className="p-2 rounded bg-input/20 border border-border/30 flex justify-between">
                     <span className="text-muted-foreground">{RATIO_CUR_LABEL}</span>
-                    <span className="text-emerald-400 font-bold">{RATIO_CUR_VAL}</span>
+                    <span className="text-success font-bold">{RATIO_CUR_VAL}</span>
                   </div>
                   <div className="p-2 rounded bg-input/20 border border-border/30 flex justify-between">
                     <span className="text-muted-foreground">{RATIO_DE_LABEL}</span>
-                    <span className="text-emerald-400 font-bold">{RATIO_DE_VAL}</span>
+                    <span className="text-success font-bold">{RATIO_DE_VAL}</span>
                   </div>
                   <div className="p-2 rounded bg-input/20 border border-border/30 flex justify-between">
                     <span className="text-muted-foreground">{RATIO_ROA_LABEL}</span>
-                    <span className="text-emerald-400 font-bold">{RATIO_ROA_VAL}</span>
+                    <span className="text-success font-bold">{RATIO_ROA_VAL}</span>
                   </div>
                   <div className="p-2 rounded bg-input/20 border border-border/30 flex justify-between">
                     <span className="text-muted-foreground">{RATIO_ATO_LABEL}</span>
-                    <span className="text-emerald-400 font-bold">{RATIO_ATO_VAL}</span>
+                    <span className="text-success font-bold">{RATIO_ATO_VAL}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -254,7 +254,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <Card className="bg-card border-border">
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                    <CheckSquare className="h-3.5 w-3.5 text-blue-400" />
+                    <CheckSquare className="h-3.5 w-3.5 text-info" />
                     {AUDIT_TITLE}
                   </CardTitle>
                   <p className="text-xxxs text-muted-foreground mt-0.5 leading-normal">{AUDIT_DESC}</p>
@@ -263,20 +263,20 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
                   {!auditing && (
                     <Button
                       onClick={handleSimulateAudit}
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8 flex items-center justify-center gap-1.5"
+                      className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 flex items-center justify-center gap-1.5"
                     >
                       <Play className="h-3 w-3 fill-current" />
                       {AUDIT_BTN_RUN}
                     </Button>
                   )}
                   {auditing && (
-                    <div className="text-xxxs font-mono text-amber-400 animate-pulse flex items-center gap-1.5 justify-center py-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping" />
+                    <div className="text-xxxs font-mono text-warning animate-pulse flex items-center gap-1.5 justify-center py-2">
+                      <span className="w-1.5 h-1.5 bg-warning rounded-full animate-ping" />
                       {t("accounting.audit.checking")}
                     </div>
                   )}
                   {auditComplete && (
-                    <Button className="w-full bg-blue-500 hover:bg-blue-600 text-slate-950 font-bold text-xs h-8 flex items-center justify-center gap-1.5">
+                    <Button className="w-full bg-info hover:bg-info text-brand-foreground font-bold text-xs h-8 flex items-center justify-center gap-1.5">
                       <FileArrowDown className="h-3 w-3" />
                       {AUDIT_BTN_EXPORT}
                     </Button>
@@ -295,31 +295,31 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <TabsList className="bg-sidebar border border-border text-muted-foreground mb-6 p-0.5 rounded-lg flex w-fit print:hidden">
               <TabsTrigger
                 value="coa"
-                className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
               >
                 {t("accounting.tabs.coa")}
               </TabsTrigger>
               <TabsTrigger
                 value="journal"
-                className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
               >
                 {t("accounting.tabs.journal")}
               </TabsTrigger>
               <TabsTrigger
                 value="ledger"
-                className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
               >
                 {t("accounting.tabs.ledger")}
               </TabsTrigger>
               <TabsTrigger
                 value="neraca"
-                className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
               >
                 {t("accounting.tabs.neraca")}
               </TabsTrigger>
               <TabsTrigger
                 value="labarugi"
-                className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
               >
                 {t("accounting.tabs.labarugi")}
               </TabsTrigger>

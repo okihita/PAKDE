@@ -37,7 +37,7 @@ export default function AccountingCoa({
       <div className="flex justify-end">
         <Button
           onClick={() => setShowModal(true)}
-          className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+          className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
         >
           <Plus className="h-3 w-3 mr-1" /> {t("accounting.coa.addButton")}
         </Button>
@@ -70,7 +70,7 @@ export default function AccountingCoa({
               <TableCell className="text-xxs font-mono text-muted-foreground">{a.type}</TableCell>
               <TableCell className="text-xxs font-mono text-muted-foreground">{a.normal_balance}</TableCell>
               <TableCell
-                className={`text-xxs font-mono font-bold text-right ${a.balance >= 0 ? "text-emerald-300" : "text-rose-300"}`}
+                className={`text-xxs font-mono font-bold text-right ${a.balance >= 0 ? "text-success" : "text-danger"}`}
               >
                 Rp {a.balance.toLocaleString()}
               </TableCell>
@@ -166,7 +166,7 @@ export default function AccountingCoa({
               >
                 {t("accounting.coa.modal.cancel")}
               </Button>
-              <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs">
+              <Button type="submit" className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs">
                 {t("accounting.coa.modal.save")}
               </Button>
             </DialogFooter>

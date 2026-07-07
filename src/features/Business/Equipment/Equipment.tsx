@@ -22,7 +22,7 @@ export default function Equipment() {
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Wrench className="h-3.5 w-3.5 text-amber-400" /> {t("sidebar.nav.equipment")}
+            <Wrench className="h-3.5 w-3.5 text-warning" /> {t("sidebar.nav.equipment")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -51,10 +51,10 @@ export default function Equipment() {
                     <span
                       className={`text-xxxs font-bold px-1.5 py-0.5 rounded ${
                         e.condition === "Baik"
-                          ? "bg-emerald-500/10 text-emerald-400"
+                          ? "bg-success/10 text-success"
                           : e.condition === "Rusak Ringan"
-                            ? "bg-amber-500/10 text-amber-400"
-                            : "bg-rose-500/10 text-rose-400"
+                            ? "bg-warning/10 text-warning"
+                            : "bg-danger/10 text-danger"
                       }`}
                     >
                       {e.condition}

@@ -109,7 +109,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-900 border border-emerald-500/25 text-foreground max-w-xl max-h-[85vh] overflow-y-auto shadow-2xl">
+      <DialogContent className="bg-slate-900 border border-brand/25 text-foreground max-w-xl max-h-[85vh] overflow-y-auto shadow-2xl">
         <form onSubmit={handleCreateSubmit}>
           <DialogHeader>
             <DialogTitle className="text-sm font-bold text-foreground">{t("profileSelect.dialogTitle")}</DialogTitle>
@@ -118,7 +118,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
 
           <div className="space-y-4 py-4 text-xs">
             {formError && (
-              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xxs font-mono text-rose-400">
+              <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs font-mono text-danger">
                 {formError}
               </div>
             )}
@@ -126,25 +126,25 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             {/* Basic Details */}
             <div className="grid grid-cols-2 gap-3.5">
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldName")} *
                 </label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder={PLACEHOLDER_NAME}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 placeholder:text-slate-500"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldLegalId")}
                 </label>
                 <Input
                   value={formData.legalId}
                   onChange={(e) => setFormData({ ...formData, legalId: e.target.value })}
                   placeholder={PLACEHOLDER_LEGAL_ID}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 placeholder:text-slate-500"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500"
                 />
               </div>
             </div>
@@ -152,94 +152,94 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             {/* Location details */}
             <div className="grid grid-cols-2 gap-3.5">
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldRegency")} *
                 </label>
                 <Input
                   value={formData.regency}
                   onChange={(e) => setFormData({ ...formData, regency: e.target.value })}
                   placeholder={PLACEHOLDER_REGENCY}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 placeholder:text-slate-500"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldProvince")} *
                 </label>
                 <Input
                   value={formData.province}
                   onChange={(e) => setFormData({ ...formData, province: e.target.value })}
                   placeholder={PLACEHOLDER_PROVINCE}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 placeholder:text-slate-500"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3.5">
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldDistrict")}
                 </label>
                 <Input
                   value={formData.district}
                   onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldVillage")}
                 </label>
                 <Input
                   value={formData.village}
                   onChange={(e) => setFormData({ ...formData, village: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldPostalCode")}
                 </label>
                 <Input
                   value={formData.postalCode}
                   onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
             </div>
 
             <div className="space-y-1">
-              <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+              <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                 {t("profileSelect.fieldAddress")}
               </label>
               <Input
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
               />
             </div>
 
             {/* Contacts */}
             <div className="grid grid-cols-2 gap-3.5">
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldPhone")}
                 </label>
                 <Input
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldEmail")}
                 </label>
                 <Input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
             </div>
@@ -247,53 +247,53 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             {/* Officers */}
             <div className="grid grid-cols-2 gap-3.5 border-t border-slate-800/80 pt-3.5">
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldChairman")}
                 </label>
                 <Input
                   value={formData.chairman}
                   onChange={(e) => setFormData({ ...formData, chairman: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldSecretary")}
                 </label>
                 <Input
                   value={formData.secretary}
                   onChange={(e) => setFormData({ ...formData, secretary: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3.5">
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldTreasurer")}
                 </label>
                 <Input
                   value={formData.treasurer}
                   onChange={(e) => setFormData({ ...formData, treasurer: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-emerald-400 font-mono text-xxxs uppercase tracking-wider">
+                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
                   {t("profileSelect.fieldSupervisor")}
                 </label>
                 <Input
                   value={formData.supervisor}
                   onChange={(e) => setFormData({ ...formData, supervisor: e.target.value })}
-                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  className="bg-slate-950 border-slate-800 text-slate-100 text-xs h-8.5 focus:border-success/50 focus:ring-1 focus:ring-brand/50"
                 />
               </div>
             </div>
 
             {/* Business Units Checkboxes */}
             <div className="space-y-2 border-t border-slate-800/80 pt-3.5">
-              <label className="text-emerald-400 font-mono text-xxxs uppercase block tracking-wider">
+              <label className="text-success font-mono text-xxxs uppercase block tracking-wider">
                 {t("profileSelect.units")}
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -302,7 +302,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
                     type="checkbox"
                     checked={formData.unitPupuk}
                     onChange={(e) => setFormData({ ...formData, unitPupuk: e.target.checked })}
-                    className="rounded accent-emerald-500 bg-slate-950 border-slate-800"
+                    className="rounded accent-brand bg-slate-950 border-slate-800"
                   />
                   <span>🌱 {t("sidebar.nav.sales")}</span>
                 </label>
@@ -311,7 +311,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
                     type="checkbox"
                     checked={formData.unitSimpanPinjam}
                     onChange={(e) => setFormData({ ...formData, unitSimpanPinjam: e.target.checked })}
-                    className="rounded accent-emerald-500 bg-slate-950 border-slate-800"
+                    className="rounded accent-brand bg-slate-950 border-slate-800"
                   />
                   <span>{LABEL_SP}</span>
                 </label>
@@ -320,7 +320,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
                     type="checkbox"
                     checked={formData.unitToko}
                     onChange={(e) => setFormData({ ...formData, unitToko: e.target.checked })}
-                    className="rounded accent-emerald-500 bg-slate-950 border-slate-800"
+                    className="rounded accent-brand bg-slate-950 border-slate-800"
                   />
                   <span>{LABEL_TOKO}</span>
                 </label>
@@ -339,7 +339,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             </Button>
             <Button
               type="submit"
-              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8.5 px-4"
+              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8.5 px-4"
             >
               <Plus className="h-3.5 w-3.5 mr-1" />
               {t("common.save")}

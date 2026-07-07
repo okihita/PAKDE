@@ -86,7 +86,7 @@ export default function ShelfPanel({
             variant="ghost"
             size="icon"
             onClick={onDelete}
-            className="h-6 w-6 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
+            className="h-6 w-6 text-danger hover:text-danger hover:bg-danger/10"
             title={t("common.delete")}
           >
             <Trash className="h-3 w-3" />
@@ -200,16 +200,16 @@ export default function ShelfPanel({
                   transition-all hover:scale-105
                   ${
                     isEmpty
-                      ? "border-slate-800 bg-slate-900/40 hover:border-emerald-500/30"
+                      ? "border-slate-800 bg-slate-900/40 hover:border-success/30"
                       : isOut
-                        ? "border-rose-500/30 bg-rose-500/10"
+                        ? "border-danger/30 bg-danger/10"
                         : isLow
-                          ? "border-amber-500/30 bg-amber-500/10"
-                          : "border-emerald-500/30 bg-emerald-500/10"
+                          ? "border-warning/30 bg-warning/10"
+                          : "border-success/30 bg-success/10"
                   }
                   ${
                     assigningBin?.row === row && assigningBin?.col === col
-                      ? "ring-2 ring-emerald-400"
+                      ? "ring-2 ring-brand"
                       : ""
                   }
                 `}
@@ -223,7 +223,7 @@ export default function ShelfPanel({
                     </span>
                     <span
                       className={`text-xxxs font-bold ${
-                        isOut ? "text-rose-400" : isLow ? "text-amber-400" : "text-emerald-400"
+                        isOut ? "text-danger" : isLow ? "text-warning" : "text-success"
                       }`}
                     >
                       {item.stock_quantity} {item.unit}
@@ -243,7 +243,7 @@ export default function ShelfPanel({
       {isShelf && assigningBin && (
         <div className="p-3 border-t border-border bg-slate-900/60 shrink-0 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xxs font-mono text-emerald-400">
+            <span className="text-xxs font-mono text-success">
               [{assigningBin.row}, {assigningBin.col}]
             </span>
             <Button
@@ -265,7 +265,7 @@ export default function ShelfPanel({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-5 w-5 text-rose-400"
+                className="h-5 w-5 text-danger"
                 onClick={() => {
                   const currentItem = bins.find(
                     (b) => b.row === assigningBin.row && b.col === assigningBin.col,
@@ -295,7 +295,7 @@ export default function ShelfPanel({
           <Button
             onClick={handleAssign}
             disabled={!selectedItemId}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-7"
+            className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-7"
           >
             {t("storeLayout.assignItem")}
           </Button>

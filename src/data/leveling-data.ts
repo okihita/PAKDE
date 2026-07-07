@@ -152,8 +152,8 @@ export const LEVELS: LevelDef[] = [
     descEn: "Membership is growing and financial activity is increasing.",
     descId: "Keanggotaan bertumbuh dan aktivitas keuangan meningkat.",
     color: "#3b82f6",
-    bgClass: "bg-blue-500/10",
-    textClass: "text-blue-400",
+    bgClass: "bg-info/10",
+    textClass: "text-info",
     minScore: 20,
     maxScore: 29,
     aspects: [
@@ -303,8 +303,8 @@ export const LEVELS: LevelDef[] = [
     descEn: "Stable operations with healthy financial ratios.",
     descId: "Operasional stabil dengan rasio keuangan yang sehat.",
     color: "#10b981",
-    bgClass: "bg-emerald-500/10",
-    textClass: "text-emerald-400",
+    bgClass: "bg-success/10",
+    textClass: "text-success",
     minScore: 40,
     maxScore: 49,
     aspects: [
@@ -685,8 +685,8 @@ export const LEVELS: LevelDef[] = [
     descEn: "A model cooperative — top health score, an inspiration for others.",
     descId: "Koperasi teladan — skor kesehatan tertinggi, inspirasi bagi yang lain.",
     color: "#f59e0b",
-    bgClass: "bg-amber-500/10",
-    textClass: "text-amber-400",
+    bgClass: "bg-warning/10",
+    textClass: "text-warning",
     minScore: 90,
     maxScore: 100,
     aspects: [

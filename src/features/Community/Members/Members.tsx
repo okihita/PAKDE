@@ -48,13 +48,13 @@ export default function Members() {
             <Button
               onClick={handleSeed}
               disabled={seeding}
-              className="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 font-bold text-xs h-8 border border-amber-600/20"
+              className="bg-warning/20 hover:bg-warning/30 text-warning font-bold text-xs h-8 border border-warning/20"
             >
               <Plant className="h-3 w-3 mr-1" /> {seeding ? "..." : "Mock 50"}
             </Button>
             <Button
               onClick={m.openAddMemberModal}
-              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
             >
               <Plus className="h-3 w-3 mr-1" /> {t("members.addButton")}
             </Button>
@@ -129,18 +129,18 @@ export default function Members() {
                   <TableCell className="text-xxs font-mono text-muted-foreground">{mbr.gender}</TableCell>
                   <TableCell>
                     <span
-                      className={`text-xxxs font-mono font-bold px-2 py-0.5 rounded ${mbr.status === "aktif" ? "text-emerald-400 bg-emerald-500/10" : "text-muted-foreground bg-muted"}`}
+                      className={`text-xxxs font-mono font-bold px-2 py-0.5 rounded ${mbr.status === "aktif" ? "text-success bg-success/10" : "text-muted-foreground bg-muted"}`}
                     >
                       {mbr.status.toUpperCase()}
                     </span>
                   </TableCell>
-                  <TableCell className="text-xxs font-mono text-emerald-300 text-right">
+                  <TableCell className="text-xxs font-mono text-success text-right">
                     Rp {mbr.savings_pokok.toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-xxs font-mono text-emerald-300 text-right">
+                  <TableCell className="text-xxs font-mono text-success text-right">
                     Rp {mbr.savings_wajib.toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-xxs font-mono text-rose-300 text-right">
+                  <TableCell className="text-xxs font-mono text-danger text-right">
                     Rp {mbr.loan_outstanding.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right">
@@ -156,7 +156,7 @@ export default function Members() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 text-rose-400 hover:text-foreground"
+                        className="h-6 w-6 text-danger hover:text-foreground"
                         onClick={() => m.handleDeleteMember(mbr)}
                       >
                         <Trash className="h-3 w-3" />
@@ -390,7 +390,7 @@ export default function Members() {
               >
                 {t("members.form.cancel")}
               </Button>
-              <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs">
+              <Button type="submit" className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs">
                 {m.memberFormType === "add" ? t("members.form.saveAdd") : t("members.form.saveEdit")}
               </Button>
             </DialogFooter>

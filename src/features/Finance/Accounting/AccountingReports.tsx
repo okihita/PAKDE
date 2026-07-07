@@ -75,7 +75,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
           </TableHeader>
           <TableBody>
             <TableRow className="border-border">
-              <TableCell className="text-xxxs font-mono text-emerald-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-success font-bold py-1" colSpan={2}>
                 {t("accounting.reports.neraca.aset")}
               </TableCell>
             </TableRow>
@@ -88,7 +88,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-border">
-              <TableCell className="text-xxxs font-mono text-amber-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-warning font-bold py-1" colSpan={2}>
                 {t("accounting.reports.neraca.kewajiban")}
               </TableCell>
             </TableRow>
@@ -101,7 +101,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-border">
-              <TableCell className="text-xxxs font-mono text-blue-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-info font-bold py-1" colSpan={2}>
                 {t("accounting.reports.neraca.ekuitas")}
               </TableCell>
             </TableRow>
@@ -113,7 +113,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               value={r.totalEquity.toLocaleString()}
               accent
             />
-            <TableRow className="border-border bg-emerald-500/5">
+            <TableRow className="border-border bg-success/5">
               <TableCell className="text-xxxs font-mono text-foreground font-bold py-1">
                 {t("accounting.reports.neraca.totalLiabilitiesEquity")}
               </TableCell>
@@ -143,7 +143,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
           </TableHeader>
           <TableBody>
             <TableRow className="border-border">
-              <TableCell className="text-xxxs font-mono text-emerald-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-success font-bold py-1" colSpan={2}>
                 {t("accounting.reports.labarugi.pendapatan")}
               </TableCell>
             </TableRow>
@@ -156,7 +156,7 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
               accent
             />
             <TableRow className="border-border">
-              <TableCell className="text-xxxs font-mono text-rose-400 font-bold py-1" colSpan={2}>
+              <TableCell className="text-xxxs font-mono text-danger font-bold py-1" colSpan={2}>
                 {t("accounting.reports.labarugi.beban")}
               </TableCell>
             </TableRow>
@@ -170,11 +170,11 @@ export default function AccountingReports({ coaAccounts }: { coaAccounts: CoaAcc
             />
             <Row label={t("accounting.reports.labarugi.shuGross")} value={r.shuKotor.toLocaleString()} accent />
             <Row label={t("accounting.reports.labarugi.tax")} value={r.tax.toLocaleString()} />
-            <TableRow className="border-border bg-emerald-500/5">
+            <TableRow className="border-border bg-success/5">
               <TableCell className="text-xxxs font-mono text-foreground font-bold py-1">
                 {t("accounting.reports.labarugi.shuNet")}
               </TableCell>
-              <TableCell className="text-xxxs font-mono text-emerald-400 font-bold py-1 text-right">
+              <TableCell className="text-xxxs font-mono text-success font-bold py-1 text-right">
                 Rp {r.shuBersih.toLocaleString()}
               </TableCell>
             </TableRow>

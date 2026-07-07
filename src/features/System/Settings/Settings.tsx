@@ -115,7 +115,7 @@ export default function Settings({
 
   const bannerBase =
     "flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl border-2 cursor-pointer transition-all text-center";
-  const bannerActive = "border-emerald-500/50 bg-emerald-500/10";
+  const bannerActive = "border-success/50 bg-success/10";
   const bannerInactive = "border-border bg-muted/40 hover:border-muted-foreground/30 hover:bg-muted/70";
 
   const PROFILE_FIELDS = [
@@ -139,7 +139,7 @@ export default function Settings({
         <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-              <Palette className="h-3.5 w-3.5 text-emerald-400" />
+              <Palette className="h-3.5 w-3.5 text-success" />
               {t("settings.preferences.title")}
             </CardTitle>
           </CardHeader>
@@ -276,7 +276,7 @@ export default function Settings({
             <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                  <User className="h-3.5 w-3.5 text-blue-400" />
+                  <User className="h-3.5 w-3.5 text-info" />
                   {t("settings.userProfile.title")}
                 </CardTitle>
               </CardHeader>
@@ -307,7 +307,7 @@ export default function Settings({
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <Buildings className="h-3.5 w-3.5 text-emerald-400" />
+                <Buildings className="h-3.5 w-3.5 text-success" />
                 {t("settings.profileTitle")}
               </CardTitle>
             </CardHeader>
@@ -328,7 +328,7 @@ export default function Settings({
               </div>
               <Button
                 onClick={handleSaveProfile}
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 mt-4 w-full"
+                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 mt-4 w-full"
               >
                 {t("settings.saveProfile")}
               </Button>
@@ -351,12 +351,12 @@ export default function Settings({
           <Button
             onClick={u.checkUpdateCenter}
             disabled={u.isUpdateChecking}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9"
+            className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9"
           >
             {u.isUpdateChecking ? t("settings.updater.checking") : t("settings.updater.checkButton")}
           </Button>
           {u.updateStatusText && (
-            <span className="text-emerald-400 text-xs font-mono font-semibold block text-center">
+            <span className="text-success text-xs font-mono font-semibold block text-center">
               {u.updateStatusText}
             </span>
           )}
@@ -366,11 +366,11 @@ export default function Settings({
                 <span>
                   {`${t("settings.updater.progress")}: ${(u.downloadedBytes / 1024 / 1024).toFixed(2)} MB / ${(u.downloadContentLength / 1024 / 1024).toFixed(2)} MB`}
                 </span>
-                <span className="font-bold text-emerald-400">{u.downloadProgress}%</span>
+                <span className="font-bold text-success">{u.downloadProgress}%</span>
               </div>
               <div className="w-full bg-input rounded-full h-1.5 border border-border overflow-hidden">
                 <div
-                  className="bg-emerald-500 h-full transition-all duration-300"
+                  className="bg-brand h-full transition-all duration-300"
                   style={{ width: `${u.downloadProgress}%` }}
                 />
               </div>

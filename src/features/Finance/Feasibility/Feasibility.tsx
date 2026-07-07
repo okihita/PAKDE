@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFeasibility } from "@/hooks/useFeasibility";
 
-const TIER_COLORS: Record<number, string> = { 1: "emerald", 2: "amber", 3: "rose" };
+const TIER_COLORS: Record<number, string> = { 1: "success", 2: "warning", 3: "danger" };
 
 export default function Feasibility() {
   const f = useFeasibility();
@@ -22,13 +22,13 @@ export default function Feasibility() {
         <TabsList className="bg-sidebar border border-border text-muted-foreground mb-6 p-0.5 rounded-lg flex w-fit">
           <TabsTrigger
             value="calculator"
-            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
           >
             {t("feasibility.tabs.calculator")}
           </TabsTrigger>
           <TabsTrigger
             value="sensitivity"
-            className="text-xxs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+            className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success"
           >
             {t("feasibility.tabs.sensitivity")}
           </TabsTrigger>
@@ -68,7 +68,7 @@ export default function Feasibility() {
               </div>
               <Button
                 onClick={f.calculateFeasibility}
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9"
+                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9"
               >
                 {t("feasibility.calculator.calculate")}
               </Button>
@@ -108,17 +108,17 @@ export default function Feasibility() {
                   ].map(({ label, value, pass, accent }) => (
                     <div
                       key={label}
-                      className={`p-3 rounded-xl border ${pass === false ? "border-rose-500/20 bg-rose-500/5" : pass === true ? "border-emerald-500/20 bg-emerald-500/5" : "border-border bg-card"}`}
+                      className={`p-3 rounded-xl border ${pass === false ? "border-danger/20 bg-danger/5" : pass === true ? "border-success/20 bg-success/5" : "border-border bg-card"}`}
                     >
                       <p className="text-xxxs font-mono text-muted-foreground">{label}</p>
                       <p
-                        className={`text-sm font-black font-mono mt-1 ${accent ? `text-${accent}-400` : "text-foreground"}`}
+                        className={`text-sm font-black font-mono mt-1 ${accent ? `text-${accent}` : "text-foreground"}`}
                       >
                         {value}
                       </p>
                       {pass !== undefined && (
                         <span
-                          className={`text-xxxs font-mono font-bold ${pass ? "text-emerald-400" : "text-rose-400"}`}
+                          className={`text-xxxs font-mono font-bold ${pass ? "text-success" : "text-danger"}`}
                         >
                           {pass ? t("feasibility.calculator.pass") : t("feasibility.calculator.fail")}
                         </span>
@@ -144,7 +144,7 @@ export default function Feasibility() {
                   <Button
                     key={s}
                     variant={f.sensitivityScenario === s ? "default" : "outline"}
-                    className={`text-xs h-8 font-bold ${f.sensitivityScenario === s ? "bg-emerald-500 text-slate-950" : "border-border text-muted-foreground"}`}
+                    className={`text-xs h-8 font-bold ${f.sensitivityScenario === s ? "bg-brand text-brand-foreground" : "border-border text-muted-foreground"}`}
                     onClick={() => f.handleSensitivityScenarioChange(s)}
                   >
                     {s === "optimis"
@@ -183,7 +183,7 @@ export default function Feasibility() {
                         <p className="text-xxxs font-mono text-muted-foreground">{label}</p>
                       </div>
                       <p
-                        className={`text-sm font-black font-mono ${accent ? `text-${accent}-400` : "text-foreground"}`}
+                        className={`text-sm font-black font-mono ${accent ? `text-${accent}` : "text-foreground"}`}
                       >
                         {value}
                       </p>

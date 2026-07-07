@@ -41,8 +41,8 @@ export default function Units({ onTabChange }: UnitsProps) {
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-            <Buildings className="h-5 w-5 text-emerald-400" />
+          <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
+            <Buildings className="h-5 w-5 text-success" />
           </div>
           <div>
             <h1 className="text-sm font-bold text-foreground">{t("units.title")}</h1>
@@ -52,7 +52,7 @@ export default function Units({ onTabChange }: UnitsProps) {
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <Button
             onClick={() => setIsOpen(true)}
-            className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 px-4 flex items-center gap-1.5"
+            className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 px-4 flex items-center gap-1.5"
           >
             <Plus className="h-4 w-4" />
             {t("units.register")}
@@ -63,7 +63,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       {/* Active Units list */}
       <div className="space-y-3">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Pulse className="h-3.5 w-3.5 text-emerald-400" />
+          <Pulse className="h-3.5 w-3.5 text-success" />
           {t("units.active")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -100,11 +100,11 @@ export default function Units({ onTabChange }: UnitsProps) {
             return (
               <Card
                 key={unit.id}
-                className="bg-card border-emerald-500/15 bg-gradient-to-br from-emerald-500/5 via-card to-transparent overflow-hidden"
+                className="bg-card border-success/15 bg-gradient-to-br from-success/5 via-card to-transparent overflow-hidden"
               >
                 <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/10">
+                    <span className="text-2xl w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center border border-success/10">
                       {unit.icon}
                     </span>
                     <div>
@@ -114,14 +114,14 @@ export default function Units({ onTabChange }: UnitsProps) {
                       </span>
                     </div>
                   </div>
-                  <span className="text-xxxs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full shrink-0">
+                  <span className="text-xxxs font-mono font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-full shrink-0">
                     {t("units.activeBadge")}
                   </span>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="p-3 rounded-lg bg-input/40 border border-border">
                     <span className="text-xxxs font-mono text-muted-foreground uppercase">{t("units.revenue")}</span>
-                    <p className="text-xs font-bold font-mono mt-1 text-emerald-400">
+                    <p className="text-xs font-bold font-mono mt-1 text-success">
                       {revenue > 0 ? `Rp ${revenue.toLocaleString("id-ID")}` : t("units.noRevenues")}
                     </p>
                   </div>
@@ -134,12 +134,12 @@ export default function Units({ onTabChange }: UnitsProps) {
                       <div className="flex items-center justify-between text-xxs bg-input/20 p-1.5 rounded border border-border/30">
                         <span className="text-muted-foreground font-mono">{t("units.roleManager")}</span>
                         <div className="flex items-center gap-1.5">
-                          <span className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-400 text-xxxs font-bold flex items-center justify-center border border-emerald-500/20 shrink-0">
+                          <span className="w-4 h-4 rounded-full bg-success/10 text-success text-xxxs font-bold flex items-center justify-center border border-success/20 shrink-0">
                             {getInitials(manager.name)}
                           </span>
                           <button
                             onClick={() => handleMemberClick(manager.name)}
-                            className="text-emerald-400 font-bold hover:underline"
+                            className="text-success font-bold hover:underline"
                           >
                             {manager.name}
                           </button>
@@ -149,12 +149,12 @@ export default function Units({ onTabChange }: UnitsProps) {
                       <div className="flex items-center justify-between text-xxs bg-input/20 p-1.5 rounded border border-border/30">
                         <span className="text-muted-foreground font-mono">{t("units.roleTreasurer")}</span>
                         <div className="flex items-center gap-1.5">
-                          <span className="w-4 h-4 rounded-full bg-blue-500/10 text-blue-400 text-xxxs font-bold flex items-center justify-center border border-blue-500/20 shrink-0">
+                          <span className="w-4 h-4 rounded-full bg-info/10 text-info text-xxxs font-bold flex items-center justify-center border border-info/20 shrink-0">
                             {getInitials(treasurer.name)}
                           </span>
                           <button
                             onClick={() => handleMemberClick(treasurer.name)}
-                            className="text-blue-400 font-bold hover:underline"
+                            className="text-info font-bold hover:underline"
                           >
                             {treasurer.name}
                           </button>
@@ -164,12 +164,12 @@ export default function Units({ onTabChange }: UnitsProps) {
                       <div className="flex items-center justify-between text-xxs bg-input/20 p-1.5 rounded border border-border/30">
                         <span className="text-muted-foreground font-mono">{t("units.roleOperator")}</span>
                         <div className="flex items-center gap-1.5">
-                          <span className="w-4 h-4 rounded-full bg-amber-500/10 text-amber-400 text-xxxs font-bold flex items-center justify-center border border-amber-500/20 shrink-0">
+                          <span className="w-4 h-4 rounded-full bg-warning/10 text-warning text-xxxs font-bold flex items-center justify-center border border-warning/20 shrink-0">
                             {getInitials(operator.name)}
                           </span>
                           <button
                             onClick={() => handleMemberClick(operator.name)}
-                            className="text-amber-400 font-bold hover:underline"
+                            className="text-warning font-bold hover:underline"
                           >
                             {operator.name}
                           </button>
@@ -181,7 +181,7 @@ export default function Units({ onTabChange }: UnitsProps) {
                   <Button
                     onClick={() => u.toggleUnitStatus(unit.id, true)}
                     variant="outline"
-                    className="w-full border-rose-500/20 hover:bg-rose-500/10 hover:text-rose-400 text-muted-foreground text-xxs h-8 flex items-center gap-1.5"
+                    className="w-full border-danger/20 hover:bg-danger/10 hover:text-danger text-muted-foreground text-xxs h-8 flex items-center gap-1.5"
                   >
                     <Power className="h-3 w-3" />
                     {t("units.toggleActive")}
@@ -227,7 +227,7 @@ export default function Units({ onTabChange }: UnitsProps) {
                 <Button
                   onClick={() => u.toggleUnitStatus(unit.id, false)}
                   variant="outline"
-                  className="w-full border-border hover:bg-emerald-500/10 hover:text-emerald-400 text-muted-foreground text-xxs h-8 flex items-center gap-1.5"
+                  className="w-full border-border hover:bg-success/10 hover:text-success text-muted-foreground text-xxs h-8 flex items-center gap-1.5"
                 >
                   <Power className="h-3 w-3" />
                   {t("units.toggleInactive")}
@@ -279,7 +279,7 @@ export default function Units({ onTabChange }: UnitsProps) {
               </Button>
               <Button
                 type="submit"
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8 px-4 flex items-center gap-1"
+                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 px-4 flex items-center gap-1"
               >
                 <Sparkle className="h-3 w-3" />
                 {t("units.form.submit")}

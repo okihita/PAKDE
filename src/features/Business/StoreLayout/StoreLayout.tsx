@@ -124,7 +124,7 @@ export default function StoreLayout() {
         <div className="space-y-4">
           <div className="flex items-center">
             <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+              <MapPin className="h-3.5 w-3.5 text-success" />
               {t("storeLayout.title")}
             </h3>
           </div>
@@ -132,14 +132,14 @@ export default function StoreLayout() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {/* New layout card — always first */}
             <Card
-              className="bg-slate-950/30 border-dashed border-2 border-slate-800 hover:border-emerald-500/30 cursor-pointer transition-all group"
+              className="bg-slate-950/30 border-dashed border-2 border-slate-800 hover:border-success/30 cursor-pointer transition-all group"
               onClick={() => setShowNewDialog(true)}
             >
               <CardContent className="p-6 flex flex-col items-center justify-center min-h-[140px]">
-                <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-3 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30 transition-all">
-                  <Plus className="h-5 w-5 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+                <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-3 group-hover:bg-success/10 group-hover:border-success/30 transition-all">
+                  <Plus className="h-5 w-5 text-slate-500 group-hover:text-success transition-colors" />
                 </div>
-                <span className="text-xs font-bold text-slate-500 group-hover:text-emerald-400 transition-colors">
+                <span className="text-xs font-bold text-slate-500 group-hover:text-success transition-colors">
                   {t("storeLayout.newLayout")}
                 </span>
               </CardContent>
@@ -148,7 +148,7 @@ export default function StoreLayout() {
             {layouts.map((layout) => (
               <Card
                 key={layout.id}
-                className="bg-slate-950/60 border-slate-900/80 hover:border-emerald-500/20 cursor-pointer transition-all"
+                className="bg-slate-950/60 border-slate-900/80 hover:border-success/20 cursor-pointer transition-all"
                 onClick={() => handleEditLayout(layout)}
               >
                 <CardContent className="p-4 space-y-3">
@@ -166,7 +166,7 @@ export default function StoreLayout() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
+                      className="h-7 w-7 text-danger hover:text-danger hover:bg-danger/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteLayout(layout.id);
@@ -241,7 +241,7 @@ export default function StoreLayout() {
                 <div className="space-y-1">
                   <label className="text-muted-foreground font-mono text-xxxs uppercase flex items-center justify-between">
                     <span>{t("storeLayout.cellSize")}</span>
-                    <span className="font-bold text-emerald-400">
+                    <span className="font-bold text-success">
                       1{t("storeLayout.cellLabel")} ={" "}
                       {cellSize === 1 ? "1 m" : cellSize === 0.5 ? "0.5 m" : `${cellSize} m`}
                     </span>
@@ -254,7 +254,7 @@ export default function StoreLayout() {
                         onClick={() => setCellSize(s)}
                         className={`flex-1 text-xxs font-bold py-1.5 rounded-lg border transition-all ${
                           cellSize === s
-                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                            ? "bg-success/10 text-success border-success/30"
                             : "bg-slate-900/40 text-muted-foreground border-border hover:border-slate-700"
                         }`}
                       >
@@ -279,7 +279,7 @@ export default function StoreLayout() {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+                  className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
                 >
                   <Sparkle className="h-3 w-3 mr-1" />
                   {t("storeLayout.create")}
@@ -314,7 +314,7 @@ export default function StoreLayout() {
         </div>
         <Button
           onClick={handleSaveZones}
-          className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-7 px-3"
+          className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-7 px-3"
         >
           {t("common.save")}
         </Button>

@@ -14,13 +14,13 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
     <div className="space-y-3 pt-2">
       {/* Divider */}
       <div className="flex items-center gap-2 text-xxs font-mono text-slate-500 uppercase tracking-wider">
-        <TrendUp className="h-3 w-3 text-emerald-400" />
+        <TrendUp className="h-3 w-3 text-success" />
         {t("event.prediction.heading")}
       </div>
 
       {/* ── Cost Prediction ── */}
-      <div className="rounded-lg border border-amber-500/15 bg-amber-500/5 p-3 space-y-2">
-        <h4 className="text-xxs font-mono font-bold text-amber-400 flex items-center gap-1.5">
+      <div className="rounded-lg border border-warning/15 bg-warning/5 p-3 space-y-2">
+        <h4 className="text-xxs font-mono font-bold text-warning flex items-center gap-1.5">
           <Coins className="h-3 w-3" />
           {t("event.prediction.costTitle")}
         </h4>
@@ -31,16 +31,16 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
               <span className="text-slate-400">{formatIdr(b.value)}</span>
             </div>
           ))}
-          <div className="flex justify-between text-xxxs font-mono pt-1 border-t border-amber-500/10">
-            <span className="text-amber-400 font-bold">{t("event.prediction.costTotal")}</span>
-            <span className="text-amber-400 font-bold">{formatIdr(predictions.totalCost)}</span>
+          <div className="flex justify-between text-xxxs font-mono pt-1 border-t border-warning/10">
+            <span className="text-warning font-bold">{t("event.prediction.costTotal")}</span>
+            <span className="text-warning font-bold">{formatIdr(predictions.totalCost)}</span>
           </div>
         </div>
       </div>
 
       {/* ── Engagement Prediction ── */}
-      <div className="rounded-lg border border-emerald-500/15 bg-emerald-500/5 p-3 space-y-1.5">
-        <h4 className="text-xxs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+      <div className="rounded-lg border border-success/15 bg-success/5 p-3 space-y-1.5">
+        <h4 className="text-xxs font-mono font-bold text-success flex items-center gap-1.5">
           <Users className="h-3 w-3" />
           {t("event.prediction.engagementTitle")}
         </h4>
@@ -73,7 +73,7 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
 
         <div className="flex justify-between text-xxxs font-mono pt-1.5 border-t border-slate-700/30">
           <span className="text-slate-500">{t("event.prediction.prepDaysNeeded")}</span>
-          <span className="text-amber-400 font-bold">
+          <span className="text-warning font-bold">
             {t("event.prediction.prepDaysValue", { days: predictions.prepDays })}
           </span>
         </div>
@@ -81,7 +81,7 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
         {recommendedStartDate && (
           <div className="flex justify-between text-xxxs font-mono pt-0.5">
             <span className="text-slate-500">{t("event.prediction.prepStartBy")}</span>
-            <span className="text-emerald-400 font-bold">{recommendedStartDate}</span>
+            <span className="text-success font-bold">{recommendedStartDate}</span>
           </div>
         )}
       </div>

@@ -28,13 +28,13 @@ export default function Sync() {
           <Button
             onClick={s.handleSyncNow}
             disabled={s.isSyncing}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9"
+            className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9"
           >
             {s.isSyncing ? t("sync.syncing") : t("sync.syncButton")}
           </Button>
           {s.syncProgress && (
             <div className="mt-3 text-center">
-              <span className="text-emerald-400 text-xs font-mono font-semibold">{s.syncProgress}</span>
+              <span className="text-success text-xs font-mono font-semibold">{s.syncProgress}</span>
             </div>
           )}
         </CardContent>
@@ -73,7 +73,7 @@ export default function Sync() {
                   <TableCell className="text-xxs font-mono text-muted-foreground">{hist.started_at}</TableCell>
                   <TableCell>
                     <span
-                      className={`font-mono text-xs font-bold ${hist.status === "success" ? "text-emerald-400" : "text-rose-400"}`}
+                      className={`font-mono text-xs font-bold ${hist.status === "success" ? "text-success" : "text-danger"}`}
                     >
                       {hist.status === "success" ? t("sync.status.success") : t("sync.status.failed")}
                     </span>

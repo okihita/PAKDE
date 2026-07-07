@@ -45,7 +45,7 @@ export default function AccountingJournal({
       <div className="flex justify-end">
         <Button
           onClick={() => setShowModal(true)}
-          className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8"
+          className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
         >
           <Plus className="h-3 w-3 mr-1" /> {t("accounting.journal.addButton")}
         </Button>
@@ -85,10 +85,10 @@ export default function AccountingJournal({
                   <TableRow key={i} className="border-border">
                     <TableCell className="text-xxxs font-mono text-foreground py-1">{line.account_code}</TableCell>
                     <TableCell className="text-xxxs font-mono text-muted-foreground py-1">{line.name}</TableCell>
-                    <TableCell className="text-xxxs font-mono text-emerald-300 py-1 text-right">
+                    <TableCell className="text-xxxs font-mono text-success py-1 text-right">
                       Rp {line.debit.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-xxxs font-mono text-rose-300 py-1 text-right">
+                    <TableCell className="text-xxxs font-mono text-danger py-1 text-right">
                       Rp {line.credit.toLocaleString()}
                     </TableCell>
                   </TableRow>
@@ -173,7 +173,7 @@ export default function AccountingJournal({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 text-rose-400"
+                      className="h-6 w-6 text-danger"
                       onClick={() => onRemoveLine(i)}
                     >
                       <Trash className="h-3 w-3" />
@@ -195,7 +195,7 @@ export default function AccountingJournal({
               >
                 {t("accounting.journal.modal.cancel")}
               </Button>
-              <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs">
+              <Button type="submit" className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs">
                 {t("accounting.journal.modal.save")}
               </Button>
             </DialogFooter>

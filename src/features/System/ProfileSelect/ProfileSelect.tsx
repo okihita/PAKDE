@@ -95,7 +95,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
           className="p-2 bg-slate-900/80 border border-slate-800 rounded-lg hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-colors shadow-md backdrop-blur-md"
           title={soundOn ? "Mute SFX" : "Unmute SFX"}
         >
-          {soundOn ? <SpeakerLow className="h-4 w-4" /> : <SpeakerX className="h-4 w-4 text-rose-400" />}
+          {soundOn ? <SpeakerLow className="h-4 w-4" /> : <SpeakerX className="h-4 w-4 text-danger" />}
         </button>
       </div>
 
@@ -103,8 +103,8 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         {/* Clean Corporate Header */}
         <div className="text-center space-y-2.5 p-6 rounded-2xl bg-slate-950/80 border border-slate-900 backdrop-blur-lg max-w-lg mx-auto shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
           <div className="flex justify-center mb-1">
-            <div className="w-11 h-11 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-              <Shield className="h-5.5 w-5.5 text-emerald-400" />
+            <div className="w-11 h-11 rounded-xl bg-success/10 flex items-center justify-center border border-success/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+              <Shield className="h-5.5 w-5.5 text-success" />
             </div>
           </div>
           <h1 className="text-2xl font-bold text-foreground tracking-wide font-sans">{t("profileSelect.title")}</h1>
@@ -114,7 +114,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         </div>
 
         {loading ? (
-          <div className="text-center py-12 text-xxs font-mono text-emerald-500 animate-pulse">
+          <div className="text-center py-12 text-xxs font-mono text-brand animate-pulse">
             {t("common.loading")}
           </div>
         ) : (
@@ -129,14 +129,14 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                   key={p.id}
                   onClick={() => handleCardClick(p)}
                   onMouseEnter={handleCardHover}
-                  className="bg-slate-950/90 border-slate-800 hover:border-emerald-500/40 backdrop-blur-md cursor-pointer hover:shadow-[0_8px_30px_rgba(16,185,129,0.08)] transition-all duration-200 flex flex-col justify-between min-h-52 p-5 hover:scale-[1.01] select-none shadow-xl relative"
+                  className="bg-slate-950/90 border-slate-800 hover:border-brand/40 backdrop-blur-md cursor-pointer hover:shadow-[0_8px_30px_hsl(var(--brand) / 0.08)] transition-all duration-200 flex flex-col justify-between min-h-52 p-5 hover:scale-[1.01] select-none shadow-xl relative"
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
-                        <Buildings className="h-4.5 w-4.5 text-emerald-400" />
+                      <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center border border-success/20 shrink-0">
+                        <Buildings className="h-4.5 w-4.5 text-success" />
                       </div>
-                      <span className="text-xxxs font-mono font-bold text-emerald-400 uppercase border border-emerald-500/25 px-2 py-0.5 rounded bg-emerald-950/20">
+                      <span className="text-xxxs font-mono font-bold text-success uppercase border border-brand/25 px-2 py-0.5 rounded bg-success/20">
                         {p.id}
                       </span>
                     </div>
@@ -161,7 +161,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       <div className="flex justify-between items-center text-xxxs font-mono text-slate-400">
                         <span className="uppercase">{t("profileSelect.health")}</span>
                         <span
-                          className={`font-bold ${isHealthy ? "text-emerald-400" : isCritical ? "text-rose-400" : "text-amber-400"}`}
+                          className={`font-bold ${isHealthy ? "text-success" : isCritical ? "text-danger" : "text-warning"}`}
                         >
                           {p.health_score}%
                         </span>
@@ -169,7 +169,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       <div className="h-1 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-300 ${
-                            isHealthy ? "bg-emerald-500" : isCritical ? "bg-rose-500" : "bg-amber-500"
+                            isHealthy ? "bg-brand" : isCritical ? "bg-danger" : "bg-warning"
                           }`}
                           style={{ width: `${p.health_score}%` }}
                         />
@@ -205,12 +205,12 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
             <Card
               onClick={() => setShowCreateModal(true)}
               onMouseEnter={handleCardHover}
-              className="bg-slate-950/60 border-dashed border-slate-800 hover:border-emerald-500/35 hover:bg-emerald-500/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-52 p-5 hover:scale-[1.01] select-none shadow-md"
+              className="bg-slate-950/60 border-dashed border-slate-800 hover:border-brand/35 hover:bg-success/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-52 p-5 hover:scale-[1.01] select-none shadow-md"
             >
               <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center mb-3 group-hover:bg-slate-800 border border-slate-800 transition-colors shadow-sm">
-                <Plus className="h-5 w-5 text-emerald-400" />
+                <Plus className="h-5 w-5 text-success" />
               </div>
-              <span className="text-xxs font-mono font-bold text-emerald-400 uppercase tracking-wider">
+              <span className="text-xxs font-mono font-bold text-success uppercase tracking-wider">
                 {t("profileSelect.createBtn")}
               </span>
             </Card>

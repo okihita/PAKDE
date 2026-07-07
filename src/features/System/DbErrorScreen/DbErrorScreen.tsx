@@ -8,11 +8,11 @@ export default function DbErrorScreen({ message }: { message: string }) {
 
   return (
     <div className="flex h-screen items-center justify-center bg-background text-foreground">
-      <div className="w-full max-w-md p-8 bg-input border border-rose-500/30 rounded-2xl shadow-2xl text-center">
-        <Warning className="h-12 w-12 text-rose-500 mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-rose-900 mb-1">{t("dbError.title")}</h2>
+      <div className="w-full max-w-md p-8 bg-input border border-danger/30 rounded-2xl shadow-2xl text-center">
+        <Warning className="h-12 w-12 text-danger mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-danger mb-1">{t("dbError.title")}</h2>
         <p className="text-muted-foreground text-xs mb-6">{t("dbError.message")}</p>
-        <div className="bg-rose-500/5 border border-rose-500/10 p-4 rounded-xl text-rose-400 text-left font-mono text-xs mb-6 overflow-x-auto">
+        <div className="bg-danger/5 border border-danger/10 p-4 rounded-xl text-danger text-left font-mono text-xs mb-6 overflow-x-auto">
           <code>{message}</code>
         </div>
         <Button variant="destructive" className="w-full" onClick={() => window.location.reload()}>

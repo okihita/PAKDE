@@ -69,7 +69,7 @@ export default function Planners() {
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <FileText className="h-3.5 w-3.5 text-amber-400" /> {t("sidebar.nav.planners")}
+            <FileText className="h-3.5 w-3.5 text-warning" /> {t("sidebar.nav.planners")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -81,8 +81,8 @@ export default function Planners() {
                 className="rounded-xl bg-card border border-border p-4 space-y-3 hover:bg-secondary transition-colors"
               >
                 <div className="flex items-start justify-between">
-                  <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-                    <FileText className="h-4 w-4 text-amber-400" />
+                  <div className="w-9 h-9 rounded-lg bg-warning/10 flex items-center justify-center shrink-0">
+                    <FileText className="h-4 w-4 text-warning" />
                   </div>
                   <span className="text-xxxs font-mono text-muted-foreground px-1.5 py-0.5 rounded bg-secondary">
                     {t("planners.pages", { n: p.pages })}
@@ -100,7 +100,7 @@ export default function Planners() {
                 <div className="flex gap-2 pt-1">
                   <Button
                     size="sm"
-                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xxs h-7"
+                    className="flex-1 bg-brand hover:bg-brand text-brand-foreground font-bold text-xxs h-7"
                   >
                     <DownloadSimple className="h-3 w-3 mr-1" /> {t("planners.pdf")}
                   </Button>

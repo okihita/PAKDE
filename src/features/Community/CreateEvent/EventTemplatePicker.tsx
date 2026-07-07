@@ -22,7 +22,7 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
       </button>
 
       <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-5">
-        <Sparkle className="h-3.5 w-3.5 text-amber-400" />
+        <Sparkle className="h-3.5 w-3.5 text-warning" />
         {t("event.template.heading")}
       </h3>
 
@@ -40,8 +40,8 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
               onClick={() => onSelect(tmpl)}
               className={`cursor-pointer transition-all group ${
                 isCustom
-                  ? "bg-slate-950/30 border-dashed border-2 border-slate-800 hover:border-emerald-500/30"
-                  : "bg-slate-950/60 border-slate-900/80 hover:border-amber-500/20"
+                  ? "bg-slate-950/30 border-dashed border-2 border-slate-800 hover:border-success/30"
+                  : "bg-slate-950/60 border-slate-900/80 hover:border-warning/20"
               }`}
             >
               <CardContent
@@ -51,20 +51,20 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
               >
                 {isCustom ? (
                   <>
-                    <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-1 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30 transition-all">
-                      <Icon className="h-5 w-5 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+                    <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-1 group-hover:bg-success/10 group-hover:border-success/30 transition-all">
+                      <Icon className="h-5 w-5 text-slate-500 group-hover:text-success transition-colors" />
                     </div>
-                    <span className="text-xs font-bold text-slate-500 group-hover:text-emerald-400 transition-colors">
+                    <span className="text-xs font-bold text-slate-500 group-hover:text-success transition-colors">
                       {t(tmpl.i18nKey)}
                     </span>
                   </>
                 ) : (
                   <>
                     <div className="flex items-start justify-between gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
-                        <Icon className="h-4 w-4 text-amber-400" />
+                      <div className="w-8 h-8 rounded-lg bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
+                        <Icon className="h-4 w-4 text-warning" />
                       </div>
-                      <span className="text-xxxs font-mono text-amber-400/70 leading-tight text-right">{stars}</span>
+                      <span className="text-xxxs font-mono text-warning/70 leading-tight text-right">{stars}</span>
                     </div>
                     <h4 className="text-xs font-bold text-foreground leading-snug">{t(tmpl.i18nKey)}</h4>
                     <div className="flex items-center gap-3 text-xxxs font-mono text-slate-500">
@@ -73,7 +73,7 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
                         {prepLabel}
                       </span>
                       {tmpl.legalNoteKey && (
-                        <span className="text-amber-400/60 truncate" title={t(tmpl.legalNoteKey)}>
+                        <span className="text-warning/60 truncate" title={t(tmpl.legalNoteKey)}>
                           {t(tmpl.legalNoteKey)}
                         </span>
                       )}

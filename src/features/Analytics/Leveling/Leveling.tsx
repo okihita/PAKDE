@@ -35,11 +35,11 @@ function QuestItem({ done, text }: { done: boolean; text: string }) {
   return (
     <li className="flex items-start gap-1.5 text-xxs text-muted-foreground">
       {done ? (
-        <CheckCircle className="h-3 w-3 text-emerald-500 mt-0.5 shrink-0" />
+        <CheckCircle className="h-3 w-3 text-brand mt-0.5 shrink-0" />
       ) : (
         <span className="text-slate-700 mt-0.5 shrink-0">◈</span>
       )}
-      <span className={done ? "text-emerald-400/70" : ""}>{text}</span>
+      <span className={done ? "text-success/70" : ""}>{text}</span>
     </li>
   );
 }
@@ -68,7 +68,7 @@ function LevelCard({
   return (
     <Card
       className={`bg-card border-border text-foreground overflow-hidden transition-all hover-glow-card ${
-        isCurrent ? "ring-1 ring-emerald-500/30" : ""
+        isCurrent ? "ring-1 ring-brand/30" : ""
       } ${!isUnlocked ? "opacity-60" : ""}`}
     >
       <CardHeader className="pb-3 cursor-pointer select-none" onClick={() => setOpen(!open)}>
@@ -91,7 +91,7 @@ function LevelCard({
                   {label}
                 </span>
                 {isCurrent && (
-                  <span className="text-xxxs font-mono text-emerald-500 font-bold">{t("leveling.active")}</span>
+                  <span className="text-xxxs font-mono text-brand font-bold">{t("leveling.active")}</span>
                 )}
               </div>
               <p className="text-xxs text-muted-foreground mt-0.5 truncate">{desc}</p>
@@ -107,7 +107,7 @@ function LevelCard({
               <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
-                    isCurrent ? "bg-emerald-500" : isUnlocked ? level.color : "bg-muted"
+                    isCurrent ? "bg-brand" : isUnlocked ? level.color : "bg-muted"
                   }`}
                   style={{ width: `${isUnlocked ? percent : 0}%` }}
                 />
@@ -162,8 +162,8 @@ export default function Leveling({ healthScore = 0 }: Props) {
     <div className="flex-1 overflow-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-          <Trophy className="h-5 w-5 text-amber-400" />
+        <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center">
+          <Trophy className="h-5 w-5 text-warning" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{isId ? "Leveling Koperasi" : "Cooperative Leveling"}</h1>
@@ -180,7 +180,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-amber-400" />
+              <Trophy className="h-4 w-4 text-warning" />
               <span className="text-xs font-bold text-foreground">
                 {isId ? `Level Saat Ini: ${currentLevel.labelId}` : `Current Level: ${currentLevel.labelEn}`}
               </span>
@@ -192,7 +192,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
           {/* Global XP bar */}
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-amber-400 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-brand to-warning rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, healthScore)}%` }}
             />
           </div>
@@ -216,7 +216,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
               key={level.id}
               className={`flex flex-col items-center gap-0.5 py-2 rounded-lg border ${
                 isActive
-                  ? `${level.bgClass} border-emerald-500/30`
+                  ? `${level.bgClass} border-success/30`
                   : isComplete
                     ? `${level.bgClass} border-muted`
                     : "bg-input/50 border-border"

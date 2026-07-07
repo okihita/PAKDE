@@ -146,13 +146,13 @@ export default function CreateEvent() {
       <div className="flex-1 overflow-auto p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-            <Calendar className="h-3.5 w-3.5 text-amber-400" />
+            <Calendar className="h-3.5 w-3.5 text-warning" />
             {t("sidebar.nav.event")}
           </h3>
           {events.length > 0 && (
             <Button
               onClick={openTemplates}
-              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-8 px-3"
+              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 px-3"
             >
               <CalendarPlus className="h-3.5 w-3.5 mr-1.5" />
               {t("event.form.save")}
@@ -162,8 +162,8 @@ export default function CreateEvent() {
 
         {events.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-            <div className="w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6">
-              <Calendar className="h-9 w-9 text-amber-400/60" />
+            <div className="w-20 h-20 rounded-full bg-warning/10 border border-warning/20 flex items-center justify-center mb-6">
+              <Calendar className="h-9 w-9 text-warning/60" />
             </div>
             <h2 className="text-sm font-bold text-foreground mb-2">{t("event.empty.title")}</h2>
             <p className="text-xxs text-muted-foreground max-w-xs mb-8 leading-relaxed">
@@ -171,7 +171,7 @@ export default function CreateEvent() {
             </p>
             <Button
               onClick={openTemplates}
-              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 px-5"
+              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 px-5"
             >
               <Sparkle className="h-3.5 w-3.5 mr-1.5" />
               {t("event.empty.cta")}
@@ -195,13 +195,13 @@ export default function CreateEvent() {
             {events.map((ev) => (
               <Card
                 key={ev.id}
-                className="bg-slate-950/60 border-slate-900/80 hover:border-amber-500/20 transition-all group"
+                className="bg-slate-950/60 border-slate-900/80 hover:border-warning/20 transition-all group"
               >
                 <CardContent className="p-4 space-y-3">
                   <div className="flex justify-between items-start">
                     <div className="min-w-0">
                       <h4 className="text-sm font-bold text-foreground truncate">{ev.name}</h4>
-                      <p className="text-xxxs font-mono text-amber-400 mt-0.5">
+                      <p className="text-xxxs font-mono text-warning mt-0.5">
                         {ev.date}
                         {ev.time !== "00:00" && ` · ${ev.time}`}
                       </p>
@@ -210,7 +210,7 @@ export default function CreateEvent() {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDelete(ev.id)}
-                      className="h-7 w-7 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="h-7 w-7 text-danger hover:text-danger hover:bg-danger/10 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xxxs font-mono">✕</span>
                     </Button>
@@ -267,13 +267,13 @@ export default function CreateEvent() {
       <Card className="bg-card border-border">
         <CardHeader className="pb-0">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <FormIcon className="h-3.5 w-3.5 text-amber-400" />
+            <FormIcon className="h-3.5 w-3.5 text-warning" />
             {isCustom ? t("event.form.title") : t(tmpl!.i18nKey)}
             {!isCustom && (
               <span className="ml-auto flex items-center gap-1">
-                <span className="text-xxxs font-mono text-amber-400/80">{importanceStars(tmpl!.importance)}</span>
+                <span className="text-xxxs font-mono text-warning/80">{importanceStars(tmpl!.importance)}</span>
                 {tmpl!.legalNoteKey && (
-                  <span className="text-xxxs font-mono text-amber-400/60 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                  <span className="text-xxxs font-mono text-warning/60 bg-warning/10 px-1.5 py-0.5 rounded">
                     {t(tmpl!.legalNoteKey)}
                   </span>
                 )}
@@ -367,13 +367,13 @@ export default function CreateEvent() {
           {!isCustom && tmpl!.rationaleKeys.length > 0 && (
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-2 text-xxs font-mono text-slate-500 uppercase tracking-wider">
-                <Lightbulb className="h-3 w-3 text-amber-400" />
+                <Lightbulb className="h-3 w-3 text-warning" />
                 {t("event.rationale.heading")}
               </div>
 
               {/* Why this event */}
-              <div className="rounded-lg border border-amber-500/10 bg-amber-500/[0.03] p-3 space-y-1.5">
-                <h4 className="text-xxs font-mono font-bold text-amber-400 flex items-center gap-1.5">
+              <div className="rounded-lg border border-warning/10 bg-warning/[0.03] p-3 space-y-1.5">
+                <h4 className="text-xxs font-mono font-bold text-warning flex items-center gap-1.5">
                   <Lightbulb className="h-3 w-3" />
                   {t("event.rationale.whyTitle")}
                 </h4>
@@ -386,15 +386,15 @@ export default function CreateEvent() {
 
               {/* Checklist */}
               {tmpl!.checklistKeys.length > 0 && (
-                <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/[0.03] p-3 space-y-1.5">
-                  <h4 className="text-xxs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+                <div className="rounded-lg border border-success/10 bg-brand/[0.03] p-3 space-y-1.5">
+                  <h4 className="text-xxs font-mono font-bold text-success flex items-center gap-1.5">
                     <CheckSquare className="h-3 w-3" />
                     {t("event.rationale.checklistTitle")}
                   </h4>
                   <div className="space-y-1">
                     {tmpl!.checklistKeys.map((key) => (
                       <div key={key} className="flex items-center gap-2 text-xxxs font-mono text-slate-400">
-                        <span className="text-emerald-400/60">☐</span>
+                        <span className="text-success/60">☐</span>
                         {t(key)}
                       </div>
                     ))}
@@ -404,8 +404,8 @@ export default function CreateEvent() {
 
               {/* Cooperative ROI */}
               {tmpl!.roiKeys.length > 0 && (
-                <div className="rounded-lg border border-blue-500/10 bg-blue-500/[0.03] p-3 space-y-1.5">
-                  <h4 className="text-xxs font-mono font-bold text-blue-400 flex items-center gap-1.5">
+                <div className="rounded-lg border border-info/10 bg-info/[0.03] p-3 space-y-1.5">
+                  <h4 className="text-xxs font-mono font-bold text-info flex items-center gap-1.5">
                     <TrendUp className="h-3 w-3" />
                     {t("event.rationale.roiTitle")}
                   </h4>
@@ -435,7 +435,7 @@ export default function CreateEvent() {
             <Button
               onClick={handleSave}
               disabled={!name.trim() || !date}
-              className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs h-9 flex-1 disabled:opacity-40"
+              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 flex-1 disabled:opacity-40"
             >
               <CalendarPlus className="h-3.5 w-3.5 mr-1.5" /> {t("event.form.save")}
             </Button>

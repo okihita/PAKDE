@@ -312,7 +312,7 @@ export default function LayoutCanvas({
               key={tool}
               onClick={() => setActiveTool(tool)}
               className={`px-2.5 py-1.5 text-xxs font-bold flex items-center gap-1 transition-colors border-r border-slate-800 last:border-r-0
-                ${activeTool === tool ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"}
+                ${activeTool === tool ? "bg-success/20 text-success" : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/60"}
               `}
               title={tool.charAt(0).toUpperCase() + tool.slice(1)}
             >
@@ -369,7 +369,7 @@ export default function LayoutCanvas({
         {selectedZone && (
           <button
             onClick={() => onZoneSelect(selectedZone)}
-            className="text-xxs font-bold px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all"
+            className="text-xxs font-bold px-3 py-1.5 rounded-lg border border-warning/30 bg-warning/10 text-warning hover:bg-warning/20 transition-all"
           >
             ⚙ {selectedZone.name}
           </button>
