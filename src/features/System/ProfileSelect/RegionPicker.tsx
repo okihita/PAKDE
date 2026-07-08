@@ -164,9 +164,9 @@ function ComboboxField({
   const handleInput = (value: string) => {
     setQuery(value);
     setOpen(true);
-    // Debounce 150ms
+    // Instant search
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => doSearch(value), 150);
+    debounceRef.current = setTimeout(() => doSearch(value), 0);
   };
 
   // Scroll highlighted option into view

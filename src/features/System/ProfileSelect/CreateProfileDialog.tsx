@@ -9,12 +9,11 @@ import { createCooperative } from "./cooperativeDb";
 import RegionPicker from "./RegionPicker";
 import { sfx } from "./sfx";
 
-const PLACEHOLDER_NAME = "e.g. Koperasi Tani Makmur";
 const COMPLETE_LATER =
   "Data lainnya seperti pengurus, unit usaha, dan kontak dapat dilengkapi nanti melalui Dashboard.";
 const STEP_IDENTITAS = "Step 1: Identitas";
 const STEP_KONFIRMASI = "Step 2: Konfirmasi";
-const BTN_LANJUT = "Lanjut";
+const BTN_LANJUT = "Mulai Kelola";
 const BTN_KEMBALI = "Kembali";
 const BTN_LUNCURKAN = "Luncurkan Koperasi";
 const REWARD_TITLE = "Mulai dengan 5 Poin";
@@ -134,8 +133,8 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
           <>
             {/* Step 1 Header */}
             <div className="text-center mb-4">
-              <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center mx-auto mb-2">
-                <Buildings className="h-6 w-6 text-brand" weight="fill" />
+              <div className="w-full h-20 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center mb-3">
+                <Buildings className="h-8 w-8 text-brand" weight="fill" />
               </div>
               <h2 className="text-lg font-bold text-white">{t("profileSelect.dialogTitle")}</h2>
               <p className="text-xxs text-slate-400 mt-1">{t("profileSelect.dialogDesc")}</p>
@@ -156,7 +155,6 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder={PLACEHOLDER_NAME}
                   autoFocus
                   className="bg-slate-950 border-slate-700 text-slate-100 text-xs h-9 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500"
                 />
@@ -178,7 +176,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
               </div>
 
               <input type="hidden" value={formData.category} />
-              <p className="text-xxs text-slate-500 italic text-center">{COMPLETE_LATER}</p>
+              <p className="text-xxs text-slate-500 text-center">{COMPLETE_LATER}</p>
             </div>
 
             {/* Step 1 buttons */}
@@ -189,7 +187,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
                 onClick={handleClose}
                 className="flex-1 border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-9"
               >
-                {t("common.cancel")}
+                {BTN_KEMBALI}
               </Button>
               <Button
                 type="button"
@@ -206,7 +204,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             {/* Step 2: Confirm */}
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-brand/10 border border-brand/30 flex items-center justify-center mx-auto mb-3">
-                <CheckCircle className="h-6 w-6 text-brand" weight="fill" />
+                <CheckCircle className="h-8 w-8 text-brand" weight="fill" />
               </div>
               <h3 className="text-base font-bold text-white">{formData.name}</h3>
               <p className="text-xxs text-slate-400 mt-1">{CONFIRM_HEADING}</p>
