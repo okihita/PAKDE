@@ -9,6 +9,9 @@ import { ToastProvider } from "@/hooks/useToast";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { IconProvider } from "@/components/IconContext";
 import { usePaletteInit } from "@/hooks/usePalette";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { SignOut, XCircle } from "@phosphor-icons/react";
 import SplashScreen from "@/features/System/SplashScreen/SplashScreen";
 import DbErrorScreen from "@/features/System/DbErrorScreen/DbErrorScreen";
 import Sidebar from "@/features/Sidebar";
@@ -42,6 +45,10 @@ type FontLevel = "small" | "normal" | "large" | "xlarge";
 const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
 const FONT_LEVEL_DEFAULT: FontLevel = "normal";
 const TITLEBAR_TEXT = "PAKDE";
+const LBL_LOGOUT_TITLE = "Keluar dari Koperasi";
+const LBL_LOGOUT_CONFIRM = "Apakah Anda yakin ingin keluar dari profil koperasi saat ini?";
+const LBL_CANCEL = "Batal";
+const LBL_LOGOUT = "Keluar";
 
 function AppContent() {
   usePaletteInit();
@@ -85,6 +92,7 @@ function AppContent() {
   const [coopProfile, setCoopProfile] = useState<CooperativeProfile | null>(null);
   const [ewsAlerts, _setEwsAlerts] = useState<EwsAlert[]>([]);
   const [memberCount, _setMemberCount] = useState(0);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // DB init
   useEffect(() => {
@@ -115,10 +123,28 @@ function AppContent() {
     }
   }, [appTheme]);
 
-  // Keyboard shortcuts: Cmd/Ctrl + +/-/0 to zoom font
+  // Keyboard shortcuts: Cmd/Ctrl + +/-/0 to zoom font, Escape for back/exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Only fire when Cmd (mac) or Ctrl (windows/linux) is held
+      // Escape: back/exit/logout
+      if (e.key === "Escape") {
+        if (appState === "main" && !showLogoutConfirm) {
+          e.preventDefault();
+          setShowLogoutConfirm(true);
+          return;
+        }
+        if (appState === "user_signin" || appState === "user_create") {
+          e.preventDefault();
+          setAppState("profile_select");
+          return;
+        }
+        if (showLogoutConfirm) {
+          setShowLogoutConfirm(false);
+          return;
+        }
+      }
+
+      // Cmd/Ctrl + +/-/0 to zoom font
       const mod = e.metaKey || e.ctrlKey;
       if (!mod) return;
 
@@ -142,7 +168,7 @@ function AppContent() {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [appState, showLogoutConfirm]);
 
   // Load dashboard data on mount
   useEffect(() => {
@@ -369,6 +395,39 @@ function AppContent() {
           )}
         </main>
       </div>
+
+      {/* Logout confirmation dialog */}
+      <Dialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <DialogContent className="bg-slate-900 border border-slate-800 max-w-sm shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-sm font-bold text-slate-200">
+              <SignOut className="h-5 w-5 text-danger shrink-0" />
+              {LBL_LOGOUT_TITLE}
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-xs text-slate-400 leading-relaxed py-2">{LBL_LOGOUT_CONFIRM}</p>
+          <DialogFooter className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowLogoutConfirm(false)}
+              className="flex-1 border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8"
+            >
+              <XCircle className="h-3.5 w-3.5 mr-1" />
+              {LBL_CANCEL}
+            </Button>
+            <Button
+              onClick={() => {
+                setShowLogoutConfirm(false);
+                handleSwitchProfile();
+              }}
+              className="flex-1 bg-danger hover:bg-danger/90 text-white font-bold text-xs h-8"
+            >
+              <SignOut className="h-3.5 w-3.5 mr-1" />
+              {LBL_LOGOUT}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
