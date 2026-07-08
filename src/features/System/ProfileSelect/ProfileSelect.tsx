@@ -24,28 +24,9 @@ import { seedDemoCooperativeAtLevel, DEMO_COOP_UUID, type DemoLevel } from "@/db
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-// Module-level constants to satisfy eslint no-hardcoded-labels rule
+// Module-level constants for branding (not translatable)
 const LOGOTYPE = "PAKDE";
 const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.vercel.app";
-const BTN_CLOSE = "Close";
-const HERO_TITLE = "Mulai Perjalanan Koperasi Anda";
-const HERO_SUBTITLE = "Pilih jalur Anda — kelola koperasi nyata atau jelajahi akun demo.";
-const REAL_TITLE = "Koperasi Saya";
-const REAL_DESC = "Daftarkan koperasi baru atau masuk ke akun yang sudah ada.";
-const REAL_REGISTER = "Daftar Baru";
-const REAL_LOGIN = "Sudah punya akun?";
-const LOGIN_LINK = "Masuk";
-const COOP_LIST_HEADING = "Koperasi Anda";
-const COOP_COUNT_SUFFIX = "koperasi";
-const DEMO_TIER_HEADING = "Pilih Level Demo";
-const FOOTER_KEMENKOP_ALT = "Kemenkop";
-
-const DEMO_TITLE = "Coba Demo";
-const DEMO_DESC = "Jelajahi koperasi virtual dengan data dan modul lengkap — pilih level di bawah.";
-const DEMO_ACTION = "Mulai Demo";
-const DEMO_BADGE = "Mode Eksplorasi";
-const REAL_BADGE = "Mulai dari 0";
-const OR_TEXT = "atau";
 
 const SLIDESHOW_IMAGES = [
   "/Gemini_Generated_Image_4tfb4o4tfb4o4tfb.png",
@@ -221,8 +202,10 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
             {/* ── Two-Box always visible ── */}
             <div className="w-full max-w-3xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="space-y-2">
-                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{HERO_TITLE}</h2>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">{HERO_SUBTITLE}</p>
+                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                  {t("profileSelect.heroTitle")}
+                </h2>
+                <p className="text-xs text-slate-500 max-w-md mx-auto">{t("profileSelect.heroSubtitle")}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
@@ -251,14 +234,14 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       <ShieldCheck className="h-5 w-5 text-brand" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-white">{REAL_TITLE}</h3>
+                      <h3 className="text-sm font-bold text-white">{t("profileSelect.realTitle")}</h3>
                       <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
                         <TrophyIcon className="h-3 w-3" />
-                        {REAL_BADGE}
+                        {t("profileSelect.realBadge")}
                       </p>
                     </div>
                   </div>
-                  <p className="text-xxs text-slate-400 leading-relaxed mb-5">{REAL_DESC}</p>
+                  <p className="text-xxs text-slate-400 leading-relaxed mb-5">{t("profileSelect.realDesc")}</p>
                   <div
                     className="rounded-lg bg-brand/10 border border-brand/25 px-4 py-2.5 text-xs font-bold text-brand text-center group-hover:bg-brand/20 transition-colors"
                     onClick={(e) => {
@@ -268,10 +251,10 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       setShowCreateModal(true);
                     }}
                   >
-                    {REAL_REGISTER}
+                    {t("profileSelect.realRegister")}
                   </div>
                   <p className="mt-3 text-xxxs text-slate-600 text-center">
-                    {REAL_LOGIN}{" "}
+                    {t("profileSelect.realLogin")}{" "}
                     <span
                       data-login-link
                       className="text-slate-500 underline cursor-pointer hover:text-slate-400 transition-colors"
@@ -282,13 +265,15 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                         setShowCoopList((prev) => !prev);
                       }}
                     >
-                      {LOGIN_LINK}
+                      {t("profileSelect.loginLink")}
                     </span>
                   </p>
                 </div>
 
                 {/* "atau" divider */}
-                <span className="text-xxs font-mono font-bold text-slate-600 uppercase tracking-widest">{OR_TEXT}</span>
+                <span className="text-xxs font-mono font-bold text-slate-600 uppercase tracking-widest">
+                  {t("profileSelect.orText")}
+                </span>
 
                 {/* Right: Demo Account */}
                 <div
@@ -308,17 +293,17 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       <GameController className="h-5 w-5 text-amber-400" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-amber-200">{DEMO_TITLE}</h3>
+                      <h3 className="text-sm font-bold text-amber-200">{t("profileSelect.demoTitle")}</h3>
                       <p className="text-xxxs text-amber-600 mt-0.5 flex items-center gap-1">
                         <GameController className="h-3 w-3" />
-                        {DEMO_BADGE}
+                        {t("profileSelect.demoBadge")}
                       </p>
                     </div>
                   </div>
-                  <p className="text-xxs text-amber-300/70 leading-relaxed mb-5">{DEMO_DESC}</p>
+                  <p className="text-xxs text-amber-300/70 leading-relaxed mb-5">{t("profileSelect.demoDesc")}</p>
                   <div className="invisible h-[1.625rem]" />
                   <div className="mt-auto rounded-lg bg-amber-500/10 border border-amber-500/25 px-4 py-2.5 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
-                    {DEMO_ACTION}
+                    {t("profileSelect.demoAction")}
                   </div>
                 </div>
               </div>
@@ -330,7 +315,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
               {showDemoTiers && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                   <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider text-center mb-4">
-                    {DEMO_TIER_HEADING}
+                    {t("profileSelect.tierHeading")}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {DEMO_TIERS.map((tier) => (
@@ -358,11 +343,18 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                           </p>
                           <p>
                             <span className="text-slate-300">{tier.stats[1].value}</span> {tier.stats[1].label}
-                            {tier.stats[2] && <> · <span className="text-slate-300">{tier.stats[2].value}</span> {tier.stats[2].label}</>}
+                            {tier.stats[2] && (
+                              <>
+                                {" "}
+                                · <span className="text-slate-300">{tier.stats[2].value}</span> {tier.stats[2].label}
+                              </>
+                            )}
                           </p>
                         </div>
                         {/* Location */}
-                        <p className="mt-1.5 text-xxxs text-slate-600 font-mono">{tier.village}, {tier.regency}</p>
+                        <p className="mt-1.5 text-xxxs text-slate-600 font-mono">
+                          {tier.village}, {tier.regency}
+                        </p>
                         {/* Unit icons */}
                         <div className="flex items-center gap-1.5 mt-2">
                           {tier.units.map((unitId) => {
@@ -394,9 +386,11 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
               {showCoopList && profiles.length > 0 && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">{COOP_LIST_HEADING}</h3>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      {t("profileSelect.coopListHeading")}
+                    </h3>
                     <span className="text-xxs text-slate-600">
-                      {profiles.length} {COOP_COUNT_SUFFIX}
+                      {profiles.length} {t("profileSelect.coopCountSuffix")}
                     </span>
                   </div>
                   <CooperativeCardList
@@ -416,7 +410,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
       <div className="relative z-10 flex flex-col items-center pb-8 space-y-0.5 animate-in fade-in duration-500">
         <span className="text-xxs font-mono text-slate-500">{t("splash.version")}</span>
         <div className="flex items-center gap-2">
-          <img src="/logo_kemenkop.svg" alt={FOOTER_KEMENKOP_ALT} className="h-6 w-auto opacity-70" />
+          <img src="/logo_kemenkop.svg" alt={t("profileSelect.footerKemenkopAlt")} className="h-6 w-auto opacity-70" />
           <span className="text-xxs font-mono text-slate-600">{FOOTER_COPYRIGHT}</span>
         </div>
       </div>
@@ -428,22 +422,23 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
       />
 
       {/* Campaign briefing popup */}
-      {selectedTier && (() => {
-        const tier = DEMO_TIERS.find((t) => t.level === selectedTier)!;
-        return (
-          <CampaignBriefingDialog
-            tier={tier}
-            seeding={seeding}
-            onStart={async () => {
-              setSeeding(true);
-              await handleDemoEnter(tier.level);
-              setSeeding(false);
-              setSelectedTier(null);
-            }}
-            onClose={() => setSelectedTier(null)}
-          />
-        );
-      })()}
+      {selectedTier &&
+        (() => {
+          const tier = DEMO_TIERS.find((t) => t.level === selectedTier)!;
+          return (
+            <CampaignBriefingDialog
+              tier={tier}
+              seeding={seeding}
+              onStart={async () => {
+                setSeeding(true);
+                await handleDemoEnter(tier.level);
+                setSeeding(false);
+                setSelectedTier(null);
+              }}
+              onClose={() => setSelectedTier(null)}
+            />
+          );
+        })()}
 
       {/* Result popup */}
       <Dialog open={devResult.open} onOpenChange={(open) => setDevResult((prev) => ({ ...prev, open }))}>
@@ -467,7 +462,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
               onClick={() => setDevResult((prev) => ({ ...prev, open: false }))}
               className="border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8.5"
             >
-              {BTN_CLOSE}
+              {t("common.close")}
             </Button>
           </DialogFooter>
         </DialogContent>

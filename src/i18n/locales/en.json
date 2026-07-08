@@ -1142,6 +1142,26 @@
     "switchProfile": "Switch Profile",
     "switchProfileConfirm": "Are you sure you want to exit the current cooperative profile?",
     "emptyTitle": "No Cooperative Profiles",
-    "emptyDesc": "Create your first cooperative command center to begin managing operations."
+    "emptyDesc": "Create your first cooperative command center to begin managing operations.",
+    "heroTitle": "Start Your Cooperative Journey",
+    "heroSubtitle": "Choose your path — manage a real cooperative or explore the demo account.",
+    "realTitle": "My Cooperative",
+    "realDesc": "Register a new cooperative or sign in to an existing account.",
+    "realRegister": "Register",
+    "realLogin": "Already have an account?",
+    "loginLink": "Sign In",
+    "realBadge": "Start from 0",
+    "demoTitle": "Try Demo",
+    "demoDesc": "Explore a virtual cooperative with complete data and modules — choose a level below.",
+    "demoAction": "Start Demo",
+    "demoBadge": "Exploration Mode",
+    "tierHeading": "Choose Demo Level",
+    "orText": "or",
+    "coopListHeading": "Your Cooperatives",
+    "coopCountSuffix": "cooperatives",
+    "footerKemenkopAlt": "Kemenkop",
+    "briefingFeatures": "Unlocked Features",
+    "briefingBack": "Back",
+    "briefingStart": "Start"
   }
 }

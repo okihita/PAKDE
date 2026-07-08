@@ -1142,6 +1142,26 @@
     "switchProfile": "Ganti Profil Koperasi",
     "switchProfileConfirm": "Apakah Anda yakin ingin keluar dari profil koperasi saat ini?",
     "emptyTitle": "Belum Ada Profil Koperasi",
-    "emptyDesc": "Buat pusat komando koperasi pertama Anda untuk mulai mengelola operasi."
+    "emptyDesc": "Buat pusat komando koperasi pertama Anda untuk mulai mengelola operasi.",
+    "heroTitle": "Mulai Perjalanan Koperasi Anda",
+    "heroSubtitle": "Pilih jalur Anda — kelola koperasi nyata atau jelajahi akun demo.",
+    "realTitle": "Koperasi Saya",
+    "realDesc": "Daftarkan koperasi baru atau masuk ke akun yang sudah ada.",
+    "realRegister": "Daftar Baru",
+    "realLogin": "Sudah punya akun?",
+    "loginLink": "Masuk",
+    "realBadge": "Mulai dari 0",
+    "demoTitle": "Coba Demo",
+    "demoDesc": "Jelajahi koperasi virtual dengan data dan modul lengkap — pilih level di bawah.",
+    "demoAction": "Mulai Demo",
+    "demoBadge": "Mode Eksplorasi",
+    "tierHeading": "Pilih Level Demo",
+    "orText": "atau",
+    "coopListHeading": "Koperasi Anda",
+    "coopCountSuffix": "koperasi",
+    "footerKemenkopAlt": "Kemenkop",
+    "briefingFeatures": "Fitur yang Dibuka",
+    "briefingBack": "Kembali",
+    "briefingStart": "Mulai"
   }
 }
