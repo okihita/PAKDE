@@ -16,6 +16,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Exo 2"', "system-ui", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
