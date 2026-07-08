@@ -21,6 +21,8 @@ interface ShelfPanelProps {
   onDelete: () => void;
 }
 
+const UNIT_M_X = "m ×";
+const UNIT_M_DOT = "m ·";
 const ZONE_COLORS = [
   "#4CAF50",
   "#2196F3",
@@ -145,13 +147,13 @@ export default function ShelfPanel({
               </div>
             </div>
             <div className="text-xxxs font-mono text-slate-500 px-1">
-              {(zone.width * (cellSize ?? 1)).toFixed(1)}m × {(zone.height * (cellSize ?? 1)).toFixed(1)}m · {zone.rows * zone.cols} {t("storeLayout.bins").toLowerCase()}
+              {(zone.width * (cellSize ?? 1)).toFixed(1)}{UNIT_M_X} {(zone.height * (cellSize ?? 1)).toFixed(1)}{UNIT_M_DOT} {zone.rows * zone.cols} {t("storeLayout.bins").toLowerCase()}
             </div>
           </>
         )}
         {isArea && (
           <div className="text-xxxs font-mono text-slate-500 px-1">
-            {(zone.width * (cellSize ?? 1)).toFixed(1)}m × {(zone.height * (cellSize ?? 1)).toFixed(1)}m
+            {(zone.width * (cellSize ?? 1)).toFixed(1)}{UNIT_M_X} {(zone.height * (cellSize ?? 1)).toFixed(1)}m
           </div>
         )}
         <div className="space-y-1">

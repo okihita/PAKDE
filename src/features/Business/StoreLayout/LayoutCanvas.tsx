@@ -6,6 +6,9 @@ import { sfx } from "@/features/System/ProfileSelect/sfx";
 import { CursorIcon, SquareIcon, CubeIcon, EraserIcon, MagnifyingGlassPlusIcon, MagnifyingGlassMinusIcon, ArrowsOutIcon } from "@phosphor-icons/react";
 import "./index.css";
 
+const TITLE_ZOOM_OUT = "Zoom out";
+const TITLE_FIT = "Fit to screen";
+const TITLE_ZOOM_IN = "Zoom in";
 const CELL = 60;
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 2.5;
@@ -328,14 +331,14 @@ export default function LayoutCanvas({
             onClick={() => doZoom(-1)}
             disabled={scale <= MIN_ZOOM}
             className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors border-r border-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
-            title="Zoom out"
+            title={TITLE_ZOOM_OUT}
           >
             <MagnifyingGlassMinusIcon className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={doFit}
             className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors border-r border-slate-800"
-            title="Fit to screen"
+            title={TITLE_FIT}
           >
             <ArrowsOutIcon className="h-3.5 w-3.5" />
           </button>
@@ -343,7 +346,7 @@ export default function LayoutCanvas({
             onClick={() => doZoom(1)}
             disabled={scale >= MAX_ZOOM}
             className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            title="Zoom in"
+            title={TITLE_ZOOM_IN}
           >
             <MagnifyingGlassPlusIcon className="h-3.5 w-3.5" />
           </button>
