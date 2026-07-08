@@ -11,8 +11,6 @@ import { sfx } from "./sfx";
 
 const COMPLETE_LATER =
   "Data lainnya seperti pengurus, unit usaha, dan kontak dapat dilengkapi nanti melalui Dashboard.";
-const STEP_IDENTITAS = "Step 1: Identitas";
-const STEP_KONFIRMASI = "Step 2: Konfirmasi";
 const BTN_LANJUT = "Mulai Kelola";
 const BTN_KEMBALI = "Kembali";
 const BTN_LUNCURKAN = "Luncurkan Koperasi";
@@ -116,19 +114,6 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-slate-900 border border-brand/25 text-foreground max-w-lg max-h-[85vh] overflow-y-auto shadow-2xl">
-        {/* Progress bar */}
-        <div className="flex items-center gap-3 mb-1">
-          <span className="text-xxxs font-mono text-slate-500 uppercase tracking-wider">
-            {step === "fill" ? STEP_IDENTITAS : STEP_KONFIRMASI}
-          </span>
-          <div className="flex-1 h-1 rounded-full bg-slate-800 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-brand transition-all duration-500"
-              style={{ width: step === "fill" ? "50%" : "100%" }}
-            />
-          </div>
-        </div>
-
         {step === "fill" ? (
           <>
             {/* Step 1 Header */}
@@ -149,14 +134,14 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             <div className="space-y-4">
               {/* Nama */}
               <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-3 space-y-1">
-                <label className="text-success font-mono text-xxxs uppercase tracking-wider">
-                  {t("profileSelect.fieldName")} *
+                <label className="text-success text-xxxs uppercase tracking-wider">
+                  {t("profileSelect.fieldName")}
                 </label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   autoFocus
-                  className="bg-slate-950 border-slate-700 text-slate-100 text-xs h-9 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500"
+                  className="bg-slate-950 border-slate-700 text-slate-100 text-xs h-9 focus:outline-none placeholder:text-slate-500"
                 />
               </div>
 
