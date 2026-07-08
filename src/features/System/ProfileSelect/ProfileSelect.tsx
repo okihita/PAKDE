@@ -84,6 +84,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
   };
 
   useEffect(() => {
+    let active = true;
     (async () => {
       try {
         setLoading(true);
@@ -94,11 +95,17 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
         await loadProfiles();
       } catch (e) {
         console.error(e);
-        onDbError(e instanceof Error ? e.message : String(e));
-      } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+          onDbError(e instanceof Error ? e.message : String(e));
+        }
+        return;
       }
+      if (active) setLoading(false);
     })();
+    return () => {
+      active = false;
+    };
   }, [onDbError]);
 
   // Escape: close any open sub-view. Capture phase so this fires before App.tsx's quitter.
@@ -251,7 +258,11 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                 <p className="text-xs text-slate-500 max-w-md mx-auto">{t("profileSelect.heroSubtitle")}</p>
               </div>
 
-              <div className="relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-3">
+              <div
+                className={`relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-3 transition-opacity duration-300 ${
+                  loading ? "opacity-60 pointer-events-none" : ""
+                }`}
+              >
                 {/* Left: Real Account */}
                 <div
                   role="button"
@@ -391,13 +402,13 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                     {t("profileSelect.demoAction")}
                   </div>
                 </div>
+                {loading && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-2xl">
+                    <CircleNotch className="h-7 w-7 text-brand animate-spin" weight="bold" />
+                  </div>
+                )}
               </div>
             </div>
-            {loading && (
-              <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-slate-950/40 backdrop-blur-[1px] cursor-wait">
-                <CircleNotch className="h-7 w-7 text-brand animate-spin" weight="bold" />
-              </div>
-            )}
 
             {/* ── Submenu area (reserved space, prevents layout shift) ── */}
             <div className="w-full max-w-3xl mx-auto min-h-[280px] mt-6">
