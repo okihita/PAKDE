@@ -1,3 +1,4 @@
+import { getActiveCoopId } from "@/db/active-coop";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { getDb } from "@/db";
@@ -28,6 +29,7 @@ const JOURNAL_FORM_DEFAULT = {
 export function useAccounting() {
   const { t } = useTranslation();
   const toast = useToast();
+  const coopId = getActiveCoopId();
 
   const [accountingTab, setAccountingTab] = useState<"coa" | "journal" | "ledger" | "neraca" | "labarugi">("coa");
   const [coaAccounts, setCoaAccounts] = useState<CoaAccount[]>([]);
@@ -135,7 +137,7 @@ export function useAccounting() {
     try {
       const db = await getDb();
       await db.execute(
-        `INSERT INTO coa_accounts (code, cooperative_id, name, type, normal_balance, balance) VALUES (?, 'kdp-001', ?, ?, ?, ?)`,
+        `INSERT INTO coa_accounts (code, cooperative_id, name, type, normal_balance, balance) VALUES (?, ${coopId}, ?, ?, ?, ?)`,
         [
           newCoaValues.code,
           newCoaValues.name,
@@ -194,7 +196,7 @@ export function useAccounting() {
       const db = await getDb();
       const newEntryId = `je-${Date.now()}`;
       await db.execute(
-        `INSERT INTO journal_entries (id, cooperative_id, number, date, description, reference, category, created_by) VALUES (?, 'kdp-001', ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO journal_entries (id, cooperative_id, number, date, description, reference, category, created_by) VALUES (?, ${coopId}, ?, ?, ?, ?, ?, ?)`,
         [
           newEntryId,
           journalForm.number,

@@ -1,3 +1,4 @@
+import { getActiveCoopId } from "@/db/active-coop";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { getDb } from "@/db";
@@ -27,6 +28,7 @@ const MEMBER_DEFAULT: Member = {
 export function useMembers() {
   const { t } = useTranslation();
   const toast = useToast();
+  const coopId = getActiveCoopId();
 
   const [membersList, setMembersList] = useState<Member[]>([]);
   const [memberSearchQuery, setMemberSearchQuery] = useState(() => {
@@ -85,7 +87,7 @@ export function useMembers() {
           `INSERT INTO members (id, cooperative_id, nik, name, place_of_birth, date_of_birth, gender,
             occupation, education, rt, rw, hamlet, status, savings_pokok, savings_wajib,
             savings_sukarela, loan_total, loan_outstanding, loan_status)
-           VALUES (?, 'kdp-001', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           VALUES (?, ${coopId}, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             newId,
             fv.nik,
