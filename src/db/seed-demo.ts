@@ -42,53 +42,45 @@ const LEVEL_BUSINESS_UNITS: Record<DemoLevel, string[]> = {
 export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void> {
   const db = await getDb();
 
-  await db.execute("BEGIN");
-  try {
-    // 1. Clear any existing demo data
-    await clearDemoCooperative();
+  // 1. Clear any existing demo data
+  await clearDemoCooperative();
 
-    // 2. Insert cooperative row with tier-specific units
-    const units = JSON.stringify(LEVEL_BUSINESS_UNITS[level]);
-    await db.execute(
-      `INSERT INTO cooperatives (id, name, regency, province, level, business_units, officers, status, founded_date, category, is_demo)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
-      [
-        DEMO_COOP.id,
-        DEMO_COOP.name,
-        DEMO_COOP.regency,
-        DEMO_COOP.province,
-        DEMO_COOP.level,
-        units,
-        DEMO_COOP.officers,
-        DEMO_COOP.status,
-        DEMO_COOP.founded_date,
-        DEMO_COOP.category,
-      ],
-    );
+  // 2. Insert cooperative row with tier-specific units
+  const units = JSON.stringify(LEVEL_BUSINESS_UNITS[level]);
+  await db.execute(
+    `INSERT INTO cooperatives (id, name, regency, province, level, business_units, officers, status, founded_date, category, is_demo)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+    [
+      DEMO_COOP.id,
+      DEMO_COOP.name,
+      DEMO_COOP.regency,
+      DEMO_COOP.province,
+      DEMO_COOP.level,
+      units,
+      DEMO_COOP.officers,
+      DEMO_COOP.status,
+      DEMO_COOP.founded_date,
+      DEMO_COOP.category,
+    ],
+  );
 
-    // 3. Seed demo admin user (PIN: 123456)
-    const demoUserId = "usr-demo-001";
-    const defaultPinHash = "8d969ee56701d853af7b830aef854b3c7b288d60c9329ee3073a56657a8c462a"; // SHA-256 of "123456"
-    await db.execute(
-      `INSERT INTO local_users (id, cooperative_id, name, role, pin_hash)
-       VALUES (?, ?, ?, ?, ?)`,
-      [demoUserId, DEMO_COOP.id, "Slamet Riyadi", "admin", defaultPinHash],
-    );
+  // 3. Seed demo admin user (PIN: 123456)
+  const demoUserId = "usr-demo-001";
+  const defaultPinHash = "8d969ee56701d853af7b830aef854b3c7b288d60c9329ee3073a56657a8c462a"; // SHA-256 of "123456"
+  await db.execute(
+    `INSERT INTO local_users (id, cooperative_id, name, role, pin_hash)
+     VALUES (?, ?, ?, ?, ?)`,
+    [demoUserId, DEMO_COOP.id, "Slamet Riyadi", "admin", defaultPinHash],
+  );
 
-    // 4. Seed COA — always full set (no harm; unused accounts just sit idle)
-    await seedDemoCoaAccounts(db);
+  // 4. Seed COA — always full set (no harm; unused accounts just sit idle)
+  await seedDemoCoaAccounts(db);
 
-    // 5. Seed categories — tier-specific
-    await seedDemoCategoriesAtLevel(db, level);
+  // 5. Seed categories — tier-specific
+  await seedDemoCategoriesAtLevel(db, level);
 
-    // 6. Seed inventory — tier-specific
-    await seedDemoInventoryAtLevel(db, level);
-
-    await db.execute("COMMIT");
-  } catch (e) {
-    await db.execute("ROLLBACK");
-    throw e;
-  }
+  // 6. Seed inventory — tier-specific
+  await seedDemoInventoryAtLevel(db, level);
 }
 
 export async function seedDemoCooperative(): Promise<void> {
