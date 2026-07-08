@@ -16,6 +16,7 @@ import { sfx } from "./sfx";
 import { bgMusic } from "./music";
 import CreateProfileDialog from "./CreateProfileDialog";
 import CooperativeCardList from "./CooperativeCardList";
+import { UNIT_ICONS } from "./unitIcons";
 import { seedDemoCooperativeAtLevel, DEMO_COOP_UUID, type DemoLevel } from "@/db/seed-demo";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,7 @@ const DEMO_TIERS: {
   level: DemoLevel;
   title: string;
   desc: string;
+  units: string[];
   color: string;
   border: string;
   bg: string;
@@ -50,28 +52,31 @@ const DEMO_TIERS: {
     level: "pemula",
     title: "Pemula",
     desc: "10 anggota · 1 unit usaha · 8 modul — Cocok untuk koperasi kecil yang baru memulai.",
+    units: ["unit_pupuk"],
     color: "emerald",
-    border: "border-emerald-800/50",
-    bg: "bg-emerald-950/30",
-    text: "text-emerald-400",
+    border: "border-amber-900/40",
+    bg: "bg-amber-950/20",
+    text: "text-amber-300",
   },
   {
     level: "menengah",
     title: "Menengah",
     desc: "30 anggota · 2 unit usaha · 12 modul — Untuk koperasi yang sedang berkembang.",
+    units: ["unit_pupuk", "unit_simpan_pinjam"],
     color: "amber",
     border: "border-amber-800/50",
-    bg: "bg-amber-950/30",
+    bg: "bg-amber-950/40",
     text: "text-amber-400",
   },
   {
     level: "lanjutan",
     title: "Lanjutan",
     desc: "50 anggota · 3 unit usaha · 16 modul — Koperasi lengkap dengan semua fitur.",
+    units: ["unit_pupuk", "unit_simpan_pinjam", "unit_apotek", "unit_pemasaran"],
     color: "brand",
-    border: "border-brand/40",
-    bg: "bg-brand/10",
-    text: "text-brand",
+    border: "border-amber-600/50",
+    bg: "bg-amber-950/60",
+    text: "text-amber-500",
   },
 ];
 const DEMO_TITLE = "Coba Demo";
@@ -380,6 +385,12 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       >
                         <h4 className={`text-sm font-bold ${tier.text}`}>{tier.title}</h4>
                         <p className="mt-1.5 text-xxs leading-relaxed text-slate-500">{tier.desc}</p>
+                        <div className="flex items-center gap-1.5 mt-2">
+                          {tier.units.map((unitId) => {
+                            const Icon = UNIT_ICONS[unitId];
+                            return Icon ? <Icon key={unitId} className="h-3.5 w-3.5 text-slate-500" /> : null;
+                          })}
+                        </div>
                         <div
                           className={`mt-3 rounded-md border ${tier.border} ${tier.bg} px-3 py-1.5 text-xxs font-bold ${tier.text} text-center group-hover:brightness-110 transition-all`}
                         >
