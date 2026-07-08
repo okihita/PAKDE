@@ -28,6 +28,10 @@ export async function initDb(): Promise<void> {
     );
   `);
 
+  // Demo cooperative separation flag (0 = real, 1 = demo)
+  // Must run immediately after table creation so all downstream code sees the column
+  await ensureColumn("cooperatives", "is_demo INTEGER NOT NULL DEFAULT 0", "is_demo");
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS local_users (
       id TEXT PRIMARY KEY, cooperative_id TEXT NOT NULL, name TEXT NOT NULL,
@@ -223,9 +227,6 @@ export async function initDb(): Promise<void> {
   // Cooperative metadata columns (UU 25/1992 compliance)
   await ensureColumn("cooperatives", "founded_date TEXT", "founded_date");
   await ensureColumn("cooperatives", "category TEXT", "category");
-
-  // Demo cooperative separation flag (0 = real, 1 = demo)
-  await ensureColumn("cooperatives", "is_demo INTEGER NOT NULL DEFAULT 0", "is_demo");
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales_transactions (
