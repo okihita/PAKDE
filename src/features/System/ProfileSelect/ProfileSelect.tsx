@@ -35,7 +35,6 @@ const LOGIN_LINK = "Masuk";
 const COOP_LIST_HEADING = "Koperasi Anda";
 const COOP_COUNT_SUFFIX = "koperasi";
 const DEMO_TIER_HEADING = "Pilih Level Demo";
-const DEMO_TIER_COUNT = "3 level";
 const DEMO_TIER_START = "Mulai";
 
 const DEMO_TIERS: {
@@ -353,6 +352,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                     </div>
                   </div>
                   <p className="text-xxs text-amber-300/70 leading-relaxed mb-5">{DEMO_DESC}</p>
+                  <div className="invisible h-[1.625rem]" />
                   <div className="mt-auto rounded-lg bg-amber-500/10 border border-amber-500/25 px-4 py-2.5 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
                     {DEMO_ACTION}
                   </div>
@@ -365,10 +365,9 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
               {/* Demo tier cards */}
               {showDemoTiers && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider">{DEMO_TIER_HEADING}</h3>
-                    <span className="text-xxs text-amber-700">{DEMO_TIER_COUNT}</span>
-                  </div>
+                  <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider text-center">
+                    {DEMO_TIER_HEADING}
+                  </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {DEMO_TIERS.map((tier) => (
                       <div
