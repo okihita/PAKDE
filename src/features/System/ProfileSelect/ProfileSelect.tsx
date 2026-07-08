@@ -422,7 +422,8 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
       {/* Campaign briefing popup */}
       {selectedTier &&
         (() => {
-          const tier = DEMO_TIERS.find((t) => t.level === selectedTier)!;
+          const tier = DEMO_TIERS.find((t) => t.level === selectedTier);
+          if (!tier) return null;
           return (
             <CampaignBriefingDialog
               tier={tier}

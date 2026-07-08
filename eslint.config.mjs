@@ -32,7 +32,7 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true, allowExportNames: ["UNIT_ICONS", "UNIT_CONFIG", "UNIT_ICON_NAMES"] }],
     },
   },
 
