@@ -234,7 +234,17 @@ function ComboboxField({
           onKeyDown={handleKeyDown}
           className="w-full bg-slate-950 border border-slate-800 text-slate-100 text-xs h-8.5 rounded-md pl-2 pr-7 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500 disabled:opacity-40"
         />
-        <CaretDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500 pointer-events-none" />
+        <button
+          type="button"
+          disabled={disabled}
+          className="absolute right-0 top-0 h-full w-7 flex items-center justify-center rounded-r-md hover:bg-slate-800/50 disabled:opacity-40"
+          onClick={() => {
+            if (results.length === 0) handleInput(query || "");
+            setOpen((prev) => !prev);
+          }}
+        >
+          <CaretDown className="h-3.5 w-3.5 text-slate-500" />
+        </button>
         {open && results.length > 0 && (
           <ul
             ref={listRef}
