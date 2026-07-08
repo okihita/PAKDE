@@ -25,3 +25,25 @@ export async function updateCooperative(
     ],
   );
 }
+
+export async function deleteCooperative(id: string): Promise<void> {
+  const db = await getDb();
+  // Delete in dependency order (children before parents)
+  await db.execute("DELETE FROM sales_transaction_items WHERE transaction_id IN (SELECT id FROM sales_transactions WHERE cooperative_id = ?)", [id]);
+  await db.execute("DELETE FROM sales_transactions WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM journal_lines WHERE journal_entry_id IN (SELECT id FROM journal_entries WHERE cooperative_id = ?)", [id]);
+  await db.execute("DELETE FROM journal_entries WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM sensitivity_analyses WHERE financial_analysis_id IN (SELECT id FROM financial_analyses WHERE cooperative_id = ?)", [id]);
+  await db.execute("DELETE FROM financial_analyses WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM layout_zones WHERE layout_id IN (SELECT id FROM store_layouts WHERE cooperative_id = ?)", [id]);
+  await db.execute("DELETE FROM store_layouts WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM inventory_items WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM categories WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM members WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM local_users WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM ews_alerts WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM ews_metrics WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM sync_history WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM coa_accounts WHERE cooperative_id = ?", [id]);
+  await db.execute("DELETE FROM cooperatives WHERE id = ?", [id]);
+}

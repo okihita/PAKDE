@@ -10,7 +10,9 @@ import { useIconSettings } from "@/components/IconContext";
 import { usePalette } from "@/hooks/usePalette";
 import { PALETTES } from "@/data/palettes";
 import type { CooperativeProfile } from "@/types";
-import { updateCooperative } from "./settingsDb";
+import { updateCooperative, deleteCooperative } from "./settingsDb";
+import { DEMO_COOP_UUID } from "@/db/seed-demo";
+import { seedDemoCooperativeAtLevel } from "@/db/seed-demo";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { remove } from "@tauri-apps/plugin-fs";
 import { MoonIcon, SunIcon, GlobeIcon, TextAaIcon, PaletteIcon, PaintBucketIcon, UserIcon, BuildingsIcon, ArrowsLeftRightIcon, WarningIcon } from "@phosphor-icons/react";
@@ -83,6 +85,10 @@ export default function Settings({
   const [activePalette, setPalette] = usePalette();
   const [resetConfirm, setResetConfirm] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const isDemo = coopProfile?.id === DEMO_COOP_UUID;
 
   const handleFactoryReset = async () => {
     if (!resetConfirm) {
@@ -101,6 +107,36 @@ export default function Settings({
       setResetting(false);
       setResetConfirm(false);
     }
+  };
+
+  const handleDeleteCooperative = async () => {
+    if (!deleteConfirm) {
+      setDeleteConfirm(true);
+      return;
+    }
+    if (!coopProfile?.id) return;
+    setDeleting(true);
+    try {
+      await deleteCooperative(coopProfile.id);
+      localStorage.removeItem("pakde-active-profile-id");
+      onSwitchProfile();
+    } catch (err) {
+      toast.error(String(err));
+      setDeleting(false);
+      setDeleteConfirm(false);
+    }
+  };
+
+  const handleResetDemo = async () => {
+    setDeleting(true);
+    try {
+      await seedDemoCooperativeAtLevel("lanjutan");
+      toast.success(L_DEMO_RESET_OK);
+      window.location.reload();
+    } catch (err) {
+      toast.error(String(err));
+    }
+    setDeleting(false);
   };
 
   if (!coopProfile) return <div className="text-muted-foreground text-xs">{t("common.loading")}</div>;
@@ -135,6 +171,14 @@ export default function Settings({
   const bannerBase =
     "flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl border-2 cursor-pointer transition-all text-center";
   const bannerActive = "border-success/50 bg-success/10";
+const L_RESET_DEMO = "Reset Demo";
+const L_DELETE_COOP = "Hapus Koperasi";
+const L_RESET_DESC = "Kembalikan demo ke data awal. Semua perubahan akan hilang.";
+const L_DELETE_DESC = "Hapus koperasi ini beserta seluruh data secara permanen.";
+const L_CONFIRM_RESET = "Klik lagi untuk reset";
+const L_CONFIRM_DELETE = "Klik lagi untuk hapus";
+const L_PROCESSING = "Memproses...";
+const L_DEMO_RESET_OK = "Demo account reset successfully.";
   const bannerInactive = "border-border bg-muted/40 hover:border-muted-foreground/30 hover:bg-muted/70";
 
   const PROFILE_FIELDS = [
@@ -321,6 +365,35 @@ export default function Settings({
               </CardContent>
             </Card>
           )}
+
+          {/* Delete / Reset */}
+          <Card className={`bg-card ${isDemo ? "border-amber-800/30" : "border-destructive/20"}`}>
+            <CardHeader>
+              <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                <WarningIcon className={`h-3.5 w-3.5 ${isDemo ? "text-amber-500" : "text-danger"}`} />
+                {isDemo ? L_RESET_DEMO : L_DELETE_COOP}
+              </CardTitle>
+              <CardDescription className="text-xxs text-muted-foreground">
+                {isDemo
+                  ? L_RESET_DESC
+                  : L_DELETE_DESC}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                onClick={isDemo ? handleResetDemo : handleDeleteCooperative}
+                disabled={deleting}
+                variant="outline"
+                className={`w-full text-xs h-8 ${isDemo ? "border-amber-800/30 text-amber-400 hover:bg-amber-950/30" : "border-destructive/30 text-danger hover:bg-destructive/10"}`}
+              >
+                {deleting
+                  ? L_PROCESSING
+                  : isDemo
+                    ? (deleteConfirm ? L_CONFIRM_RESET : L_RESET_DEMO)
+                    : (deleteConfirm ? L_CONFIRM_DELETE : L_DELETE_COOP)}
+              </Button>
+            </CardContent>
+          </Card>
 
           {/* Cooperative Profile */}
           <Card className="bg-card border-border">
