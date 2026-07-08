@@ -165,3 +165,25 @@
   border-color: hsl(var(--brand) / 0.45) !important;
   box-shadow: 0 0 16px hsl(var(--brand) / 0.1) !important;
 }
+
+/* ── Slideshow Ken Burns zoom ──────────────────────────────────── */
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}
+
+.ken-burns {
+  animation: ken-burns 6.5s ease-out forwards;
+}
+
+/* Respect users who opt out of motion: no zoom, no auto-advance feel. */
+@media (prefers-reduced-motion: reduce) {
+  .ken-burns {
+    animation: none !important;
+  }
+}

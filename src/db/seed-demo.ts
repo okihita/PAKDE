@@ -1,6 +1,7 @@
 // ── Demo seed helpers ──────────────────────────────────────
 
 import { getDb } from "./index";
+import { DEMO_TIERS, type DemoTier } from "@/features/System/ProfileSelect/demoTiers";
 
 /** Well-known UUID for the demo cooperative — referenced by both seed logic and UI. */
 export const DEMO_COOP_UUID = "00000000-0000-0000-0000-000000000001";
@@ -10,11 +11,6 @@ export const isDemoCooperative = (p?: { is_demo?: number } | null): boolean => !
 
 const DEMO_COOP = {
   id: DEMO_COOP_UUID,
-  name: "Koperasi Maju Bersama",
-  regency: "Mojokerto",
-  province: "Jawa Timur",
-  level: "desa",
-  business_units: JSON.stringify(["unit_apotek", "unit_pupuk", "unit_pemasaran"]),
   officers: JSON.stringify({
     chairman: "Slamet Riyadi",
     secretary: "Siti Rahmawati",
@@ -22,17 +18,11 @@ const DEMO_COOP = {
     supervisor: "Drs. Suparman",
   }),
   status: "aktif",
-  founded_date: "2020-01-15",
+  level: "desa",
   category: "serba_usaha",
 };
 
 export type DemoLevel = "pemula" | "menengah" | "lanjutan";
-
-const LEVEL_BUSINESS_UNITS: Record<DemoLevel, string[]> = {
-  pemula: ["unit_pupuk"],
-  menengah: ["unit_pupuk", "unit_simpan_pinjam"],
-  lanjutan: ["unit_apotek", "unit_pupuk", "unit_pemasaran"],
-};
 
 /**
  * Clear + seed the demo cooperative at the given complexity tier.
@@ -41,25 +31,29 @@ const LEVEL_BUSINESS_UNITS: Record<DemoLevel, string[]> = {
  */
 export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void> {
   const db = await getDb();
+  const tier = DEMO_TIERS.find((t) => t.level === level) ?? DEMO_TIERS[0];
 
   // 1. Clear any existing demo data
   await clearDemoCooperative();
 
-  // 2. Insert cooperative row with tier-specific units
-  const units = JSON.stringify(LEVEL_BUSINESS_UNITS[level]);
+  // 2. Insert cooperative row — driven by the selected tier so the seeded
+  //    coop matches the mini-card and mission brief (name, location, units, tenure).
+  const units = JSON.stringify(tier.units);
+  const foundedDate = computeFoundedDate(tier);
   await db.execute(
-    `INSERT INTO cooperatives (id, name, regency, province, level, business_units, officers, status, founded_date, category, is_demo)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+    `INSERT INTO cooperatives (id, name, regency, province, village, level, business_units, officers, status, founded_date, category, is_demo)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
     [
       DEMO_COOP.id,
-      DEMO_COOP.name,
-      DEMO_COOP.regency,
-      DEMO_COOP.province,
+      tier.coopName,
+      tier.regency,
+      tier.province,
+      tier.village,
       DEMO_COOP.level,
       units,
       DEMO_COOP.officers,
       DEMO_COOP.status,
-      DEMO_COOP.founded_date,
+      foundedDate,
       DEMO_COOP.category,
     ],
   );
@@ -81,6 +75,9 @@ export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void
 
   // 6. Seed inventory — tier-specific
   await seedDemoInventoryAtLevel(db, level);
+
+  // 7. Seed members to match the tier's "Anggota" stat
+  await seedDemoMembers(db, tier);
 }
 
 export async function seedDemoCooperative(): Promise<void> {
@@ -292,6 +289,93 @@ async function seedDemoInventoryAtLevel(db: Awaited<ReturnType<typeof getDb>>, l
         item.cost_price,
         item.selling_price,
       ],
+    );
+  }
+}
+
+// ── Tier → seeded-data helpers ──────────────────────────────
+
+const MEMBER_FIRST_NAMES = [
+  "Budi",
+  "Siti",
+  "Agus",
+  "Rina",
+  "Joko",
+  "Dewi",
+  "Anto",
+  "Maya",
+  "Eko",
+  "Nur",
+  "Tono",
+  "Wati",
+  "Slamet",
+  "Sri",
+  "Hendra",
+  "Yanti",
+  "Bambang",
+  "Susi",
+  "Rudi",
+  "Lina",
+  "Fajar",
+  "Indah",
+  "Gunawan",
+  "Sartika",
+  "Purnomo",
+  "Wulan",
+  "Agung",
+  "Tuti",
+  "Bayu",
+  "Sugeng",
+  "Marni",
+  "Hadi",
+  "Yuni",
+  "Ani",
+  "Wahyu",
+  "Sri",
+  "Budi",
+  "Siti",
+  "Rina",
+  "Joko",
+  "Dewi",
+  "Anto",
+  "Maya",
+  "Eko",
+  "Nur",
+  "Tono",
+  "Wati",
+  "Slamet",
+  "Sri",
+  "Rina",
+];
+
+/** Parse an Indonesian duration like "4 bulan" / "2 tahun" into days. */
+function parseDurationToDays(value: string): number {
+  const m = value.match(/(\d+)\s*(bulan|tahun)/i);
+  if (!m) return 365;
+  const n = parseInt(m[1], 10);
+  return m[2].toLowerCase() === "tahun" ? n * 365 : n * 30;
+}
+
+/** Derive a plausible founded_date from the tier's "Berjalan" stat. */
+function computeFoundedDate(tier: DemoTier): string {
+  const berjalan = tier.stats.find((s) => s.label === "Berjalan")?.value ?? "1 tahun";
+  const d = new Date();
+  d.setDate(d.getDate() - parseDurationToDays(berjalan));
+  return d.toISOString().slice(0, 10);
+}
+
+/** Seed enough members to match the tier's "Anggota" stat. */
+async function seedDemoMembers(db: Awaited<ReturnType<typeof getDb>>, tier: DemoTier): Promise<void> {
+  const anggota = tier.stats.find((s) => s.label === "Anggota")?.value ?? "0";
+  const count = parseInt(anggota, 10) || 0;
+  for (let i = 0; i < count; i++) {
+    const id = `mem-demo-${i}`;
+    const nik = `3201${String(10000000 + i).slice(-8)}`;
+    const name = `${MEMBER_FIRST_NAMES[i % MEMBER_FIRST_NAMES.length]} ${String.fromCharCode(65 + (i % 26))}.`;
+    await db.execute(
+      `INSERT INTO members (id, cooperative_id, nik, name, status, registered_at)
+       VALUES (?, ?, ?, ?, 'aktif', datetime('now'))`,
+      [id, DEMO_COOP.id, nik, name],
     );
   }
 }

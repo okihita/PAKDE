@@ -195,15 +195,23 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
       onClick={handleUserInteraction}
       className="flex-1 flex flex-col h-full w-full relative overflow-hidden bg-slate-950 select-none"
     >
-      {/* Slideshow background */}
+      {/* Slideshow background — slow Ken Burns zoom, 5s cadence.
+          Wrapper key is stable so the opacity cross-fade is preserved; the
+          inner <img> key flips on activation so the zoom restarts each cycle. */}
       {SLIDESHOW_IMAGES.map((src, i) => (
-        <img
+        <div
           key={src}
-          src={src}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
-          style={{ opacity: i === slideIndex ? 1 : 0 }}
-        />
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            i === slideIndex ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <img
+            key={i === slideIndex ? `active-${i}` : `idle-${i}`}
+            src={src}
+            alt=""
+            className={`w-full h-full object-cover ${i === slideIndex ? "ken-burns" : ""}`}
+          />
+        </div>
       ))}
 
       {/* Dark blur overlay */}
