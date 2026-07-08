@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import "@/i18n"; // initialize i18next before render
-import { initDb, getDb } from "@/db";
+import { initDb } from "@/db";
+import { listCooperatives, getCooperativeById } from "@/features/System/ProfileSelect/cooperativeDb";
 import { ToastProvider } from "@/hooks/useToast";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { IconProvider } from "@/components/IconContext";
@@ -29,7 +30,8 @@ import Participation from "@/features/Community/Participation/Participation";
 import Sync from "@/features/System/Sync/Sync";
 import Settings from "@/features/System/Settings/Settings";
 import ProfileSelect from "@/features/System/ProfileSelect/ProfileSelect";
-import { getErrorMessage, type CooperativeProfile, type EwsAlert, type CountRow } from "@/types";
+import ProfileCompletion from "@/features/Home/Dashboard/ProfileCompletion";
+import { getErrorMessage, type CooperativeProfile, type EwsAlert } from "@/types";
 
 type FontLevel = "small" | "normal" | "large" | "xlarge";
 const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
@@ -78,8 +80,8 @@ function AppContent() {
     return saved && FONT_LEVELS.includes(saved) ? saved : FONT_LEVEL_DEFAULT;
   });
   const [coopProfile, setCoopProfile] = useState<CooperativeProfile | null>(null);
-  const [ewsAlerts, setEwsAlerts] = useState<EwsAlert[]>([]);
-  const [memberCount, setMemberCount] = useState(0);
+  const [ewsAlerts, _setEwsAlerts] = useState<EwsAlert[]>([]);
+  const [memberCount, _setMemberCount] = useState(0);
 
   // DB init
   useEffect(() => {
@@ -144,22 +146,17 @@ function AppContent() {
     if (appState !== "main") return;
     (async () => {
       try {
-        const db = await getDb();
         const activeId = coopProfile?.id || localStorage.getItem("pakde-active-profile-id");
         if (activeId) {
-          const profile = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE id = ?", [activeId]);
-          if (profile.length > 0) setCoopProfile(profile[0]);
+          const profile = await getCooperativeById(activeId);
+          if (profile) setCoopProfile(profile);
         } else {
-          const profile = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives LIMIT 1");
-          if (profile.length > 0) {
-            setCoopProfile(profile[0]);
-            localStorage.setItem("pakde-active-profile-id", profile[0].id || "");
+          const profiles = await listCooperatives();
+          if (profiles.length > 0) {
+            setCoopProfile(profiles[0]);
+            localStorage.setItem("pakde-active-profile-id", profiles[0].id || "");
           }
         }
-        const alerts = await db.select<EwsAlert[]>("SELECT * FROM ews_alerts ORDER BY triggered_at DESC LIMIT 5");
-        setEwsAlerts(alerts);
-        const count = await db.select<CountRow[]>("SELECT COUNT(*) as count FROM members");
-        if (count.length > 0) setMemberCount(count[0].count);
       } catch (e) {
         console.error(e);
       }
@@ -254,7 +251,19 @@ function AppContent() {
             activeTab === "storelayout" ? "flex flex-col overflow-hidden p-0" : "overflow-y-auto p-6",
           )}
         >
-          {activeTab === "home" && <Dashboard />}
+          {activeTab === "home" && (
+            <>
+              {coopProfile && (
+                <div className="mb-4">
+                  <ProfileCompletion
+                    profile={coopProfile}
+                    onUpdate={(p) => setCoopProfile(p)}
+                  />
+                </div>
+              )}
+              <Dashboard />
+            </>
+          )}
           {activeTab === "statistics" && (
             <Statistics coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
           )}
