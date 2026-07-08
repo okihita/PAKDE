@@ -217,6 +217,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                     if ((e.target as HTMLElement).closest("[data-login-link]")) return;
                     handleUserInteraction();
                     if (profiles.length > 0) {
+                      sfx.playBleep(600, 0.03);
                       setShowDemoTiers(false);
                       setShowCoopList((prev) => !prev);
                     } else {
@@ -259,6 +260,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                       onClick={(e) => {
                         e.stopPropagation();
                         handleUserInteraction();
+                        sfx.playBleep(600, 0.03);
                         setShowDemoTiers(false);
                         setShowCoopList((prev) => !prev);
                       }}
@@ -280,6 +282,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                   onKeyDown={(e) => e.key === "Enter" && (setShowCoopList(false), setShowDemoTiers((prev) => !prev))}
                   onClick={() => {
                     handleUserInteraction();
+                    sfx.playBleep(600, 0.03);
                     setShowCoopList(false);
                     setShowDemoTiers((prev) => !prev);
                   }}
@@ -387,9 +390,6 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                       {t("profileSelect.coopListHeading")}
                     </h3>
-                    <span className="text-xxs text-slate-600">
-                      {profiles.length} {t("profileSelect.coopCountSuffix")}
-                    </span>
                   </div>
                   <CooperativeCardList
                     profiles={profiles}
