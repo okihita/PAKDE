@@ -93,6 +93,24 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
     })();
   }, []);
 
+  // Escape: close any open sub-view
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      // JoinExistingCoop handles its own Escape — don't close it from here
+      if (showJoinExisting) return;
+      if (showCoopList) {
+        setShowCoopList(false);
+      } else if (showDemoTiers) {
+        setShowDemoTiers(false);
+      } else if (showCreateModal) {
+        setShowCreateModal(false);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [showJoinExisting, showCoopList, showDemoTiers, showCreateModal]);
+
   const handleUserInteraction = () => {
     sfx.resume();
     bgMusic.resume();

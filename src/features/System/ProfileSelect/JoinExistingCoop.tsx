@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -106,6 +106,23 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
     }
     setJoining(false);
   };
+
+  // Escape: if in registration code view → back to search; if in search → back to hero
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      if (selected) {
+        setSelected(null);
+        setRegCode("");
+        setError("");
+      } else {
+        onBack();
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [selected, onBack]);
 
   return (
     <div className="flex-1 flex flex-col h-full w-full p-6 bg-slate-950 select-none overflow-y-auto">
