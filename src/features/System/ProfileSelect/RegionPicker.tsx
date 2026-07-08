@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { CaretDown } from "@phosphor-icons/react";
 import { searchProvinces, searchRegencies, searchDistricts, searchVillages, type WilayahRow } from "./wilayahDb";
 
 interface RegionValue {
@@ -231,8 +232,9 @@ function ComboboxField({
             if (query.length >= 1) setOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          className="w-full bg-slate-950 border border-slate-800 text-slate-100 text-xs h-8.5 rounded-md px-2 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500 disabled:opacity-40"
+          className="w-full bg-slate-950 border border-slate-800 text-slate-100 text-xs h-8.5 rounded-md pl-2 pr-7 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500 disabled:opacity-40"
         />
+        <CaretDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500 pointer-events-none" />
         {open && results.length > 0 && (
           <ul
             ref={listRef}

@@ -17,6 +17,15 @@ const BTN_LUNCURKAN = "Luncurkan Koperasi";
 const REWARD_TITLE = "Mulai dengan 5 Poin";
 const REWARD_DESC = "Lengkapi profil untuk buka badge & modul!";
 const CONFIRM_HEADING = "siap diluncurkan!";
+
+const EMBLEM_LABEL = EMBLEM_LABEL;
+const EMBLEMS = [
+  "/emblems/Gemini_Generated_Image_4z0p1y4z0p1y4z0p.png",
+  "/emblems/Gemini_Generated_Image_9q6ekf9q6ekf9q6e.png",
+  "/emblems/Gemini_Generated_Image_ciso4wciso4wciso.png",
+  "/emblems/Gemini_Generated_Image_lmwuaxlmwuaxlmwu.png",
+  "/emblems/Gemini_Generated_Image_srz0n5srz0n5srz0.png",
+];
 const CAT_LABELS: Record<string, string> = {
   serba_usaha: "Serba Usaha",
   konsumsi: "Konsumen",
@@ -57,6 +66,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
     unitToko: false,
     foundedDate: "",
     category: "serba_usaha",
+    emblem: EMBLEMS[0],
   });
 
   const isValid = formData.name.trim() && formData.province.trim();
@@ -173,6 +183,31 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
               </div>
 
               <input type="hidden" value={formData.category} />
+
+              {/* Emblem picker */}
+              <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-3">
+                <p className="text-success text-xxxs uppercase tracking-wider mb-2">Emblem Koperasi</p>
+                <div className="flex gap-2">
+                  {EMBLEMS.map((src) => (
+                    <button
+                      key={src}
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, emblem: src });
+                        sfx.playBleep(600, 0.02);
+                      }}
+                      className={`h-10 w-10 rounded-lg border-2 overflow-hidden flex-shrink-0 transition-all ${
+                        formData.emblem === src
+                          ? "border-brand bg-brand/10"
+                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                      }`}
+                    >
+                      <img src={src} alt="" className="h-full w-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <p className="text-xxs text-slate-500 text-center">{COMPLETE_LATER}</p>
             </div>
 
