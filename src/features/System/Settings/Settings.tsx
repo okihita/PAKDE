@@ -11,7 +11,7 @@ import { usePalette } from "@/hooks/usePalette";
 import { PALETTES } from "@/data/palettes";
 import type { CooperativeProfile } from "@/types";
 import { updateCooperative, deleteCooperative } from "./settingsDb";
-import { DEMO_COOP_UUID } from "@/db/seed-demo";
+import { DEMO_COOP_UUID, seedDemoCooperativeAtLevel } from "@/db/seed-demo";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { remove } from "@tauri-apps/plugin-fs";
 import {

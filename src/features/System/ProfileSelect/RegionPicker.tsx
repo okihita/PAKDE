@@ -30,12 +30,7 @@ export default function RegionPicker({ onChange }: Props) {
   const [district, setDistrict] = useState<WilayahRow | null>(null);
   const [village, setVillage] = useState<WilayahRow | null>(null);
 
-  const emit = (
-    p: WilayahRow | null,
-    r: WilayahRow | null,
-    d: WilayahRow | null,
-    v: WilayahRow | null,
-  ) => {
+  const emit = (p: WilayahRow | null, r: WilayahRow | null, d: WilayahRow | null, v: WilayahRow | null) => {
     onChange({
       province_code: p?.kode ?? "",
       province_name: p?.nama ?? "",
@@ -228,7 +223,9 @@ function ComboboxField({
           aria-labelledby={`${listboxId}-label`}
           autoComplete="off"
           onChange={(e) => handleInput(e.target.value)}
-          onFocus={() => { if (query.length >= 1) setOpen(true); }}
+          onFocus={() => {
+            if (query.length >= 1) setOpen(true);
+          }}
           onKeyDown={handleKeyDown}
           className="w-full bg-slate-950 border border-slate-800 text-slate-100 text-xs h-8.5 rounded-md px-2 focus:border-success/50 focus:ring-1 focus:ring-brand/50 placeholder:text-slate-500 disabled:opacity-40"
         />
@@ -260,9 +257,7 @@ function ComboboxField({
             ))}
           </ul>
         )}
-        {loading && (
-          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xxxs text-slate-600">...</span>
-        )}
+        {loading && <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xxxs text-slate-600">...</span>}
       </div>
     </div>
   );

@@ -255,10 +255,7 @@ function AppContent() {
             <>
               {coopProfile && (
                 <div className="mb-4">
-                  <ProfileCompletion
-                    profile={coopProfile}
-                    onUpdate={(p) => setCoopProfile(p)}
-                  />
+                  <ProfileCompletion profile={coopProfile} onUpdate={(p) => setCoopProfile(p)} />
                 </div>
               )}
               <Dashboard />

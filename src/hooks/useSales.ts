@@ -26,9 +26,7 @@ export function useSales() {
   const loadInventory = useCallback(async () => {
     try {
       const db = await getDb();
-      const res = await db.select<InventoryItem[]>(
-        "SELECT * FROM inventory_items ORDER BY name ASC"
-      );
+      const res = await db.select<InventoryItem[]>("SELECT * FROM inventory_items ORDER BY name ASC");
       setInventoryList(res);
     } catch (e) {
       console.error("Failed to load inventory:", e);
@@ -39,9 +37,7 @@ export function useSales() {
   const loadMembers = useCallback(async () => {
     try {
       const db = await getDb();
-      const res = await db.select<Member[]>(
-        "SELECT * FROM members WHERE status = 'aktif' ORDER BY name ASC"
-      );
+      const res = await db.select<Member[]>("SELECT * FROM members WHERE status = 'aktif' ORDER BY name ASC");
       setMembersList(res);
     } catch (e) {
       console.error("Failed to load members:", e);
@@ -54,7 +50,7 @@ export function useSales() {
       const db = await getDb();
       // only load categories that represent business units (prefix unit_)
       const res = await db.select<Array<{ id: string; name: string; icon: string }>>(
-        "SELECT * FROM categories WHERE id LIKE 'unit_%' ORDER BY name ASC"
+        "SELECT * FROM categories WHERE id LIKE 'unit_%' ORDER BY name ASC",
       );
       setCategoriesList(res);
     } catch (e) {
@@ -71,7 +67,7 @@ export function useSales() {
          FROM sales_transactions st
          LEFT JOIN members m ON st.member_id = m.id
          LEFT JOIN categories c ON st.category_id = c.id
-         ORDER BY st.transaction_date DESC`
+         ORDER BY st.transaction_date DESC`,
       );
 
       const mapped: SalesTransaction[] = [];
@@ -81,7 +77,7 @@ export function useSales() {
            FROM sales_transaction_items sti
            LEFT JOIN inventory_items ii ON sti.item_id = ii.id
            WHERE sti.transaction_id = ?`,
-          [tx.id]
+          [tx.id],
         );
         mapped.push({ ...tx, items });
       }
@@ -101,9 +97,7 @@ export function useSales() {
           toast.error(t("sales.toast.outOfStock", { name: item.name }));
           return prev;
         }
-        return prev.map((c) =>
-          c.item.id === item.id ? { ...c, quantity: c.quantity + 1 } : c
-        );
+        return prev.map((c) => (c.item.id === item.id ? { ...c, quantity: c.quantity + 1 } : c));
       }
       return [...prev, { item, quantity: 1 }];
     });
@@ -119,9 +113,7 @@ export function useSales() {
       toast.error(t("sales.toast.outOfStock", { name: invItem.name }));
       return;
     }
-    setCart((prev) =>
-      prev.map((c) => (c.item.id === itemId ? { ...c, quantity: qty } : c))
-    );
+    setCart((prev) => prev.map((c) => (c.item.id === itemId ? { ...c, quantity: qty } : c)));
   };
 
   const removeFromCart = (itemId: string) => {
@@ -135,7 +127,7 @@ export function useSales() {
   const processCheckout = async (
     memberId: string | null,
     paymentType: "cash" | "credit",
-    categoryId: string
+    categoryId: string,
   ): Promise<boolean> => {
     if (cart.length === 0) {
       toast.error(t("sales.toast.emptyCart"));
@@ -167,7 +159,7 @@ export function useSales() {
       await db.execute(
         `INSERT INTO sales_transactions (id, member_id, total_amount, payment_type, category_id, journal_entry_id, transaction_date)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [txId, memberId, totalAmount, paymentType, categoryId, jeId, timestamp]
+        [txId, memberId, totalAmount, paymentType, categoryId, jeId, timestamp],
       );
 
       // 3. Process each line item (Save, Deduct Stock)
@@ -176,7 +168,7 @@ export function useSales() {
         await db.execute(
           `INSERT INTO sales_transaction_items (id, transaction_id, item_id, quantity, price, cost)
            VALUES (?, ?, ?, ?, ?, ?)`,
-          [lineId, txId, c.item.id, c.quantity, c.item.selling_price, c.item.cost_price]
+          [lineId, txId, c.item.id, c.quantity, c.item.selling_price, c.item.cost_price],
         );
 
         // Deduct Stock
@@ -184,7 +176,7 @@ export function useSales() {
           `UPDATE inventory_items
            SET stock_quantity = stock_quantity - ?, updated_at = datetime('now')
            WHERE id = ?`,
-          [c.quantity, c.item.id]
+          [c.quantity, c.item.id],
         );
       }
 
@@ -194,19 +186,19 @@ export function useSales() {
           `UPDATE members
            SET loan_outstanding = loan_outstanding + ?, updated_at = datetime('now')
            WHERE id = ?`,
-          [totalAmount, memberId]
+          [totalAmount, memberId],
         );
       }
 
       // 5. Create Double-Entry Journal Entry
       const jeNumber = `JE-SALES-${Date.now().toString().slice(-6)}`;
       const jeDesc = `Penjualan ${paymentType === "cash" ? "Tunai" : "Kredit (Yarnen)"} - POS`;
-      
+
       const coopId = getActiveCoopId();
       await db.execute(
         `INSERT INTO journal_entries (id, cooperative_id, number, date, description, category, created_by)
          VALUES (?, ?, ?, ?, ?, ?, 'usr-001')`,
-        [jeId, coopId, jeNumber, timestamp.split(" ")[0], jeDesc, "operasional"]
+        [jeId, coopId, jeNumber, timestamp.split(" ")[0], jeDesc, "operasional"],
       );
 
       // Line 1: Debit Cash (1.1.01) or Accounts Receivable (1.1.03)
@@ -215,7 +207,7 @@ export function useSales() {
       await db.execute(
         `INSERT INTO journal_lines (id, journal_entry_id, account_code, description, debit, credit)
          VALUES (?, ?, ?, ?, ?, 0)`,
-        [line1Id, jeId, debitAccount, jeDesc, totalAmount]
+        [line1Id, jeId, debitAccount, jeDesc, totalAmount],
       );
 
       // Line 2: Credit Business Unit Revenue (4.02)
@@ -223,32 +215,31 @@ export function useSales() {
       await db.execute(
         `INSERT INTO journal_lines (id, journal_entry_id, account_code, description, debit, credit)
          VALUES (?, ?, ?, ?, 0, ?)`,
-        [line2Id, jeId, "4.02", jeDesc, totalAmount]
+        [line2Id, jeId, "4.02", jeDesc, totalAmount],
       );
 
       // Update balances in coa_accounts
       // Debit account is Asset (Aset) -> Normal balance debit -> Balance increases
-      const debAccRes = await db.select<Array<{ balance: number }>>(
-        "SELECT balance FROM coa_accounts WHERE code = ?",
-        [debitAccount]
-      );
+      const debAccRes = await db.select<Array<{ balance: number }>>("SELECT balance FROM coa_accounts WHERE code = ?", [
+        debitAccount,
+      ]);
       if (debAccRes.length > 0) {
-        await db.execute(
-          "UPDATE coa_accounts SET balance = ? WHERE code = ?",
-          [debAccRes[0].balance + totalAmount, debitAccount]
-        );
+        await db.execute("UPDATE coa_accounts SET balance = ? WHERE code = ?", [
+          debAccRes[0].balance + totalAmount,
+          debitAccount,
+        ]);
       }
 
       // Credit account is Revenue (Pendapatan) -> Normal balance kredit -> Balance increases
       const credAccRes = await db.select<Array<{ balance: number }>>(
         "SELECT balance FROM coa_accounts WHERE code = ?",
-        ["4.02"]
+        ["4.02"],
       );
       if (credAccRes.length > 0) {
-        await db.execute(
-          "UPDATE coa_accounts SET balance = ? WHERE code = ?",
-          [credAccRes[0].balance + totalAmount, "4.02"]
-        );
+        await db.execute("UPDATE coa_accounts SET balance = ? WHERE code = ?", [
+          credAccRes[0].balance + totalAmount,
+          "4.02",
+        ]);
       }
 
       toast.success(t("sales.toast.checkoutSuccess"));
@@ -274,7 +265,7 @@ export function useSales() {
     stockQuantity: number,
     unit: string,
     costPrice: number,
-    sellingPrice: number
+    sellingPrice: number,
   ): Promise<boolean> => {
     if (!name || !categoryId || !unit || sellingPrice <= 0) {
       toast.error(t("sales.toast.fieldsRequired"));
@@ -286,7 +277,7 @@ export function useSales() {
       await db.execute(
         `INSERT INTO inventory_items (id, name, category_id, stock_quantity, unit, cost_price, selling_price)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [itemId, name, categoryId, stockQuantity, unit, costPrice, sellingPrice]
+        [itemId, name, categoryId, stockQuantity, unit, costPrice, sellingPrice],
       );
       toast.success(t("sales.toast.itemCreated"));
       await loadInventory();
@@ -298,10 +289,7 @@ export function useSales() {
     }
   };
 
-  const restockInventoryItem = async (
-    id: string,
-    qty: number
-  ): Promise<boolean> => {
+  const restockInventoryItem = async (id: string, qty: number): Promise<boolean> => {
     if (qty <= 0) {
       toast.error(t("sales.toast.qtyInvalid"));
       return false;
@@ -312,7 +300,7 @@ export function useSales() {
         `UPDATE inventory_items
          SET stock_quantity = stock_quantity + ?, updated_at = datetime('now')
          WHERE id = ?`,
-        [qty, id]
+        [qty, id],
       );
       toast.success(t("sales.toast.itemRestocked"));
       await loadInventory();

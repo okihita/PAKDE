@@ -277,10 +277,7 @@ export default function StoreLayout() {
                 >
                   {t("common.cancel")}
                 </Button>
-                <Button
-                  type="submit"
-                  className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
-                >
+                <Button type="submit" className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8">
                   <SparkleIcon className="h-3 w-3 mr-1" />
                   {t("storeLayout.create")}
                 </Button>

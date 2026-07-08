@@ -10,7 +10,16 @@ import AccountingCoa from "./AccountingCoa";
 import AccountingJournal from "./AccountingJournal";
 import AccountingLedger from "./AccountingLedger";
 import AccountingReports from "./AccountingReports";
-import { FileArrowDownIcon, ShieldWarningIcon, SparkleIcon, TrendUpIcon, WalletIcon, CheckSquareIcon, GearSixIcon, PlayIcon } from "@phosphor-icons/react";
+import {
+  FileArrowDownIcon,
+  ShieldWarningIcon,
+  SparkleIcon,
+  TrendUpIcon,
+  WalletIcon,
+  CheckSquareIcon,
+  GearSixIcon,
+  PlayIcon,
+} from "@phosphor-icons/react";
 
 // Linter constants
 const RUNWAY_STATUS = "Sovereignty Status: Safe";

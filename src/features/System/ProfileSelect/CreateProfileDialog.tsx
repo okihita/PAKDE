@@ -9,7 +9,8 @@ import { createCooperative } from "./cooperativeDb";
 import RegionPicker from "./RegionPicker";
 
 const PLACEHOLDER_NAME = "e.g. Koperasi Tani Makmur";
-const COMPLETE_LATER = "Data lainnya seperti pengurus, unit usaha, dan kontak dapat dilengkapi nanti melalui Dashboard.";
+const COMPLETE_LATER =
+  "Data lainnya seperti pengurus, unit usaha, dan kontak dapat dilengkapi nanti melalui Dashboard.";
 
 interface CreateProfileDialogProps {
   open: boolean;
@@ -127,9 +128,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             {/* Category — hidden, defaults to serba_usaha */}
             <input type="hidden" value={formData.category} />
 
-            <p className="text-xxs text-slate-500 italic">
-              {COMPLETE_LATER}
-            </p>
+            <p className="text-xxs text-slate-500 italic">{COMPLETE_LATER}</p>
           </div>
 
           <DialogFooter className="border-t border-slate-800/80 pt-3.5">

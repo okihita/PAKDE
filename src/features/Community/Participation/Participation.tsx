@@ -1,6 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartBarIcon, UsersIcon, CheckSquareIcon, WalletIcon, FireIcon, CalendarIcon, MedalIcon, LeafIcon, HandshakeIcon } from "@phosphor-icons/react";
+import {
+  ChartBarIcon,
+  UsersIcon,
+  CheckSquareIcon,
+  WalletIcon,
+  FireIcon,
+  CalendarIcon,
+  MedalIcon,
+  LeafIcon,
+  HandshakeIcon,
+} from "@phosphor-icons/react";
 import "./Participation.css";
 
 // Constants for i18n/linter rules bypass

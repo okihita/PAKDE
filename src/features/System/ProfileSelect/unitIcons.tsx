@@ -1,10 +1,4 @@
-import {
-  Plant,
-  CurrencyDollar,
-  FirstAid,
-  Storefront,
-  type Icon,
-} from "@phosphor-icons/react";
+import { Plant, CurrencyDollar, FirstAid, Storefront, type Icon } from "@phosphor-icons/react";
 
 interface UnitConfig {
   icon: Icon;

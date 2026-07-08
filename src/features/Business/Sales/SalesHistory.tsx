@@ -14,10 +14,7 @@ interface SalesHistoryProps {
   membersList: Member[];
 }
 
-export default function SalesHistory({
-  transactionsList,
-  membersList,
-}: SalesHistoryProps) {
+export default function SalesHistory({ transactionsList, membersList }: SalesHistoryProps) {
   const { t } = useTranslation();
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [selectedTx, setSelectedTx] = useState<SalesTransaction | null>(null);
@@ -46,18 +43,12 @@ export default function SalesHistory({
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("sales.history.id")}
-                </TableHead>
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("sales.history.date")}
-                </TableHead>
+                <TableHead className="text-xxs font-mono text-muted-foreground">{t("sales.history.id")}</TableHead>
+                <TableHead className="text-xxs font-mono text-muted-foreground">{t("sales.history.date")}</TableHead>
                 <TableHead className="text-xxs font-mono text-muted-foreground">
                   {t("sales.history.customer")}
                 </TableHead>
-                <TableHead className="text-xxs font-mono text-muted-foreground">
-                  {t("sales.history.payment")}
-                </TableHead>
+                <TableHead className="text-xxs font-mono text-muted-foreground">{t("sales.history.payment")}</TableHead>
                 <TableHead className="text-xxs font-mono text-muted-foreground text-right">
                   {t("sales.history.amount")}
                 </TableHead>
@@ -72,18 +63,14 @@ export default function SalesHistory({
                   <TableCell className="text-xxs font-mono text-muted-foreground truncate max-w-[120px]">
                     {tx.id}
                   </TableCell>
-                  <TableCell className="text-xxs font-mono text-muted-foreground">
-                    {tx.transaction_date}
-                  </TableCell>
+                  <TableCell className="text-xxs font-mono text-muted-foreground">{tx.transaction_date}</TableCell>
                   <TableCell className="text-xs text-foreground font-semibold">
                     {getCustomerLabel(tx.member_id)}
                   </TableCell>
                   <TableCell>
                     <span
                       className={`text-xxxs font-mono font-bold px-1.5 py-0.5 rounded ${
-                        tx.payment_type === "cash"
-                          ? "text-success bg-success/10"
-                          : "text-warning bg-warning/10"
+                        tx.payment_type === "cash" ? "text-success bg-success/10" : "text-warning bg-warning/10"
                       }`}
                     >
                       {tx.payment_type.toUpperCase()}
@@ -121,9 +108,7 @@ export default function SalesHistory({
       <Dialog open={showReceiptModal} onOpenChange={setShowReceiptModal}>
         <DialogContent className="bg-card border-border text-foreground max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-sm font-bold text-foreground">
-              {t("sales.history.detailsTitle")}
-            </DialogTitle>
+            <DialogTitle className="text-sm font-bold text-foreground">{t("sales.history.detailsTitle")}</DialogTitle>
           </DialogHeader>
           {selectedTx && (
             <div className="space-y-4 pt-2 text-xxs">
@@ -152,9 +137,7 @@ export default function SalesHistory({
 
               {/* Items */}
               <div className="space-y-2">
-                <p className="font-bold text-muted-foreground uppercase tracking-wide">
-                  {t("sales.history.items")}
-                </p>
+                <p className="font-bold text-muted-foreground uppercase tracking-wide">{t("sales.history.items")}</p>
                 <div className="space-y-1.5 max-h-40 overflow-y-auto">
                   {selectedTx.items?.map((it) => (
                     <div
@@ -169,9 +152,7 @@ export default function SalesHistory({
                           {it.price.toLocaleString("id-ID")}
                         </p>
                       </div>
-                      <p className="text-foreground font-bold">
-                        Rp {(it.quantity * it.price).toLocaleString("id-ID")}
-                      </p>
+                      <p className="text-foreground font-bold">Rp {(it.quantity * it.price).toLocaleString("id-ID")}</p>
                     </div>
                   ))}
                 </div>
@@ -180,9 +161,7 @@ export default function SalesHistory({
               {/* Total & Accounting */}
               <div className="pt-2 space-y-2 border-t border-border/50">
                 <div className="flex justify-between items-baseline font-mono">
-                  <span className="font-bold text-muted-foreground uppercase">
-                    {t("sales.checkout.total")}
-                  </span>
+                  <span className="font-bold text-muted-foreground uppercase">{t("sales.checkout.total")}</span>
                   <span className="text-sm font-black text-success">
                     Rp {selectedTx.total_amount.toLocaleString("id-ID")}
                   </span>

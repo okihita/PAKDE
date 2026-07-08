@@ -23,16 +23,7 @@ interface ShelfPanelProps {
 
 const UNIT_M_X = "m ×";
 const UNIT_M_DOT = "m ·";
-const ZONE_COLORS = [
-  "#4CAF50",
-  "#2196F3",
-  "#FF9800",
-  "#9C27B0",
-  "#E91E63",
-  "#00BCD4",
-  "#8BC34A",
-  "#FF5722",
-];
+const ZONE_COLORS = ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#FF5722"];
 
 export default function ShelfPanel({
   zone,
@@ -64,9 +55,7 @@ export default function ShelfPanel({
   };
 
   // Get items NOT yet assigned to any zone (available for assignment)
-  const availableItems = inventoryItems.filter(
-    (i) => !i.zone_id || i.zone_id === zone.id,
-  );
+  const availableItems = inventoryItems.filter((i) => !i.zone_id || i.zone_id === zone.id);
 
   const bins = Array.from({ length: zone.rows * zone.cols }, (_, idx) => {
     const row = Math.floor(idx / zone.cols);
@@ -107,9 +96,7 @@ export default function ShelfPanel({
       {/* Zone config */}
       <div className="p-3 space-y-2.5 text-xs border-b border-border shrink-0">
         <div className="space-y-1">
-          <label className="text-muted-foreground font-mono text-xxxs uppercase">
-            {t("common.name")}
-          </label>
+          <label className="text-muted-foreground font-mono text-xxxs uppercase">{t("common.name")}</label>
           <Input
             value={zone.name}
             onChange={(e) => onZoneChange({ ...zone, name: e.target.value })}
@@ -120,9 +107,7 @@ export default function ShelfPanel({
           <>
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <label className="text-muted-foreground font-mono text-xxxs uppercase">
-                  {t("storeLayout.rows")}
-                </label>
+                <label className="text-muted-foreground font-mono text-xxxs uppercase">{t("storeLayout.rows")}</label>
                 <Input
                   type="number"
                   min={1}
@@ -133,9 +118,7 @@ export default function ShelfPanel({
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-muted-foreground font-mono text-xxxs uppercase">
-                  {t("storeLayout.cols")}
-                </label>
+                <label className="text-muted-foreground font-mono text-xxxs uppercase">{t("storeLayout.cols")}</label>
                 <Input
                   type="number"
                   min={1}
@@ -147,19 +130,20 @@ export default function ShelfPanel({
               </div>
             </div>
             <div className="text-xxxs font-mono text-slate-500 px-1">
-              {(zone.width * (cellSize ?? 1)).toFixed(1)}{UNIT_M_X} {(zone.height * (cellSize ?? 1)).toFixed(1)}{UNIT_M_DOT} {zone.rows * zone.cols} {t("storeLayout.bins").toLowerCase()}
+              {(zone.width * (cellSize ?? 1)).toFixed(1)}
+              {UNIT_M_X} {(zone.height * (cellSize ?? 1)).toFixed(1)}
+              {UNIT_M_DOT} {zone.rows * zone.cols} {t("storeLayout.bins").toLowerCase()}
             </div>
           </>
         )}
         {isArea && (
           <div className="text-xxxs font-mono text-slate-500 px-1">
-            {(zone.width * (cellSize ?? 1)).toFixed(1)}{UNIT_M_X} {(zone.height * (cellSize ?? 1)).toFixed(1)}m
+            {(zone.width * (cellSize ?? 1)).toFixed(1)}
+            {UNIT_M_X} {(zone.height * (cellSize ?? 1)).toFixed(1)}m
           </div>
         )}
         <div className="space-y-1">
-          <label className="text-muted-foreground font-mono text-xxxs uppercase">
-            {t("storeLayout.color")}
-          </label>
+          <label className="text-muted-foreground font-mono text-xxxs uppercase">{t("storeLayout.color")}</label>
           <div className="flex gap-1.5 flex-wrap">
             {ZONE_COLORS.map((c) => (
               <button
@@ -179,25 +163,25 @@ export default function ShelfPanel({
       {/* Shelf bins grid — only for shelf zones */}
       {isShelf && (
         <div className="flex-1 p-3 overflow-y-auto">
-        <h5 className="text-xxs font-mono text-muted-foreground uppercase tracking-wider mb-2">
-          {t("storeLayout.bins")}
-        </h5>
-        <div
-          className="grid gap-1.5"
-          style={{
-            gridTemplateColumns: `repeat(${zone.cols}, 1fr)`,
-          }}
-        >
-          {bins.map(({ row, col, item }) => {
-            const isEmpty = !item;
-            const isLow = item && item.stock_quantity <= 10 && item.stock_quantity > 0;
-            const isOut = item && item.stock_quantity === 0;
+          <h5 className="text-xxs font-mono text-muted-foreground uppercase tracking-wider mb-2">
+            {t("storeLayout.bins")}
+          </h5>
+          <div
+            className="grid gap-1.5"
+            style={{
+              gridTemplateColumns: `repeat(${zone.cols}, 1fr)`,
+            }}
+          >
+            {bins.map(({ row, col, item }) => {
+              const isEmpty = !item;
+              const isLow = item && item.stock_quantity <= 10 && item.stock_quantity > 0;
+              const isOut = item && item.stock_quantity === 0;
 
-            return (
-              <div
-                key={`${row}-${col}`}
-                onClick={() => setAssigningBin({ row, col })}
-                className={`
+              return (
+                <div
+                  key={`${row}-${col}`}
+                  onClick={() => setAssigningBin({ row, col })}
+                  className={`
                   aspect-square rounded-lg border flex flex-col items-center justify-center p-1 cursor-pointer
                   transition-all hover:scale-105
                   ${
@@ -209,36 +193,32 @@ export default function ShelfPanel({
                           ? "border-warning/30 bg-warning/10"
                           : "border-success/30 bg-success/10"
                   }
-                  ${
-                    assigningBin?.row === row && assigningBin?.col === col
-                      ? "ring-2 ring-brand"
-                      : ""
-                  }
+                  ${assigningBin?.row === row && assigningBin?.col === col ? "ring-2 ring-brand" : ""}
                 `}
-                title={`[${row},${col}] ${item?.name || t("storeLayout.emptyBin")}`}
-              >
-                {item ? (
-                  <>
-                    <span className="text-sm">{getCategoryIcon(item.category_id)}</span>
-                    <span className="text-xxxs font-mono font-bold text-foreground text-center truncate w-full">
-                      {item.name.slice(0, 10)}
-                    </span>
-                    <span
-                      className={`text-xxxs font-bold ${
-                        isOut ? "text-danger" : isLow ? "text-warning" : "text-success"
-                      }`}
-                    >
-                      {item.stock_quantity} {item.unit}
-                    </span>
-                  </>
-                ) : (
-                  <CubeIcon className="h-4 w-4 text-slate-600" />
-                )}
-              </div>
-            );
-          })}
+                  title={`[${row},${col}] ${item?.name || t("storeLayout.emptyBin")}`}
+                >
+                  {item ? (
+                    <>
+                      <span className="text-sm">{getCategoryIcon(item.category_id)}</span>
+                      <span className="text-xxxs font-mono font-bold text-foreground text-center truncate w-full">
+                        {item.name.slice(0, 10)}
+                      </span>
+                      <span
+                        className={`text-xxxs font-bold ${
+                          isOut ? "text-danger" : isLow ? "text-warning" : "text-success"
+                        }`}
+                      >
+                        {item.stock_quantity} {item.unit}
+                      </span>
+                    </>
+                  ) : (
+                    <CubeIcon className="h-4 w-4 text-slate-600" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
       )}
 
       {/* Assign dialog inline — only for shelf zones */}
@@ -269,9 +249,7 @@ export default function ShelfPanel({
                 size="icon"
                 className="h-5 w-5 text-danger"
                 onClick={() => {
-                  const currentItem = bins.find(
-                    (b) => b.row === assigningBin.row && b.col === assigningBin.col,
-                  )?.item;
+                  const currentItem = bins.find((b) => b.row === assigningBin.row && b.col === assigningBin.col)?.item;
                   if (currentItem) onItemUnassign(currentItem.id);
                   setAssigningBin(null);
                 }}

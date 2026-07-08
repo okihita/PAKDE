@@ -6,7 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingCartIcon, ClockCounterClockwiseIcon, PackageIcon, MagnifyingGlassIcon, MinusCircleIcon, PlusCircleIcon, CreditCardIcon, TrashIcon } from "@phosphor-icons/react";
+import {
+  ShoppingCartIcon,
+  ClockCounterClockwiseIcon,
+  PackageIcon,
+  MagnifyingGlassIcon,
+  MinusCircleIcon,
+  PlusCircleIcon,
+  CreditCardIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import SalesHistory from "./SalesHistory";
 import SalesInventory from "./SalesInventory";
 import "./Sales.css";
@@ -354,9 +363,7 @@ export default function Sales() {
                       <span className="text-xxxs font-bold text-muted-foreground uppercase">
                         {t("sales.checkout.total")}
                       </span>
-                      <span className="text-base font-black text-success">
-                        Rp {cartTotal.toLocaleString("id-ID")}
-                      </span>
+                      <span className="text-base font-black text-success">Rp {cartTotal.toLocaleString("id-ID")}</span>
                     </div>
 
                     <Button

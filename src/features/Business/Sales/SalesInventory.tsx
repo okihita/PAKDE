@@ -319,7 +319,7 @@ export default function SalesInventory({
                               onClick={() => onDeleteItem(item.id)}
                               className="h-6.5 w-6.5 text-danger hover:text-danger hover:bg-danger/10 shrink-0"
                             >
-                               <TrashIcon className="h-3 w-3" />
+                              <TrashIcon className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
@@ -437,10 +437,7 @@ export default function SalesInventory({
               >
                 {t("common.cancel")}
               </Button>
-              <Button
-                type="submit"
-                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
-              >
+              <Button type="submit" className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8">
                 <SparkleIcon className="h-3 w-3 mr-1" />
                 {t("sales.inventory.submit")}
               </Button>
@@ -480,10 +477,7 @@ export default function SalesInventory({
               >
                 {t("common.cancel")}
               </Button>
-              <Button
-                type="submit"
-                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
-              >
+              <Button type="submit" className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8">
                 {t("sales.inventory.restock")}
               </Button>
             </DialogFooter>

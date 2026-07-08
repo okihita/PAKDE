@@ -117,9 +117,7 @@ export default function Feasibility() {
                         {value}
                       </p>
                       {pass !== undefined && (
-                        <span
-                          className={`text-xxxs font-mono font-bold ${pass ? "text-success" : "text-danger"}`}
-                        >
+                        <span className={`text-xxxs font-mono font-bold ${pass ? "text-success" : "text-danger"}`}>
                           {pass ? t("feasibility.calculator.pass") : t("feasibility.calculator.fail")}
                         </span>
                       )}
@@ -182,9 +180,7 @@ export default function Feasibility() {
                         <InfoIcon className="h-2.5 w-2.5 text-muted-foreground" />
                         <p className="text-xxxs font-mono text-muted-foreground">{label}</p>
                       </div>
-                      <p
-                        className={`text-sm font-black font-mono ${accent ? `text-${accent}` : "text-foreground"}`}
-                      >
+                      <p className={`text-sm font-black font-mono ${accent ? `text-${accent}` : "text-foreground"}`}>
                         {value}
                       </p>
                     </div>

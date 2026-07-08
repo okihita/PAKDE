@@ -3,7 +3,15 @@ import { Stage, Layer, Rect, Line, Text, Group, Circle } from "react-konva";
 import type Konva from "konva";
 import type { LayoutZone, InventoryItem } from "@/types";
 import { sfx } from "@/features/System/ProfileSelect/sfx";
-import { CursorIcon, SquareIcon, CubeIcon, EraserIcon, MagnifyingGlassPlusIcon, MagnifyingGlassMinusIcon, ArrowsOutIcon } from "@phosphor-icons/react";
+import {
+  CursorIcon,
+  SquareIcon,
+  CubeIcon,
+  EraserIcon,
+  MagnifyingGlassPlusIcon,
+  MagnifyingGlassMinusIcon,
+  ArrowsOutIcon,
+} from "@phosphor-icons/react";
 import "./index.css";
 
 const TITLE_ZOOM_OUT = "Zoom out";
@@ -16,10 +24,7 @@ const ZOOM_STEP = 0.1;
 
 type Tool = "select" | "zone" | "shelf" | "erase";
 
-const ZONE_COLORS = [
-  "#4ade80", "#60a5fa", "#fbbf24", "#c084fc",
-  "#fb7185", "#2dd4bf", "#a3e635", "#fb923c",
-];
+const ZONE_COLORS = ["#4ade80", "#60a5fa", "#fbbf24", "#c084fc", "#fb7185", "#2dd4bf", "#a3e635", "#fb923c"];
 
 interface LayoutCanvasProps {
   zones: LayoutZone[];
@@ -97,10 +102,8 @@ export default function LayoutCanvas({
   // Grid lines — skip recomputation on unrelated state changes
   const gridLines = useMemo(() => {
     const lines: Array<{ points: number[]; key: string }> = [];
-    for (let x = 0; x <= gridWidth; x++)
-      lines.push({ points: [x * CELL, 0, x * CELL, gridPxH], key: `v-${x}` });
-    for (let y = 0; y <= gridHeight; y++)
-      lines.push({ points: [0, y * CELL, gridPxW, y * CELL], key: `h-${y}` });
+    for (let x = 0; x <= gridWidth; x++) lines.push({ points: [x * CELL, 0, x * CELL, gridPxH], key: `v-${x}` });
+    for (let y = 0; y <= gridHeight; y++) lines.push({ points: [0, y * CELL, gridPxW, y * CELL], key: `h-${y}` });
     return lines;
   }, [gridWidth, gridHeight, gridPxW, gridPxH]);
 
@@ -305,12 +308,14 @@ export default function LayoutCanvas({
       {/* ── Toolbar ── */}
       <div className="absolute top-2 left-2 right-2 z-10 flex flex-wrap items-stretch gap-1">
         <div className="flex bg-slate-900/90 border border-slate-800 rounded-lg overflow-hidden">
-          {([
-            ["select", CursorIcon],
-            ["zone", SquareIcon],
-            ["shelf", CubeIcon],
-            ["erase", EraserIcon],
-          ] as const).map(([tool, Icon]) => (
+          {(
+            [
+              ["select", CursorIcon],
+              ["zone", SquareIcon],
+              ["shelf", CubeIcon],
+              ["erase", EraserIcon],
+            ] as const
+          ).map(([tool, Icon]) => (
             <button
               key={tool}
               onClick={() => setActiveTool(tool)}
@@ -409,8 +414,10 @@ export default function LayoutCanvas({
               x={x * CELL + 2}
               y={-16}
               text={cellSize === 1 ? `${x}m` : `${(x * cellSize).toFixed(1)}`}
-              fontSize={8} fill="#475569"
-              fontFamily="JetBrains Mono, monospace" listening={false}
+              fontSize={8}
+              fill="#475569"
+              fontFamily="JetBrains Mono, monospace"
+              listening={false}
             />
           ))}
           {Array.from({ length: gridHeight }, (_, y) => (
@@ -419,8 +426,10 @@ export default function LayoutCanvas({
               x={-22}
               y={y * CELL + 2}
               text={cellSize === 1 ? `${y}m` : `${(y * cellSize).toFixed(1)}`}
-              fontSize={8} fill="#475569"
-              fontFamily="JetBrains Mono, monospace" listening={false}
+              fontSize={8}
+              fill="#475569"
+              fontFamily="JetBrains Mono, monospace"
+              listening={false}
             />
           ))}
         </Layer>
@@ -440,8 +449,8 @@ export default function LayoutCanvas({
                 onDragEnd={(e) => {
                   if (activeTool !== "select") return;
                   const node = e.target;
-const nx = clampPos(snap(node.x()), zw, gridPxW);
-                   const ny = clampPos(snap(node.y()), zh, gridPxH);
+                  const nx = clampPos(snap(node.x()), zw, gridPxW);
+                  const ny = clampPos(snap(node.y()), zh, gridPxH);
                   node.x(nx);
                   node.y(ny);
                   onZoneUpdate({ ...zone, x: nx, y: ny });
@@ -456,14 +465,11 @@ const nx = clampPos(snap(node.x()), zw, gridPxW);
                 }}
               >
                 {/* Zone fill */}
-                <Rect
-                  width={zw} height={zh}
-                  fill={hexToRGBA(zone.color, 0.1)}
-                  cornerRadius={6}
-                />
+                <Rect width={zw} height={zh} fill={hexToRGBA(zone.color, 0.1)} cornerRadius={6} />
                 {/* Zone border */}
                 <Rect
-                  width={zw} height={zh}
+                  width={zw}
+                  height={zh}
                   fill="transparent"
                   stroke={isSel ? zone.color : hexToRGBA(zone.color, 0.4)}
                   strokeWidth={isSel ? 2.5 : 1.5}
@@ -501,11 +507,15 @@ const nx = clampPos(snap(node.x()), zw, gridPxW);
           {/* Zone drawing preview */}
           {previewRect && (
             <Rect
-              x={previewRect.x} y={previewRect.y}
-              width={previewRect.w} height={previewRect.h}
+              x={previewRect.x}
+              y={previewRect.y}
+              width={previewRect.w}
+              height={previewRect.h}
               fill={hexToRGBA(zoneColor, 0.12)}
               stroke={zoneColor}
-              strokeWidth={2} cornerRadius={6} dash={[6, 3]}
+              strokeWidth={2}
+              cornerRadius={6}
+              dash={[6, 3]}
               listening={false}
             />
           )}
@@ -529,8 +539,8 @@ const nx = clampPos(snap(node.x()), zw, gridPxW);
                 onDragEnd={(e) => {
                   if (activeTool !== "select") return;
                   const node = e.target;
-const nx = clampPos(snap(node.x()), zw, gridPxW);
-                   const ny = clampPos(snap(node.y()), zh, gridPxH);
+                  const nx = clampPos(snap(node.x()), zw, gridPxW);
+                  const ny = clampPos(snap(node.y()), zh, gridPxH);
                   node.x(nx);
                   node.y(ny);
                   onZoneUpdate({ ...zone, x: nx, y: ny });
@@ -546,7 +556,8 @@ const nx = clampPos(snap(node.x()), zw, gridPxW);
               >
                 <Rect width={zw} height={zh} fill={indicator.color} opacity={0.25} cornerRadius={4} />
                 <Rect
-                  width={zw} height={zh}
+                  width={zw}
+                  height={zh}
                   fill="transparent"
                   stroke={isSel ? "#10b981" : indicator.color}
                   strokeWidth={isSel ? 2 : 1.5}
@@ -556,31 +567,39 @@ const nx = clampPos(snap(node.x()), zw, gridPxW);
                 {/* Selection handles */}
                 {isSel && (
                   <>
-                    {[[0, 0], [zw, 0], [0, zh], [zw, zh]].map(([hx, hy], hi) => (
+                    {[
+                      [0, 0],
+                      [zw, 0],
+                      [0, zh],
+                      [zw, zh],
+                    ].map(([hx, hy], hi) => (
                       <Circle key={hi} x={hx} y={hy} radius={4} fill="#10b981" />
                     ))}
                   </>
                 )}
                 {/* Bin overlay */}
-                {zone.rows > 0 && zone.cols > 0 &&
+                {zone.rows > 0 &&
+                  zone.cols > 0 &&
                   Array.from({ length: zone.rows * zone.cols }, (_, bi) => {
                     const row = Math.floor(bi / zone.cols);
                     const col = bi % zone.cols;
                     const bw = zw / zone.cols;
                     const bh = zh / zone.rows;
-                    const binItem = zoneInventory.find(
-                      (i) => i.shelf_row === row && i.shelf_col === col,
-                    );
+                    const binItem = zoneInventory.find((i) => i.shelf_row === row && i.shelf_col === col);
                     const bc = binItem
                       ? binItem.stock_quantity > 0
-                        ? binItem.stock_quantity < 10 ? "#f59e0b" : "#10b981"
+                        ? binItem.stock_quantity < 10
+                          ? "#f59e0b"
+                          : "#10b981"
                         : "#ef4444"
                       : "transparent";
                     return (
                       <Rect
                         key={`bin-${bi}`}
-                        x={col * bw + 1} y={row * bh + 1}
-                        width={bw - 2} height={bh - 2}
+                        x={col * bw + 1}
+                        y={row * bh + 1}
+                        width={bw - 2}
+                        height={bh - 2}
                         fill={binItem ? bc : "transparent"}
                         opacity={binItem ? 0.3 : 0}
                         stroke={binItem ? bc : "#1e293b"}
@@ -589,10 +608,10 @@ const nx = clampPos(snap(node.x()), zw, gridPxW);
                         listening={false}
                       />
                     );
-                  })
-                }
+                  })}
                 <Text
-                  x={4} y={zh + 2}
+                  x={4}
+                  y={zh + 2}
                   text={`${zone.name} · ${(zone.width * (cellSize ?? 1)).toFixed(1)}×${(zone.height * (cellSize ?? 1)).toFixed(1)}m · ${zone.rows}×${zone.cols}`}
                   fontSize={9}
                   fontFamily="JetBrains Mono, monospace"

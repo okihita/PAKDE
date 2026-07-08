@@ -170,12 +170,7 @@ export default function AccountingJournal({
                     className="bg-input border-border text-xs h-8 flex-1"
                   />
                   {journalForm.lines.length > 2 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 text-danger"
-                      onClick={() => onRemoveLine(i)}
-                    >
+                    <Button variant="ghost" size="icon" className="h-6 w-6 text-danger" onClick={() => onRemoveLine(i)}>
                       <TrashIcon className="h-3 w-3" />
                     </Button>
                   )}

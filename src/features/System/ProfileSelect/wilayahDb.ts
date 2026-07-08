@@ -32,7 +32,10 @@ export async function searchDistricts(regencyCode: string, query: string): Promi
   );
 }
 
-export async function searchVillages(districtCode: string | null, query: string): Promise<(WilayahRow & { district_nama: string; regency_nama: string })[]> {
+export async function searchVillages(
+  districtCode: string | null,
+  query: string,
+): Promise<(WilayahRow & { district_nama: string; regency_nama: string })[]> {
   const db = await getWilayahDb();
   if (districtCode) {
     // Narrowed by district — faster, no collision

@@ -14,7 +14,15 @@
 }
 
 /* Tool cursors */
-.cursor-crosshair canvas { cursor: crosshair !important; }
-.cursor-copy canvas { cursor: copy !important; }
-.cursor-not-allowed canvas { cursor: not-allowed !important; }
-.cursor-default canvas { cursor: default !important; }
+.cursor-crosshair canvas {
+  cursor: crosshair !important;
+}
+.cursor-copy canvas {
+  cursor: copy !important;
+}
+.cursor-not-allowed canvas {
+  cursor: not-allowed !important;
+}
+.cursor-default canvas {
+  cursor: default !important;
+}
