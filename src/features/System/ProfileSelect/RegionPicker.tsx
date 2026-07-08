@@ -247,12 +247,12 @@ function ComboboxField({
                 onMouseDown={(e) => {
                   e.preventDefault();
                   onSelect(row);
-                  setQuery(displayLabel(row as any));
+                  setQuery(displayLabel(row as WilayahRow & { district_nama?: string; regency_nama?: string }));
                   setOpen(false);
                 }}
                 onMouseEnter={() => setHighlightIdx(i)}
               >
-                {displayLabel(row as any)}
+                {displayLabel(row as WilayahRow & { district_nama?: string; regency_nama?: string })}
               </li>
             ))}
           </ul>

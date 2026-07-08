@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { IconContext as PhosphorContext } from "@phosphor-icons/react";
 import { loadSettings, saveSettings, type IconSettings, type IconWeight } from "./iconSettings";
