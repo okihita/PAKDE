@@ -2,7 +2,7 @@ import "./Planners.css";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, DownloadSimple, Printer } from "@phosphor-icons/react";
+import { FileTextIcon, DownloadSimpleIcon, PrinterIcon } from "@phosphor-icons/react";
 
 const PLANNERS = [
   {
@@ -69,7 +69,7 @@ export default function Planners() {
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <FileText className="h-3.5 w-3.5 text-warning" /> {t("sidebar.nav.planners")}
+            <FileTextIcon className="h-3.5 w-3.5 text-warning" /> {t("sidebar.nav.planners")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -82,7 +82,7 @@ export default function Planners() {
               >
                 <div className="flex items-start justify-between">
                   <div className="w-9 h-9 rounded-lg bg-warning/10 flex items-center justify-center shrink-0">
-                    <FileText className="h-4 w-4 text-warning" />
+                    <FileTextIcon className="h-4 w-4 text-warning" />
                   </div>
                   <span className="text-xxxs font-mono text-muted-foreground px-1.5 py-0.5 rounded bg-secondary">
                     {t("planners.pages", { n: p.pages })}
@@ -102,14 +102,14 @@ export default function Planners() {
                     size="sm"
                     className="flex-1 bg-brand hover:bg-brand text-brand-foreground font-bold text-xxs h-7"
                   >
-                    <DownloadSimple className="h-3 w-3 mr-1" /> {t("planners.pdf")}
+                    <DownloadSimpleIcon className="h-3 w-3 mr-1" /> {t("planners.pdf")}
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
                     className="border-border text-muted-foreground hover:text-foreground text-xxs h-7"
                   >
-                    <Printer className="h-3 w-3" />
+                    <PrinterIcon className="h-3 w-3" />
                   </Button>
                 </div>
               </div>

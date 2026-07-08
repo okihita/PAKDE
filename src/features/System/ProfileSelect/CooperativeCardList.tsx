@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
-import { Buildings, Plus, MapPin } from "@phosphor-icons/react";
+import { BuildingsIcon, PlusIcon, MapPinIcon } from "@phosphor-icons/react";
 import type { CooperativeProfile } from "@/types";
 
 const TEXT_UNIT_PUPUK = "Sales";
@@ -60,7 +60,7 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center border border-success/20 shrink-0">
-                  <Buildings className="h-4.5 w-4.5 text-success" />
+                  <BuildingsIcon className="h-4.5 w-4.5 text-success" />
                 </div>
                 <span className="text-xxxs font-mono font-bold text-success uppercase border border-brand/25 px-2 py-0.5 rounded bg-success/20">
                   {p.id}
@@ -70,7 +70,7 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
               <div className="space-y-1">
                 <h3 className="text-xs font-bold text-foreground line-clamp-1 leading-tight tracking-wide">{p.name}</h3>
                 <p className="text-xxs text-slate-400 flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                  <MapPinIcon className="h-3.5 w-3.5 text-slate-500 shrink-0" />
                   <span className="truncate">
                     {p.regency}, {p.province}
                   </span>
@@ -139,7 +139,7 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
         className="bg-slate-950/60 border-dashed border-slate-800 hover:border-brand/35 hover:bg-success/5 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-52 p-5 hover:scale-[1.01] select-none shadow-md"
       >
         <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center mb-3 border border-slate-800 transition-colors shadow-sm">
-          <Plus className="h-5 w-5 text-success" />
+          <PlusIcon className="h-5 w-5 text-success" />
         </div>
         <span className="text-xxs font-mono font-bold text-success uppercase tracking-wider">
           {t("profileSelect.createBtn")}

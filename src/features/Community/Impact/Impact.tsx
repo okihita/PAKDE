@@ -4,15 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/useToast";
 import {
-  Handshake,
-  Users,
-  Leaf,
-  Pulse,
-  Sparkle,
-  TrendUp,
+  HandshakeIcon,
+  UsersIcon,
+  LeafIcon,
+  PulseIcon,
+  SparkleIcon,
+  TrendUpIcon,
   Chat,
-  Play,
-  CheckCircle,
+  PlayIcon,
+  CheckCircleIcon,
 } from "@phosphor-icons/react";
 import "./Impact.css";
 
@@ -84,7 +84,7 @@ export default function Impact() {
       {/* Header section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
-          <Handshake className="h-5 w-5 text-success" />
+          <HandshakeIcon className="h-5 w-5 text-success" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("impact.title")}</h1>
@@ -100,7 +100,7 @@ export default function Impact() {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("impact.metrics.employmentTitle")}
             </span>
-            <Users className="h-4 w-4 text-success" />
+            <UsersIcon className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">24 {t("beranda.harian").toLowerCase()}</h3>
@@ -114,7 +114,7 @@ export default function Impact() {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("impact.metrics.welfareTitle")}
             </span>
-            <TrendUp className="h-4 w-4 text-info" />
+            <TrendUpIcon className="h-4 w-4 text-info" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">+ 18.5%</h3>
@@ -126,7 +126,7 @@ export default function Impact() {
         <Card className="bg-card border-border">
           <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
             <span className="text-xxxs font-mono text-muted-foreground uppercase">{t("impact.metrics.ecoTitle")}</span>
-            <Leaf className="h-4 w-4 text-lime-400" />
+            <LeafIcon className="h-4 w-4 text-lime-400" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{t("impact.metrics.ecoValue")}</h3>
@@ -140,7 +140,7 @@ export default function Impact() {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("impact.metrics.genderTitle")}
             </span>
-            <Sparkle className="h-4 w-4 text-warning" />
+            <SparkleIcon className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">45%</h3>
@@ -153,7 +153,7 @@ export default function Impact() {
       <Card className="bg-card border-border overflow-hidden">
         <CardHeader className="pb-3 border-b border-border/55">
           <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-            <Pulse className="h-3.5 w-3.5 text-success" />
+            <PulseIcon className="h-3.5 w-3.5 text-success" />
             {t("impact.auditTitle")}
           </CardTitle>
           <p className="text-xxxs text-muted-foreground mt-1 leading-relaxed">{t("impact.auditDesc")}</p>
@@ -164,7 +164,7 @@ export default function Impact() {
               onClick={handleStartAudit}
               className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 flex items-center justify-center gap-2"
             >
-              <Play className="h-3.5 w-3.5 fill-current" />
+              <PlayIcon className="h-3.5 w-3.5 fill-current" />
               {t("impact.runAudit")}
             </Button>
           )}
@@ -188,7 +188,7 @@ export default function Impact() {
             <div className="p-4 rounded-xl border border-success/15 bg-gradient-to-br from-success/5 via-card to-transparent flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-xxs font-mono font-bold text-success flex items-center gap-1.5">
-                  <CheckCircle className="h-3.5 w-3.5 text-success" />
+                  <CheckCircleIcon className="h-3.5 w-3.5 text-success" />
                   {t("impact.auditComplete")}
                 </span>
                 <p className="text-xs font-bold text-foreground mt-1">{t("impact.sroiVal")}</p>

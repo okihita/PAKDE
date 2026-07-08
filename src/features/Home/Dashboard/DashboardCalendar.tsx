@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, CaretLeft, CaretRight, MapPin, Clock } from "@phosphor-icons/react";
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, MapPinIcon, ClockIcon } from "@phosphor-icons/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -83,7 +83,7 @@ const EVENT_TITLES: { title: string; description: string; location: string }[] =
   },
   {
     title: "Pelaporan EWS Bulanan",
-    description: "Penyusunan dan pengiriman laporan Early Warning System ke Dinas.",
+    description: "Penyusunan dan pengiriman laporan Early WarningIcon System ke Dinas.",
     location: "Kantor Koperasi",
   },
   {
@@ -209,7 +209,7 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
       <Card className="bg-card border-border text-foreground hover-glow-card">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-            <Calendar className="h-3 w-3" />
+            <CalendarIcon className="h-3 w-3" />
             {t("beranda.calendar")}
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -221,13 +221,13 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
                 onClick={prevMonth}
                 className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
               >
-                <CaretLeft className="h-3 w-3" />
+                <CaretLeftIcon className="h-3 w-3" />
               </button>
               <button
                 onClick={nextMonth}
                 className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
               >
-                <CaretRight className="h-3 w-3" />
+                <CaretRightIcon className="h-3 w-3" />
               </button>
             </div>
           </div>
@@ -295,17 +295,17 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
           </DialogHeader>
           <div className="space-y-3 text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5 text-warning shrink-0" />
+              <CalendarIcon className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>
                 {selectedEvent?.date} {selectedEvent ? MONTHS[selectedEvent.month] : ""} {selectedEvent?.year}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="h-3.5 w-3.5 text-warning shrink-0" />
+              <ClockIcon className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>{selectedEvent?.time}</span>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-warning shrink-0" />
+              <MapPinIcon className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>{selectedEvent?.location}</span>
             </div>
             <p className="pt-1 leading-relaxed border-t border-border">{selectedEvent?.description}</p>

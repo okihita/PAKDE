@@ -2,7 +2,7 @@ import "./Equipment.css";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Wrench } from "@phosphor-icons/react";
+import { WrenchIcon } from "@phosphor-icons/react";
 
 const EQUIPMENT = [
   { name: "Mesin Penggiling Padi", amount: 2, condition: "Baik", lastMaintenance: "2026-06-15", value: 45000000 },
@@ -22,7 +22,7 @@ export default function Equipment() {
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Wrench className="h-3.5 w-3.5 text-warning" /> {t("sidebar.nav.equipment")}
+            <WrenchIcon className="h-3.5 w-3.5 text-warning" /> {t("sidebar.nav.equipment")}
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Plus, Trash, Sparkle, GridFour, List } from "@phosphor-icons/react";
+import { PackageIcon, PlusIcon, TrashIcon, SparkleIcon, GridFourIcon, ListIcon } from "@phosphor-icons/react";
 import type { InventoryItem } from "@/types";
 
 const TEXT_AISLE_HEADER = "Aisle: ";
@@ -103,7 +103,7 @@ export default function SalesInventory({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Package className="h-3.5 w-3.5 text-success" />
+          <PackageIcon className="h-3.5 w-3.5 text-success" />
           {t("sales.inventory.title")}
         </h3>
         <div className="flex items-center gap-3">
@@ -117,7 +117,7 @@ export default function SalesInventory({
               className="h-7 w-7 rounded-md p-0"
               title={TEXT_TITLE_TABLE}
             >
-              <List className="h-3.5 w-3.5" />
+              <ListIcon className="h-3.5 w-3.5" />
             </Button>
             <Button
               type="button"
@@ -127,7 +127,7 @@ export default function SalesInventory({
               className="h-7 w-7 rounded-md p-0"
               title={TEXT_TITLE_VISUAL}
             >
-              <GridFour className="h-3.5 w-3.5" />
+              <GridFourIcon className="h-3.5 w-3.5" />
             </Button>
           </div>
 
@@ -140,7 +140,7 @@ export default function SalesInventory({
             }}
             className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8.5 px-4 flex items-center gap-1.5"
           >
-            <Plus className="h-4 w-4" />
+            <PlusIcon className="h-4 w-4" />
             {t("sales.inventory.addItem")}
           </Button>
         </div>
@@ -204,7 +204,7 @@ export default function SalesInventory({
                           }}
                           className="border-border text-muted-foreground hover:text-foreground text-xxs h-7 px-2.5"
                         >
-                          <Plus className="h-3 w-3 mr-1" />
+                          <PlusIcon className="h-3 w-3 mr-1" />
                           {t("sales.inventory.restock")}
                         </Button>
                         <Button
@@ -213,7 +213,7 @@ export default function SalesInventory({
                           onClick={() => onDeleteItem(item.id)}
                           className="h-7 w-7 text-danger hover:text-foreground hover:bg-danger/10"
                         >
-                          <Trash className="h-3.5 w-3.5" />
+                          <TrashIcon className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </TableCell>
@@ -310,7 +310,7 @@ export default function SalesInventory({
                               }}
                               className="flex-1 border-slate-900 hover:border-slate-800 text-slate-300 text-xxxs h-6.5"
                             >
-                              <Plus className="h-2.5 w-2.5 mr-1" />
+                              <PlusIcon className="h-2.5 w-2.5 mr-1" />
                               {t("sales.inventory.restock")}
                             </Button>
                             <Button
@@ -319,7 +319,7 @@ export default function SalesInventory({
                               onClick={() => onDeleteItem(item.id)}
                               className="h-6.5 w-6.5 text-danger hover:text-danger hover:bg-danger/10 shrink-0"
                             >
-                               <Trash className="h-3 w-3" />
+                               <TrashIcon className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
@@ -441,7 +441,7 @@ export default function SalesInventory({
                 type="submit"
                 className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
               >
-                <Sparkle className="h-3 w-3 mr-1" />
+                <SparkleIcon className="h-3 w-3 mr-1" />
                 {t("sales.inventory.submit")}
               </Button>
             </DialogFooter>

@@ -10,7 +10,7 @@ import AccountingCoa from "./AccountingCoa";
 import AccountingJournal from "./AccountingJournal";
 import AccountingLedger from "./AccountingLedger";
 import AccountingReports from "./AccountingReports";
-import { FileArrowDown, ShieldWarning, Sparkle, TrendUp, Wallet, CheckSquare, GearSix, Play } from "@phosphor-icons/react";
+import { FileArrowDownIcon, ShieldWarningIcon, SparkleIcon, TrendUpIcon, WalletIcon, CheckSquareIcon, GearSixIcon, PlayIcon } from "@phosphor-icons/react";
 
 // Linter constants
 const RUNWAY_STATUS = "Sovereignty Status: Safe";
@@ -78,7 +78,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
         <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="text-xxs font-mono font-bold text-success flex items-center gap-1.5">
-              <GearSix className="h-3.5 w-3.5" />
+              <GearSixIcon className="h-3.5 w-3.5" />
               {t("accounting.tiers.selectLabel")}
             </span>
             <p className="text-xxxs text-muted-foreground leading-normal max-w-md">
@@ -131,7 +131,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Wallet className="h-3.5 w-3.5 text-success" />
+                    <WalletIcon className="h-3.5 w-3.5 text-success" />
                     {t("accounting.runway.title")}
                   </span>
                   <span className="text-xxxs font-mono font-bold text-success bg-success/10 border border-success/20 px-2 py-0.5 rounded-full">
@@ -158,7 +158,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <Card className="bg-card border-border">
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <Sparkle className="h-3.5 w-3.5 text-warning" />
+                  <SparkleIcon className="h-3.5 w-3.5 text-warning" />
                   {t("accounting.health.title")}
                 </CardTitle>
               </CardHeader>
@@ -202,7 +202,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
             <Card className="bg-card border-border">
               <CardHeader className="pb-3 border-b border-border/55">
                 <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <ShieldWarning className="h-3.5 w-3.5 text-info" />
+                  <ShieldWarningIcon className="h-3.5 w-3.5 text-info" />
                   {AR_AP_TITLE}
                 </CardTitle>
               </CardHeader>
@@ -226,7 +226,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <Card className="bg-card border-border md:col-span-2">
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                    <TrendUp className="h-3.5 w-3.5 text-success" />
+                    <TrendUpIcon className="h-3.5 w-3.5 text-success" />
                     {RATIO_TITLE}
                   </CardTitle>
                 </CardHeader>
@@ -254,7 +254,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
               <Card className="bg-card border-border">
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-                    <CheckSquare className="h-3.5 w-3.5 text-info" />
+                    <CheckSquareIcon className="h-3.5 w-3.5 text-info" />
                     {AUDIT_TITLE}
                   </CardTitle>
                   <p className="text-xxxs text-muted-foreground mt-0.5 leading-normal">{AUDIT_DESC}</p>
@@ -265,7 +265,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
                       onClick={handleSimulateAudit}
                       className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 flex items-center justify-center gap-1.5"
                     >
-                      <Play className="h-3 w-3 fill-current" />
+                      <PlayIcon className="h-3 w-3 fill-current" />
                       {AUDIT_BTN_RUN}
                     </Button>
                   )}
@@ -277,7 +277,7 @@ export default function Accounting({ financeTier, onTierChange }: AccountingProp
                   )}
                   {auditComplete && (
                     <Button className="w-full bg-info hover:bg-info text-brand-foreground font-bold text-xs h-8 flex items-center justify-center gap-1.5">
-                      <FileArrowDown className="h-3 w-3" />
+                      <FileArrowDownIcon className="h-3 w-3" />
                       {AUDIT_BTN_EXPORT}
                     </Button>
                   )}

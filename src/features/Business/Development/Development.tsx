@@ -4,16 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/useToast";
 import {
-  Buildings,
+  BuildingsIcon,
   Database,
-  Globe,
-  Pulse,
-  CheckCircle,
+  GlobeIcon,
+  PulseIcon,
+  CheckCircleIcon,
   ArrowsClockwise,
-  Sparkle,
-  FileText,
-  Warning,
-  Play,
+  SparkleIcon,
+  FileTextIcon,
+  WarningIcon,
+  PlayIcon,
 } from "@phosphor-icons/react";
 import "./Development.css";
 
@@ -76,7 +76,7 @@ export default function Development() {
       {/* Header section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center">
-          <Buildings className="h-5 w-5 text-warning" />
+          <BuildingsIcon className="h-5 w-5 text-warning" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("development.title")}</h1>
@@ -88,7 +88,7 @@ export default function Development() {
       <Card className="bg-card border-border overflow-hidden hover-glow-card">
         <CardHeader className="pb-4">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Pulse className="h-3.5 w-3.5 text-success" />
+            <PulseIcon className="h-3.5 w-3.5 text-success" />
             {t("development.workflow.title")}
           </CardTitle>
         </CardHeader>
@@ -102,7 +102,7 @@ export default function Development() {
             >
               <div className="flex items-center justify-between mb-2">
                 <Database className={`h-4 w-4 ${analysisStep >= 1 ? "text-success" : "text-muted-foreground"}`} />
-                {analysisStep > 1 && <CheckCircle className="h-3.5 w-3.5 text-success" />}
+                {analysisStep > 1 && <CheckCircleIcon className="h-3.5 w-3.5 text-success" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 1 ? "text-success" : "text-foreground"}`}>
                 {t("development.workflow.step1.title")}
@@ -119,8 +119,8 @@ export default function Development() {
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <Globe className={`h-4 w-4 ${analysisStep >= 2 ? "text-success" : "text-muted-foreground"}`} />
-                {analysisStep > 2 && <CheckCircle className="h-3.5 w-3.5 text-success" />}
+                <GlobeIcon className={`h-4 w-4 ${analysisStep >= 2 ? "text-success" : "text-muted-foreground"}`} />
+                {analysisStep > 2 && <CheckCircleIcon className="h-3.5 w-3.5 text-success" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 2 ? "text-success" : "text-foreground"}`}>
                 {t("development.workflow.step2.title")}
@@ -137,8 +137,8 @@ export default function Development() {
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <Sparkle className={`h-4 w-4 ${analysisStep >= 3 ? "text-success" : "text-muted-foreground"}`} />
-                {analysisStep > 3 && <CheckCircle className="h-3.5 w-3.5 text-success" />}
+                <SparkleIcon className={`h-4 w-4 ${analysisStep >= 3 ? "text-success" : "text-muted-foreground"}`} />
+                {analysisStep > 3 && <CheckCircleIcon className="h-3.5 w-3.5 text-success" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 3 ? "text-success" : "text-foreground"}`}>
                 {t("development.workflow.step3.title")}
@@ -155,8 +155,8 @@ export default function Development() {
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <FileText className={`h-4 w-4 ${analysisStep >= 4 ? "text-success" : "text-muted-foreground"}`} />
-                {analysisCompleted && <CheckCircle className="h-3.5 w-3.5 text-success" />}
+                <FileTextIcon className={`h-4 w-4 ${analysisStep >= 4 ? "text-success" : "text-muted-foreground"}`} />
+                {analysisCompleted && <CheckCircleIcon className="h-3.5 w-3.5 text-success" />}
               </div>
               <p className={`text-xxs font-bold ${analysisStep >= 4 ? "text-success" : "text-foreground"}`}>
                 {t("development.workflow.step4.title")}
@@ -174,7 +174,7 @@ export default function Development() {
         <Card className="bg-card border-border border-dashed py-8">
           <CardContent className="flex flex-col items-center justify-center text-center space-y-4 max-w-md mx-auto">
             <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
-              <Sparkle className="h-6 w-6 text-success animate-pulse" />
+              <SparkleIcon className="h-6 w-6 text-success animate-pulse" />
             </div>
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-foreground">{t("development.simulation.ctaTitle")}</h3>
@@ -184,7 +184,7 @@ export default function Development() {
               onClick={handleStartAnalysis}
               className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 px-6 flex items-center gap-2"
             >
-              <Play className="h-3.5 w-3.5 fill-current" />
+              <PlayIcon className="h-3.5 w-3.5 fill-current" />
               {t("development.simulation.button")}
             </Button>
           </CardContent>
@@ -257,7 +257,7 @@ export default function Development() {
             <CardContent className="space-y-4">
               <div className="p-4 rounded-xl bg-input/40 border border-border">
                 <p className="text-xs font-bold text-foreground flex items-center gap-2">
-                  <Sparkle className="h-3.5 w-3.5 text-warning" />
+                  <SparkleIcon className="h-3.5 w-3.5 text-warning" />
                   {t("development.preview.unitName")}
                 </p>
                 <p className="text-xxs text-muted-foreground mt-1.5 leading-relaxed">
@@ -299,7 +299,7 @@ export default function Development() {
                   onClick={handleExport}
                   className="w-full md:w-auto bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 px-5 flex items-center justify-center gap-2"
                 >
-                  <FileText className="h-3.5 w-3.5" />
+                  <FileTextIcon className="h-3.5 w-3.5" />
                   {t("development.simulation.export")}
                 </Button>
                 <Button
@@ -316,9 +316,9 @@ export default function Development() {
         </div>
       )}
 
-      {/* Federated Warning alert */}
+      {/* Federated WarningIcon alert */}
       <div className="flex gap-2.5 p-3 rounded-xl border border-warning/10 bg-warning/5 text-xxs text-warning/80 leading-normal">
-        <Warning className="h-4 w-4 shrink-0 text-warning mt-0.5" />
+        <WarningIcon className="h-4 w-4 shrink-0 text-warning mt-0.5" />
         <span>{t("development.preview.alert")}</span>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ClockCounterClockwise, FileText, Info } from "@phosphor-icons/react";
+import { ClockCounterClockwiseIcon, FileTextIcon, InfoIcon } from "@phosphor-icons/react";
 import type { SalesTransaction, Member } from "@/types";
 
 const QUANTITY_PRICE_SEPARATOR = " x Rp ";
@@ -38,7 +38,7 @@ export default function SalesHistory({
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <ClockCounterClockwise className="h-4 w-4 text-success" />
+            <ClockCounterClockwiseIcon className="h-4 w-4 text-success" />
             {t("sales.history.title")}
           </CardTitle>
         </CardHeader>
@@ -99,7 +99,7 @@ export default function SalesHistory({
                       onClick={() => handleOpenReceipt(tx)}
                       className="border-border text-muted-foreground hover:text-foreground hover:bg-secondary text-xxs h-7.5 px-3"
                     >
-                      <FileText className="h-3 w-3 mr-1" />
+                      <FileTextIcon className="h-3 w-3 mr-1" />
                       {t("sales.history.action")}
                     </Button>
                   </TableCell>
@@ -189,7 +189,7 @@ export default function SalesHistory({
                 </div>
                 <div className="p-2 rounded bg-input/20 border border-border/30 font-mono text-xxs text-muted-foreground">
                   <span className="flex items-center gap-1 text-success/90">
-                    <Info className="h-3 w-3" />
+                    <InfoIcon className="h-3 w-3" />
                     {t("sales.history.journalRef", {
                       num: selectedTx.journal_entry_id?.slice(-8),
                     })}

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Coins, Users, TrendUp, ListChecks } from "@phosphor-icons/react";
+import { CoinsIcon, UsersIcon, TrendUpIcon, ListChecksIcon } from "@phosphor-icons/react";
 import { formatIdr, type Prediction } from "./eventTemplates";
 
 interface Props {
@@ -14,14 +14,14 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
     <div className="space-y-3 pt-2">
       {/* Divider */}
       <div className="flex items-center gap-2 text-xxs font-mono text-slate-500 uppercase tracking-wider">
-        <TrendUp className="h-3 w-3 text-success" />
+        <TrendUpIcon className="h-3 w-3 text-success" />
         {t("event.prediction.heading")}
       </div>
 
       {/* ── Cost Prediction ── */}
       <div className="rounded-lg border border-warning/15 bg-warning/5 p-3 space-y-2">
         <h4 className="text-xxs font-mono font-bold text-warning flex items-center gap-1.5">
-          <Coins className="h-3 w-3" />
+          <CoinsIcon className="h-3 w-3" />
           {t("event.prediction.costTitle")}
         </h4>
         <div className="space-y-1">
@@ -41,7 +41,7 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
       {/* ── Engagement Prediction ── */}
       <div className="rounded-lg border border-success/15 bg-success/5 p-3 space-y-1.5">
         <h4 className="text-xxs font-mono font-bold text-success flex items-center gap-1.5">
-          <Users className="h-3 w-3" />
+          <UsersIcon className="h-3 w-3" />
           {t("event.prediction.engagementTitle")}
         </h4>
         <p className="text-xxxs text-slate-400 leading-relaxed">
@@ -56,7 +56,7 @@ export default function EventPredictionPanels({ predictions, recommendedStartDat
       {/* ── Prep Timeline ── */}
       <div className="rounded-lg border border-slate-700/50 bg-slate-900/30 p-3 space-y-2">
         <h4 className="text-xxs font-mono font-bold text-slate-300 flex items-center gap-1.5">
-          <ListChecks className="h-3 w-3" />
+          <ListChecksIcon className="h-3 w-3" />
           {t("event.prediction.prepTitle")}
         </h4>
 

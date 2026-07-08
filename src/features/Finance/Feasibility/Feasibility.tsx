@@ -1,5 +1,5 @@
 import "./Feasibility.css";
-import { Info } from "@phosphor-icons/react";
+import { InfoIcon } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -179,7 +179,7 @@ export default function Feasibility() {
                   ].map(({ label, value, accent }) => (
                     <div key={label} className="p-3 rounded-xl border border-border bg-card">
                       <div className="flex items-center gap-1 mb-1">
-                        <Info className="h-2.5 w-2.5 text-muted-foreground" />
+                        <InfoIcon className="h-2.5 w-2.5 text-muted-foreground" />
                         <p className="text-xxxs font-mono text-muted-foreground">{label}</p>
                       </div>
                       <p

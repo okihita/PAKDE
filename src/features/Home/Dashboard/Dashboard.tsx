@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Circle, Plus, Newspaper, DotsSixVertical } from "@phosphor-icons/react";
+import { CheckCircleIcon, CircleIcon, PlusIcon, NewspaperIcon, DotsSixVerticalIcon } from "@phosphor-icons/react";
 import { NEWS_ITEMS, type NewsItem } from "@/data/news";
 
 import { DndContext, type DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
@@ -161,7 +161,7 @@ function SortableCard({ id, children, className }: { id: string; children: React
         {...attributes}
         {...listeners}
       >
-        <DotsSixVertical className="h-3.5 w-3.5 text-muted-foreground" />
+        <DotsSixVerticalIcon className="h-3.5 w-3.5 text-muted-foreground" />
       </div>
     </div>
   );
@@ -198,7 +198,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircle className="h-3 w-3 text-success" />
+              <CheckCircleIcon className="h-3 w-3 text-success" />
               {t("beranda.todoMain")}
             </CardTitle>
             {main.doneCount > 0 && (
@@ -223,9 +223,9 @@ export default function Dashboard() {
                 onClick={() => main.toggleItem(todo.id)}
               >
                 {todo.done ? (
-                  <CheckCircle className="h-3.5 w-3.5 text-brand shrink-0" />
+                  <CheckCircleIcon className="h-3.5 w-3.5 text-brand shrink-0" />
                 ) : (
-                  <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
+                  <CircleIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
                 )}
                 <span className={`text-xs ${todo.done ? "text-muted-foreground line-through" : "text-foreground"}`}>
                   {todo.text}
@@ -241,7 +241,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3 space-y-0">
           <div className="flex items-center justify-between mb-2">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircle className="h-3 w-3 text-success" />
+              <CheckCircleIcon className="h-3 w-3 text-success" />
               {tab === "daily" ? t("beranda.todo") : t("beranda.todoWeekly")}
             </CardTitle>
             {activeList.doneCount > 0 && (
@@ -284,7 +284,7 @@ export default function Dashboard() {
                 className="flex-1 bg-input border-border text-xs h-8 text-foreground placeholder:text-muted-foreground"
               />
               <Button type="submit" size="icon" className="h-8 w-8 bg-brand hover:bg-brand text-brand-foreground">
-                <Plus className="h-3.5 w-3.5" />
+                <PlusIcon className="h-3.5 w-3.5" />
               </Button>
             </form>
           )}
@@ -299,9 +299,9 @@ export default function Dashboard() {
                 onClick={() => activeList.toggleItem(todo.id)}
               >
                 {todo.done ? (
-                  <CheckCircle className="h-3.5 w-3.5 text-brand shrink-0" />
+                  <CheckCircleIcon className="h-3.5 w-3.5 text-brand shrink-0" />
                 ) : (
-                  <Circle className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
+                  <CircleIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
                 )}
                 <span className={`text-xs ${todo.done ? "text-muted-foreground line-through" : "text-foreground"}`}>
                   {todo.text}
@@ -318,7 +318,7 @@ export default function Dashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <Newspaper className="h-3 w-3 text-info" />
+              <NewspaperIcon className="h-3 w-3 text-info" />
               {t("beranda.news.title")}
               {unreadCount > 0 && (
                 <span className="text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/10 text-info">

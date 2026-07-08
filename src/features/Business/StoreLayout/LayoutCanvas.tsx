@@ -3,7 +3,7 @@ import { Stage, Layer, Rect, Line, Text, Group, Circle } from "react-konva";
 import type Konva from "konva";
 import type { LayoutZone, InventoryItem } from "@/types";
 import { sfx } from "@/features/System/ProfileSelect/sfx";
-import { Cursor, Square, Cube, Eraser, MagnifyingGlassPlus, MagnifyingGlassMinus, ArrowsOut } from "@phosphor-icons/react";
+import { CursorIcon, SquareIcon, CubeIcon, EraserIcon, MagnifyingGlassPlusIcon, MagnifyingGlassMinusIcon, ArrowsOutIcon } from "@phosphor-icons/react";
 import "./index.css";
 
 const CELL = 60;
@@ -303,10 +303,10 @@ export default function LayoutCanvas({
       <div className="absolute top-2 left-2 right-2 z-10 flex flex-wrap items-stretch gap-1">
         <div className="flex bg-slate-900/90 border border-slate-800 rounded-lg overflow-hidden">
           {([
-            ["select", Cursor],
-            ["zone", Square],
-            ["shelf", Cube],
-            ["erase", Eraser],
+            ["select", CursorIcon],
+            ["zone", SquareIcon],
+            ["shelf", CubeIcon],
+            ["erase", EraserIcon],
           ] as const).map(([tool, Icon]) => (
             <button
               key={tool}
@@ -330,14 +330,14 @@ export default function LayoutCanvas({
             className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors border-r border-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
             title="Zoom out"
           >
-            <MagnifyingGlassMinus className="h-3.5 w-3.5" />
+            <MagnifyingGlassMinusIcon className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={doFit}
             className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors border-r border-slate-800"
             title="Fit to screen"
           >
-            <ArrowsOut className="h-3.5 w-3.5" />
+            <ArrowsOutIcon className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => doZoom(1)}
@@ -345,7 +345,7 @@ export default function LayoutCanvas({
             className="px-2 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             title="Zoom in"
           >
-            <MagnifyingGlassPlus className="h-3.5 w-3.5" />
+            <MagnifyingGlassPlusIcon className="h-3.5 w-3.5" />
           </button>
         </div>
 

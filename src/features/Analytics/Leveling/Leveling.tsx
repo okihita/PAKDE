@@ -4,18 +4,18 @@ import { useTranslation } from "react-i18next";
 import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
-  Users,
-  TrendUp,
+  UsersIcon,
+  TrendUpIcon,
   ShieldCheck,
   ClipboardText,
-  Buildings,
+  BuildingsIcon,
   Monitor,
-  CaretDown,
-  CaretUp,
-  Trophy,
-  Star,
-  Lock,
-  CheckCircle,
+  CaretDownIcon,
+  CaretUpIcon,
+  TrophyIcon,
+  StarIcon,
+  LockIcon,
+  CheckCircleIcon,
 } from "@phosphor-icons/react";
 
 interface Props {
@@ -23,11 +23,11 @@ interface Props {
 }
 
 const ASPECT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  Users,
-  TrendUp,
+  UsersIcon,
+  TrendUpIcon,
   ShieldCheck,
   ClipboardText,
-  Buildings,
+  BuildingsIcon,
   Monitor,
 };
 
@@ -35,7 +35,7 @@ function QuestItem({ done, text }: { done: boolean; text: string }) {
   return (
     <li className="flex items-start gap-1.5 text-xxs text-muted-foreground">
       {done ? (
-        <CheckCircle className="h-3 w-3 text-brand mt-0.5 shrink-0" />
+        <CheckCircleIcon className="h-3 w-3 text-brand mt-0.5 shrink-0" />
       ) : (
         <span className="text-slate-700 mt-0.5 shrink-0">◈</span>
       )}
@@ -56,7 +56,7 @@ function LevelCard({
   healthScore: number;
 }) {
   const [open, setOpen] = useState(false);
-  const Icon = Trophy;
+  const Icon = TrophyIcon;
   const isId = lang.startsWith("id");
   const label = isId ? level.labelId : level.labelEn;
   const desc = isId ? level.descId : level.descEn;
@@ -79,7 +79,7 @@ function LevelCard({
               {isUnlocked ? (
                 <Icon className={`h-5 w-5 ${level.textClass}`} />
               ) : (
-                <Lock className="h-4 w-4 text-muted-foreground" />
+                <LockIcon className="h-4 w-4 text-muted-foreground" />
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -114,9 +114,9 @@ function LevelCard({
               </div>
             </div>
             {open ? (
-              <CaretUp className="h-3.5 w-3.5 text-muted-foreground" />
+              <CaretUpIcon className="h-3.5 w-3.5 text-muted-foreground" />
             ) : (
-              <CaretDown className="h-3.5 w-3.5 text-muted-foreground" />
+              <CaretDownIcon className="h-3.5 w-3.5 text-muted-foreground" />
             )}
           </div>
         </div>
@@ -126,7 +126,7 @@ function LevelCard({
         <CardContent className="pt-0 pb-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {level.aspects.map((aspect) => {
-              const AspectIcon = ASPECT_ICONS[aspect.icon] ?? Star;
+              const AspectIcon = ASPECT_ICONS[aspect.icon] ?? StarIcon;
               const aLabel = isId ? aspect.labelId : aspect.labelEn;
               const quests = isId ? aspect.quests.map((q) => q.id) : aspect.quests.map((q) => q.en);
 
@@ -163,7 +163,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center">
-          <Trophy className="h-5 w-5 text-warning" />
+          <TrophyIcon className="h-5 w-5 text-warning" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{isId ? "Leveling Koperasi" : "Cooperative Leveling"}</h1>
@@ -180,7 +180,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-warning" />
+              <TrophyIcon className="h-4 w-4 text-warning" />
               <span className="text-xs font-bold text-foreground">
                 {isId ? `Level Saat Ini: ${currentLevel.labelId}` : `Current Level: ${currentLevel.labelEn}`}
               </span>
@@ -206,7 +206,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
       {/* 10-level summary strip */}
       <div className="grid grid-cols-10 gap-1">
         {LEVELS.map((level: LevelDef) => {
-          const Icon = level.id === "teladan" ? Trophy : Star;
+          const Icon = level.id === "teladan" ? TrophyIcon : StarIcon;
           const label = isId ? level.labelId : level.labelEn;
           const isActive = currentLevel.id === level.id;
           const isComplete =
@@ -223,7 +223,7 @@ export default function Leveling({ healthScore = 0 }: Props) {
               }`}
             >
               {isComplete ? (
-                <CheckCircle className={`h-3.5 w-3.5 ${level.textClass}`} />
+                <CheckCircleIcon className={`h-3.5 w-3.5 ${level.textClass}`} />
               ) : (
                 <Icon className={`h-3.5 w-3.5 ${isActive ? level.textClass : "text-muted-foreground"}`} />
               )}

@@ -2,31 +2,31 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   SquaresFour,
-  Users,
+  UsersIcon,
   Note,
-  TrendUp,
-  ChartBar,
-  Trophy,
+  TrendUpIcon,
+  ChartBarIcon,
+  TrophyIcon,
   ArrowsClockwise,
   Gear,
-  Warning,
+  WarningIcon,
   UserCheck,
-  Sun,
-  Moon,
+  SunIcon,
+  MoonIcon,
   Shield,
-  Medal,
-  CaretDown,
-  CaretRight,
+  MedalIcon,
+  CaretDownIcon,
+  CaretRightIcon,
   ChartLine,
-  Wallet,
+  WalletIcon,
   CalendarPlus,
-  Wrench,
-  Handshake,
-  Buildings,
-  BookOpen,
-  FileText,
+  WrenchIcon,
+  HandshakeIcon,
+  BuildingsIcon,
+  BookOpenIcon,
+  FileTextIcon,
   SignOut,
-  MapPin,
+  MapPinIcon,
 } from "@phosphor-icons/react";
 import { getCurrentLevel } from "@/data/leveling";
 import type { CooperativeProfile, EwsAlert } from "@/types";
@@ -123,50 +123,50 @@ export default function Sidebar({
       icon: ChartLine,
       label: t("sidebar.groups.analitik"),
       items: [
-        { id: "statistics", icon: ChartBar, label: t("sidebar.nav.statistics") },
-        { id: "ranking", icon: Medal, label: t("sidebar.nav.ranking") },
-        { id: "leveling", icon: Trophy, label: t("sidebar.nav.leveling") },
+        { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
+        { id: "ranking", icon: MedalIcon, label: t("sidebar.nav.ranking") },
+        { id: "leveling", icon: TrophyIcon, label: t("sidebar.nav.leveling") },
       ],
     },
     {
       id: "bisnis",
-      icon: TrendUp,
+      icon: TrendUpIcon,
       label: t("sidebar.groups.bisnis"),
       items: [
-        { id: "units", icon: Buildings, label: t("sidebar.nav.units") },
-        { id: "equipment", icon: Wrench, label: t("sidebar.nav.equipment") },
-        { id: "sales", icon: Handshake, label: t("sidebar.nav.sales") },
-        { id: "storelayout", icon: MapPin, label: t("sidebar.nav.storeLayout") },
-        { id: "development", icon: Buildings, label: t("sidebar.nav.development") },
+        { id: "units", icon: BuildingsIcon, label: t("sidebar.nav.units") },
+        { id: "equipment", icon: WrenchIcon, label: t("sidebar.nav.equipment") },
+        { id: "sales", icon: HandshakeIcon, label: t("sidebar.nav.sales") },
+        { id: "storelayout", icon: MapPinIcon, label: t("sidebar.nav.storeLayout") },
+        { id: "development", icon: BuildingsIcon, label: t("sidebar.nav.development") },
       ],
     },
     {
       id: "komunitas",
-      icon: Users,
+      icon: UsersIcon,
       label: t("sidebar.groups.komunitas"),
       items: [
-        { id: "participation", icon: ChartBar, label: t("sidebar.nav.participation") },
-        { id: "members", icon: Users, label: t("sidebar.nav.members") },
+        { id: "participation", icon: ChartBarIcon, label: t("sidebar.nav.participation") },
+        { id: "members", icon: UsersIcon, label: t("sidebar.nav.members") },
         { id: "event", icon: CalendarPlus, label: t("sidebar.nav.event") },
-        { id: "impact", icon: Handshake, label: t("sidebar.nav.impact") },
+        { id: "impact", icon: HandshakeIcon, label: t("sidebar.nav.impact") },
       ],
     },
     {
       id: "keuangan",
-      icon: Wallet,
+      icon: WalletIcon,
       label: t("sidebar.groups.keuangan"),
       items: [
         { id: "accounting", icon: Note, label: t("sidebar.nav.accounting") },
-        { id: "feasibility", icon: TrendUp, label: t("sidebar.nav.feasibility") },
+        { id: "feasibility", icon: TrendUpIcon, label: t("sidebar.nav.feasibility") },
       ],
     },
     {
       id: "learn",
-      icon: BookOpen,
+      icon: BookOpenIcon,
       label: t("sidebar.groups.learn"),
       items: [
-        { id: "learn", icon: BookOpen, label: t("sidebar.nav.learn") },
-        { id: "planners", icon: FileText, label: t("sidebar.nav.planners") },
+        { id: "learn", icon: BookOpenIcon, label: t("sidebar.nav.learn") },
+        { id: "planners", icon: FileTextIcon, label: t("sidebar.nav.planners") },
       ],
     },
     {
@@ -213,7 +213,7 @@ export default function Sidebar({
         >
           <GroupIcon className="h-3.5 w-3.5 shrink-0" />
           <span className="flex-1">{group.label}</span>
-          {isCollapsed ? <CaretRight className="h-3 w-3" /> : <CaretDown className="h-3 w-3" />}
+          {isCollapsed ? <CaretRightIcon className="h-3 w-3" /> : <CaretDownIcon className="h-3 w-3" />}
         </div>
         {/* Group items */}
         {!isCollapsed && group.items.map((item) => renderNavItem(item, true))}
@@ -258,7 +258,7 @@ export default function Sidebar({
             )}
             <div className="flex items-center gap-2 text-xxs text-muted-foreground">
               <span className="flex items-center gap-1">
-                <Users className="h-3 w-3 shrink-0" />
+                <UsersIcon className="h-3 w-3 shrink-0" />
                 <span>{memberCount}</span>
               </span>
               <span className="text-border">|</span>
@@ -269,7 +269,7 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* User Profile Row */}
+          {/* UserIcon Profile Row */}
           <div className="flex items-center gap-3 px-1">
             <div className="w-9 h-9 rounded-full bg-success/20 flex items-center justify-center shrink-0 ring-1 ring-brand/30">
               <UserCheck className="h-4 w-4 text-success" />
@@ -284,9 +284,9 @@ export default function Sidebar({
               title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             >
               {appTheme === "dark" ? (
-                <Sun className="h-3.5 w-3.5 text-muted-foreground hover:text-warning transition-colors" />
+                <SunIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-warning transition-colors" />
               ) : (
-                <Moon className="h-3.5 w-3.5 text-muted-foreground hover:text-info transition-colors" />
+                <MoonIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-info transition-colors" />
               )}
             </button>
             <button
@@ -312,7 +312,7 @@ export default function Sidebar({
         <div className="border-t border-border p-4">
           <div className="px-3 py-3 rounded-xl bg-danger/5 border border-danger/10">
             <div className="flex items-center gap-2">
-              <Warning className="h-3 w-3 text-danger" />
+              <WarningIcon className="h-3 w-3 text-danger" />
               <span className="text-xxs font-mono text-danger">
                 {t("sidebar.criticalAlerts", { count: criticalAlerts })}
               </span>

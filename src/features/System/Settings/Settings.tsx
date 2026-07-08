@@ -13,7 +13,7 @@ import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { remove } from "@tauri-apps/plugin-fs";
-import { Moon, Sun, Globe, TextAa, Palette, PaintBucket, User, Buildings, ArrowsLeftRight, Warning } from "@phosphor-icons/react";
+import { MoonIcon, SunIcon, GlobeIcon, TextAaIcon, PaletteIcon, PaintBucketIcon, UserIcon, BuildingsIcon, ArrowsLeftRightIcon, WarningIcon } from "@phosphor-icons/react";
 
 interface Props {
   coopProfile: CooperativeProfile | null;
@@ -34,8 +34,8 @@ const FONT_LEVELS = [
 ] as const;
 
 const THEME_OPTIONS = [
-  { value: "dark", icon: Moon, label: "settings.preferences.themeDark" },
-  { value: "light", icon: Sun, label: "settings.preferences.themeLight" },
+  { value: "dark", icon: MoonIcon, label: "settings.preferences.themeDark" },
+  { value: "light", icon: SunIcon, label: "settings.preferences.themeLight" },
 ] as const;
 
 const LANG_OPTIONS = [
@@ -162,7 +162,7 @@ export default function Settings({
         <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-              <Palette className="h-3.5 w-3.5 text-success" />
+              <PaletteIcon className="h-3.5 w-3.5 text-success" />
               {t("settings.preferences.title")}
             </CardTitle>
           </CardHeader>
@@ -170,7 +170,7 @@ export default function Settings({
             {/* Language */}
             <div className="space-y-2">
               <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Globe className="h-3 w-3 text-slate-500" />
+                <GlobeIcon className="h-3 w-3 text-slate-500" />
                 {t("settings.preferences.language")}
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -193,7 +193,7 @@ export default function Settings({
             {/* Theme */}
             <div className="space-y-2">
               <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <PaintBucket className="h-3 w-3 text-slate-500" />
+                <PaintBucketIcon className="h-3 w-3 text-slate-500" />
                 {t("settings.preferences.theme")}
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -216,7 +216,7 @@ export default function Settings({
             {/* Font Size */}
             <div className="space-y-2">
               <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <TextAa className="h-3 w-3 text-slate-500" />
+                <TextAaIcon className="h-3 w-3 text-slate-500" />
                 {t("settings.preferences.fontSize")}
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -238,7 +238,7 @@ export default function Settings({
             {/* Icon Weight */}
             <div className="space-y-2">
               <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Palette className="h-3 w-3 text-slate-500" />
+                <PaletteIcon className="h-3 w-3 text-slate-500" />
                 {t("settings.preferences.iconWeight")}
               </label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -256,10 +256,10 @@ export default function Settings({
               </div>
             </div>
 
-            {/* Palette */}
+            {/* PaletteIcon */}
             <div className="space-y-2">
               <label className="text-xxs font-mono text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Palette className="h-3 w-3 text-slate-500" />
+                <PaletteIcon className="h-3 w-3 text-slate-500" />
                 {t("settings.preferences.palette")}
               </label>
               <div className="space-y-2">
@@ -292,14 +292,14 @@ export default function Settings({
           </CardContent>
         </Card>
 
-        {/* ── Right: User Profile + Cooperative Profile ── */}
+        {/* ── Right: UserIcon Profile + Cooperative Profile ── */}
         <div className="space-y-6">
-          {/* User Profile */}
+          {/* UserIcon Profile */}
           {currentUser && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                  <User className="h-3.5 w-3.5 text-info" />
+                  <UserIcon className="h-3.5 w-3.5 text-info" />
                   {t("settings.userProfile.title")}
                 </CardTitle>
               </CardHeader>
@@ -319,7 +319,7 @@ export default function Settings({
                   onClick={onSwitchProfile}
                   className="w-full border-border text-muted-foreground hover:text-foreground text-xs h-8"
                 >
-                  <ArrowsLeftRight className="h-3.5 w-3.5 mr-1.5" />
+                  <ArrowsLeftRightIcon className="h-3.5 w-3.5 mr-1.5" />
                   {t("profileSelect.switchProfile")}
                 </Button>
               </CardContent>
@@ -330,7 +330,7 @@ export default function Settings({
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <Buildings className="h-3.5 w-3.5 text-success" />
+                <BuildingsIcon className="h-3.5 w-3.5 text-success" />
                 {t("settings.profileTitle")}
               </CardTitle>
             </CardHeader>
@@ -406,7 +406,7 @@ export default function Settings({
       <Card className="bg-card border-destructive/20">
         <CardHeader>
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Warning className="h-3.5 w-3.5 text-danger" />
+            <WarningIcon className="h-3.5 w-3.5 text-danger" />
             {t("settings.reset.title")}
           </CardTitle>
           <CardDescription className="text-xxs text-muted-foreground">

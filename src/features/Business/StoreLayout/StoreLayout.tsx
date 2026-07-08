@@ -9,7 +9,7 @@ import { useStoreLayout } from "@/hooks/useStoreLayout";
 import LayoutCanvas from "./LayoutCanvas";
 import ShelfPanel from "./ShelfPanel";
 import type { LayoutZone } from "@/types";
-import { MapPin, Plus, Trash, ArrowLeft, Sparkle } from "@phosphor-icons/react";
+import { MapPinIcon, PlusIcon, TrashIcon, ArrowLeft, SparkleIcon } from "@phosphor-icons/react";
 
 export interface CategoryRow {
   id: string;
@@ -124,7 +124,7 @@ export default function StoreLayout() {
         <div className="space-y-4">
           <div className="flex items-center">
             <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-success" />
+              <MapPinIcon className="h-3.5 w-3.5 text-success" />
               {t("storeLayout.title")}
             </h3>
           </div>
@@ -137,7 +137,7 @@ export default function StoreLayout() {
             >
               <CardContent className="p-6 flex flex-col items-center justify-center min-h-[140px]">
                 <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-3 group-hover:bg-success/10 group-hover:border-success/30 transition-all">
-                  <Plus className="h-5 w-5 text-slate-500 group-hover:text-success transition-colors" />
+                  <PlusIcon className="h-5 w-5 text-slate-500 group-hover:text-success transition-colors" />
                 </div>
                 <span className="text-xs font-bold text-slate-500 group-hover:text-success transition-colors">
                   {t("storeLayout.newLayout")}
@@ -172,7 +172,7 @@ export default function StoreLayout() {
                         deleteLayout(layout.id);
                       }}
                     >
-                      <Trash className="h-3.5 w-3.5" />
+                      <TrashIcon className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                   <p className="text-xxxs font-mono text-slate-500">
@@ -281,7 +281,7 @@ export default function StoreLayout() {
                   type="submit"
                   className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
                 >
-                  <Sparkle className="h-3 w-3 mr-1" />
+                  <SparkleIcon className="h-3 w-3 mr-1" />
                   {t("storeLayout.create")}
                 </Button>
               </DialogFooter>

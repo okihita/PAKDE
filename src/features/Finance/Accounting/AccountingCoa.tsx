@@ -1,4 +1,4 @@
-import { Plus } from "@phosphor-icons/react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -39,7 +39,7 @@ export default function AccountingCoa({
           onClick={() => setShowModal(true)}
           className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
         >
-          <Plus className="h-3 w-3 mr-1" /> {t("accounting.coa.addButton")}
+          <PlusIcon className="h-3 w-3 mr-1" /> {t("accounting.coa.addButton")}
         </Button>
       </div>
       <Table>

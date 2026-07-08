@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus } from "@phosphor-icons/react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
 
@@ -381,7 +381,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
               type="submit"
               className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8.5 px-4"
             >
-              <Plus className="h-3.5 w-3.5 mr-1" />
+              <PlusIcon className="h-3.5 w-3.5 mr-1" />
               {t("common.save")}
             </Button>
           </DialogFooter>

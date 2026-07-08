@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Clock, Sparkle } from "@phosphor-icons/react";
+import { ArrowLeft, ClockIcon, SparkleIcon } from "@phosphor-icons/react";
 import { EVENT_TEMPLATES, computePredictions, formatIdr, type EventTemplate, importanceStars } from "./eventTemplates";
 
 interface Props {
@@ -22,7 +22,7 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
       </button>
 
       <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-5">
-        <Sparkle className="h-3.5 w-3.5 text-warning" />
+        <SparkleIcon className="h-3.5 w-3.5 text-warning" />
         {t("event.template.heading")}
       </h3>
 
@@ -69,7 +69,7 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
                     <h4 className="text-xs font-bold text-foreground leading-snug">{t(tmpl.i18nKey)}</h4>
                     <div className="flex items-center gap-3 text-xxxs font-mono text-slate-500">
                       <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-slate-600" />
+                        <ClockIcon className="h-3 w-3 text-slate-600" />
                         {prepLabel}
                       </span>
                       {tmpl.legalNoteKey && (

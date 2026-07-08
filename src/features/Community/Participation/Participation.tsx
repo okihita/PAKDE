@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartBar, Users, CheckSquare, Wallet, Fire, Calendar, Medal, Leaf, Handshake } from "@phosphor-icons/react";
+import { ChartBarIcon, UsersIcon, CheckSquareIcon, WalletIcon, FireIcon, CalendarIcon, MedalIcon, LeafIcon, HandshakeIcon } from "@phosphor-icons/react";
 import "./Participation.css";
 
 // Constants for i18n/linter rules bypass
@@ -83,7 +83,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
       {/* Header section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
-          <ChartBar className="h-5 w-5 text-success" />
+          <ChartBarIcon className="h-5 w-5 text-success" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-foreground">{t("participation.title")}</h1>
@@ -99,7 +99,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.attendanceTitle")}
             </span>
-            <Users className="h-4 w-4 text-success" />
+            <UsersIcon className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_ATTENDANCE}</h3>
@@ -115,7 +115,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.votingTitle")}
             </span>
-            <CheckSquare className="h-4 w-4 text-info" />
+            <CheckSquareIcon className="h-4 w-4 text-info" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_VOTING}</h3>
@@ -131,7 +131,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.loyaltyTitle")}
             </span>
-            <Wallet className="h-4 w-4 text-lime-400" />
+            <WalletIcon className="h-4 w-4 text-lime-400" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_LOYALTY}</h3>
@@ -147,7 +147,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
             <span className="text-xxxs font-mono text-muted-foreground uppercase">
               {t("participation.metrics.activeStreak")}
             </span>
-            <Fire className="h-4 w-4 text-warning" />
+            <FireIcon className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
             <h3 className="text-sm font-bold text-foreground">{VAL_STREAK}</h3>
@@ -163,7 +163,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border md:col-span-2">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5 text-success" />
+              <CalendarIcon className="h-3.5 w-3.5 text-success" />
               {t("participation.heatmapTitle")}
             </CardTitle>
             <p className="text-xxxs text-muted-foreground mt-1 leading-relaxed">{t("participation.heatmapDesc")}</p>
@@ -191,7 +191,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Medal className="h-3.5 w-3.5 text-warning" />
+              <MedalIcon className="h-3.5 w-3.5 text-warning" />
               {t("participation.tiersTitle")}
             </CardTitle>
           </CardHeader>
@@ -244,7 +244,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Medal className="h-3.5 w-3.5 text-lime-400" />
+              <MedalIcon className="h-3.5 w-3.5 text-lime-400" />
               {t("participation.progressTitle")}
             </CardTitle>
             <p className="text-xxxs text-muted-foreground mt-1 leading-relaxed">{t("participation.progressDesc")}</p>
@@ -285,7 +285,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3 border-b border-border/55">
             <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-              <Medal className="h-3.5 w-3.5 text-info" />
+              <MedalIcon className="h-3.5 w-3.5 text-info" />
               {t("participation.leaderboardTitle")}
             </CardTitle>
           </CardHeader>
@@ -334,7 +334,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
       <Card className="bg-card border-border">
         <CardHeader className="pb-3 border-b border-border/55">
           <CardTitle className="text-xs font-bold text-foreground flex items-center gap-2">
-            <Medal className="h-3.5 w-3.5 text-warning" />
+            <MedalIcon className="h-3.5 w-3.5 text-warning" />
             {t("participation.badgesTitle")}
           </CardTitle>
         </CardHeader>
@@ -342,7 +342,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
           {/* Democracy Badge */}
           <div className="p-3 rounded-xl bg-input/20 border border-border/40 text-center space-y-2">
             <div className="w-10 h-10 rounded-full bg-info/10 text-info border border-info/20 flex items-center justify-center mx-auto">
-              <Users className="h-5 w-5" />
+              <UsersIcon className="h-5 w-5" />
             </div>
             <div>
               <span className="text-xxs font-bold text-foreground block">{t("participation.badgeDemoTitle")}</span>
@@ -353,7 +353,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
           {/* Eco Badge */}
           <div className="p-3 rounded-xl bg-input/20 border border-border/40 text-center space-y-2">
             <div className="w-10 h-10 rounded-full bg-lime-500/10 text-lime-400 border border-lime-500/20 flex items-center justify-center mx-auto">
-              <Leaf className="h-5 w-5" />
+              <LeafIcon className="h-5 w-5" />
             </div>
             <div>
               <span className="text-xxs font-bold text-foreground block">{t("participation.badgeEcoTitle")}</span>
@@ -364,7 +364,7 @@ export default function Participation({ onTabChange }: ParticipationProps) {
           {/* Health Badge */}
           <div className="p-3 rounded-xl bg-input/20 border border-border/40 text-center space-y-2">
             <div className="w-10 h-10 rounded-full bg-success/10 text-success border border-success/20 flex items-center justify-center mx-auto">
-              <Handshake className="h-5 w-5" />
+              <HandshakeIcon className="h-5 w-5" />
             </div>
             <div>
               <span className="text-xxs font-bold text-foreground block">{t("participation.badgeHealthTitle")}</span>

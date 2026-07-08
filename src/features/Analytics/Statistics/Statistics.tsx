@@ -2,7 +2,7 @@ import "./Statistics.css";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Warning, Info } from "@phosphor-icons/react";
+import { WarningIcon, InfoIcon } from "@phosphor-icons/react";
 import type { CooperativeProfile, EwsAlert } from "@/types";
 
 interface Props {
@@ -17,10 +17,10 @@ const LEVEL_STYLE: Record<string, string> = {
   critical: "text-danger bg-danger/10",
 };
 
-const LEVEL_ICON: Record<string, typeof Info> = {
-  info: Info,
-  warning: Warning,
-  critical: Warning,
+const LEVEL_ICON: Record<string, typeof InfoIcon> = {
+  info: InfoIcon,
+  warning: WarningIcon,
+  critical: WarningIcon,
 };
 
 export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Props) {
@@ -81,7 +81,7 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
           <Card className="bg-card border-border text-foreground hover-glow-card">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-mono tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-                <Warning className="h-3 w-3 text-warning" />
+                <WarningIcon className="h-3 w-3 text-warning" />
                 {t("dashboard.ewAlerts")}
               </CardTitle>
             </CardHeader>
@@ -112,7 +112,7 @@ export default function Statistics({ coopProfile, ewsAlerts, currentUser }: Prop
                     </TableRow>
                   )}
                   {activeAlerts.map((a) => {
-                    const Icon = LEVEL_ICON[a.level] ?? Info;
+                    const Icon = LEVEL_ICON[a.level] ?? InfoIcon;
                     return (
                       <TableRow key={a.id} className="border-border hover:bg-sidebar-ring">
                         <TableCell className="py-2 pl-4">

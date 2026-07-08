@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { LayoutZone, InventoryItem } from "@/types";
 import type { CategoryRow } from "./StoreLayout";
-import { X, Trash, Minus, Cube } from "@phosphor-icons/react";
+import { XIcon, TrashIcon, MinusIcon, CubeIcon } from "@phosphor-icons/react";
 
 interface ShelfPanelProps {
   zone: LayoutZone;
@@ -89,7 +89,7 @@ export default function ShelfPanel({
             className="h-6 w-6 text-danger hover:text-danger hover:bg-danger/10"
             title={t("common.delete")}
           >
-            <Trash className="h-3 w-3" />
+            <TrashIcon className="h-3 w-3" />
           </Button>
           <Button
             variant="ghost"
@@ -97,7 +97,7 @@ export default function ShelfPanel({
             onClick={onClose}
             className="h-6 w-6 text-muted-foreground hover:text-foreground"
           >
-            <X className="h-3 w-3" />
+            <XIcon className="h-3 w-3" />
           </Button>
         </div>
       </div>
@@ -230,7 +230,7 @@ export default function ShelfPanel({
                     </span>
                   </>
                 ) : (
-                  <Cube className="h-4 w-4 text-slate-600" />
+                  <CubeIcon className="h-4 w-4 text-slate-600" />
                 )}
               </div>
             );
@@ -252,7 +252,7 @@ export default function ShelfPanel({
               onClick={() => setAssigningBin(null)}
               className="h-5 w-5 text-muted-foreground"
             >
-              <X className="h-3 w-3" />
+              <XIcon className="h-3 w-3" />
             </Button>
           </div>
 
@@ -274,7 +274,7 @@ export default function ShelfPanel({
                   setAssigningBin(null);
                 }}
               >
-                <Minus className="h-3 w-3" />
+                <MinusIcon className="h-3 w-3" />
               </Button>
             </div>
           )}

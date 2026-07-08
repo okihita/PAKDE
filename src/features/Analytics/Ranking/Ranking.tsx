@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trophy, Medal, TrendUp, TrendDown, Minus, Star } from "@phosphor-icons/react";
+import { TrophyIcon, MedalIcon, TrendUpIcon, TrendDownIcon, MinusIcon, StarIcon } from "@phosphor-icons/react";
 import type { CooperativeProfile } from "@/types";
 
 interface Props {
@@ -133,15 +133,15 @@ function ragColor(status: string): string {
 }
 
 function TrendIcon({ trend }: { trend: "up" | "down" | "stable" }) {
-  if (trend === "up") return <TrendUp className="h-3 w-3 text-success" />;
-  if (trend === "down") return <TrendDown className="h-3 w-3 text-danger" />;
-  return <Minus className="h-3 w-3 text-muted-foreground" />;
+  if (trend === "up") return <TrendUpIcon className="h-3 w-3 text-success" />;
+  if (trend === "down") return <TrendDownIcon className="h-3 w-3 text-danger" />;
+  return <MinusIcon className="h-3 w-3 text-muted-foreground" />;
 }
 
 function rankMedal(rank: number) {
-  if (rank === 1) return <Trophy className="h-4 w-4 text-warning" />;
-  if (rank === 2) return <Medal className="h-4 w-4 text-slate-300" />;
-  if (rank === 3) return <Medal className="h-4 w-4 text-warning" />;
+  if (rank === 1) return <TrophyIcon className="h-4 w-4 text-warning" />;
+  if (rank === 2) return <MedalIcon className="h-4 w-4 text-slate-300" />;
+  if (rank === 3) return <MedalIcon className="h-4 w-4 text-warning" />;
   return <span className="text-xxs font-mono text-muted-foreground w-4 text-center">{rank}</span>;
 }
 
@@ -191,7 +191,7 @@ export default function Ranking({ coopProfile }: Props) {
               </TableCell>
               <TableCell className="py-2">
                 <div className="flex items-center gap-2">
-                  {c.isOurs && <Star className="h-3 w-3 text-success shrink-0" />}
+                  {c.isOurs && <StarIcon className="h-3 w-3 text-success shrink-0" />}
                   <div className="min-w-0">
                     <p className={`text-xs font-bold truncate ${c.isOurs ? "text-success" : "text-foreground"}`}>
                       {c.name}
@@ -239,7 +239,7 @@ export default function Ranking({ coopProfile }: Props) {
       <Card className="bg-card border-border hover-glow-card">
         <CardHeader className="pb-0">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Trophy className="h-3 w-3 text-warning" />
+            <TrophyIcon className="h-3 w-3 text-warning" />
             {t("ranking.title")}
           </CardTitle>
         </CardHeader>

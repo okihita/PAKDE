@@ -1,6 +1,6 @@
 import "./Members.css";
 import { useTranslation } from "react-i18next";
-import { MagnifyingGlass, Plus, Trash, PencilSimple, Plant } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, PlusIcon, TrashIcon, PencilSimpleIcon, Plant } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -56,14 +56,14 @@ export default function Members() {
               onClick={m.openAddMemberModal}
               className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
             >
-              <Plus className="h-3 w-3 mr-1" /> {t("members.addButton")}
+              <PlusIcon className="h-3 w-3 mr-1" /> {t("members.addButton")}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
-              <MagnifyingGlass className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+              <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
               <Input
                 placeholder={t("members.searchPlaceholder")}
                 value={m.memberSearchQuery}
@@ -151,7 +151,7 @@ export default function Members() {
                         className="h-6 w-6 text-muted-foreground hover:text-foreground"
                         onClick={() => m.openEditMemberModal(mbr)}
                       >
-                        <PencilSimple className="h-3 w-3" />
+                        <PencilSimpleIcon className="h-3 w-3" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -159,7 +159,7 @@ export default function Members() {
                         className="h-6 w-6 text-danger hover:text-foreground"
                         onClick={() => m.handleDeleteMember(mbr)}
                       >
-                        <Trash className="h-3 w-3" />
+                        <TrashIcon className="h-3 w-3" />
                       </Button>
                     </div>
                   </TableCell>

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, CheckCircle, Lock, Star, Trophy, ArrowRight, ArrowLeft } from "@phosphor-icons/react";
+import { BookOpenIcon, CheckCircleIcon, LockIcon, StarIcon, TrophyIcon, ArrowRight, ArrowLeft } from "@phosphor-icons/react";
 
 import { MODULES, CONNECTIONS, type ModuleDef } from "./curriculum";
 import { loadProgress, saveProgress } from "./secureStorage";
@@ -97,7 +97,7 @@ export default function Learn() {
         <CardContent className="p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-warning" />
+              <BookOpenIcon className="h-5 w-5 text-warning" />
             </div>
             <div>
               <p className="text-sm font-bold text-foreground">{t("sidebar.nav.learn")}</p>
@@ -107,7 +107,7 @@ export default function Learn() {
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Star className="h-4 w-4 text-warning fill-warning" />
+            <StarIcon className="h-4 w-4 text-warning fill-warning" />
             <span className="text-sm font-black text-foreground font-mono">{allDone.length * 10}</span>
           </div>
         </CardContent>
@@ -186,11 +186,11 @@ export default function Learn() {
                   >
                     <div className="flex items-center gap-1 mb-1 font-mono text-xxxs uppercase tracking-wider font-bold">
                       {!isUnlocked ? (
-                        <Lock className="h-3 w-3 text-slate-500" />
+                        <LockIcon className="h-3 w-3 text-slate-500" />
                       ) : isCompleted ? (
-                        <Trophy className="h-3 w-3 text-success" />
+                        <TrophyIcon className="h-3 w-3 text-success" />
                       ) : (
-                        <BookOpen className="h-3 w-3 text-warning animate-pulse" />
+                        <BookOpenIcon className="h-3 w-3 text-warning animate-pulse" />
                       )}
                       <span>{mod.id}</span>
                     </div>
@@ -209,7 +209,7 @@ export default function Learn() {
               /* Render Lesson Complete area */
               <Card className="bg-card border-border">
                 <CardContent className="p-8 text-center space-y-3">
-                  <CheckCircle className="h-12 w-12 text-success mx-auto" />
+                  <CheckCircleIcon className="h-12 w-12 text-success mx-auto" />
                   <p className="text-sm font-bold text-foreground">{t("learn.lessonComplete")}</p>
                   <p className="text-xxs text-muted-foreground">
                     {t("learn.lessonCompleteDesc", { name: activeLessonDef?.name ?? "" })}
@@ -362,7 +362,7 @@ export default function Learn() {
                     {!isUnlocked ? (
                       <div className="p-3.5 bg-danger/10 border border-danger/20 text-xxs font-mono text-danger rounded-lg space-y-1">
                         <p className="font-bold flex items-center gap-1.5">
-                          <Lock className="h-3.5 w-3.5 text-danger" />
+                          <LockIcon className="h-3.5 w-3.5 text-danger" />
                           <span>{TEXT_LOCKED_MSG}</span>
                         </p>
                         <p className="text-xxxs opacity-80 leading-normal">{selectedMod.prerequisites.join(", ")}</p>
@@ -390,7 +390,7 @@ export default function Learn() {
                                   <p className="text-xs font-bold text-slate-200">{ls.name}</p>
                                 </div>
                                 {done ? (
-                                  <CheckCircle className="h-4 w-4 text-success shrink-0" />
+                                  <CheckCircleIcon className="h-4 w-4 text-success shrink-0" />
                                 ) : (
                                   <Button
                                     size="sm"

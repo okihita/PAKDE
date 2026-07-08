@@ -4,11 +4,13 @@ import {
   SpeakerLow,
   SpeakerX,
   MusicNotes,
-  CheckCircle,
-  XCircle,
+  CheckCircleIcon,
+  XCircleIcon,
   ShieldCheck,
   GameController,
-  Trophy,
+  TrophyIcon,
+  Camera,
+  CircleNotch,
 } from "@phosphor-icons/react";
 import { getDb } from "@/db";
 import type { CooperativeProfile } from "@/types";
@@ -16,7 +18,7 @@ import { sfx } from "./sfx";
 import { bgMusic } from "./music";
 import CreateProfileDialog from "./CreateProfileDialog";
 import CooperativeCardList from "./CooperativeCardList";
-import { UNIT_ICONS } from "./unitIcons";
+import { UNIT_CONFIG } from "./unitIcons";
 import { seedDemoCooperativeAtLevel, DEMO_COOP_UUID, type DemoLevel } from "@/db/seed-demo";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -35,12 +37,20 @@ const LOGIN_LINK = "Masuk";
 const COOP_LIST_HEADING = "Koperasi Anda";
 const COOP_COUNT_SUFFIX = "koperasi";
 const DEMO_TIER_HEADING = "Pilih Level Demo";
-const DEMO_TIER_START = "Mulai";
+const BRIEFING_FEATURES = "Fitur yang Dibuka";
+const BRIEFING_BACK = "Kembali";
+const BRIEFING_START = "Mulai";
 
 const DEMO_TIERS: {
   level: DemoLevel;
   title: string;
-  desc: string;
+  coopName: string;
+  narrative: string;
+  features: string[];
+  stats: { label: string; value: string }[];
+  village: string;
+  regency: string;
+  province: string;
   units: string[];
   color: string;
   border: string;
@@ -50,7 +60,17 @@ const DEMO_TIERS: {
   {
     level: "pemula",
     title: "Pemula",
-    desc: "10 anggota · 1 unit usaha · 8 modul — Cocok untuk koperasi kecil yang baru memulai.",
+    coopName: "Koperasi Tani Sejahtera",
+    narrative: "Pak Karto baru saja merintis koperasi ini bersama 24 tetangganya di Lampung. Mereka mulai dengan mengumpulkan pupuk untuk musim tanam berikutnya — gotong royong, langkah demi langkah.",
+    features: ["Dashboard", "Anggota", "Unit Usaha", "Penjualan", "Inventaris", "Akuntansi Dasar", "Profil Koperasi"],
+    stats: [
+      { label: "Berjalan", value: "4 bulan" },
+      { label: "Anggota", value: "25" },
+      { label: "Unit Usaha", value: "1" },
+    ],
+    village: "Desa Air Hitam",
+    regency: "Lampung Tengah",
+    province: "Lampung",
     units: ["unit_pupuk"],
     color: "emerald",
     border: "border-amber-900/40",
@@ -60,7 +80,17 @@ const DEMO_TIERS: {
   {
     level: "menengah",
     title: "Menengah",
-    desc: "30 anggota · 2 unit usaha · 12 modul — Untuk koperasi yang sedang berkembang.",
+    coopName: "Koperasi Usaha Bersama",
+    narrative: "Berawal dari pupuk, koperasi di Bontang ini berkembang dengan unit simpan pinjam. Ibu Siti Rahmawati memimpin pencatatan keuangan yang rapi — koperasi mulai tumbuh dan dipercaya warga.",
+    features: ["Dashboard", "Anggota", "Unit Usaha", "Penjualan", "Inventaris", "Akuntansi", "Simpan Pinjam", "Statistik", "Profil Koperasi", "EWS Alert"],
+    stats: [
+      { label: "Berjalan", value: "2 tahun" },
+      { label: "Anggota", value: "30" },
+      { label: "Unit Usaha", value: "2" },
+    ],
+    village: "Kelurahan Bontang Baru",
+    regency: "Bontang",
+    province: "Kalimantan Timur",
     units: ["unit_pupuk", "unit_simpan_pinjam"],
     color: "amber",
     border: "border-amber-800/50",
@@ -70,7 +100,17 @@ const DEMO_TIERS: {
   {
     level: "lanjutan",
     title: "Lanjutan",
-    desc: "50 anggota · 3 unit usaha · 16 modul — Koperasi lengkap dengan semua fitur.",
+    coopName: "Koperasi Maju Bersama",
+    narrative: "Koperasi Maju Bersama telah menjadi tulang punggung ekonomi di Makassar. Dari pupuk hingga apotek, semua dikelola secara profesional — koperasi mandiri dan menjadi rujukan daerah.",
+    features: ["Semua 16 Modul", "Dashboard", "Anggota", "Unit Usaha", "Penjualan", "Inventaris", "Akuntansi Lengkap", "Simpan Pinjam", "Statistik", "Ranking", "Leveling", "Tata Letak Toko", "Analisis Kelayakan", "EWS Alert", "Sinkronisasi", "Profil Koperasi"],
+    stats: [
+      { label: "Berjalan", value: "5 tahun" },
+      { label: "Anggota", value: "50" },
+      { label: "Unit Usaha", value: "4" },
+    ],
+    village: "Kelurahan Tanjung Bunga",
+    regency: "Makassar",
+    province: "Sulawesi Selatan",
     units: ["unit_pupuk", "unit_simpan_pinjam", "unit_apotek", "unit_pemasaran"],
     color: "brand",
     border: "border-amber-600/50",
@@ -113,6 +153,8 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   const [slideIndex, setSlideIndex] = useState(0);
   const [showCoopList, setShowCoopList] = useState(false);
   const [showDemoTiers, setShowDemoTiers] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<DemoLevel | null>(null);
+  const [seeding, setSeeding] = useState(false);
 
   // Slideshow loop
   useEffect(() => {
@@ -289,7 +331,7 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                     <div>
                       <h3 className="text-sm font-bold text-white">{REAL_TITLE}</h3>
                       <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
-                        <Trophy className="h-3 w-3" />
+                        <TrophyIcon className="h-3 w-3" />
                         {REAL_BADGE}
                       </p>
                     </div>
@@ -361,11 +403,11 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
             </div>
 
             {/* ── Submenu area (reserved space, prevents layout shift) ── */}
-            <div className="w-full max-w-3xl mx-auto min-h-[220px] mt-6">
+            <div className="w-full max-w-3xl mx-auto min-h-[280px] mt-6">
               {/* Demo tier cards */}
               {showDemoTiers && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider text-center">
+                  <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider text-center mb-4">
                     {DEMO_TIER_HEADING}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -374,26 +416,51 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
                         key={tier.level}
                         role="button"
                         tabIndex={0}
-                        onKeyDown={(e) => e.key === "Enter" && handleDemoEnter(tier.level)}
+                        onKeyDown={(e) => e.key === "Enter" && setSelectedTier(tier.level)}
                         onClick={() => {
                           handleUserInteraction();
-                          handleDemoEnter(tier.level);
+                          setSelectedTier(tier.level);
                         }}
                         onMouseEnter={handleCardHover}
-                        className={`group relative rounded-xl border-2 ${tier.border} ${tier.bg} backdrop-blur-md p-4 cursor-pointer hover:scale-[1.03] hover:shadow-[0_0_25px_rgba(245,158,11,0.10)] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-amber-500/50`}
+                        className={`group relative rounded-xl border-2 ${tier.border} ${tier.bg} backdrop-blur-md p-4 cursor-pointer hover:scale-[1.03] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_0_25px_rgba(245,158,11,0.10)] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-amber-500/50`}
                       >
+                        {/* Image placeholder */}
+                        <div className="w-full h-20 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-center mb-3">
+                          <Camera className="h-5 w-5 text-slate-600" />
+                        </div>
                         <h4 className={`text-sm font-bold ${tier.text}`}>{tier.title}</h4>
-                        <p className="mt-1.5 text-xxs leading-relaxed text-slate-500">{tier.desc}</p>
+                        {/* Stats */}
+                        <div className="mt-2 text-xxxs text-slate-500 font-mono">
+                          <p>
+                            {tier.stats[0].label} <span className="text-slate-300">{tier.stats[0].value}</span>
+                          </p>
+                          <p>
+                            <span className="text-slate-300">{tier.stats[1].value}</span> {tier.stats[1].label}
+                            {tier.stats[2] && <> · <span className="text-slate-300">{tier.stats[2].value}</span> {tier.stats[2].label}</>}
+                          </p>
+                        </div>
+                        {/* Location */}
+                        <p className="mt-1.5 text-xxxs text-slate-600 font-mono">{tier.village}, {tier.regency}</p>
+                        {/* Unit icons */}
                         <div className="flex items-center gap-1.5 mt-2">
                           {tier.units.map((unitId) => {
-                            const Icon = UNIT_ICONS[unitId];
-                            return Icon ? <Icon key={unitId} className="h-3.5 w-3.5 text-slate-500" /> : null;
+                            const cfg = UNIT_CONFIG[unitId];
+                            if (!cfg) return null;
+                            const Icon = cfg.icon;
+                            return (
+                              <div key={unitId} className="group/tip relative hover:z-10">
+                                <div
+                                  className={`flex items-center justify-center h-6 w-6 rounded-md border ${cfg.boxClass}`}
+                                >
+                                  <Icon weight="fill" className={`h-3.5 w-3.5 ${cfg.iconClass}`} />
+                                </div>
+                                <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2.5 py-1.5 rounded bg-slate-800 border border-slate-700 shadow-lg opacity-0 group-hover/tip:opacity-100 transition-opacity duration-100 pointer-events-none min-w-48 max-w-64 z-10">
+                                  <p className="text-xxxs font-bold text-slate-200">{cfg.label}</p>
+                                  <p className="text-xxxs text-slate-500 mt-0.5 leading-relaxed">{cfg.desc}</p>
+                                </span>
+                              </div>
+                            );
                           })}
-                        </div>
-                        <div
-                          className={`mt-3 rounded-md border ${tier.border} ${tier.bg} px-3 py-1.5 text-xxs font-bold ${tier.text} text-center group-hover:brightness-110 transition-all`}
-                        >
-                          {DEMO_TIER_START}
                         </div>
                       </div>
                     ))}
@@ -426,7 +493,10 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
       {/* Bottom: Footer */}
       <div className="relative z-10 flex flex-col items-center pb-8 space-y-0.5 animate-in fade-in duration-500">
         <span className="text-xxs font-mono text-slate-500">{t("splash.version")}</span>
-        <span className="text-xxs font-mono text-slate-600">{FOOTER_COPYRIGHT}</span>
+        <div className="flex items-center gap-2">
+          <img src="/logo_kemenkop.svg" alt="Kemenkop" className="h-6 w-auto opacity-70" />
+          <span className="text-xxs font-mono text-slate-600">{FOOTER_COPYRIGHT}</span>
+        </div>
       </div>
 
       <CreateProfileDialog
@@ -435,15 +505,88 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
         onProfileCreated={handleCreateCreated}
       />
 
+      {/* Campaign briefing popup */}
+      {selectedTier && (() => {
+        const tier = DEMO_TIERS.find((t) => t.level === selectedTier)!;
+        return (
+          <Dialog open={!!selectedTier} onOpenChange={(open) => { if (!open) setSelectedTier(null); }}>
+            <DialogContent className="bg-slate-900 border border-amber-800/40 max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+              {/* Image placeholder */}
+              <div className="w-full h-36 rounded-lg bg-slate-800/80 border border-slate-700 flex items-center justify-center mb-4">
+                <Camera className="h-6 w-6 text-slate-600" />
+              </div>
+
+              <DialogHeader>
+                <DialogTitle className={`text-lg font-bold ${tier.text}`}>{tier.coopName}</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4 text-xs">
+                {/* Location */}
+                <p className="text-xxs text-slate-500 font-mono">{tier.village}, {tier.regency}, {tier.province}</p>
+
+                {/* Narrative */}
+                <p className="text-xs leading-relaxed text-slate-400">{tier.narrative}</p>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-2">
+                  {tier.stats.map((s) => (
+                    <div key={s.label} className="text-center rounded-lg bg-slate-800/50 border border-slate-700 p-2">
+                      <p className="text-lg font-bold text-amber-400">{s.value}</p>
+                      <p className="text-xxxs text-slate-500 font-mono uppercase">{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Features checklist */}
+                <div>
+                  <p className="text-xxs font-bold text-slate-400 uppercase tracking-wider mb-2">{BRIEFING_FEATURES}</p>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                    {tier.features.map((f) => (
+                      <p key={f} className="text-xxs text-slate-500 font-mono flex items-center gap-1">
+                        <CheckCircleIcon className="h-3 w-3 text-amber-500 flex-shrink-0" /> {f}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-2 mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setSelectedTier(null)}
+                  disabled={seeding}
+                  className="border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8.5"
+                >
+                  {BRIEFING_BACK}
+                </Button>
+                <Button
+                  onClick={async () => {
+                    setSeeding(true);
+                    await handleDemoEnter(tier.level);
+                    setSeeding(false);
+                    setSelectedTier(null);
+                  }}
+                  disabled={seeding}
+                  className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs h-8.5 px-4"
+                >
+                  {seeding ? <CircleNotch className="h-3.5 w-3.5 animate-spin mr-1" /> : null}
+                  {BRIEFING_START}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        );
+      })()}
+
       {/* Result popup */}
       <Dialog open={devResult.open} onOpenChange={(open) => setDevResult((prev) => ({ ...prev, open }))}>
         <DialogContent className="bg-slate-900 border max-w-sm shadow-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-sm font-bold">
               {devResult.ok ? (
-                <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+                <CheckCircleIcon className="h-5 w-5 text-success flex-shrink-0" />
               ) : (
-                <XCircle className="h-5 w-5 text-danger flex-shrink-0" />
+                <XCircleIcon className="h-5 w-5 text-danger flex-shrink-0" />
               )}
               <span className={devResult.ok ? "text-success" : "text-danger"}>
                 {devResult.ok ? "Success" : "Error"}

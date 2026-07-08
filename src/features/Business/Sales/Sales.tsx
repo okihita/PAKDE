@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingCart, ClockCounterClockwise, Package, MagnifyingGlass, MinusCircle, PlusCircle, CreditCard, Trash } from "@phosphor-icons/react";
+import { ShoppingCartIcon, ClockCounterClockwiseIcon, PackageIcon, MagnifyingGlassIcon, MinusCircleIcon, PlusCircleIcon, CreditCardIcon, TrashIcon } from "@phosphor-icons/react";
 import SalesHistory from "./SalesHistory";
 import SalesInventory from "./SalesInventory";
 import "./Sales.css";
@@ -71,7 +71,7 @@ export default function Sales() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
-            <ShoppingCart className="h-5 w-5 text-success" />
+            <ShoppingCartIcon className="h-5 w-5 text-success" />
           </div>
           <div>
             <h1 className="text-sm font-bold text-foreground">{t("sales.checkout.title")}</h1>
@@ -90,21 +90,21 @@ export default function Sales() {
             value="checkout"
             className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success flex items-center gap-1.5"
           >
-            <ShoppingCart className="h-3.5 w-3.5" />
+            <ShoppingCartIcon className="h-3.5 w-3.5" />
             {t("sales.tabs.checkout")}
           </TabsTrigger>
           <TabsTrigger
             value="history"
             className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success flex items-center gap-1.5"
           >
-            <ClockCounterClockwise className="h-3.5 w-3.5" />
+            <ClockCounterClockwiseIcon className="h-3.5 w-3.5" />
             {t("sales.tabs.history")}
           </TabsTrigger>
           <TabsTrigger
             value="inventory"
             className="text-xxs data-[state=active]:bg-success/10 data-[state=active]:text-success flex items-center gap-1.5"
           >
-            <Package className="h-3.5 w-3.5" />
+            <PackageIcon className="h-3.5 w-3.5" />
             {t("sales.tabs.inventory")}
           </TabsTrigger>
         </TabsList>
@@ -116,7 +116,7 @@ export default function Sales() {
             <div className="lg:col-span-2 space-y-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
-                  <MagnifyingGlass className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <MagnifyingGlassIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                   <Input
                     placeholder={t("sales.checkout.searchProducts")}
                     value={productSearch}
@@ -208,7 +208,7 @@ export default function Sales() {
                 <CardHeader className="pb-3 border-b border-border/55">
                   <CardTitle className="text-xs font-bold text-muted-foreground uppercase flex justify-between items-center">
                     <span className="flex items-center gap-1.5">
-                      <ShoppingCart className="h-3.5 w-3.5 text-success" />
+                      <ShoppingCartIcon className="h-3.5 w-3.5 text-success" />
                       {t("sales.checkout.cartTitle")}
                     </span>
                     <span className="font-mono text-xxs text-muted-foreground">
@@ -235,7 +235,7 @@ export default function Sales() {
                             onClick={() => s.updateCartQty(c.item.id, c.quantity - 1)}
                             className="p-1 hover:text-success text-muted-foreground transition-colors"
                           >
-                            <MinusCircle className="h-4 w-4" />
+                            <MinusCircleIcon className="h-4 w-4" />
                           </button>
                           <span className="w-6 text-center font-mono font-bold text-foreground text-xxs">
                             {c.quantity}
@@ -244,13 +244,13 @@ export default function Sales() {
                             onClick={() => s.updateCartQty(c.item.id, c.quantity + 1)}
                             className="p-1 hover:text-success text-muted-foreground transition-colors"
                           >
-                            <PlusCircle className="h-4 w-4" />
+                            <PlusCircleIcon className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => s.removeFromCart(c.item.id)}
                             className="p-1 pl-2 hover:text-danger text-muted-foreground transition-colors"
                           >
-                            <Trash className="h-3.5 w-3.5" />
+                            <TrashIcon className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </div>
@@ -368,7 +368,7 @@ export default function Sales() {
                       }
                       className="w-full bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9.5 flex items-center justify-center gap-1.5"
                     >
-                      <CreditCard className="h-4 w-4" />
+                      <CreditCardIcon className="h-4 w-4" />
                       {s.isProcessing ? t("sales.checkout.processing") : t("sales.checkout.process")}
                     </Button>
                   </div>

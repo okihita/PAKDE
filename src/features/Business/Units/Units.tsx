@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useUnits } from "@/hooks/useUnits";
-import { Buildings, Plus, Sparkle, Power, Pulse } from "@phosphor-icons/react";
+import { BuildingsIcon, PlusIcon, SparkleIcon, PowerIcon, PulseIcon } from "@phosphor-icons/react";
 import "./Units.css";
 
 interface UnitsProps {
@@ -42,7 +42,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
-            <Buildings className="h-5 w-5 text-success" />
+            <BuildingsIcon className="h-5 w-5 text-success" />
           </div>
           <div>
             <h1 className="text-sm font-bold text-foreground">{t("units.title")}</h1>
@@ -54,7 +54,7 @@ export default function Units({ onTabChange }: UnitsProps) {
             onClick={() => setIsOpen(true)}
             className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-9 px-4 flex items-center gap-1.5"
           >
-            <Plus className="h-4 w-4" />
+            <PlusIcon className="h-4 w-4" />
             {t("units.register")}
           </Button>
         </div>
@@ -63,7 +63,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       {/* Active Units list */}
       <div className="space-y-3">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Pulse className="h-3.5 w-3.5 text-success" />
+          <PulseIcon className="h-3.5 w-3.5 text-success" />
           {t("units.active")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -183,7 +183,7 @@ export default function Units({ onTabChange }: UnitsProps) {
                     variant="outline"
                     className="w-full border-danger/20 hover:bg-danger/10 hover:text-danger text-muted-foreground text-xxs h-8 flex items-center gap-1.5"
                   >
-                    <Power className="h-3 w-3" />
+                    <PowerIcon className="h-3 w-3" />
                     {t("units.toggleActive")}
                   </Button>
                 </CardContent>
@@ -201,7 +201,7 @@ export default function Units({ onTabChange }: UnitsProps) {
       {/* Inactive Units list */}
       <div className="space-y-3 pt-4 border-t border-border">
         <h3 className="text-xxs font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Buildings className="h-3.5 w-3.5 text-muted-foreground" />
+          <BuildingsIcon className="h-3.5 w-3.5 text-muted-foreground" />
           {t("units.inactive")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-75">
@@ -229,7 +229,7 @@ export default function Units({ onTabChange }: UnitsProps) {
                   variant="outline"
                   className="w-full border-border hover:bg-success/10 hover:text-success text-muted-foreground text-xxs h-8 flex items-center gap-1.5"
                 >
-                  <Power className="h-3 w-3" />
+                  <PowerIcon className="h-3 w-3" />
                   {t("units.toggleInactive")}
                 </Button>
               </CardContent>
@@ -281,7 +281,7 @@ export default function Units({ onTabChange }: UnitsProps) {
                 type="submit"
                 className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 px-4 flex items-center gap-1"
               >
-                <Sparkle className="h-3 w-3" />
+                <SparkleIcon className="h-3 w-3" />
                 {t("units.form.submit")}
               </Button>
             </div>

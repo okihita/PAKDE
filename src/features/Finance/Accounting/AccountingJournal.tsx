@@ -1,4 +1,4 @@
-import { Plus, Trash, Calendar } from "@phosphor-icons/react";
+import { PlusIcon, TrashIcon, CalendarIcon } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,7 +47,7 @@ export default function AccountingJournal({
           onClick={() => setShowModal(true)}
           className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
         >
-          <Plus className="h-3 w-3 mr-1" /> {t("accounting.journal.addButton")}
+          <PlusIcon className="h-3 w-3 mr-1" /> {t("accounting.journal.addButton")}
         </Button>
       </div>
 
@@ -55,7 +55,7 @@ export default function AccountingJournal({
         <Card key={entry.id} className="bg-card border-border">
           <CardHeader className="py-3">
             <CardTitle className="text-xs font-mono flex items-center gap-3 text-muted-foreground">
-              <Calendar className="h-3 w-3" />
+              <CalendarIcon className="h-3 w-3" />
               <span className="text-foreground font-bold">{entry.number}</span>
               <span className="text-muted-foreground">— {entry.date}</span>
               <span className="ml-auto text-xxxs text-muted-foreground">{entry.category}</span>
@@ -176,7 +176,7 @@ export default function AccountingJournal({
                       className="h-6 w-6 text-danger"
                       onClick={() => onRemoveLine(i)}
                     >
-                      <Trash className="h-3 w-3" />
+                      <TrashIcon className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
