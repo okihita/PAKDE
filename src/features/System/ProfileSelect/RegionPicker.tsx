@@ -93,8 +93,8 @@ export default function RegionPicker({ onChange }: Props) {
           setVillage(v);
           emit(province, regency, district, v);
         }}
-        disabled={!regency}
-        placeholder={regency ? L_SEARCH : L_SELECT_KAB}
+        disabled={!district}
+        placeholder={district ? L_SEARCH : "Pilih kecamatan terlebih dahulu"}
         renderOption={(row) => {
           const v = row as WilayahRow & { district_nama?: string; regency_nama?: string };
           if (v.district_nama) {

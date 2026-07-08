@@ -42,7 +42,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 flex items-center justify-center h-6 w-6 rounded-md bg-red-950/60 border border-red-800/40 text-red-400 opacity-70 transition-opacity hover:opacity-100 hover:bg-red-900/60 focus:outline-none">
+      <DialogPrimitive.Close className="absolute right-2 top-2 flex items-center justify-center h-6 w-6 rounded-md bg-red-950/60 border border-red-800/40 text-red-400 opacity-70 transition-opacity hover:opacity-100 hover:bg-red-900/60 focus:outline-none">
         <XIcon className="h-3.5 w-3.5" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>

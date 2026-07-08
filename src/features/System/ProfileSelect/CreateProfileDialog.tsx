@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,18 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
     sfx.playSoftThud(100, 0.15);
     setStep("confirm");
   };
+
+  // Auto-advance to confirm when all location fields are filled
+  const allLocationFilled = formData.province && formData.regency && formData.district && formData.village;
+  const hasAdvanced = useRef(false);
+  useEffect(() => {
+    if (step === "fill" && allLocationFilled && !hasAdvanced.current) {
+      hasAdvanced.current = true;
+      handleNext();
+    }
+    if (!allLocationFilled) hasAdvanced.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allLocationFilled, step]);
 
   const handleLaunch = async () => {
     setCreating(true);
