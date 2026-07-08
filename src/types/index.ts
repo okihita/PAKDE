@@ -87,6 +87,7 @@ export interface CooperativeProfile {
   parent_name?: string;
   founded_date?: string;
   category?: string;
+  is_demo?: number; // 0 = real, 1 = demo. Optional for legacy rows.
   created_at?: string;
   updated_at?: string;
 }

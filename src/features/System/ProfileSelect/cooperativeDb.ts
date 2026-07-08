@@ -72,11 +72,18 @@ export async function createCooperative(input: CreateCooperativeInput): Promise<
 
 export async function listCooperatives(): Promise<CooperativeProfile[]> {
   const db = await getDb();
-  return db.select<CooperativeProfile[]>("SELECT * FROM cooperatives ORDER BY created_at DESC");
+  return db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE is_demo = 0 ORDER BY created_at DESC");
 }
 
 export async function getCooperativeById(id: string): Promise<CooperativeProfile | null> {
   const db = await getDb();
   const rows = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE id = ?", [id]);
+  return rows.length > 0 ? rows[0] : null;
+}
+
+/** Returns the seeded demo cooperative, or null if not yet seeded. */
+export async function getDemoCooperative(): Promise<CooperativeProfile | null> {
+  const db = await getDb();
+  const rows = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE is_demo = 1 LIMIT 1");
   return rows.length > 0 ? rows[0] : null;
 }

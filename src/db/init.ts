@@ -224,6 +224,9 @@ export async function initDb(): Promise<void> {
   await ensureColumn("cooperatives", "founded_date TEXT", "founded_date");
   await ensureColumn("cooperatives", "category TEXT", "category");
 
+  // Demo cooperative separation flag (0 = real, 1 = demo)
+  await ensureColumn("cooperatives", "is_demo INTEGER NOT NULL DEFAULT 0", "is_demo");
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales_transactions (
       id TEXT PRIMARY KEY,

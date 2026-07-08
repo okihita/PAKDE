@@ -13,7 +13,7 @@ import {
   Buildings,
 } from "@phosphor-icons/react";
 import type { CooperativeProfile } from "@/types";
-import { listCooperatives, getCooperativeById } from "./cooperativeDb";
+import { listCooperatives, getDemoCooperative } from "./cooperativeDb";
 import { sfx } from "./sfx";
 import { bgMusic } from "./music";
 import CreateProfileDialog from "./CreateProfileDialog";
@@ -22,7 +22,7 @@ import JoinExistingCoop from "./JoinExistingCoop";
 import { UNIT_CONFIG } from "./unitIcons";
 import { DEMO_TIERS } from "./demoTiers";
 import CampaignBriefingDialog from "./CampaignBriefingDialog";
-import { seedDemoCooperativeAtLevel, DEMO_COOP_UUID, type DemoLevel } from "@/db/seed-demo";
+import { seedDemoCooperativeAtLevel, type DemoLevel } from "@/db/seed-demo";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -155,7 +155,8 @@ export default function ProfileSelect({ onProfileSelect }: ProfileSelectProps) {
   const handleDemoEnter = async (level: DemoLevel) => {
     try {
       await seedDemoCooperativeAtLevel(level);
-      const coop = await getCooperativeById(DEMO_COOP_UUID);
+      localStorage.setItem("pakde-demo-tier", level);
+      const coop = await getDemoCooperative();
       if (coop) {
         sfx.playChime();
         setTimeout(() => {

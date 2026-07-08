@@ -11,7 +11,7 @@ import { usePalette } from "@/hooks/usePalette";
 import { PALETTES } from "@/data/palettes";
 import type { CooperativeProfile } from "@/types";
 import { updateCooperative, deleteCooperative } from "./settingsDb";
-import { DEMO_COOP_UUID, seedDemoCooperativeAtLevel } from "@/db/seed-demo";
+import { isDemoCooperative, seedDemoCooperativeAtLevel, type DemoLevel } from "@/db/seed-demo";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { remove } from "@tauri-apps/plugin-fs";
 import {
@@ -98,7 +98,7 @@ export default function Settings({
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const isDemo = coopProfile?.id === DEMO_COOP_UUID;
+  const isDemo = isDemoCooperative(coopProfile);
 
   const handleFactoryReset = async () => {
     if (!resetConfirm) {
@@ -140,7 +140,8 @@ export default function Settings({
   const handleResetDemo = async () => {
     setDeleting(true);
     try {
-      await seedDemoCooperativeAtLevel("lanjutan");
+      const tier = (localStorage.getItem("pakde-demo-tier") as DemoLevel | null) ?? "lanjutan";
+      await seedDemoCooperativeAtLevel(tier);
       toast.success(L_DEMO_RESET_OK);
       window.location.reload();
     } catch (err) {

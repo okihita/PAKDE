@@ -40,7 +40,7 @@ import CreateUserProfile from "@/features/System/ProfileSelect/CreateUserProfile
 import UserSignIn from "@/features/System/ProfileSelect/UserSignIn";
 import ProfileCompletion from "@/features/Home/Dashboard/ProfileCompletion";
 import { getErrorMessage, type CooperativeProfile, type EwsAlert, type LocalUser } from "@/types";
-import { DEMO_COOP_UUID } from "@/db/seed-demo";
+import { isDemoCooperative } from "@/db/seed-demo";
 
 type FontLevel = "small" | "normal" | "large" | "xlarge";
 const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
@@ -282,7 +282,7 @@ function AppContent() {
               setCoopProfile(profile);
               localStorage.setItem("pakde-active-profile-id", profile.id || "");
               // Demo coop — auto-login with seeded user, skip PIN
-              if (profile.id === DEMO_COOP_UUID) {
+              if (isDemoCooperative(profile)) {
                 const users = await getUsersByCooperativeId(profile.id || "");
                 if (users.length > 0) {
                   setCurrentUser(users[0]);
