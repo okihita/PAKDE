@@ -334,7 +334,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                 </div>
 
                 {/* "atau" divider */}
-                <span className="text-xxs font-mono font-bold text-slate-600 uppercase tracking-widest">
+                <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
                   {t("profileSelect.orText")}
                 </span>
 
@@ -373,7 +373,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                 </div>
 
                 {/* "atau" divider */}
-                <span className="text-xxs font-mono font-bold text-slate-600 uppercase tracking-widest">
+                <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
                   {t("profileSelect.orText")}
                 </span>
 
@@ -446,7 +446,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                         </div>
                         <h4 className={`text-sm font-bold ${tier.text}`}>{tier.title}</h4>
                         {/* Stats */}
-                        <div className="mt-2 text-xxxs text-slate-500 font-mono">
+                        <div className="mt-2 text-xxxs text-slate-500">
                           <p>
                             {tier.stats[0].label} <span className="text-slate-300">{tier.stats[0].value}</span>
                           </p>
@@ -461,7 +461,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                           </p>
                         </div>
                         {/* Location */}
-                        <p className="mt-1.5 text-xxxs text-slate-600 font-mono">
+                        <p className="mt-1.5 text-xxxs text-slate-600">
                           {tier.village}, {tier.regency}
                         </p>
                         {/* Unit icons */}
@@ -514,10 +514,10 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
 
       {/* Bottom: Footer */}
       <div className="relative z-10 flex flex-col items-center pb-8 space-y-0.5 animate-in fade-in duration-500">
-        <span className="text-xxs font-mono text-slate-500">{t("splash.version")}</span>
+        <span className="text-xxs text-slate-500">{t("splash.version")}</span>
         <div className="flex items-center gap-2">
           <img src="/logo_kemenkop.svg" alt={t("profileSelect.footerKemenkopAlt")} className="h-6 w-auto opacity-70" />
-          <span className="text-xxs font-mono text-slate-600">{FOOTER_COPYRIGHT}</span>
+          <span className="text-xxs text-slate-600">{FOOTER_COPYRIGHT}</span>
         </div>
       </div>
 
@@ -565,7 +565,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
               </span>
             </DialogTitle>
           </DialogHeader>
-          <p className="text-xs text-slate-300 font-mono leading-relaxed py-2">{devResult.message}</p>
+          <p className="text-xs text-slate-300 leading-relaxed py-2">{devResult.message}</p>
           <DialogFooter>
             <Button
               variant="outline"

@@ -62,7 +62,7 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
                 <div className="w-9 h-9 rounded-lg bg-success/10 flex items-center justify-center border border-success/20 shrink-0">
                   <BuildingsIcon className="h-4.5 w-4.5 text-success" />
                 </div>
-                <span className="text-xxxs font-mono font-bold text-success uppercase border border-brand/25 px-2 py-0.5 rounded bg-success/20">
+                <span className="text-xxxs font-bold text-success uppercase border border-brand/25 px-2 py-0.5 rounded bg-success/20">
                   {p.id}
                 </span>
               </div>
@@ -81,19 +81,17 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
             {(p.category || p.founded_date) && (
               <div className="flex items-center gap-2 pt-1">
                 {p.category && (
-                  <span className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded-xs bg-amber-950/50 border border-amber-800/30 text-amber-500 uppercase tracking-wider">
+                  <span className="text-xxxs font-bold px-1.5 py-0.5 rounded-xs bg-amber-950/50 border border-amber-800/30 text-amber-500 uppercase tracking-wider">
                     {CATEGORY_LABELS[p.category] || p.category}
                   </span>
                 )}
-                {getAge(p.founded_date) && (
-                  <span className="text-xxxs font-mono text-slate-500">{getAge(p.founded_date)}</span>
-                )}
+                {getAge(p.founded_date) && <span className="text-xxxs text-slate-500">{getAge(p.founded_date)}</span>}
               </div>
             )}
 
             <div className="space-y-3 pt-4 border-t border-slate-900 font-sans">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-xxxs font-mono text-slate-400">
+                <div className="flex justify-between items-center text-xxxs text-slate-400">
                   <span className="uppercase">{t("profileSelect.health")}</span>
                   <span
                     className={`font-bold ${isHealthy ? "text-success" : isCritical ? "text-danger" : "text-warning"}`}
@@ -118,14 +116,14 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
                   return (
                     <span
                       key={unit}
-                      className="text-xxxs font-mono font-bold px-1.5 py-0.5 rounded-xs bg-slate-900 border border-slate-800 text-slate-400 uppercase tracking-wider"
+                      className="text-xxxs font-bold px-1.5 py-0.5 rounded-xs bg-slate-900 border border-slate-800 text-slate-400 uppercase tracking-wider"
                     >
                       {label}
                     </span>
                   );
                 })}
                 {activeUnits.length === 0 && (
-                  <span className="text-xxxs font-mono text-slate-600 italic">{t("profileSelect.units")}: 0</span>
+                  <span className="text-xxxs text-slate-600 italic">{t("profileSelect.units")}: 0</span>
                 )}
               </div>
             </div>
@@ -141,9 +139,7 @@ export default function CooperativeCardList({ profiles, onCardClick, onCardHover
         <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center mb-3 border border-slate-800 transition-colors shadow-sm">
           <PlusIcon className="h-5 w-5 text-success" />
         </div>
-        <span className="text-xxs font-mono font-bold text-success uppercase tracking-wider">
-          {t("profileSelect.createBtn")}
-        </span>
+        <span className="text-xxs font-bold text-success uppercase tracking-wider">{t("profileSelect.createBtn")}</span>
       </Card>
     </div>
   );

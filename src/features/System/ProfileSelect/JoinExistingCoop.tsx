@@ -147,7 +147,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
           </div>
 
           {error && (
-            <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs font-mono text-danger flex items-start gap-2">
+            <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs text-danger flex items-start gap-2">
               <WarningCircle className="h-4 w-4 shrink-0 mt-0.5" />
               {error}
             </div>
@@ -184,7 +184,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
 
           {searching && (
             <div className="text-center py-12">
-              <div className="text-brand animate-pulse text-xs font-mono">{LBL_SEARCHING}</div>
+              <div className="text-brand animate-pulse text-xs">{LBL_SEARCHING}</div>
             </div>
           )}
 
@@ -198,7 +198,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
 
           {results.length > 0 && (
             <div className="space-y-3">
-              <p className="text-xxs font-mono text-slate-500">{`${results.length} ${LBL_RESULTS_COUNT}`}</p>
+              <p className="text-xxs text-slate-500">{`${results.length} ${LBL_RESULTS_COUNT}`}</p>
               <div className="grid gap-3">
                 {results.map((coop) => (
                   <button
@@ -211,7 +211,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
                   >
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="text-sm font-bold text-white">{coop.name}</h3>
-                      <span className="text-xxxs font-mono px-1.5 py-0.5 rounded bg-brand/10 text-brand shrink-0">
+                      <span className="text-xxxs px-1.5 py-0.5 rounded bg-brand/10 text-brand shrink-0">
                         {coop.healthScore}%
                       </span>
                     </div>
@@ -228,7 +228,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {coop.businessUnits.map((u) => (
-                        <span key={u} className="text-xxxs px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
+                        <span key={u} className="text-xxxs px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
                           {u.replace(/unit_/g, "").replace(/_/g, " ")}
                         </span>
                       ))}
@@ -265,7 +265,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
           </div>
 
           {error && (
-            <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs font-mono text-danger flex items-start gap-2">
+            <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs text-danger flex items-start gap-2">
               <WarningCircle className="h-4 w-4 shrink-0 mt-0.5" />
               {error}
             </div>
@@ -281,7 +281,7 @@ export default function JoinExistingCoop({ onJoined, onBack }: JoinExistingCoopP
                 onKeyDown={(e) => e.key === "Enter" && handleJoin()}
                 placeholder={PLACEHOLDER_REG_CODE}
                 autoFocus
-                className="bg-slate-900 border-slate-700 text-slate-100 text-xs h-10 pl-10 font-mono tracking-wider"
+                className="bg-slate-900 border-slate-700 text-slate-100 text-xs h-10 pl-10 tracking-wider"
               />
             </div>
             <Button

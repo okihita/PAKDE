@@ -136,7 +136,7 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
             </div>
 
             {formError && (
-              <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs font-mono text-danger mb-3">
+              <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs text-danger mb-3">
                 {formError}
               </div>
             )}
@@ -237,13 +237,13 @@ export default function CreateProfileDialog({ open, onOpenChange, onProfileCreat
                 <span>{formData.name}</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
-                <span className="text-xxxs font-mono text-slate-500">📍</span>
+                <span className="text-xxxs text-slate-500">📍</span>
                 <span className="text-xxs">
                   {formData.regency && formData.province ? `${formData.regency}, ${formData.province}` : "—"}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
-                <span className="text-xxxs font-mono text-slate-500">🏷️</span>
+                <span className="text-xxxs text-slate-500">🏷️</span>
                 <span className="text-xxs">{CAT_LABELS[formData.category] || formData.category}</span>
               </div>
             </div>

@@ -71,7 +71,7 @@ export default function UserSignIn({ cooperativeId, cooperativeName, onSuccess, 
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center h-full w-full bg-slate-950">
-        <div className="text-brand animate-pulse text-xs font-mono">{LBL_LOADING}</div>
+        <div className="text-brand animate-pulse text-xs">{LBL_LOADING}</div>
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function UserSignIn({ cooperativeId, cooperativeName, onSuccess, 
         </div>
 
         {error && (
-          <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs font-mono text-danger flex items-start gap-2">
+          <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs text-danger flex items-start gap-2">
             <WarningCircle className="h-4 w-4 shrink-0 mt-0.5" />
             {error}
           </div>
@@ -163,7 +163,7 @@ export default function UserSignIn({ cooperativeId, cooperativeName, onSuccess, 
                 placeholder={PLACEHOLDER_PIN}
                 maxLength={6}
                 autoFocus
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg text-slate-100 text-sm h-11 px-4 pr-10 tracking-[0.4em] text-center font-mono focus:outline-none focus:border-brand transition-colors"
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg text-slate-100 text-sm h-11 px-4 pr-10 tracking-[0.4em] text-center focus:outline-none focus:border-brand transition-colors"
               />
               <button
                 type="button"

@@ -30,7 +30,7 @@ export default function CampaignBriefingDialog({ tier, seeding, onStart, onClose
         </DialogHeader>
 
         <div className="space-y-4 text-xs">
-          <p className="text-xxs text-slate-500 font-mono">
+          <p className="text-xxs text-slate-500">
             {tier.village}, {tier.regency}, {tier.province}
           </p>
           <p className="text-xs leading-relaxed text-slate-400">{tier.narrative}</p>
@@ -39,7 +39,7 @@ export default function CampaignBriefingDialog({ tier, seeding, onStart, onClose
             {tier.stats.map((s) => (
               <div key={s.label} className="text-center rounded-lg bg-slate-800/50 border border-slate-700 p-2">
                 <p className="text-lg font-bold text-amber-400">{s.value}</p>
-                <p className="text-xxxs text-slate-500 font-mono uppercase">{s.label}</p>
+                <p className="text-xxxs text-slate-500 uppercase">{s.label}</p>
               </div>
             ))}
           </div>
@@ -50,7 +50,7 @@ export default function CampaignBriefingDialog({ tier, seeding, onStart, onClose
             </p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
               {tier.features.map((f) => (
-                <p key={f} className="text-xxs text-slate-500 font-mono flex items-center gap-1">
+                <p key={f} className="text-xxs text-slate-500 flex items-center gap-1">
                   <CheckCircleIcon className="h-3 w-3 text-amber-500 shrink-0" /> {f}
                 </p>
               ))}

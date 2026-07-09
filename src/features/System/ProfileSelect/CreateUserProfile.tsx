@@ -88,9 +88,7 @@ export default function CreateUserProfile({ cooperativeId, cooperativeName, onCo
         </div>
 
         {error && (
-          <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs font-mono text-danger">
-            {error}
-          </div>
+          <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-xxs text-danger">{error}</div>
         )}
 
         <div className="space-y-4">

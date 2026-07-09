@@ -212,7 +212,7 @@ function ComboboxField({
 
   return (
     <div className="space-y-1" ref={ref}>
-      <label className="text-success font-mono text-xxxs uppercase tracking-wider" id={`${listboxId}-label`}>
+      <label className="text-success text-xxxs uppercase tracking-wider" id={`${listboxId}-label`}>
         {label}
       </label>
       <div className="relative">

@@ -230,7 +230,7 @@ function AppContent() {
       style={{ height: "38px" }}
       onMouseDown={handleTitlebarMouseDown}
     >
-      <span className="text-xxs font-mono font-black text-brand-foreground tracking-widest uppercase pointer-events-none">
+      <span className="text-xxs font-black text-brand-foreground tracking-widest uppercase pointer-events-none">
         {TITLEBAR_TEXT}
       </span>
     </div>
@@ -279,7 +279,7 @@ function AppContent() {
           {/* Quit button */}
           <button
             onClick={() => setShowQuitConfirm(true)}
-            className="absolute bottom-6 right-6 z-20 px-3 py-1.5 bg-slate-900/80 border border-slate-800 rounded-lg hover:border-danger/40 hover:text-danger transition-colors shadow-md backdrop-blur-md text-xxs font-mono font-bold text-slate-500"
+            className="absolute bottom-6 right-6 z-20 px-3 py-1.5 bg-slate-900/80 border border-slate-800 rounded-lg hover:border-danger/40 hover:text-danger transition-colors shadow-md backdrop-blur-md text-xxs font-bold text-slate-500"
             title={LBL_QUIT}
           >
             {LBL_QUIT_BTN}
