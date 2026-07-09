@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarIcon, CaretLeftIcon, CaretRightIcon, MapPinIcon, ClockIcon } from "@phosphor-icons/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-// ── Mock calendar events ──────────────────────────────────────────
+import { listEvents, type Kegiatan } from "@/features/Community/CreateEvent/eventsDb";
 
 interface CalendarEvent {
   date: number;
@@ -15,144 +14,24 @@ interface CalendarEvent {
   time: string;
 }
 
-const EVENT_TITLES: { title: string; description: string; location: string }[] = [
-  {
-    title: "RAT Koperasi Desa",
-    description: "Rapat Anggota Tahunan untuk membahas laporan keuangan dan program kerja tahun depan.",
-    location: "Balai Desa Makmur Jaya",
-  },
-  {
-    title: "Pembagian SHU",
-    description: "Pembagian Sisa Hasil Usaha kepada seluruh anggota aktif koperasi.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Rapat Pengurus",
-    description: "Rapat koordinasi pengurus koperasi membahas evaluasi bulanan.",
-    location: "Ruang Rapat Koperasi",
-  },
-  {
-    title: "Sosialisasi PAKDE",
-    description: "Sosialisasi penggunaan aplikasi PAKDE kepada anggota baru.",
-    location: "Aula Desa",
-  },
-  {
-    title: "Pelatihan Pembukuan",
-    description: "Pelatihan pencatatan keuangan sederhana untuk pengurus unit usaha.",
-    location: "Gedung Serbaguna",
-  },
-  {
-    title: "Kunjungan Dinas Koperasi",
-    description: "Monitoring dan evaluasi dari Dinas Koperasi Kabupaten.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Rapat Anggota Tahunan",
-    description: "RAT tahun buku berjalan dengan agenda utama pemilihan pengurus baru.",
-    location: "Balai Desa",
-  },
-  {
-    title: "Verifikasi Data Anggota",
-    description: "Pendataan ulang dan verifikasi identitas anggota aktif.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Monitoring Pinjaman",
-    description: "Evaluasi status pinjaman anggota dan rencana penagihan.",
-    location: "Ruang Rapat",
-  },
-  {
-    title: "Evaluasi Kinerja",
-    description: "Review pencapaian target koperasi selama triwulan terakhir.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Workshop Digitalisasi",
-    description: "Pelatihan transformasi digital layanan koperasi berbasis aplikasi.",
-    location: "Aula Desa",
-  },
-  {
-    title: "Musyawarah Desa",
-    description: "Forum musyawarah warga desa membahas pembangunan dan kegiatan bersama.",
-    location: "Balai Desa",
-  },
-  {
-    title: "Pencairan Dana Bergulir",
-    description: "Pencairan dana bergulir untuk usaha anggota yang telah disetujui.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Pelaporan EWS Bulanan",
-    description: "Penyusunan dan pengiriman laporan Early WarningIcon System ke Dinas.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Sosialisasi Simpan Pinjam",
-    description: "Edukasi tata cara simpan pinjam kepada anggota baru dan calon anggota.",
-    location: "Aula Desa",
-  },
-  {
-    title: "Rapat Koordinasi Unit Usaha",
-    description: "Koordinasi antar unit usaha koperasi untuk sinergi program.",
-    location: "Ruang Rapat",
-  },
-  {
-    title: "Bimtek Akuntansi SAK EP",
-    description: "Bimbingan teknis penerapan standar akuntansi SAK EP bagi bendahara.",
-    location: "Gedung Diklat",
-  },
-  {
-    title: "Audit Internal",
-    description: "Audit internal keuangan dan operasional koperasi periode tahun berjalan.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Rekonsiliasi Bank",
-    description: "Rekonsiliasi saldo bank dengan pembukuan koperasi.",
-    location: "Kantor Koperasi",
-  },
-  {
-    title: "Sensus Anggota Aktif",
-    description: "Pendataan jumlah anggota aktif dan nonaktif untuk laporan tahunan.",
-    location: "Seluruh Wilayah Desa",
-  },
-];
-
-const TIME_SLOTS = [
-  "08:00 WIB",
-  "09:30 WIB",
-  "10:00 WIB",
-  "13:00 WIB",
-  "14:30 WIB",
-  "15:00 WIB",
-  "19:00 WIB",
-  "20:00 WIB",
-];
-
-function generateMockEvents(): CalendarEvent[] {
-  const now = new Date();
-  const events: CalendarEvent[] = [];
-  const weekCount = 8;
-  for (let w = 0; w < weekCount; w++) {
-    for (let e = 0; e < 2; e++) {
-      const d = new Date(now);
-      d.setDate(d.getDate() + w * 7 + Math.floor(Math.random() * 5) + e);
-      const pick = EVENT_TITLES[Math.floor(Math.random() * EVENT_TITLES.length)];
-      events.push({
-        date: d.getDate(),
-        month: d.getMonth(),
-        year: d.getFullYear(),
-        title: pick.title,
-        description: pick.description,
-        location: pick.location,
-        time: TIME_SLOTS[Math.floor(Math.random() * TIME_SLOTS.length)],
-      });
-    }
-  }
-  return events;
+/**
+ * Map a stored Kegiatan ("YYYY-MM-DD" date) onto a calendar cell. Returns null
+ * when the date string is missing/unparseable so a bad row can't crash the grid.
+ */
+function kegiatanToCalendarEvent(k: Kegiatan): CalendarEvent | null {
+  if (!k.date) return null;
+  const d = new Date(`${k.date}T00:00:00`);
+  if (isNaN(d.getTime())) return null;
+  return {
+    date: d.getDate(),
+    month: d.getMonth(),
+    year: d.getFullYear(),
+    title: k.title,
+    description: k.description || k.notes,
+    location: k.location,
+    time: k.duration_min ? `${k.duration_min} menit` : "",
+  };
 }
-
-const MOCK_EVENTS = generateMockEvents();
 
 const DAYS_SHORT = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 const MONTHS = [
@@ -177,6 +56,25 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  // Load the coop's real Kegiatan. Runs on mount — the Dashboard (and this
+  // widget) remounts every time the tab is switched, so returning from the
+  // Kegiatan screen always reflects freshly saved events.
+  useEffect(() => {
+    let alive = true;
+    void (async () => {
+      try {
+        const kegiatan = await listEvents();
+        if (alive) setEvents(kegiatan.map(kegiatanToCalendarEvent).filter((e): e is CalendarEvent => e !== null));
+      } catch {
+        /* non-fatal — calendar simply shows no events */
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
@@ -201,7 +99,7 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
   const isToday = (d: number) =>
     d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
 
-  const monthEvents = MOCK_EVENTS.filter((ev) => ev.month === viewMonth && ev.year === viewYear);
+  const monthEvents = events.filter((ev) => ev.month === viewMonth && ev.year === viewYear);
   const eventDates = new Set(monthEvents.map((ev) => ev.date));
 
   return (
@@ -300,10 +198,12 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
                 {selectedEvent?.date} {selectedEvent ? MONTHS[selectedEvent.month] : ""} {selectedEvent?.year}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <ClockIcon className="h-3.5 w-3.5 text-warning shrink-0" />
-              <span>{selectedEvent?.time}</span>
-            </div>
+            {selectedEvent?.time && (
+              <div className="flex items-center gap-2">
+                <ClockIcon className="h-3.5 w-3.5 text-warning shrink-0" />
+                <span>{selectedEvent.time}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <MapPinIcon className="h-3.5 w-3.5 text-warning shrink-0" />
               <span>{selectedEvent?.location}</span>
