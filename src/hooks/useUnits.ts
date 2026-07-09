@@ -94,10 +94,10 @@ export function useUnits() {
         nextActiveIds = [...activeUnitIds, unitId];
       }
 
-      await regDb.execute(
-        "UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?",
-        [JSON.stringify(nextActiveIds), coopId],
-      );
+      await regDb.execute("UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?", [
+        JSON.stringify(nextActiveIds),
+        coopId,
+      ]);
 
       toast.success(t("units.toast.statusChangeSuccess"));
       await loadUnitsData();
@@ -132,10 +132,10 @@ export function useUnits() {
 
       // Append to active business units (registry)
       const nextActiveIds = [...activeUnitIds, newUnitId];
-      await regDb.execute(
-        "UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?",
-        [JSON.stringify(nextActiveIds), coopId],
-      );
+      await regDb.execute("UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?", [
+        JSON.stringify(nextActiveIds),
+        coopId,
+      ]);
 
       toast.success(t("units.toast.createSuccess", { name }));
       await loadUnitsData();
