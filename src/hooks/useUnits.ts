@@ -33,7 +33,8 @@ export function useUnits() {
 
       // 1. Get active cooperative profile business units array (registry)
       const coopRes = await regDb.select<Array<{ business_units: string }>>(
-        `SELECT business_units FROM cooperatives WHERE id = ${coopId} LIMIT 1`,
+        "SELECT business_units FROM cooperatives WHERE id = ? LIMIT 1",
+        [coopId],
       );
       let activeIds: string[] = [];
       if (coopRes.length > 0 && coopRes[0].business_units) {
@@ -94,9 +95,8 @@ export function useUnits() {
       }
 
       await regDb.execute(
-        // eslint-disable-next-line no-template-curly-in-string
-        "UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ${coopId}",
-        [JSON.stringify(nextActiveIds)],
+        "UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?",
+        [JSON.stringify(nextActiveIds), coopId],
       );
 
       toast.success(t("units.toast.statusChangeSuccess"));
@@ -133,9 +133,8 @@ export function useUnits() {
       // Append to active business units (registry)
       const nextActiveIds = [...activeUnitIds, newUnitId];
       await regDb.execute(
-        // eslint-disable-next-line no-template-curly-in-string
-        "UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ${coopId}",
-        [JSON.stringify(nextActiveIds)],
+        "UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?",
+        [JSON.stringify(nextActiveIds), coopId],
       );
 
       toast.success(t("units.toast.createSuccess", { name }));
