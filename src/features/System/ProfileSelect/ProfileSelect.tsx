@@ -24,7 +24,7 @@ import JoinExistingCoop from "./JoinExistingCoop";
 import { UNIT_CONFIG } from "./unitIcons";
 import { DEMO_TIERS } from "./demoTiers";
 import CampaignBriefingDialog from "./CampaignBriefingDialog";
-import { seedDemoCooperativeAtLevel, type DemoLevel } from "@/db/seed-demo";
+import { seedDemoCooperativeAtLevel, isDemoSeeded, type DemoLevel } from "@/db/seed-demo";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -168,10 +168,13 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
     sfx.playSoftThud(100, 0.15);
   };
 
-  const handleDemoEnter = async (level: DemoLevel) => {
+  const enterDemo = async (level?: DemoLevel) => {
     try {
-      await seedDemoCooperativeAtLevel(level);
-      localStorage.setItem("pakde-demo-tier", level);
+      // Only seed when no demo exists yet — preserves user progress on re-entry.
+      if (!(await isDemoSeeded()) && level) {
+        await seedDemoCooperativeAtLevel(level);
+        localStorage.setItem("pakde-demo-tier", level);
+      }
       const coop = await getDemoCooperative();
       if (coop) {
         sfx.playChime();
@@ -382,13 +385,27 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
                 <div
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && (setShowCoopList(false), setShowDemoTiers((prev) => !prev))}
-                  onClick={() => {
+                  onKeyDown={async (e) => {
+                    if (e.key !== "Enter") return;
+                    setShowCoopList(false);
+                    setShowJoinExisting(false);
+                    if (await isDemoSeeded()) {
+                      await enterDemo();
+                    } else {
+                      setShowDemoTiers((prev) => !prev);
+                    }
+                  }}
+                  onClick={async () => {
                     handleUserInteraction();
                     sfx.playBleep(600, 0.03);
                     setShowCoopList(false);
                     setShowJoinExisting(false);
-                    setShowDemoTiers((prev) => !prev);
+                    // If demo already exists, resume immediately — no re-seed.
+                    if (await isDemoSeeded()) {
+                      await enterDemo();
+                    } else {
+                      setShowDemoTiers((prev) => !prev);
+                    }
                   }}
                   onMouseEnter={handleCardHover}
                   className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-amber-800/50 bg-amber-950/30 backdrop-blur-md p-5 cursor-pointer hover:border-amber-600/60 hover:bg-amber-950/50 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(245,158,11,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-amber-500/50"
@@ -536,7 +553,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
               onStart={async () => {
                 setSeeding(true);
                 try {
-                  await handleDemoEnter(tier.level);
+                  await enterDemo(tier.level);
                 } finally {
                   setSeeding(false);
                   setSelectedTier(null);
