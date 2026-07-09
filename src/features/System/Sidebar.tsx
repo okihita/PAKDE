@@ -123,18 +123,10 @@ export default function Sidebar({
     .join("")
     .toUpperCase();
 
+  // Ordered to mirror a coop's lifecycle: people → operations → money → growth.
+  // Combined with per-group unlocked-first sorting, a fresh coop surfaces
+  // Members → Units → Sales → Accounting as the first actionable items.
   const GROUPS: NavGroupDef[] = [
-    {
-      id: "bisnis",
-      accent: "brand",
-      label: t("sidebar.groups.bisnis"),
-      items: [
-        { id: "units", icon: BuildingsIcon, label: t("sidebar.nav.units") },
-        { id: "equipment", icon: WrenchIcon, label: t("sidebar.nav.equipment") },
-        { id: "sales", icon: HandshakeIcon, label: t("sidebar.nav.sales") },
-        { id: "development", icon: RocketLaunchIcon, label: t("sidebar.nav.development") },
-      ],
-    },
     {
       id: "komunitas",
       accent: "violet",
@@ -144,6 +136,17 @@ export default function Sidebar({
         { id: "members", icon: UsersIcon, label: t("sidebar.nav.members") },
         { id: "event", icon: CalendarPlus, label: t("sidebar.nav.event") },
         { id: "impact", icon: HandshakeIcon, label: t("sidebar.nav.impact") },
+      ],
+    },
+    {
+      id: "bisnis",
+      accent: "brand",
+      label: t("sidebar.groups.bisnis"),
+      items: [
+        { id: "units", icon: BuildingsIcon, label: t("sidebar.nav.units") },
+        { id: "equipment", icon: WrenchIcon, label: t("sidebar.nav.equipment") },
+        { id: "sales", icon: HandshakeIcon, label: t("sidebar.nav.sales") },
+        { id: "development", icon: RocketLaunchIcon, label: t("sidebar.nav.development") },
       ],
     },
     {
@@ -224,10 +227,13 @@ export default function Sidebar({
 
   function renderGroup(group: NavGroupDef) {
     const a = ACCENT_CLASSES[group.accent];
+    // Unlocked (available) items float to the top of each section; locked
+    // items sink below, preserving relative order within each partition.
+    const sorted = [...group.items].sort((x, y) => Number(isTabUnlocked(y.id, xp)) - Number(isTabUnlocked(x.id, xp)));
     return (
       <div key={group.id} className="border-t border-border mt-1">
         <p className={cn("px-4 pt-3 pb-1 text-xxs font-bold uppercase tracking-wider", a.label)}>{group.label}</p>
-        <div className="space-y-0.5">{group.items.map((item) => renderNavItem(item, group.accent))}</div>
+        <div className="space-y-0.5">{sorted.map((item) => renderNavItem(item, group.accent))}</div>
       </div>
     );
   }

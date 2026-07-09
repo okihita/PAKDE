@@ -133,6 +133,10 @@ This pattern repeats for every module. The **sense of direction** comes from the
 
 Rural cooperative digitization consistently fails because of the "training gap" — the assumption that someone will read a PDF manual or watch a YouTube tutorial before using software. PAKDE eliminates that assumption. The app is the pitch deck because it proves its value immediately. The app is the training because every quest is a guided tour. The app is the progress report because every completed task visibly advances the cooperative's level.
 
+### 8. Information Architecture That Teaches Priority
+
+PAKDE is designed with utmost care for information architecture, so a first-time Ketua knows what to check first without asking anyone. The navigation is ordered by a cooperative's natural lifecycle — **Community** (people) → **Business** (operations) → **Finance** (money) → **Learn** (growth) — and within every section, unlocked modules float to the top while locked ones sink below. The menu is therefore self-instructing: at a fresh coop the top items are exactly the next real tasks (Members, then Units, then Sales). No manual, no orientation session — the UI tells you where to begin.
+
 ---
 
 ## Stack

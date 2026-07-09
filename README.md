@@ -112,6 +112,7 @@ All data lives in a local SQLite database. No cloud. No sign-up. No latency.
 - **Procedural audio feedback** — 8-bit tones confirm actions without reading text
 - **Zero training required** — quests link directly to features; completing a quest *is* learning the feature
 - **Compliance is automatic** — all UU 25/1992 and SAK EP requirements are hardcoded into the quest system
+- **Information architecture that teaches priority** — navigation follows a cooperative's lifecycle (Community → Business → Finance → Learn), and each section floats unlocked modules to the top, so the Ketua knows what to check first simply by reading the menu
 
 ---
 
