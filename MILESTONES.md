@@ -1,5 +1,17 @@
 # Milestones & Future Development
 
+PAKDE is a productivity suite. It helps the *anak muda yang ingin terus berkarya di desanya* — young people who want to keep building and creating in their villages. PAKDE helps them **mengelola dana masyarakat desa, sekaligus mengemban amanah memajukan hajat hidup orang banyak** — managing village community funds while carrying the mandate to advance the people's vital interests.
+
+> **"Hajat hidup orang banyak"** is a constitutional term from Pasal 33 UUD 1945. It refers to the branches of production and services essential to the livelihood of *all* Indonesian people — water, energy, food, natural resources, and other vital sectors. The mandate is that these must be managed for public service, not private profit. Cooperatives (*koperasi*) are uniquely suited to this mission because of their *dual identity*: members are both owners and users, eliminating the profit margin between producer and consumer. By operating *at cost*, cooperatives make life's necessities more affordable and accessible to the entire community. PAKDE is the digital toolkit that makes this possible at the village level.
+
+PAKDE **menghilangkan salah urus, membantu perencanaan, memberikan konsultasi bisnis sekaligus pelatihan akunting lewat in-app, semuanya offline-first.** It eliminates mismanagement, aids planning, and provides business consultation alongside in-app accounting training — all offline-first. A built-in financial calculator **menghitung keuangan, mencegah kredit macet, dan mengingatkan penagihan** — calculating finances, preventing bad debt, and sending collection reminders.
+
+PAKDE helps **menghindari program yang tidak tepat sasaran** — avoiding misdirected programs that miss the community's real needs. AI assists in designing targeted programs, tracking progress, and mitigating any risks recorded along the way.
+
+Data ekonomi desa bisa diupdate lewat koneksi online jika ada internet **ATAU** expansion pack yang bisa diunduh tiap 3 bulan dan diinstall offline lewat USB drive atau bahkan kabel *Android* — village economic data can be updated via online connection when internet is available, **OR** via an expansion pack downloaded every 3 months and installed offline through a USB drive or even an Android cable.
+
+**The old way is broken.** Metode tradisional lambat dan analisis kelayakan dilakukan secara manual sehingga memakan waktu berbulan-bulan — sehingga koperasi kehilangan momentum bisnis. Traditional methods are slow and feasibility analysis is done manually, taking months — causing cooperatives to lose business momentum. Pengambilan keputusan sering didasarkan pada intuisi atau kedekatan pribadi, bukan pada data yang valid dan objektif — decisions are often based on intuition or personal relationships, not on valid and objective data.
+
 Scratchpad for feature ideas, backlog items, and development direction. Not a spec — a living brainstorm.
 
 ---
