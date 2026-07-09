@@ -26,7 +26,7 @@ import {
   RocketLaunchIcon,
 } from "@phosphor-icons/react";
 import { getCurrentLevel } from "@/data/leveling";
-import { isTabUnlocked, getUnlockRequirementLabel } from "@/features/Sidebar/moduleUnlock";
+import { isTabUnlocked, getUnlockRequirementLabel } from "@/features/System/moduleUnlock";
 import type { CooperativeProfile, EwsAlert } from "@/types";
 
 interface SidebarProps {
