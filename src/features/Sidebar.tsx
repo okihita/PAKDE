@@ -22,8 +22,8 @@ import {
   BookOpenIcon,
   FileTextIcon,
   SignOut,
-  MapPinIcon,
   LockSimple,
+  RocketLaunchIcon,
 } from "@phosphor-icons/react";
 import { getCurrentLevel } from "@/data/leveling";
 import { isTabUnlocked, getUnlockRequirementLabel } from "@/features/Sidebar/moduleUnlock";
@@ -123,7 +123,6 @@ export default function Sidebar({
       items: [
         { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
         { id: "ranking", icon: MedalIcon, label: t("sidebar.nav.ranking") },
-        { id: "leveling", icon: TrophyIcon, label: t("sidebar.nav.leveling") },
       ],
     },
     {
@@ -134,8 +133,7 @@ export default function Sidebar({
         { id: "units", icon: BuildingsIcon, label: t("sidebar.nav.units") },
         { id: "equipment", icon: WrenchIcon, label: t("sidebar.nav.equipment") },
         { id: "sales", icon: HandshakeIcon, label: t("sidebar.nav.sales") },
-        { id: "storelayout", icon: MapPinIcon, label: t("sidebar.nav.storeLayout") },
-        { id: "development", icon: BuildingsIcon, label: t("sidebar.nav.development") },
+        { id: "development", icon: RocketLaunchIcon, label: t("sidebar.nav.development") },
       ],
     },
     {
@@ -165,6 +163,7 @@ export default function Sidebar({
       items: [
         { id: "learn", icon: BookOpenIcon, label: t("sidebar.nav.learn") },
         { id: "planners", icon: FileTextIcon, label: t("sidebar.nav.planners") },
+        { id: "leveling", icon: TrophyIcon, label: t("sidebar.nav.leveling") },
       ],
     },
   ];

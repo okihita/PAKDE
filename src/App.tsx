@@ -391,9 +391,7 @@ function AppContent() {
               <Dashboard healthScore={coopProfile?.health_score ?? 0} />
             </>
           )}
-          {activeTab === "statistics" && (
-            <Statistics coopProfile={coopProfile} ewsAlerts={ewsAlerts} currentUser={currentUser} />
-          )}
+          {activeTab === "statistics" && <Statistics coopProfile={coopProfile} />}
           {activeTab === "ranking" && <Ranking coopProfile={coopProfile} />}
           {activeTab === "leveling" && <Leveling healthScore={coopProfile?.health_score ?? 0} />}
           {activeTab === "units" && <Units onTabChange={setActiveTab} />}
