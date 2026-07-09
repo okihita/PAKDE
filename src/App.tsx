@@ -44,6 +44,7 @@ import ProfileCompletion from "@/features/Home/Dashboard/ProfileCompletion";
 import { type CooperativeProfile, type EwsAlert, type LocalUser } from "@/types";
 import { isDemoCooperative } from "@/db/seed-demo";
 import { getActiveCoopId } from "@/db/active-coop";
+import { initDb } from "@/db";
 
 type FontLevel = "small" | "normal" | "large" | "xlarge";
 const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
@@ -180,6 +181,32 @@ function AppContent() {
       }
     })();
   }, [appState, coopProfile?.id]);
+
+  // Boot resume: if a cooperative was previously active, skip the title screen
+  // and drop the user straight back into their session. Demo coop → auto-login
+  // straight to main; real coop → PIN prompt (security gate stays). First run
+  // or missing/unresolvable id → normal title screen.
+  useEffect(() => {
+    (async () => {
+      const savedId = localStorage.getItem("pakde-active-profile-id");
+      if (!savedId) return;
+      try {
+        await initDb();
+        const profile = await getCooperativeById(savedId);
+        if (!profile) return;
+        setCoopProfile(profile);
+        const users = await getUsersByCooperativeId(profile.id || "");
+        if (isDemoCooperative(profile) && users.length > 0) {
+          setCurrentUser(users[0]);
+          setAppState("main");
+          return;
+        }
+        setAppState(users.length === 0 ? "user_create" : "user_signin");
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, []);
 
   // Module gating guard: wrap setActiveTab to redirect locked tabs
   const guardedSetActiveTab = useCallback(
