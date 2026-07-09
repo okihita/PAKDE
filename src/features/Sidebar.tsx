@@ -117,15 +117,6 @@ export default function Sidebar({
 
   const GROUPS: NavGroupDef[] = [
     {
-      id: "analitik",
-      accent: "sky",
-      label: t("sidebar.groups.analitik"),
-      items: [
-        { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
-        { id: "ranking", icon: MedalIcon, label: t("sidebar.nav.ranking") },
-      ],
-    },
-    {
       id: "bisnis",
       accent: "brand",
       label: t("sidebar.groups.bisnis"),
@@ -154,6 +145,8 @@ export default function Sidebar({
       items: [
         { id: "accounting", icon: Note, label: t("sidebar.nav.accounting") },
         { id: "feasibility", icon: TrendUpIcon, label: t("sidebar.nav.feasibility") },
+        { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
+        { id: "ranking", icon: MedalIcon, label: t("sidebar.nav.ranking") },
       ],
     },
     {
