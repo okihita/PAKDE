@@ -14,7 +14,6 @@ import {
   UserCheck,
   SunIcon,
   MoonIcon,
-  MedalIcon,
   CalendarPlus,
   WrenchIcon,
   HandshakeIcon,
@@ -158,7 +157,6 @@ export default function Sidebar({
         { id: "accounting", icon: Note, label: t("sidebar.nav.accounting") },
         { id: "feasibility", icon: TrendUpIcon, label: t("sidebar.nav.feasibility") },
         { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
-        { id: "ranking", icon: MedalIcon, label: t("sidebar.nav.ranking") },
       ],
     },
     {
