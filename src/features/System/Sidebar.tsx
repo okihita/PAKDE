@@ -101,9 +101,10 @@ export default function Sidebar({
     .join("")
     .toUpperCase();
 
-  // Ordered to mirror a coop's lifecycle: people → operations → money → growth.
-  // Combined with per-group unlocked-first sorting, a fresh coop surfaces
-  // Members → Units → Sales → Accounting as the first actionable items.
+  // The array order inside each group IS the display order. Decoupled from
+  // unlock thresholds on purpose: changing a tab's gating level must never
+  // silently reshuffle the menu. Ordered to mirror a coop's lifecycle:
+  // people → operations → money → growth.
   const GROUPS: NavGroupDef[] = [
     {
       id: "komunitas",
@@ -121,8 +122,8 @@ export default function Sidebar({
       label: t("sidebar.groups.bisnis"),
       items: [
         { id: "units", icon: BuildingsIcon, label: t("sidebar.nav.units") },
-        { id: "equipment", icon: WrenchIcon, label: t("sidebar.nav.equipment") },
         { id: "sales", icon: HandshakeIcon, label: t("sidebar.nav.sales") },
+        { id: "equipment", icon: WrenchIcon, label: t("sidebar.nav.equipment") },
         { id: "development", icon: RocketLaunchIcon, label: t("sidebar.nav.development") },
       ],
     },
@@ -131,9 +132,9 @@ export default function Sidebar({
       accent: "warning",
       label: t("sidebar.groups.keuangan"),
       items: [
+        { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
         { id: "accounting", icon: Note, label: t("sidebar.nav.accounting") },
         { id: "feasibility", icon: TrendUpIcon, label: t("sidebar.nav.feasibility") },
-        { id: "statistics", icon: ChartBarIcon, label: t("sidebar.nav.statistics") },
       ],
     },
     {
@@ -141,9 +142,9 @@ export default function Sidebar({
       accent: "sky",
       label: t("sidebar.groups.learn"),
       items: [
+        { id: "leveling", icon: TrophyIcon, label: t("sidebar.nav.leveling") },
         { id: "learn", icon: BookOpenIcon, label: t("sidebar.nav.learn") },
         { id: "planners", icon: FileTextIcon, label: t("sidebar.nav.planners") },
-        { id: "leveling", icon: TrophyIcon, label: t("sidebar.nav.leveling") },
       ],
     },
   ];
@@ -202,18 +203,10 @@ export default function Sidebar({
 
   function renderGroup(group: NavGroupDef) {
     const a = ACCENT_CLASSES[group.accent];
-    // Order is derived from the same unlock-threshold table that drives
-    // availability, so it is identical across every profile (xp-independent).
-    // Low-threshold items naturally surface first without runtime reshuffling.
-    const sorted = [...group.items].sort(
-      (x, y) =>
-        ((TABS_LEVEL_REQUIREMENTS as Record<string, number>)[x.id] ?? 0) -
-        ((TABS_LEVEL_REQUIREMENTS as Record<string, number>)[y.id] ?? 0),
-    );
     return (
       <div key={group.id} className="border-t border-border mt-1">
         <p className={cn("px-4 pt-3 pb-1 text-xxs font-bold uppercase tracking-wider", a.label)}>{group.label}</p>
-        <div className="space-y-0.5">{sorted.map((item) => renderNavItem(item, group.accent))}</div>
+        <div className="space-y-0.5">{group.items.map((item) => renderNavItem(item, group.accent))}</div>
       </div>
     );
   }
