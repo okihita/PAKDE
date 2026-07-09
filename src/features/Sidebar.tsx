@@ -76,7 +76,7 @@ interface NavGroupDef {
   items: NavItemDef[];
 }
 
-type Accent = "sky" | "brand" | "violet" | "warning" | "muted" | "amber";
+type Accent = "sky" | "brand" | "violet" | "warning" | "amber";
 
 /** Static class strings so Tailwind's content scanner picks them up. */
 const ACCENT_CLASSES: Record<Accent, { label: string; icon: string; active: string }> = {
@@ -87,11 +87,6 @@ const ACCENT_CLASSES: Record<Accent, { label: string; icon: string; active: stri
     label: "text-warning",
     icon: "text-warning",
     active: "bg-warning/10 text-warning border-warning/20",
-  },
-  muted: {
-    label: "text-muted-foreground",
-    icon: "text-muted-foreground",
-    active: "bg-secondary text-foreground border-transparent",
   },
   amber: { label: "text-amber", icon: "text-amber", active: "bg-amber/10 text-amber border-amber/20" },
 };
@@ -162,15 +157,6 @@ export default function Sidebar({
       items: [
         { id: "learn", icon: BookOpenIcon, label: t("sidebar.nav.learn") },
         { id: "planners", icon: FileTextIcon, label: t("sidebar.nav.planners") },
-      ],
-    },
-    {
-      id: "sistem",
-      accent: "muted",
-      label: t("sidebar.groups.sistem"),
-      items: [
-        { id: "sync", icon: ArrowsClockwise, label: t("sidebar.nav.sync") },
-        { id: "settings", icon: Gear, label: t("sidebar.nav.settings") },
       ],
     },
   ];
@@ -286,7 +272,7 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* UserIcon Profile Row */}
+          {/* Account */}
           <div className="flex items-center gap-3 px-1">
             <div className="w-9 h-9 rounded-full bg-success/20 flex items-center justify-center shrink-0 ring-1 ring-brand/30">
               <UserCheck className="h-4 w-4 text-success" />
@@ -295,24 +281,45 @@ export default function Sidebar({
               <p className="text-xs font-bold text-foreground truncate">{currentUser?.name}</p>
               <p className="text-xxs text-muted-foreground truncate">{currentUser?.role}</p>
             </div>
-            <button
-              onClick={onThemeToggle}
-              className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0"
-              title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {appTheme === "dark" ? (
-                <SunIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-warning transition-colors" />
-              ) : (
-                <MoonIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-info transition-colors" />
-              )}
-            </button>
-            <button
-              onClick={onSwitchProfile}
-              className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-danger"
-              title={t("profileSelect.switchProfile")}
-            >
-              <SignOut className="h-3.5 w-3.5" />
-            </button>
+          </div>
+          {/* Meta control bar */}
+          <div className="flex items-center justify-between gap-1 rounded-lg bg-secondary/40 px-1.5 py-1 mx-1">
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={() => onTabChange("sync")}
+                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-info"
+                title={t("sidebar.nav.sync")}
+              >
+                <ArrowsClockwise className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={() => onTabChange("settings")}
+                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-foreground"
+                title={t("sidebar.nav.settings")}
+              >
+                <Gear className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={onThemeToggle}
+                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0"
+                title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {appTheme === "dark" ? (
+                  <SunIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-warning transition-colors" />
+                ) : (
+                  <MoonIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-info transition-colors" />
+                )}
+              </button>
+              <button
+                onClick={onSwitchProfile}
+                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-danger"
+                title={t("profileSelect.switchProfile")}
+              >
+                <SignOut className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 

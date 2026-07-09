@@ -8,7 +8,6 @@ export const TABS_LEVEL_REQUIREMENTS: Record<string, number> = {
   home: 0,
   members: 0,
   units: 0,
-  settings: 0,
   sales: 10,
   accounting: 10,
   participation: 20,
@@ -21,7 +20,6 @@ export const TABS_LEVEL_REQUIREMENTS: Record<string, number> = {
   leveling: 60,
   ranking: 60,
   development: 70,
-  sync: 70,
   learn: 80,
   planners: 80,
 };
