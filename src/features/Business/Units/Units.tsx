@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useUnits } from "@/hooks/useUnits";
-import { BuildingsIcon, PlusIcon, SparkleIcon, PowerIcon, PulseIcon, MapPinIcon } from "@phosphor-icons/react";
+import { BuildingsIcon, PlusIcon, SparkleIcon, PowerIcon, PulseIcon } from "@phosphor-icons/react";
+import type { TabId } from "@/features/System/moduleUnlock";
 import "./Units.css";
 
 interface UnitsProps {
-  onTabChange?: (tab: "anggota" | "storelayout") => void;
+  onTabChange?: (tab: TabId) => void;
 }
 
 export default function Units({ onTabChange }: UnitsProps) {
@@ -56,13 +57,6 @@ export default function Units({ onTabChange }: UnitsProps) {
           >
             <PlusIcon className="h-4 w-4" />
             {t("units.register")}
-          </Button>
-          <Button
-            onClick={() => onTabChange?.("storelayout")}
-            className="border border-border bg-transparent hover:bg-secondary text-foreground font-bold text-xs h-9 px-4 flex items-center gap-1.5"
-          >
-            <MapPinIcon className="h-4 w-4" />
-            {t("sidebar.nav.storeLayout")}
           </Button>
         </div>
       </div>

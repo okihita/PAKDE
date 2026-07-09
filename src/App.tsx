@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { cn } from "@/lib/utils";
 import "@/i18n"; // initialize i18next before render
 import {
   listCooperatives,
@@ -23,9 +22,8 @@ import Statistics from "@/features/Finance/Statistics/Statistics";
 import Leveling from "@/features/Learn/Leveling/Leveling";
 import Members from "@/features/Community/Members/Members";
 import Units from "@/features/Business/Units/Units";
-import Equipment from "@/features/Business/Equipment/Equipment";
+import Assets from "@/features/Business/Assets/Assets";
 import Sales from "@/features/Business/Sales/Sales";
-import StoreLayout from "@/features/Business/StoreLayout/StoreLayout";
 import Development from "@/features/Business/Development/Development";
 import Learn from "@/features/Learn/Learn/Learn";
 import Planners from "@/features/Learn/Planners/Planners";
@@ -394,12 +392,7 @@ function AppContent() {
           rankingUnlocked={isTabUnlocked("ranking", coopProfile?.xp ?? 0)}
         />
 
-        <main
-          className={cn(
-            "flex-1 max-h-full overscroll-contain",
-            activeTab === "storelayout" ? "flex flex-col overflow-hidden p-0" : "overflow-y-auto p-6",
-          )}
-        >
+        <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6">
           {activeTab === "home" && (
             <>
               {coopProfile && (
@@ -414,9 +407,8 @@ function AppContent() {
           {activeTab === "ranking" && <Ranking ranking={ranking} onGoSync={() => guardedSetActiveTab("sync")} />}
           {activeTab === "leveling" && <Leveling xp={coopProfile?.xp ?? 0} />}
           {activeTab === "units" && <Units onTabChange={setActiveTab} />}
-          {activeTab === "equipment" && <Equipment />}
+          {activeTab === "asetFisik" && <Assets />}
           {activeTab === "sales" && <Sales />}
-          {activeTab === "storelayout" && <StoreLayout />}
           {activeTab === "development" && <Development onTabChange={setActiveTab} />}
           {activeTab === "learn" && <Learn />}
           {activeTab === "planners" && <Planners />}
