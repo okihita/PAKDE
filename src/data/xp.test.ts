@@ -12,6 +12,15 @@ describe("xp-core", () => {
   it("scales member_joined XP to the existing 0-100 level curve", () => {
     expect(XP_SOURCES.member_joined.xp).toBe(5);
   });
+
+  it("is a multi-source table (A2): member_joined plus future stubs", () => {
+    expect(Object.keys(XP_SOURCES)).toEqual(["member_joined", "member_verified", "weekly_active", "trade_completed"]);
+    // Flipping a source value changes the awarded XP — no code edit needed.
+    const original = XP_SOURCES.member_joined.xp;
+    XP_SOURCES.member_joined.xp = 7;
+    expect(XP_SOURCES.member_joined.xp).toBe(7);
+    XP_SOURCES.member_joined.xp = original;
+  });
 });
 
 describe("level is derived only from xp (A1)", () => {

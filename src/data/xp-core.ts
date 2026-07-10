@@ -27,6 +27,27 @@ export const XP_SOURCES: Record<string, XpSource> = {
     labelId: "Anggota bergabung",
     reversible: true,
   },
+  // ── Future sources (data, not code) ──
+  // These rows make the table genuinely multi-source (A2): wiring one of
+  // them into a hook later is a data change, not a rewrite.
+  member_verified: {
+    xp: 2,
+    labelEn: "Member verifies identity",
+    labelId: "Anggota verifikasi identitas",
+    reversible: true,
+  },
+  weekly_active: {
+    xp: 1,
+    labelEn: "Weekly active member",
+    labelId: "Anggota aktif mingguan",
+    reversible: false,
+  },
+  trade_completed: {
+    xp: 3,
+    labelEn: "Cooperative completes a trade",
+    labelId: "Koperasi menyelesaikan transaksi",
+    reversible: false,
+  },
 };
 
 /** Sum of signed deltas — the authoritative XP total (R1/R4). */

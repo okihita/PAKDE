@@ -514,7 +514,10 @@
   },
   "leveling": {
     "level": "Level {{n}}",
-    "active": "ACTIVE"
+    "active": "ACTIVE",
+    "xpActivity": "XP Activity",
+    "xpBaseline": "Starting balance",
+    "xpEmpty": "No XP activity yet."
   },
   "ranking": {
     "title": "Cooperative Ranking",

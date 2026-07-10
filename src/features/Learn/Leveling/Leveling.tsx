@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getActiveCoopId } from "@/db/active-coop";
+import XpFeed from "./XpFeed";
 import {
   UsersIcon,
   TrendUpIcon,
@@ -221,6 +223,9 @@ export default function Leveling({ xp = 0 }: Props) {
           <LevelCard key={level.id} level={level} lang={i18n.language} t={t} xp={xp} />
         ))}
       </div>
+
+      {/* XP event ledger (Phase 2) */}
+      <XpFeed coopId={getActiveCoopId()} refreshKey={xp} />
     </div>
   );
 }
