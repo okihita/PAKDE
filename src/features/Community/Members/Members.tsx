@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { useMembers, type MemberInsights } from "@/hooks/useMembers";
 import { seedMockMembers } from "@/data/seed-members";
-import { useEffect, useState } from "react";
+import { resolveWilayah, formatWilayahShort } from "@/db/wilayahLookup";
+import { useEffect, useMemo, useState } from "react";
 import type { Member } from "@/types";
 import MemberFormDialog from "./MemberFormDialog";
 
@@ -35,6 +36,34 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
   const m = useMembers(onMembersChanged);
   const [seeding, setSeeding] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<Member | null>(null);
+  const [regionLabels, setRegionLabels] = useState<Record<string, string>>({});
+
+  // Stable key of unique visible village codes (filteredMembers is a fresh array
+  // each render, so serialize to a primitive to avoid re-running the effect every
+  // render).
+  const visibleCodesKey = useMemo(() => {
+    const set = new Set<string>();
+    for (const mbr of m.filteredMembers) if (mbr.kode_wilayah) set.add(mbr.kode_wilayah);
+    return [...set].sort().join("|");
+  }, [m.filteredMembers]);
+
+  // Batch-resolve region labels for the visible codes (resolveWilayah is cached).
+  useEffect(() => {
+    const codes = visibleCodesKey ? visibleCodesKey.split("|") : [];
+    const missing = codes.filter((c) => !(c in regionLabels));
+    if (missing.length === 0) return;
+    let cancelled = false;
+    void (async () => {
+      const entries = await Promise.all(
+        missing.map(async (code) => [code, formatWilayahShort(await resolveWilayah(code))] as const),
+      );
+      if (cancelled) return;
+      setRegionLabels((prev) => ({ ...prev, ...Object.fromEntries(entries) }));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [visibleCodesKey, regionLabels]);
 
   const statusOptions = [
     { value: "semua", label: t("members.filterAll") },
@@ -187,7 +216,9 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                       ? t(`members.membership.${mbr.status_keanggotaan}`, { defaultValue: mbr.status_keanggotaan })
                       : "-"}
                   </TableCell>
-                  <TableCell className="text-xxs font-mono text-muted-foreground">{mbr.kode_wilayah || "-"}</TableCell>
+                  <TableCell className="text-xxs font-mono text-muted-foreground" title={mbr.kode_wilayah || undefined}>
+                    {mbr.kode_wilayah ? (regionLabels[mbr.kode_wilayah] ?? "…") : "-"}
+                  </TableCell>
                   <TableCell className="text-xxs font-mono text-success text-right">
                     {fmt(totalSimpananMember(mbr))}
                   </TableCell>

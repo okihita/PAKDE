@@ -12,7 +12,7 @@ import type { WilayahRow } from "@/features/System/ProfileSelect/wilayahDb";
 import { getActiveCoopId } from "@/db/active-coop";
 import { getCooperativeById } from "@/features/System/ProfileSelect/cooperativeDb";
 import { resolveWilayah, type WilayahResolved } from "@/db/wilayahLookup";
-import { generateNik, isValidNik } from "@/data/nik";
+import { generateNik, isValidNik, parseNik } from "@/data/nik";
 
 type MembersHook = ReturnType<typeof useMembers>;
 
@@ -107,6 +107,13 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
   ]);
 
   const nikInvalid = fv.nik.length > 0 && !isValidNik(fv.nik);
+  const nikParsed = isValidNik(fv.nik) ? parseNik(fv.nik) : null;
+
+  // Zero-pad a numeric RT/RW field to 3 digits on blur (Indonesian convention).
+  const padOnBlur = (field: "rt" | "rw") => (value: string) => {
+    const v = value.trim();
+    if (/^\d+$/.test(v)) m.setMemberFormValues({ ...m.memberFormValues, [field]: v.padStart(3, "0") });
+  };
 
   return (
     <Dialog open={m.showMemberModal} onOpenChange={m.setShowMemberModal}>
@@ -132,6 +139,13 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
                 maxLength={16}
               />
               {nikInvalid && <p className="text-xxxs text-danger">{t("members.form.nikInvalidHint")}</p>}
+              {nikParsed && (
+                <p className="text-xxxs text-muted-foreground font-mono">
+                  {nikParsed.gender === "P" ? t("common.female") : t("common.male")} ·{" "}
+                  {String(nikParsed.birthDay).padStart(2, "0")}/{String(nikParsed.birthMonth).padStart(2, "0")}/
+                  {String(nikParsed.birthYear).padStart(2, "0")}
+                </p>
+              )}
             </div>
             <div className="space-y-1">
               <label className="text-muted-foreground font-mono text-xxxs uppercase">
@@ -221,12 +235,14 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
                   placeholder={t("members.form.labels.rt")}
                   value={fv.rt}
                   onChange={(e) => m.setMemberFormValues({ ...fv, rt: e.target.value })}
+                  onBlur={(e) => padOnBlur("rt")(e.target.value)}
                   className="bg-input border-border text-xs h-8 w-16"
                 />
                 <Input
                   placeholder={t("members.form.labels.rw")}
                   value={fv.rw}
                   onChange={(e) => m.setMemberFormValues({ ...fv, rw: e.target.value })}
+                  onBlur={(e) => padOnBlur("rw")(e.target.value)}
                   className="bg-input border-border text-xs h-8 w-16"
                 />
               </div>
