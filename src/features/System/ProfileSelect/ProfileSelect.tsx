@@ -12,6 +12,7 @@ import {
   Camera,
   Buildings,
   CircleNotch,
+  ArrowLeft,
 } from "@phosphor-icons/react";
 import type { CooperativeProfile } from "@/types";
 import { initDb } from "@/db";
@@ -212,6 +213,14 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
     onProfileSelect(newProfile);
   };
 
+  // A submenu (demo tiers / cooperative list) replaces the three-box hero
+  // in-place so the view fits one viewport instead of stacking and scrolling.
+  const inSubmenu = showDemoTiers || (showCoopList && profiles.length > 0);
+  const closeSubmenu = () => {
+    setShowDemoTiers(false);
+    setShowCoopList(false);
+  };
+
   return (
     <div
       onClick={handleUserInteraction}
@@ -279,174 +288,185 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
           />
         ) : (
           <>
-            {/* ── Three-Box always visible ── */}
-            <div className="w-full max-w-5xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="space-y-2">
-                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  {t("profileSelect.heroTitle")}
-                </h2>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">{t("profileSelect.heroSubtitle")}</p>
-              </div>
+            {/* ── Three-Box landing (default) — hidden when a submenu replaces it ── */}
+            {!inSubmenu && (
+              <div className="w-full max-w-5xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                    {t("profileSelect.heroTitle")}
+                  </h2>
+                  <p className="text-xs text-slate-500 max-w-md mx-auto">{t("profileSelect.heroSubtitle")}</p>
+                </div>
 
-              <div
-                className={`relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-3 transition-opacity duration-300 ${
-                  loading ? "opacity-60 pointer-events-none" : ""
-                }`}
-              >
-                {/* Left: Real Account */}
                 <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && setShowCreateModal(true)}
-                  onClick={(e) => {
-                    if ((e.target as HTMLElement).closest("[data-login-link]")) return;
-                    handleUserInteraction();
-                    if (profiles.length > 0) {
-                      sfx.playBleep(600, 0.03);
-                      setShowDemoTiers(false);
-                      setShowCoopList((prev) => !prev);
-                    } else {
-                      sfx.playChime();
-                      setShowCreateModal(true);
-                    }
-                  }}
-                  onMouseEnter={handleRealHover}
-                  className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-slate-700 bg-slate-900/80 backdrop-blur-md p-5 cursor-pointer hover:border-brand/60 hover:bg-slate-900/95 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(16,185,129,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-brand/50"
+                  className={`relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-3 transition-opacity duration-300 ${
+                    loading ? "opacity-60 pointer-events-none" : ""
+                  }`}
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
-                      <ShieldCheck className="h-4 w-4 text-brand" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-white">{t("profileSelect.realTitle")}</h3>
-                      <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
-                        <TrophyIcon className="h-3 w-3" />
-                        {t("profileSelect.realBadge")}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xxs text-slate-400 leading-relaxed mb-4">{t("profileSelect.realDesc")}</p>
+                  {/* Left: Real Account */}
                   <div
-                    className="rounded-lg bg-brand/10 border border-brand/25 px-3 py-2 text-xs font-bold text-brand text-center group-hover:bg-brand/20 transition-colors"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setShowCreateModal(true)}
                     onClick={(e) => {
-                      e.stopPropagation();
+                      if ((e.target as HTMLElement).closest("[data-login-link]")) return;
                       handleUserInteraction();
-                      sfx.playChime();
-                      setShowCreateModal(true);
-                    }}
-                  >
-                    {t("profileSelect.realRegister")}
-                  </div>
-                  <p className="mt-2.5 text-xxxs text-slate-600 text-center">
-                    {t("profileSelect.realLogin")}{" "}
-                    <span
-                      data-login-link
-                      className="text-slate-500 underline cursor-pointer hover:text-slate-400 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleUserInteraction();
+                      if (profiles.length > 0) {
                         sfx.playBleep(600, 0.03);
                         setShowDemoTiers(false);
                         setShowCoopList((prev) => !prev);
+                      } else {
+                        sfx.playChime();
+                        setShowCreateModal(true);
+                      }
+                    }}
+                    onMouseEnter={handleRealHover}
+                    className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-slate-700 bg-slate-900/80 backdrop-blur-md p-5 cursor-pointer hover:border-brand/60 hover:bg-slate-900/95 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(16,185,129,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-brand/50"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
+                        <ShieldCheck className="h-4 w-4 text-brand" />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold text-white">{t("profileSelect.realTitle")}</h3>
+                        <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
+                          <TrophyIcon className="h-3 w-3" />
+                          {t("profileSelect.realBadge")}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-xxs text-slate-400 leading-relaxed mb-4">{t("profileSelect.realDesc")}</p>
+                    <div
+                      className="rounded-lg bg-brand/10 border border-brand/25 px-3 py-2 text-xs font-bold text-brand text-center group-hover:bg-brand/20 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUserInteraction();
+                        sfx.playChime();
+                        setShowCreateModal(true);
                       }}
                     >
-                      {t("profileSelect.loginLink")}
-                    </span>
-                  </p>
+                      {t("profileSelect.realRegister")}
+                    </div>
+                    <p className="mt-2.5 text-xxxs text-slate-600 text-center">
+                      {t("profileSelect.realLogin")}{" "}
+                      <span
+                        data-login-link
+                        className="text-slate-500 underline cursor-pointer hover:text-slate-400 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUserInteraction();
+                          sfx.playBleep(600, 0.03);
+                          setShowDemoTiers(false);
+                          setShowCoopList((prev) => !prev);
+                        }}
+                      >
+                        {t("profileSelect.loginLink")}
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* "atau" divider */}
+                  <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
+                    {t("profileSelect.orText")}
+                  </span>
+
+                  {/* Middle: Join Existing */}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setShowJoinExisting(true)}
+                    onClick={() => {
+                      handleUserInteraction();
+                      sfx.playBleep(600, 0.03);
+                      setShowDemoTiers(false);
+                      setShowCoopList(false);
+                      setShowJoinExisting(true);
+                    }}
+                    onMouseEnter={handleCardHover}
+                    className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-info/50 bg-info/10 backdrop-blur-md p-5 cursor-pointer hover:border-info/60 hover:bg-info/20 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(59,130,246,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-info/50"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-xl bg-info/10 border border-info/30 flex items-center justify-center shrink-0 group-hover:bg-info/20 transition-colors">
+                        <Buildings className="h-4 w-4 text-info" />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold text-white">{JOIN_TITLE}</h3>
+                        <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
+                          <Buildings className="h-3 w-3" />
+                          {JOIN_BADGE}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-xxs text-slate-400 leading-relaxed mb-4">{JOIN_DESC}</p>
+                    <div className="invisible h-[1.5rem]" />
+                    <div className="mt-auto rounded-lg bg-info/10 border border-info/25 px-3 py-2 text-xs font-bold text-info text-center group-hover:bg-info/20 transition-colors">
+                      {JOIN_ACTION}
+                    </div>
+                  </div>
+
+                  {/* "atau" divider */}
+                  <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
+                    {t("profileSelect.orText")}
+                  </span>
+
+                  {/* Right: Demo Account */}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter") return;
+                      setShowCoopList(false);
+                      setShowJoinExisting(false);
+                      setShowDemoTiers((prev) => !prev);
+                    }}
+                    onClick={() => {
+                      handleUserInteraction();
+                      sfx.playBleep(600, 0.03);
+                      setShowCoopList(false);
+                      setShowJoinExisting(false);
+                      setShowDemoTiers((prev) => !prev);
+                    }}
+                    onMouseEnter={handleCardHover}
+                    className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-amber-800/50 bg-amber-950/30 backdrop-blur-md p-5 cursor-pointer hover:border-amber-600/60 hover:bg-amber-950/50 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(245,158,11,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
+                        <GameController className="h-4 w-4 text-amber-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold text-amber-200">{t("profileSelect.demoTitle")}</h3>
+                        <p className="text-xxxs text-amber-600 mt-0.5 flex items-center gap-1">
+                          <GameController className="h-3 w-3" />
+                          {t("profileSelect.demoBadge")}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-xxs text-amber-300/70 leading-relaxed mb-4">{t("profileSelect.demoDesc")}</p>
+                    <div className="invisible h-[1.5rem]" />
+                    <div className="mt-auto rounded-lg bg-amber-500/10 border border-amber-500/25 px-3 py-2 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
+                      {t("profileSelect.demoAction")}
+                    </div>
+                  </div>
+                  {loading && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-2xl">
+                      <CircleNotch className="h-7 w-7 text-brand animate-spin" weight="bold" />
+                    </div>
+                  )}
                 </div>
-
-                {/* "atau" divider */}
-                <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
-                  {t("profileSelect.orText")}
-                </span>
-
-                {/* Middle: Join Existing */}
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && setShowJoinExisting(true)}
-                  onClick={() => {
-                    handleUserInteraction();
-                    sfx.playBleep(600, 0.03);
-                    setShowDemoTiers(false);
-                    setShowCoopList(false);
-                    setShowJoinExisting(true);
-                  }}
-                  onMouseEnter={handleCardHover}
-                  className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-info/50 bg-info/10 backdrop-blur-md p-5 cursor-pointer hover:border-info/60 hover:bg-info/20 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(59,130,246,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-info/50"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-xl bg-info/10 border border-info/30 flex items-center justify-center shrink-0 group-hover:bg-info/20 transition-colors">
-                      <Buildings className="h-4 w-4 text-info" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-white">{JOIN_TITLE}</h3>
-                      <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
-                        <Buildings className="h-3 w-3" />
-                        {JOIN_BADGE}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xxs text-slate-400 leading-relaxed mb-4">{JOIN_DESC}</p>
-                  <div className="invisible h-[1.5rem]" />
-                  <div className="mt-auto rounded-lg bg-info/10 border border-info/25 px-3 py-2 text-xs font-bold text-info text-center group-hover:bg-info/20 transition-colors">
-                    {JOIN_ACTION}
-                  </div>
-                </div>
-
-                {/* "atau" divider */}
-                <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
-                  {t("profileSelect.orText")}
-                </span>
-
-                {/* Right: Demo Account */}
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key !== "Enter") return;
-                    setShowCoopList(false);
-                    setShowJoinExisting(false);
-                    setShowDemoTiers((prev) => !prev);
-                  }}
-                  onClick={() => {
-                    handleUserInteraction();
-                    sfx.playBleep(600, 0.03);
-                    setShowCoopList(false);
-                    setShowJoinExisting(false);
-                    setShowDemoTiers((prev) => !prev);
-                  }}
-                  onMouseEnter={handleCardHover}
-                  className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-amber-800/50 bg-amber-950/30 backdrop-blur-md p-5 cursor-pointer hover:border-amber-600/60 hover:bg-amber-950/50 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(245,158,11,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
-                      <GameController className="h-4 w-4 text-amber-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-amber-200">{t("profileSelect.demoTitle")}</h3>
-                      <p className="text-xxxs text-amber-600 mt-0.5 flex items-center gap-1">
-                        <GameController className="h-3 w-3" />
-                        {t("profileSelect.demoBadge")}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xxs text-amber-300/70 leading-relaxed mb-4">{t("profileSelect.demoDesc")}</p>
-                  <div className="invisible h-[1.5rem]" />
-                  <div className="mt-auto rounded-lg bg-amber-500/10 border border-amber-500/25 px-3 py-2 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
-                    {t("profileSelect.demoAction")}
-                  </div>
-                </div>
-                {loading && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-2xl">
-                    <CircleNotch className="h-7 w-7 text-brand animate-spin" weight="bold" />
-                  </div>
-                )}
               </div>
-            </div>
+            )}
 
-            {/* ── Submenu area (reserved space, prevents layout shift) ── */}
-            <div className="w-full max-w-3xl mx-auto min-h-[280px] mt-6">
+            {/* ── Submenu area (replaces the hero in-place; back breadcrumb restores it) ── */}
+            <div className="w-full max-w-3xl mx-auto mt-2">
+              {inSubmenu && (
+                <button
+                  onClick={closeSubmenu}
+                  className="mb-4 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700 backdrop-blur-md transition-colors focus:outline-none focus:ring-2 focus:ring-brand/50"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  {t("profileSelect.back")}
+                </button>
+              )}
               {/* Demo tier cards — dual-path: resume existing or fresh start */}
               {showDemoTiers && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
