@@ -44,6 +44,11 @@
     "message": "Sistem tidak dapat membaca database internal SQLite. Coba jalankan ulang aplikasi.",
     "reload": "Muat Ulang"
   },
+  "crash": {
+    "title": "Terjadi Kesalahan",
+    "message": "Aplikasi mengalami error tak terduga dan berhenti. Data Anda aman di perangkat ini. Muat ulang untuk melanjutkan.",
+    "reload": "Muat Ulang"
+  },
   "sidebar": {
     "connected": "Connected to local.db",
     "groups": {
@@ -1328,6 +1333,7 @@
     "resumeCardTitle": "Lanjutkan Demo",
     "resumeCardDesc": "Kembali ke sesi demo sebelumnya — semua progres tersimpan.",
     "resumeCardAction": "Lanjutkan",
+    "back": "Kembali",
     "freshStartDivider": "atau mulai ulang",
     "freshStartHeading": "Mulai Demo Baru",
     "freshStartWarning": "Memulai ulang akan menghapus semua progres demo yang tersimpan.",

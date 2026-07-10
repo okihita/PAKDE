@@ -44,6 +44,11 @@
     "message": "The system cannot read the internal SQLite database. Please restart the application.",
     "reload": "Reload"
   },
+  "crash": {
+    "title": "Something went wrong",
+    "message": "The app hit an unexpected error and stopped. Your data is safe on this device. Reload to continue.",
+    "reload": "Reload"
+  },
   "sidebar": {
     "connected": "Connected to local.db",
     "groups": {
@@ -1328,6 +1333,7 @@
     "resumeCardTitle": "Resume Demo",
     "resumeCardDesc": "Return to your previous demo session — all progress saved.",
     "resumeCardAction": "Resume",
+    "back": "Back",
     "freshStartDivider": "or start fresh",
     "freshStartHeading": "Start New Demo",
     "freshStartWarning": "Starting fresh will erase all saved demo progress.",
