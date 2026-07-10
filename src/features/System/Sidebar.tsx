@@ -10,18 +10,12 @@ import {
   ChartBarIcon,
   TrophyIcon,
   ArrowsClockwise,
-  Gear,
-  WarningIcon,
-  UserCheck,
-  SunIcon,
-  MoonIcon,
   CalendarPlus,
   WarehouseIcon,
   HandshakeIcon,
   BuildingsIcon,
   BookOpenIcon,
   FileTextIcon,
-  SignOut,
   LockSimple,
   RocketLaunchIcon,
   Coins,
@@ -36,19 +30,14 @@ import {
 import { UNIT_ICONS, UNIT_CONFIG } from "@/features/System/ProfileSelect/unitIcons";
 import { QuickStat } from "./QuickStat";
 import type { RankingStatus } from "@/features/Finance/Ranking/useRanking";
-import type { CooperativeProfile, EwsAlert } from "@/types";
+import type { CooperativeProfile } from "@/types";
 
 interface SidebarProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
   coopProfile: CooperativeProfile | null;
-  ewsAlerts: EwsAlert[];
   memberCount: number;
   netWorth: number;
-  currentUser: { name: string; role: string } | null;
-  appTheme: "dark" | "light";
-  onThemeToggle: () => void;
-  onSwitchProfile: () => void;
   rankingStatus: RankingStatus;
   rankingRank: number | null;
   rankingUnlocked: boolean;
@@ -86,19 +75,13 @@ export default function Sidebar({
   activeTab,
   onTabChange,
   coopProfile,
-  ewsAlerts,
   memberCount,
   netWorth,
-  currentUser,
-  appTheme,
-  onThemeToggle,
-  onSwitchProfile,
   rankingStatus,
   rankingRank,
   rankingUnlocked,
 }: SidebarProps) {
   const { t } = useTranslation();
-  const criticalAlerts = ewsAlerts.filter((a) => a.level === "critical").length;
   const healthScore = coopProfile?.health_score ?? 0;
   const xp = coopProfile?.xp ?? 0;
   const currentLevel = getCurrentLevel(xp);
@@ -397,54 +380,15 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* Account */}
-          <div className="flex items-center gap-3 px-1">
-            <div className="w-9 h-9 rounded-full bg-success/20 flex items-center justify-center shrink-0 ring-1 ring-brand/30">
-              <UserCheck className="h-4 w-4 text-success" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-foreground truncate">{currentUser?.name}</p>
-              <p className="text-xxs text-muted-foreground truncate">{currentUser?.role}</p>
-            </div>
-          </div>
-          {/* Meta control bar */}
-          <div className="flex items-center justify-between gap-1 rounded-lg bg-secondary/40 px-1.5 py-1 mx-1">
-            <div className="flex items-center gap-0.5">
-              <button
-                onClick={() => onTabChange("sync")}
-                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-info"
-                title={t("sidebar.nav.sync")}
-              >
-                <ArrowsClockwise className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={() => onTabChange("settings")}
-                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-foreground"
-                title={t("sidebar.nav.settings")}
-              >
-                <Gear className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div className="flex items-center gap-0.5">
-              <button
-                onClick={onThemeToggle}
-                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0"
-                title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                {appTheme === "dark" ? (
-                  <SunIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-warning transition-colors" />
-                ) : (
-                  <MoonIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-info transition-colors" />
-                )}
-              </button>
-              <button
-                onClick={onSwitchProfile}
-                className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-danger"
-                title={t("profileSelect.switchProfile")}
-              >
-                <SignOut className="h-3.5 w-3.5" />
-              </button>
-            </div>
+          {/* Sync control (session/settings/theme/profile moved to top bar) */}
+          <div className="flex items-center justify-end px-1">
+            <button
+              onClick={() => onTabChange("sync")}
+              className="p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground hover:text-info"
+              title={t("sidebar.nav.sync")}
+            >
+              <ArrowsClockwise className="h-3.5 w-3.5" />
+            </button>
           </div>
         </div>
 
@@ -454,20 +398,6 @@ export default function Sidebar({
           {GROUPS.map(renderGroup)}
         </nav>
       </div>
-
-      {/* ── Bottom Alerts ── */}
-      {criticalAlerts > 0 && (
-        <div className="border-t border-border p-4">
-          <div className="px-3 py-3 rounded-xl bg-danger/5 border border-danger/10">
-            <div className="flex items-center gap-2">
-              <WarningIcon className="h-3 w-3 text-danger" />
-              <span className="text-xxs font-mono text-danger">
-                {t("sidebar.criticalAlerts", { count: criticalAlerts })}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
     </aside>
   );
 }

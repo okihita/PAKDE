@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import "@/i18n"; // initialize i18next before render
+import { useTranslation } from "react-i18next";
 import {
   listCooperatives,
   getCooperativeById,
@@ -16,9 +17,10 @@ import { exit } from "@tauri-apps/plugin-process";
 import { IconProvider } from "@/components/IconContext";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { SignOut, XCircle } from "@phosphor-icons/react";
+import { SignOut, XCircle, WarningIcon } from "@phosphor-icons/react";
 import DbErrorScreen from "@/features/System/DbErrorScreen/DbErrorScreen";
 import Sidebar from "@/features/System/Sidebar";
+import TopBar from "@/features/System/TopBar";
 import Dashboard from "@/features/Home/Dashboard/Dashboard";
 import Statistics from "@/features/Finance/Statistics/Statistics";
 import Leveling from "@/features/Learn/Leveling/Leveling";
@@ -51,13 +53,11 @@ type FontLevel = "small" | "normal" | "large" | "xlarge";
 const FONT_LEVELS: FontLevel[] = ["small", "normal", "large", "xlarge"];
 const FONT_LEVEL_DEFAULT: FontLevel = "normal";
 const TITLEBAR_TEXT = "PAKDE";
-const LBL_LOGOUT_TITLE = "Keluar dari Koperasi";
-const LBL_LOGOUT_CONFIRM = "Apakah Anda yakin ingin keluar dari profil koperasi saat ini?";
 const LBL_CANCEL = "Batal";
-const LBL_LOGOUT = "Keluar";
 const LBL_QUIT = "Tutup Aplikasi";
 const LBL_QUIT_BTN = "QUIT";
 const LBL_QUIT_CONFIRM = "Apakah Anda yakin ingin menutup aplikasi?";
+const LBL_ALERT_ATTENTION = "Perlu perhatian segera";
 
 function quitApp() {
   exit(0);
@@ -65,6 +65,7 @@ function quitApp() {
 
 function AppContent() {
   useDisableDebugMenu();
+  const { t } = useTranslation();
   const [appState, setAppState] = useState<"profile_select" | "user_signin" | "user_create" | "main" | "db_error">(
     "profile_select",
   );
@@ -86,7 +87,6 @@ function AppContent() {
   const [ewsAlerts, setEwsAlerts] = useState<EwsAlert[]>([]);
   const [memberCount, setMemberCount] = useState(0);
   const [netWorth, setNetWorth] = useState(0);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showQuitConfirm, setShowQuitConfirm] = useState(false);
 
   // Update lifecycle — owned at the app root so the title screen can surface an
@@ -111,15 +111,9 @@ function AppContent() {
   // Keyboard shortcuts: Cmd/Ctrl + +/-/0 to zoom font, Escape for back/exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Escape: back/exit/logout
+      // Escape: back/exit
       if (e.key === "Escape") {
         // If a confirmation dialog is already open, Escape closes it (highest priority).
-        if (showLogoutConfirm) {
-          e.preventDefault();
-          e.stopPropagation();
-          setShowLogoutConfirm(false);
-          return;
-        }
         if (showQuitConfirm) {
           e.preventDefault();
           e.stopPropagation();
@@ -138,7 +132,7 @@ function AppContent() {
         }
         if (appState === "main") {
           e.preventDefault();
-          setShowLogoutConfirm(true);
+          setShowQuitConfirm(true);
           return;
         }
       }
@@ -167,7 +161,7 @@ function AppContent() {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [appState, showLogoutConfirm, showQuitConfirm]);
+  }, [appState, showQuitConfirm]);
 
   // Load dashboard data on mount
   useEffect(() => {
@@ -420,13 +414,8 @@ function AppContent() {
           activeTab={activeTab}
           onTabChange={guardedSetActiveTab}
           coopProfile={coopProfile}
-          ewsAlerts={ewsAlerts}
           memberCount={memberCount}
           netWorth={netWorth}
-          currentUser={currentUser}
-          appTheme={appTheme}
-          onThemeToggle={() => setAppTheme((t) => (t === "dark" ? "light" : "dark"))}
-          onSwitchProfile={handleSwitchProfile}
           rankingStatus={ranking.status}
           rankingRank={ranking.ourRanks.kabupaten}
           rankingUnlocked={isTabUnlocked("ranking", coopProfile?.xp ?? 0)}
@@ -435,6 +424,35 @@ function AppContent() {
         <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6 brand-scroll">
           {activeTab === "home" && (
             <>
+              {/* ── User-profile top strip (Beranda only, inside content) ── */}
+              <TopBar
+                activeTab={activeTab}
+                onNavigate={(tab) => {
+                  if (tab === "settings" || tab === "home") setActiveTab(tab);
+                  else guardedSetActiveTab(tab);
+                }}
+                currentUser={currentUser}
+                appTheme={appTheme}
+                onThemeToggle={() => setAppTheme((t) => (t === "dark" ? "light" : "dark"))}
+                onSwitchProfile={handleSwitchProfile}
+                onQuit={() => setShowQuitConfirm(true)}
+              />
+
+              {/* ── Critical alert banner: below the strip, before content ── */}
+              {ewsAlerts.filter((a) => a.level === "critical").length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => guardedSetActiveTab("home")}
+                  className="w-full mt-4 mb-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-danger/10 border border-danger/30 text-left hover:bg-danger/15 transition-colors"
+                >
+                  <WarningIcon className="h-4 w-4 text-danger shrink-0 animate-pulse" />
+                  <span className="text-xxs font-bold text-danger">
+                    {t("sidebar.criticalAlerts", { count: ewsAlerts.filter((a) => a.level === "critical").length })}
+                  </span>
+                  <span className="text-xxs text-danger/70 ml-auto">{LBL_ALERT_ATTENTION} &rarr;</span>
+                </button>
+              )}
+
               <Dashboard healthScore={coopProfile?.health_score ?? 0} xp={coopProfile?.xp ?? 0} />
             </>
           )}
@@ -476,27 +494,24 @@ function AppContent() {
         </main>
       </div>
 
-      {/* Logout confirmation dialog.
-          Radix's built-in Escape handling is disabled here (onEscapeKeyDown) so the
-          keydown listener in App owns open/close. Otherwise Radix's capture-phase
-          Escape handler mutates `open` mid-event, re-runs the effect, and re-registers
-          the listener with a stale closure — causing the dialog to instantly re-open. */}
-      <Dialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+      {/* Quit confirmation dialog (main view). Mirrors the title-screen quit
+          dialog; Escape handling owned by App's keydown listener. */}
+      <Dialog open={showQuitConfirm} onOpenChange={setShowQuitConfirm}>
         <DialogContent
           className="bg-slate-900 border border-slate-800 max-w-sm shadow-2xl"
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-sm font-bold text-slate-200">
-              <SignOut className="h-5 w-5 text-danger shrink-0" />
-              {LBL_LOGOUT_TITLE}
+              <XCircle className="h-5 w-5 text-danger shrink-0" />
+              {LBL_QUIT}
             </DialogTitle>
           </DialogHeader>
-          <p className="text-xs text-slate-400 leading-relaxed py-2">{LBL_LOGOUT_CONFIRM}</p>
+          <p className="text-xs text-slate-400 leading-relaxed py-2">{LBL_QUIT_CONFIRM}</p>
           <DialogFooter className="flex gap-2">
             <Button
               variant="outline"
-              onClick={() => setShowLogoutConfirm(false)}
+              onClick={() => setShowQuitConfirm(false)}
               className="flex-1 border-slate-800 bg-slate-950 text-slate-300 hover:text-white text-xs h-8"
             >
               <XCircle className="h-3.5 w-3.5 mr-1" />
@@ -504,13 +519,13 @@ function AppContent() {
             </Button>
             <Button
               onClick={() => {
-                setShowLogoutConfirm(false);
-                handleSwitchProfile();
+                setShowQuitConfirm(false);
+                quitApp();
               }}
               className="flex-1 bg-danger hover:bg-danger/90 text-white font-bold text-xs h-8"
             >
               <SignOut className="h-3.5 w-3.5 mr-1" />
-              {LBL_LOGOUT}
+              {LBL_QUIT}
             </Button>
           </DialogFooter>
         </DialogContent>
