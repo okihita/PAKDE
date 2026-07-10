@@ -6,7 +6,10 @@ import { awardXp } from "@/data/xp";
 import type { Member, Simpanan } from "@/types";
 import { useToast } from "@/hooks/useToast";
 
-const membersRepo = createRepository<Member>("members");
+// `members` has no `created_at` column (it uses `registered_at`), so the
+// repository must not auto-stamp one — otherwise INSERT fails with
+// "no such column: created_at".
+const membersRepo = createRepository<Member>("members", { createdAt: false });
 const simpananRepo = createRepository<Simpanan>("simpanan_anggota");
 
 const today = () => new Date().toISOString().slice(0, 10);
