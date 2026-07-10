@@ -26,7 +26,7 @@ import {
   RocketLaunchIcon,
   Coins,
 } from "@phosphor-icons/react";
-import { getCurrentLevel } from "@/data/leveling";
+import { getCurrentLevel, getLevelProgress } from "@/data/leveling";
 import {
   isTabUnlocked,
   getUnlockRequirementLabel,
@@ -317,33 +317,39 @@ export default function Sidebar({
               </div>
             </div>
 
-            {/* ── Tier / level — full-width pill ── */}
-            {currentLevel && (
-              <div
-                className={`flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 border border-current/20 ${currentLevel.bgClass} ${currentLevel.textClass}`}
-              >
-                <span className="text-xxs font-black uppercase tracking-wider shrink-0">{`Lv.${currentLevel.tier}`}</span>
-                <span className="text-xxs font-semibold truncate">{currentLevel.labelId}</span>
-                <span className="text-xxs font-mono shrink-0 opacity-80">{`XP ${xp}`}</span>
-              </div>
-            )}
+            {/* ── Level — single-row pill with progress bar ── */}
+            {currentLevel &&
+              (() => {
+                const prog = getLevelProgress(currentLevel, xp);
+                return (
+                  <div
+                    className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 border border-current/20 ${currentLevel.bgClass} ${currentLevel.textClass}`}
+                  >
+                    <span className="text-xxs font-black uppercase tracking-wider shrink-0">{`Lv.${currentLevel.tier}`}</span>
+                    <div className="h-3 flex-1 rounded-full bg-secondary/50 overflow-hidden relative">
+                      <div
+                        className="absolute inset-0 h-full rounded-full bg-current/25 transition-all duration-500"
+                        style={{ width: `${prog.percent}%` }}
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center text-xxxs font-mono font-bold">
+                        {prog.xp}/{prog.maxXp}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
 
-            {/* ── Vitals — RAG-aware health score ── */}
+            {/* ── Health — single-row RAG pill ── */}
             {healthScore > 0 && (
-              <div className="space-y-1">
-                <div className="flex justify-between text-xxxs font-mono">
-                  <span className="text-muted-foreground">{t("sidebar.healthScore")}</span>
-                  <span className={`font-bold ${rag.textClass}`}>{healthScore}%</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+              <div className="flex items-center gap-2 rounded-lg px-2.5 py-1 bg-secondary/40">
+                <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${rag.dotClass}`} />
+                <span className={`text-xxs font-semibold truncate ${rag.textClass}`}>{t(rag.ratingKey)}</span>
+                <span className={`text-xxs font-mono font-bold shrink-0 ${rag.textClass}`}>{healthScore}%</span>
+                <div className="h-1.5 flex-1 rounded-full bg-secondary overflow-hidden">
                   <div
                     className={`h-full rounded-full ${rag.barClass} transition-all duration-500`}
                     style={{ width: `${healthScore}%` }}
                   />
-                </div>
-                <div className={`flex items-center gap-1 text-xxs font-semibold ${rag.textClass}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${rag.dotClass}`} />
-                  {t(rag.ratingKey)}
                 </div>
               </div>
             )}
