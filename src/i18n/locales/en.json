@@ -210,7 +210,12 @@
       "simpanan": "Total Savings",
       "outstanding": "Outstanding",
       "action": "Actions",
-      "noData": "No member data."
+      "noData": "No member data.",
+      "pagination": {
+        "prev": "Previous",
+        "next": "Next",
+        "pageInfo": "Page {{page}} of {{total}}"
+      }
     },
     "detail": {
       "title": "Member Detail",

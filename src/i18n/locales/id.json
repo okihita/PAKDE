@@ -210,7 +210,12 @@
       "simpanan": "Total Simpanan",
       "outstanding": "Outstanding",
       "action": "Aksi",
-      "noData": "Tidak ada data anggota."
+      "noData": "Tidak ada data anggota.",
+      "pagination": {
+        "prev": "Sebelumnya",
+        "next": "Berikutnya",
+        "pageInfo": "Halaman {{page}} dari {{total}}"
+      }
     },
     "detail": {
       "title": "Detail Anggota",

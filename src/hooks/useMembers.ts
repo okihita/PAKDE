@@ -75,7 +75,7 @@ export function useMembers(onChange?: () => void) {
   const toast = useToast();
 
   const [membersList, setMembersList] = useState<Member[]>([]);
-  const [memberSearchQuery, setMemberSearchQuery] = useState(() => {
+  const [memberSearchQuery, setMemberSearchQueryRaw] = useState(() => {
     const saved = localStorage.getItem("pakde-member-search-filter");
     if (saved) {
       localStorage.removeItem("pakde-member-search-filter");
@@ -83,7 +83,7 @@ export function useMembers(onChange?: () => void) {
     }
     return "";
   });
-  const [memberFilterStatus, setMemberFilterStatus] = useState("semua");
+  const [memberFilterStatus, setMemberFilterStatusRaw] = useState("semua");
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [memberFormType, setMemberFormType] = useState<"add" | "edit">("add");
   const [currentMemberId, setCurrentMemberId] = useState("");
@@ -92,6 +92,8 @@ export function useMembers(onChange?: () => void) {
   const [insights, setInsights] = useState<MemberInsights>(EMPTY_INSIGHTS);
   // Incremented on a duplicate-NIK submit so the form can re-roll its auto-gen seq.
   const [nikConflictNonce, setNikConflictNonce] = useState(0);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
 
   const loadInsights = useCallback(async (list: Member[]) => {
     const totalSimpanan = list.reduce(
@@ -314,6 +316,21 @@ export function useMembers(onChange?: () => void) {
     })
     .sort(byJoinThenNik);
 
+  const totalPages = Math.max(1, Math.ceil(filteredMembers.length / pageSize));
+
+  // Wrapper setters that reset page to 1 when search/filter changes.
+  const setMemberSearchQuery = useCallback((q: string) => {
+    setMemberSearchQueryRaw(q);
+    setPage(1);
+  }, []);
+  const setMemberFilterStatus = useCallback((v: string) => {
+    setMemberFilterStatusRaw(v);
+    setPage(1);
+  }, []);
+
+  // Clamp page when the filtered list shrinks (e.g. after delete).
+  const clampedPage = Math.min(page, totalPages);
+
   // 1-based membership number derived from the full join-date ordering, so a
   // member keeps a stable # across search/filter (computed off all members).
   const memberSequence = useMemo(() => {
@@ -349,5 +366,9 @@ export function useMembers(onChange?: () => void) {
     loadSimpananForMember,
     handleMemberFormSubmit,
     deleteMember,
+    page: clampedPage,
+    setPage,
+    pageSize,
+    totalPages,
   };
 }

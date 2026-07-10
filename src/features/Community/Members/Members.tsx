@@ -115,6 +115,11 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
     });
   }, [m.filteredMembers, m.memberSequence, sortKey, sortDir]);
 
+  const pagedMembers = useMemo(
+    () => displayMembers.slice((m.page - 1) * m.pageSize, m.page * m.pageSize),
+    [displayMembers, m.page, m.pageSize],
+  );
+
   return (
     <div className="space-y-4">
       {/* ── Insight tiles (manager cockpit) ── */}
@@ -207,29 +212,60 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {displayMembers.length === 0 && (
+              {displayMembers.length === 0 ? (
                 <TableRow className="border-border">
                   <TableCell colSpan={4} className="text-center py-8 text-muted-foreground text-xs">
                     {t("members.tableHeaders.noData")}
                   </TableCell>
                 </TableRow>
+              ) : (
+                pagedMembers.map((mbr) => (
+                  <TableRow
+                    key={mbr.id}
+                    className="border-border hover:bg-sidebar-ring cursor-pointer"
+                    onClick={() => setSelectedMember(mbr)}
+                  >
+                    <TableCell className="text-xxs text-muted-foreground">
+                      {m.memberSequence[mbr.id ?? ""] ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-xs text-foreground font-semibold">{mbr.name}</TableCell>
+                    <TableCell className="text-xxs text-success text-right">{fmt(totalSimpananMember(mbr))}</TableCell>
+                    <TableCell className="text-xxs text-danger text-right">{fmt(mbr.loan_outstanding)}</TableCell>
+                  </TableRow>
+                ))
               )}
-              {displayMembers.map((mbr) => (
-                <TableRow
-                  key={mbr.id}
-                  className="border-border hover:bg-sidebar-ring cursor-pointer"
-                  onClick={() => setSelectedMember(mbr)}
-                >
-                  <TableCell className="text-xxs text-muted-foreground">
-                    {m.memberSequence[mbr.id ?? ""] ?? "-"}
-                  </TableCell>
-                  <TableCell className="text-xs text-foreground font-semibold">{mbr.name}</TableCell>
-                  <TableCell className="text-xxs text-success text-right">{fmt(totalSimpananMember(mbr))}</TableCell>
-                  <TableCell className="text-xxs text-danger text-right">{fmt(mbr.loan_outstanding)}</TableCell>
-                </TableRow>
-              ))}
             </TableBody>
           </Table>
+          {m.totalPages > 1 && (
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-xxs text-muted-foreground">
+                {m.filteredMembers.length} {t("members.title").toLowerCase()}
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => m.setPage(m.page - 1)}
+                  disabled={m.page <= 1}
+                  className="text-xxs h-7 border-border"
+                >
+                  {t("members.tableHeaders.pagination.prev")}
+                </Button>
+                <span className="text-xxs text-muted-foreground min-w-[80px] text-center">
+                  {t("members.tableHeaders.pagination.pageInfo", { page: m.page, total: m.totalPages })}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => m.setPage(m.page + 1)}
+                  disabled={m.page >= m.totalPages}
+                  className="text-xxs h-7 border-border"
+                >
+                  {t("members.tableHeaders.pagination.next")}
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
