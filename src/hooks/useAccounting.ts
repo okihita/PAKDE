@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { getDb } from "@/db";
+import { createRepository, getDb } from "@/db";
 import type {
   CoaAccount,
   JournalEntryWithLines,
@@ -11,6 +11,10 @@ import type {
   CoaBalanceRow,
 } from "@/types";
 import { useToast } from "@/hooks/useToast";
+
+const coaRepo = createRepository<CoaAccount>("coa_accounts");
+const journalEntriesRepo = createRepository<JournalEntryRow>("journal_entries");
+const journalLinesRepo = createRepository<JournalLineRow>("journal_lines");
 
 const JOURNAL_FORM_DEFAULT = {
   date: new Date().toISOString().split("T")[0],
@@ -53,8 +57,7 @@ export function useAccounting() {
 
   const loadAccountsData = useCallback(async () => {
     try {
-      const db = await getDb();
-      const res = await db.select<CoaAccount[]>("SELECT * FROM coa_accounts ORDER BY code ASC");
+      const res = await coaRepo.list("ORDER BY code ASC");
       setCoaAccounts(res);
     } catch (e) {
       console.error(e);
@@ -63,13 +66,12 @@ export function useAccounting() {
 
   const loadJournalData = useCallback(async () => {
     try {
-      const db = await getDb();
-      const entries = await db.select<JournalEntryRow[]>(
+      const entries = await journalEntriesRepo.select<JournalEntryRow[]>(
         "SELECT * FROM journal_entries ORDER BY date DESC, number DESC",
       );
       const mapped: JournalEntryWithLines[] = [];
       for (const entry of entries) {
-        const lines = await db.select<JournalLineRow[]>(
+        const lines = await journalLinesRepo.select<JournalLineRow[]>(
           `SELECT jl.*, ca.name FROM journal_lines jl LEFT JOIN coa_accounts ca ON jl.account_code = ca.code WHERE jl.journal_entry_id = ?`,
           [entry.id],
         );
@@ -83,14 +85,13 @@ export function useAccounting() {
 
   const loadLedgerData = useCallback(async () => {
     try {
-      const db = await getDb();
-      const account = await db.select<CoaBalanceRow[]>("SELECT balance FROM coa_accounts WHERE code = ?", [
+      const account = await coaRepo.select<CoaBalanceRow[]>("SELECT balance FROM coa_accounts WHERE code = ?", [
         ledgerSelectedCode,
       ]);
       const balanceEnd = account.length > 0 ? account[0].balance : 0;
       setLedgerBalanceEnd(balanceEnd);
 
-      const lines = await db.select<LedgerLine[]>(
+      const lines = await journalLinesRepo.select<LedgerLine[]>(
         `SELECT jl.*, je.date, je.number, je.description as entry_desc FROM journal_lines jl
          INNER JOIN journal_entries je ON jl.journal_entry_id = je.id
          WHERE jl.account_code = ? ORDER BY je.date ASC, je.created_at ASC`,
@@ -104,7 +105,7 @@ export function useAccounting() {
         credSum += l.credit;
       }
 
-      const accInfo = await db.select<CoaBalanceRow[]>("SELECT normal_balance FROM coa_accounts WHERE code = ?", [
+      const accInfo = await coaRepo.select<CoaBalanceRow[]>("SELECT normal_balance FROM coa_accounts WHERE code = ?", [
         ledgerSelectedCode,
       ]);
       const normalBal = accInfo.length > 0 ? accInfo[0].normal_balance : "debit";
@@ -133,14 +134,12 @@ export function useAccounting() {
       return;
     }
     try {
-      const db = await getDb();
-      await db.execute(`INSERT INTO coa_accounts (code, name, type, normal_balance, balance) VALUES (?, ?, ?, ?, ?)`, [
-        newCoaValues.code,
-        newCoaValues.name,
-        newCoaValues.type,
-        newCoaValues.normal_balance,
-        Number(newCoaValues.balance),
-      ]);
+      await coaRepo.insert(newCoaValues.code, {
+        name: newCoaValues.name,
+        type: newCoaValues.type,
+        normal_balance: newCoaValues.normal_balance,
+        balance: Number(newCoaValues.balance),
+      });
       setShowCoaModal(false);
       loadAccountsData();
     } catch (err) {

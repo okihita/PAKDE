@@ -1,8 +1,14 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { getDb } from "@/db";
+import { createRepository, newId, getDb } from "@/db";
 import { useToast } from "@/hooks/useToast";
 import type { InventoryItem, SalesTransaction, SalesTransactionItem, Member } from "@/types";
+
+const inventoryRepo = createRepository<InventoryItem>("inventory_items");
+const membersRepo = createRepository<Member>("members");
+const categoriesRepo = createRepository<{ id: string; name: string; icon: string }>("categories");
+const salesRepo = createRepository<SalesTransaction>("sales_transactions");
+const transactionItemsRepo = createRepository<SalesTransactionItem>("sales_transaction_items");
 
 export interface CartItem {
   item: InventoryItem;
@@ -24,8 +30,7 @@ export function useSales() {
   // Load Inventory data
   const loadInventory = useCallback(async () => {
     try {
-      const db = await getDb();
-      const res = await db.select<InventoryItem[]>("SELECT * FROM inventory_items ORDER BY name ASC");
+      const res = await inventoryRepo.list("ORDER BY name ASC");
       setInventoryList(res);
     } catch (e) {
       console.error("Failed to load inventory:", e);
@@ -35,8 +40,7 @@ export function useSales() {
   // Load active members (for customer choice)
   const loadMembers = useCallback(async () => {
     try {
-      const db = await getDb();
-      const res = await db.select<Member[]>("SELECT * FROM members WHERE status = 'aktif' ORDER BY name ASC");
+      const res = await membersRepo.list("WHERE status = 'aktif' ORDER BY name ASC");
       setMembersList(res);
     } catch (e) {
       console.error("Failed to load members:", e);
@@ -46,11 +50,8 @@ export function useSales() {
   // Load categories
   const loadCategories = useCallback(async () => {
     try {
-      const db = await getDb();
       // only load categories that represent business units (prefix unit_)
-      const res = await db.select<Array<{ id: string; name: string; icon: string }>>(
-        "SELECT * FROM categories WHERE id LIKE 'unit_%' ORDER BY name ASC",
-      );
+      const res = await categoriesRepo.list("WHERE id LIKE 'unit_%' ORDER BY name ASC");
       setCategoriesList(res);
     } catch (e) {
       console.error("Failed to load categories:", e);
@@ -60,8 +61,7 @@ export function useSales() {
   // Load Sales History
   const loadTransactions = useCallback(async () => {
     try {
-      const db = await getDb();
-      const txs = await db.select<SalesTransaction[]>(
+      const txs = await salesRepo.select<SalesTransaction[]>(
         `SELECT st.*, m.name as member_name, c.name as category_name
          FROM sales_transactions st
          LEFT JOIN members m ON st.member_id = m.id
@@ -71,7 +71,7 @@ export function useSales() {
 
       const mapped: SalesTransaction[] = [];
       for (const tx of txs) {
-        const items = await db.select<SalesTransactionItem[]>(
+        const items = await transactionItemsRepo.select<SalesTransactionItem[]>(
           `SELECT sti.*, ii.name as item_name
            FROM sales_transaction_items sti
            LEFT JOIN inventory_items ii ON sti.item_id = ii.id
@@ -270,13 +270,14 @@ export function useSales() {
       return false;
     }
     try {
-      const db = await getDb();
-      const itemId = `item-${Date.now()}`;
-      await db.execute(
-        `INSERT INTO inventory_items (id, name, category_id, stock_quantity, unit, cost_price, selling_price)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [itemId, name, categoryId, stockQuantity, unit, costPrice, sellingPrice],
-      );
+      await inventoryRepo.insert(newId("item"), {
+        name,
+        category_id: categoryId,
+        stock_quantity: stockQuantity,
+        unit,
+        cost_price: costPrice,
+        selling_price: sellingPrice,
+      });
       toast.success(t("sales.toast.itemCreated"));
       await loadInventory();
       return true;
@@ -293,8 +294,7 @@ export function useSales() {
       return false;
     }
     try {
-      const db = await getDb();
-      await db.execute(
+      await inventoryRepo.execute(
         `UPDATE inventory_items
          SET stock_quantity = stock_quantity + ?, updated_at = datetime('now')
          WHERE id = ?`,
@@ -314,8 +314,7 @@ export function useSales() {
     const confirmDelete = await toast.confirm(t("sales.toast.deleteConfirm"));
     if (!confirmDelete) return false;
     try {
-      const db = await getDb();
-      await db.execute("DELETE FROM inventory_items WHERE id = ?", [id]);
+      await inventoryRepo.remove(id);
       toast.success(t("sales.toast.itemDeleted"));
       await loadInventory();
       return true;

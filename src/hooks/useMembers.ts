@@ -1,8 +1,10 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { getDb } from "@/db";
+import { createRepository, newId } from "@/db";
 import type { Member } from "@/types";
 import { useToast } from "@/hooks/useToast";
+
+const membersRepo = createRepository<Member>("members");
 
 const MEMBER_DEFAULT: Member = {
   nik: "",
@@ -45,8 +47,7 @@ export function useMembers(onChange?: () => void) {
 
   const loadMembersData = useCallback(async () => {
     try {
-      const db = await getDb();
-      const res = await db.select<Member[]>("SELECT * FROM members ORDER BY name ASC");
+      const res = await membersRepo.list("ORDER BY name ASC");
       setMembersList(res);
     } catch (e) {
       console.error(e);
@@ -77,64 +78,30 @@ export function useMembers(onChange?: () => void) {
       return;
     }
     try {
-      const db = await getDb();
       const fv = memberFormValues;
+      const columns = {
+        nik: fv.nik,
+        name: fv.name,
+        place_of_birth: fv.place_of_birth,
+        date_of_birth: fv.date_of_birth,
+        gender: fv.gender,
+        occupation: fv.occupation,
+        education: fv.education,
+        rt: fv.rt,
+        rw: fv.rw,
+        hamlet: fv.hamlet,
+        status: fv.status,
+        savings_pokok: Number(fv.savings_pokok),
+        savings_wajib: Number(fv.savings_wajib),
+        savings_sukarela: Number(fv.savings_sukarela),
+        loan_total: Number(fv.loan_total),
+        loan_outstanding: Number(fv.loan_outstanding),
+        loan_status: fv.loan_status,
+      };
       if (memberFormType === "add") {
-        const newId = `mbr-${Date.now()}`;
-        await db.execute(
-          `INSERT INTO members (id, nik, name, place_of_birth, date_of_birth, gender,
-          occupation, education, rt, rw, hamlet, status, savings_pokok, savings_wajib,
-          savings_sukarela, loan_total, loan_outstanding, loan_status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            newId,
-            fv.nik,
-            fv.name,
-            fv.place_of_birth,
-            fv.date_of_birth,
-            fv.gender,
-            fv.occupation,
-            fv.education,
-            fv.rt,
-            fv.rw,
-            fv.hamlet,
-            fv.status,
-            Number(fv.savings_pokok),
-            Number(fv.savings_wajib),
-            Number(fv.savings_sukarela),
-            Number(fv.loan_total),
-            Number(fv.loan_outstanding),
-            fv.loan_status,
-          ],
-        );
+        await membersRepo.insert(newId("mbr"), columns);
       } else {
-        await db.execute(
-          `UPDATE members SET nik=?, name=?, place_of_birth=?, date_of_birth=?, gender=?,
-            occupation=?, education=?, rt=?, rw=?, hamlet=?, status=?,
-            savings_pokok=?, savings_wajib=?, savings_sukarela=?,
-            loan_total=?, loan_outstanding=?, loan_status=?, updated_at=datetime('now')
-           WHERE id=?`,
-          [
-            fv.nik,
-            fv.name,
-            fv.place_of_birth,
-            fv.date_of_birth,
-            fv.gender,
-            fv.occupation,
-            fv.education,
-            fv.rt,
-            fv.rw,
-            fv.hamlet,
-            fv.status,
-            Number(fv.savings_pokok),
-            Number(fv.savings_wajib),
-            Number(fv.savings_sukarela),
-            Number(fv.loan_total),
-            Number(fv.loan_outstanding),
-            fv.loan_status,
-            currentMemberId,
-          ],
-        );
+        await membersRepo.update(currentMemberId, columns);
       }
       setShowMemberModal(false);
       loadMembersData();
@@ -152,8 +119,7 @@ export function useMembers(onChange?: () => void) {
     const yes = await toast.confirm(t("toast.memberDeleteConfirm", { name: member.name }));
     if (!yes) return;
     try {
-      const db = await getDb();
-      await db.execute("DELETE FROM members WHERE id = ?", [member.id]);
+      await membersRepo.remove(member.id ?? "");
       loadMembersData();
       onChange?.();
     } catch (err) {

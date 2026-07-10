@@ -1,8 +1,10 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { getDb } from "@/db";
+import { createRepository, newId } from "@/db";
 import { useToast } from "@/hooks/useToast";
 import type { EquipmentItem, EquipmentCondition } from "@/types";
+
+const equipmentRepo = createRepository<EquipmentItem>("equipment");
 
 export function useEquipment() {
   const { t } = useTranslation();
@@ -11,8 +13,7 @@ export function useEquipment() {
 
   const loadEquipment = useCallback(async () => {
     try {
-      const db = await getDb();
-      const res = await db.select<EquipmentItem[]>("SELECT * FROM equipment ORDER BY name ASC");
+      const res = await equipmentRepo.list("ORDER BY name ASC");
       setEquipmentList(res);
     } catch (e) {
       console.error("Failed to load equipment:", e);
@@ -31,12 +32,13 @@ export function useEquipment() {
       return false;
     }
     try {
-      const db = await getDb();
-      const id = `eq-${Date.now()}`;
-      await db.execute(
-        "INSERT INTO equipment (id, name, quantity, condition, last_maintenance, value) VALUES (?, ?, ?, ?, ?, ?)",
-        [id, name.trim(), quantity, condition, lastMaintenance, value],
-      );
+      await equipmentRepo.insert(newId("eq"), {
+        name: name.trim(),
+        quantity,
+        condition,
+        last_maintenance: lastMaintenance,
+        value,
+      });
       toast.success(t("equipment.toast.itemCreated"));
       await loadEquipment();
       return true;
@@ -60,13 +62,13 @@ export function useEquipment() {
       return false;
     }
     try {
-      const db = await getDb();
-      await db.execute(
-        `UPDATE equipment
-         SET name = ?, quantity = ?, condition = ?, last_maintenance = ?, value = ?, updated_at = datetime('now')
-         WHERE id = ?`,
-        [name.trim(), quantity, condition, lastMaintenance, value, id],
-      );
+      await equipmentRepo.update(id, {
+        name: name.trim(),
+        quantity,
+        condition,
+        last_maintenance: lastMaintenance,
+        value,
+      });
       toast.success(t("equipment.toast.itemUpdated"));
       await loadEquipment();
       return true;
@@ -79,14 +81,8 @@ export function useEquipment() {
 
   const recordMaintenance = async (id: string): Promise<boolean> => {
     try {
-      const db = await getDb();
       const today = new Date().toISOString().slice(0, 10);
-      await db.execute(
-        `UPDATE equipment
-         SET last_maintenance = ?, condition = 'Baik', updated_at = datetime('now')
-         WHERE id = ?`,
-        [today, id],
-      );
+      await equipmentRepo.update(id, { last_maintenance: today, condition: "Baik" });
       toast.success(t("equipment.toast.maintenanceDone"));
       await loadEquipment();
       return true;
@@ -101,8 +97,7 @@ export function useEquipment() {
     const confirmDelete = await toast.confirm(t("equipment.toast.deleteConfirm"));
     if (!confirmDelete) return false;
     try {
-      const db = await getDb();
-      await db.execute("DELETE FROM equipment WHERE id = ?", [id]);
+      await equipmentRepo.remove(id);
       toast.success(t("equipment.toast.itemDeleted"));
       await loadEquipment();
       return true;
