@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getCurrentLevel } from "./leveling";
-import { XP_SOURCES, computeTotal } from "./xp-core";
+import { XP_SOURCES, computeTotal, getTierBand, TIER_BANDS } from "./xp-core";
 
 describe("xp-core", () => {
   it("computes the running total from signed deltas", () => {
@@ -34,5 +34,25 @@ describe("level is derived only from xp (A1)", () => {
   it("an xp total within the curve lands on the expected threshold band", () => {
     expect(getCurrentLevel(0).tier).toBe(1); // rintisan (Level 1 start)
     expect(getCurrentLevel(82).tier).toBeGreaterThan(1);
+  });
+});
+
+describe("churn recompute (A3)", () => {
+  it("supports negative deltas so a removal lowers the total", () => {
+    expect(computeTotal([{ delta: 5 }, { delta: 5 }, { delta: -5 }])).toBe(5);
+  });
+});
+
+describe("tier bands (A5)", () => {
+  it("maps level tiers onto Bronze/Silver/Gold", () => {
+    expect(getTierBand(getCurrentLevel(0).tier).en).toBe("Bronze");
+    expect(getTierBand(getCurrentLevel(82).tier).en).toBe("Gold");
+  });
+
+  it("covers all 10 tiers", () => {
+    for (let tier = 1; tier <= 10; tier++) {
+      expect(getTierBand(tier)).toBeDefined();
+    }
+    expect(TIER_BANDS[TIER_BANDS.length - 1].maxTier).toBeGreaterThanOrEqual(10);
   });
 });

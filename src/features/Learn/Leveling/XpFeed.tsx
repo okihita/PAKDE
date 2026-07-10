@@ -9,6 +9,7 @@ function actionLabel(action: string, isId: boolean, t: (k: string) => string): s
   const src = XP_SOURCES[action];
   if (src) return isId ? src.labelId : src.labelEn;
   if (action === "xp_baseline") return t("leveling.xpBaseline");
+  if (action === "member_removed") return t("leveling.xpMemberRemoved");
   return action;
 }
 

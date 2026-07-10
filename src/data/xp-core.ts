@@ -54,3 +54,27 @@ export const XP_SOURCES: Record<string, XpSource> = {
 export function computeTotal(events: Array<{ delta: number }>): number {
   return events.reduce((sum, e) => sum + e.delta, 0);
 }
+
+// ── Tier bands (R5 overlay) ───────────────────────────────
+// Maps the existing level `tier` (1–10) onto named milestone bands.
+// This is an overlay on `leveling-data.ts` — it does not alter the
+// `minXp`/`maxXp` curve. Splits: Bronze 1–3, Silver 4–6, Gold 7–10.
+export interface TierBand {
+  en: string;
+  id: string;
+  /** Upper tier (inclusive) this band covers. */
+  maxTier: number;
+  /** Tailwind classes for the badge pill. */
+  cls: string;
+}
+
+export const TIER_BANDS: TierBand[] = [
+  { en: "Bronze", id: "Perunggu", maxTier: 3, cls: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+  { en: "Silver", id: "Perak", maxTier: 6, cls: "bg-zinc-400/15 text-zinc-300 border-zinc-400/30" },
+  { en: "Gold", id: "Emas", maxTier: 10, cls: "bg-yellow-500/15 text-yellow-400 border-yellow-500/30" },
+];
+
+/** Resolve the tier band for a level tier (1–10). */
+export function getTierBand(tier: number): TierBand {
+  return TIER_BANDS.find((b) => tier <= b.maxTier) ?? TIER_BANDS[TIER_BANDS.length - 1];
+}

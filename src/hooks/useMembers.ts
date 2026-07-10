@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { createRepository, newId } from "@/db";
 import { getActiveCoopId } from "@/db/active-coop";
-import { awardXp } from "@/data/xp";
+import { awardXp, removeMemberXp } from "@/data/xp";
 import type { Member, Simpanan } from "@/types";
 import { useToast } from "@/hooks/useToast";
 
@@ -211,7 +211,13 @@ export function useMembers(onChange?: () => void) {
       if (memberFormType === "add") {
         await membersRepo.insert(id, columns);
         // Award XP via the event ledger; keeps `cooperatives.xp` in sync.
-        await awardXp(getActiveCoopId(), "member_joined", { memberId: id });
+        // A guard rejection (e.g. verification/cap, R4) must NOT roll
+        // back the member insert — surface it as its own toast.
+        try {
+          await awardXp(getActiveCoopId(), "member_joined", { memberId: id });
+        } catch (e) {
+          toast.error(t(String(e instanceof Error ? e.message : "xp.awardFailed")));
+        }
       } else {
         await membersRepo.update(currentMemberId, columns);
         // Replace this member's ledger rows with the edited set.
@@ -246,6 +252,13 @@ export function useMembers(onChange?: () => void) {
     try {
       await simpananRepo.execute("DELETE FROM simpanan_anggota WHERE anggota_ref = ?", [member.id ?? ""]);
       await membersRepo.remove(member.id ?? "");
+      // Revert XP via a negative ledger event (R3); failure here
+      // must not mask a successful member deletion.
+      try {
+        await removeMemberXp(getActiveCoopId(), member.id ?? "");
+      } catch (e) {
+        console.error(e);
+      }
       loadMembersData();
       onChange?.();
     } catch (err) {

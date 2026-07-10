@@ -19,6 +19,14 @@ import { XP_SOURCES } from "./xp-core";
 /** Internal action recorded when a co-op's pre-ledger XP is reconciled. */
 const BASELINE_ACTION = "xp_baseline";
 
+// ── Phase 4 abuse-guard flags (R4) ─────────────────────
+// Kept as data, default OFF so normal behaviour is unchanged. Flip
+// `REQUIRE_VERIFICATION` to `true` (or set a positive `DAILY_XP_CAP`)
+// to exercise the gates; UI surfaces the rejection via a toast.
+export const REQUIRE_VERIFICATION = false;
+/** Per-coop daily XP cap. `0` = disabled. */
+export const DAILY_XP_CAP = 0;
+
 export interface XpEvent {
   id: string;
   action: string;
@@ -37,11 +45,13 @@ export interface XpEvent {
  * event is written from the co-op's existing registry XP, so the ledger is
  * continuous for co-ops created before the ledger existed (e.g. demo seed).
  */
-export async function awardXp(coopId: string, action: string, meta?: object): Promise<number> {
-  const source = XP_SOURCES[action];
-  if (!source) throw new Error(`Unknown XP action: ${action}`);
-  const delta = source.xp;
-
+/**
+ * Append an immutable `xp_events` row and keep `cooperatives.xp` equal to
+ * the running total. Reconciles a one-off `xp_baseline` event from the
+ * co-op's existing registry XP the first time the ledger is written (for
+ * co-ops created before the ledger existed).
+ */
+async function appendXp(coopId: string, action: string, delta: number, meta?: object): Promise<number> {
   const coopDb = await getCoopDb(coopId);
 
   const rows = await coopDb.select<Array<{ total: number }>>("SELECT COALESCE(SUM(delta), 0) AS total FROM xp_events;");
@@ -71,6 +81,48 @@ export async function awardXp(coopId: string, action: string, meta?: object): Pr
   await reg.execute("UPDATE cooperatives SET xp = ? WHERE id = ?;", [totalAfter, coopId]);
 
   return totalAfter;
+}
+
+/**
+ * Award XP for an in-app action. On first award for a co-op (empty ledger)
+ * a `xp_baseline` reconciliation event is written from the co-op's
+ * existing registry XP, so the ledger is continuous for co-ops created
+ * before the ledger existed (e.g. demo seed).
+ *
+ * Enforces the Phase-4 abuse guards (R4): when `REQUIRE_VERIFICATION`
+ * is on, no XP is granted; when `DAILY_XP_CAP` is set, the cap is
+ * checked against today's positive deltas. Both are OFF by default (data
+ * flags, not blocking) — flip them to exercise the gates.
+ */
+export async function awardXp(coopId: string, action: string, meta?: object): Promise<number> {
+  if (REQUIRE_VERIFICATION) throw new Error("xp.verificationRequired");
+  if (DAILY_XP_CAP > 0) {
+    const today = new Date().toISOString().slice(0, 10);
+    const day = await getCoopDb(coopId).then((db) =>
+      db.select<Array<{ total: number }>>(
+        "SELECT COALESCE(SUM(delta), 0) AS total FROM xp_events WHERE date(created_at) = ? AND delta > 0;",
+        [today],
+      ),
+    );
+    const source = XP_SOURCES[action];
+    const delta = source?.xp ?? 0;
+    if ((day[0]?.total ?? 0) + delta > DAILY_XP_CAP) throw new Error("xp.dailyCapReached");
+  }
+
+  const source = XP_SOURCES[action];
+  if (!source) throw new Error(`Unknown XP action: ${action}`);
+  return appendXp(coopId, action, source.xp, meta);
+}
+
+/**
+ * Revert XP when a reversible subject leaves (R3). `member_joined` is
+ * `reversible`, so removing a member emits a negative event; the level
+ * recomputes from the new total (supports multi-level de-level).
+ */
+export async function removeMemberXp(coopId: string, memberId: string): Promise<number | null> {
+  const source = XP_SOURCES["member_joined"];
+  if (!source?.reversible) return null;
+  return appendXp(coopId, "member_removed", -source.xp, { memberId });
 }
 
 /** Read the full, chronological XP event ledger for a co-op (R4). */
