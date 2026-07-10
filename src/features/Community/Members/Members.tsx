@@ -57,6 +57,53 @@ function SortableHeader({
   );
 }
 
+function PaginationBar({
+  page,
+  totalPages,
+  totalItems,
+  onPrev,
+  onNext,
+}: {
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  const { t } = useTranslation();
+  if (totalPages <= 1) return null;
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-xxs text-muted-foreground">
+        {totalItems} {t("members.title").toLowerCase()}
+      </span>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onPrev}
+          disabled={page <= 1}
+          className="text-xxs h-7 border-border"
+        >
+          {t("members.tableHeaders.pagination.prev")}
+        </Button>
+        <span className="text-xxs text-muted-foreground min-w-[80px] text-center">
+          {t("members.tableHeaders.pagination.pageInfo", { page, total: totalPages })}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onNext}
+          disabled={page >= totalPages}
+          className="text-xxs h-7 border-border"
+        >
+          {t("members.tableHeaders.pagination.next")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function Members({ onMembersChanged }: { onMembersChanged?: () => void }) {
   const { t } = useTranslation();
   const m = useMembers(onMembersChanged);
@@ -121,153 +168,152 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
   );
 
   return (
-    <div className="space-y-4">
-      {/* ── Insight tiles (manager cockpit) ── */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <InsightTile
-          label={t("members.insights.totalMembers")}
-          value={String(i.totalMembers)}
-          sub={`${i.activeMembers} aktif · ${i.inactiveMembers} nonaktif`}
-        />
-        <InsightTile label={t("members.insights.totalSimpanan")} value={fmt(i.totalSimpanan)} />
-        <InsightTile label={t("members.insights.piutang")} value={fmt(i.totalPiutang)} />
-        <InsightTile
-          label={t("members.insights.simpananPending")}
-          value={String(i.simpananPending)}
-          danger={i.simpananPending > 0}
-        />
-        <InsightTile label={t("members.insights.newThisMonth")} value={String(i.newThisMonth)} />
-        <InsightTile label={t("members.title")} value={fmt(i.totalSimpanan + i.totalPiutang)} sub="Aset kelolaan" />
-      </div>
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+      {/* ── Left column: summary KPIs (sticky on desktop) ── */}
+      <aside className="lg:w-80 shrink-0 lg:sticky lg:top-6 space-y-3">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          {t("members.summaryTitle")}
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-3">
+          <InsightTile
+            label={t("members.insights.totalMembers")}
+            value={String(i.totalMembers)}
+            sub={`${i.activeMembers} aktif · ${i.inactiveMembers} nonaktif`}
+          />
+          <InsightTile label={t("members.insights.totalSimpanan")} value={fmt(i.totalSimpanan)} />
+          <InsightTile label={t("members.insights.piutang")} value={fmt(i.totalPiutang)} />
+          <InsightTile
+            label={t("members.insights.simpananPending")}
+            value={String(i.simpananPending)}
+            danger={i.simpananPending > 0}
+          />
+          <InsightTile label={t("members.insights.newThisMonth")} value={String(i.newThisMonth)} />
+          <InsightTile label={t("members.title")} value={fmt(i.totalSimpanan + i.totalPiutang)} sub="Aset kelolaan" />
+        </div>
+      </aside>
 
-      <Card className="bg-card border-border">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-            {t("members.title")}
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={m.openAddMemberModal}
-              className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
-            >
-              <PlusIcon className="h-3 w-3 mr-1" /> {t("members.addButton")}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-3 mb-4">
-            <div className="flex-1 relative">
-              <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-              <Input
-                placeholder={t("members.searchPlaceholder")}
-                value={m.memberSearchQuery}
-                onChange={(e) => m.setMemberSearchQuery(e.target.value)}
-                className="pl-7 bg-input border-border text-xs h-8"
+      {/* ── Right column: member database table ── */}
+      <div className="flex-1 min-w-0">
+        <Card className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              {t("members.title")}
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={m.openAddMemberModal}
+                className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
+              >
+                <PlusIcon className="h-3 w-3 mr-1" /> {t("members.addButton")}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-3 mb-4">
+              <div className="flex-1 relative">
+                <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+                <Input
+                  placeholder={t("members.searchPlaceholder")}
+                  value={m.memberSearchQuery}
+                  onChange={(e) => m.setMemberSearchQuery(e.target.value)}
+                  className="pl-7 bg-input border-border text-xs h-8"
+                />
+              </div>
+              <Select value={m.memberFilterStatus} onValueChange={(v) => m.setMemberFilterStatus(v)}>
+                <SelectTrigger className="w-36 bg-input border-border text-xs h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border text-foreground text-xs">
+                  {statusOptions.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="mb-3">
+              <PaginationBar
+                page={m.page}
+                totalPages={m.totalPages}
+                totalItems={m.filteredMembers.length}
+                onPrev={() => m.setPage(m.page - 1)}
+                onNext={() => m.setPage(m.page + 1)}
               />
             </div>
-            <Select value={m.memberFilterStatus} onValueChange={(v) => m.setMemberFilterStatus(v)}>
-              <SelectTrigger className="w-36 bg-input border-border text-xs h-8">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-card border-border text-foreground text-xs">
-                {statusOptions.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>
-                    {o.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow className="border-border hover:bg-transparent">
-                <SortableHeader
-                  label={t("members.tableHeaders.id")}
-                  active={sortKey === "id"}
-                  dir={sortDir}
-                  className="w-10"
-                  onClick={() => toggleSort("id")}
-                />
-                <SortableHeader
-                  label={t("members.tableHeaders.name")}
-                  active={sortKey === "name"}
-                  dir={sortDir}
-                  onClick={() => toggleSort("name")}
-                />
-                <SortableHeader
-                  label={t("members.tableHeaders.simpanan")}
-                  active={sortKey === "simpanan"}
-                  dir={sortDir}
-                  align="right"
-                  onClick={() => toggleSort("simpanan")}
-                />
-                <SortableHeader
-                  label={t("members.tableHeaders.outstanding")}
-                  active={sortKey === "outstanding"}
-                  dir={sortDir}
-                  align="right"
-                  onClick={() => toggleSort("outstanding")}
-                />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {displayMembers.length === 0 ? (
-                <TableRow className="border-border">
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground text-xs">
-                    {t("members.tableHeaders.noData")}
-                  </TableCell>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border hover:bg-transparent">
+                  <SortableHeader
+                    label={t("members.tableHeaders.id")}
+                    active={sortKey === "id"}
+                    dir={sortDir}
+                    className="w-10"
+                    onClick={() => toggleSort("id")}
+                  />
+                  <SortableHeader
+                    label={t("members.tableHeaders.name")}
+                    active={sortKey === "name"}
+                    dir={sortDir}
+                    onClick={() => toggleSort("name")}
+                  />
+                  <SortableHeader
+                    label={t("members.tableHeaders.simpanan")}
+                    active={sortKey === "simpanan"}
+                    dir={sortDir}
+                    align="right"
+                    onClick={() => toggleSort("simpanan")}
+                  />
+                  <SortableHeader
+                    label={t("members.tableHeaders.outstanding")}
+                    active={sortKey === "outstanding"}
+                    dir={sortDir}
+                    align="right"
+                    onClick={() => toggleSort("outstanding")}
+                  />
                 </TableRow>
-              ) : (
-                pagedMembers.map((mbr) => (
-                  <TableRow
-                    key={mbr.id}
-                    className="border-border hover:bg-sidebar-ring cursor-pointer"
-                    onClick={() => setSelectedMember(mbr)}
-                  >
-                    <TableCell className="text-xxs text-muted-foreground">
-                      {m.memberSequence[mbr.id ?? ""] ?? "-"}
+              </TableHeader>
+              <TableBody>
+                {displayMembers.length === 0 ? (
+                  <TableRow className="border-border">
+                    <TableCell colSpan={4} className="text-center py-8 text-muted-foreground text-xs">
+                      {t("members.tableHeaders.noData")}
                     </TableCell>
-                    <TableCell className="text-xs text-foreground font-semibold">{mbr.name}</TableCell>
-                    <TableCell className="text-xxs text-success text-right">{fmt(totalSimpananMember(mbr))}</TableCell>
-                    <TableCell className="text-xxs text-danger text-right">{fmt(mbr.loan_outstanding)}</TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-          {m.totalPages > 1 && (
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-xxs text-muted-foreground">
-                {m.filteredMembers.length} {t("members.title").toLowerCase()}
-              </span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => m.setPage(m.page - 1)}
-                  disabled={m.page <= 1}
-                  className="text-xxs h-7 border-border"
-                >
-                  {t("members.tableHeaders.pagination.prev")}
-                </Button>
-                <span className="text-xxs text-muted-foreground min-w-[80px] text-center">
-                  {t("members.tableHeaders.pagination.pageInfo", { page: m.page, total: m.totalPages })}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => m.setPage(m.page + 1)}
-                  disabled={m.page >= m.totalPages}
-                  className="text-xxs h-7 border-border"
-                >
-                  {t("members.tableHeaders.pagination.next")}
-                </Button>
-              </div>
+                ) : (
+                  pagedMembers.map((mbr) => (
+                    <TableRow
+                      key={mbr.id}
+                      className="border-border hover:bg-sidebar-ring cursor-pointer"
+                      onClick={() => setSelectedMember(mbr)}
+                    >
+                      <TableCell className="text-xxs text-muted-foreground">
+                        {m.memberSequence[mbr.id ?? ""] ?? "-"}
+                      </TableCell>
+                      <TableCell className="text-xs text-foreground font-semibold">{mbr.name}</TableCell>
+                      <TableCell className="text-xxs text-success text-right">
+                        {fmt(totalSimpananMember(mbr))}
+                      </TableCell>
+                      <TableCell className="text-xxs text-danger text-right">{fmt(mbr.loan_outstanding)}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+            <div className="pt-3">
+              <PaginationBar
+                page={m.page}
+                totalPages={m.totalPages}
+                totalItems={m.filteredMembers.length}
+                onPrev={() => m.setPage(m.page - 1)}
+                onNext={() => m.setPage(m.page + 1)}
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       <Dialog open={pendingDelete !== null} onOpenChange={(o) => !o && setPendingDelete(null)}>
         <DialogContent className="bg-card border border-border text-foreground max-w-sm">

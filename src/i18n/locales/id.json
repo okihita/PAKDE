@@ -182,6 +182,7 @@
   },
   "members": {
     "title": "Database Anggota",
+    "summaryTitle": "Ringkasan",
     "addButton": "Tambah Anggota",
     "deleteTitle": "Hapus Anggota",
     "deleteConfirm": "Yakin ingin menghapus anggota \"{{name}}\"? Tindakan ini tidak dapat dibatalkan dan akan menghapus seluruh riwayat simpanannya.",

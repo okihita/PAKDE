@@ -182,6 +182,7 @@
   },
   "members": {
     "title": "Member Database",
+    "summaryTitle": "Summary",
     "addButton": "Add Member",
     "deleteTitle": "Delete Member",
     "deleteConfirm": "Delete member \"{{name}}\"? This cannot be undone and will remove all of their savings history.",
