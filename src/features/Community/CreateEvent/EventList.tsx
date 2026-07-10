@@ -60,10 +60,12 @@ export default function EventList({ events, onNew, onDelete }: Props) {
           <CalendarIcon className="h-3.5 w-3.5 text-warning" />
           {t("sidebar.nav.kegiatan")}
         </h3>
-        <Button onClick={onNew} className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 px-3">
-          <CalendarPlus className="h-3.5 w-3.5 mr-1.5" />
-          {t("event.new")}
-        </Button>
+        {events.length > 0 && (
+          <Button onClick={onNew} className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8 px-3">
+            <CalendarPlus className="h-3.5 w-3.5 mr-1.5" />
+            {t("event.new")}
+          </Button>
+        )}
       </div>
 
       {events.length === 0 ? (
@@ -86,6 +88,13 @@ export default function EventList({ events, onNew, onDelete }: Props) {
               </div>
             ))}
           </div>
+          <Button
+            onClick={onNew}
+            className="mt-10 bg-warning hover:bg-warning/90 text-warning-foreground font-bold text-sm h-12 px-8 rounded-xl shadow-lg shadow-warning/20 hover:shadow-warning/30 transition-all hover:scale-105"
+          >
+            <CalendarPlus className="h-5 w-5 mr-2" />
+            {t("event.new")}
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
