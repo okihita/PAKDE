@@ -43,12 +43,12 @@ Two-column split — **left = podium + winner profiles, right = ranked list**. T
 
 On `lg` and below, fall back to a single column (podium on top, list below).
 
-**Integration with the existing tabs (resolves the structural question):** keep both existing tab sets exactly as they are today — the metric `Tabs` (health / growth / membership / impact) wraps the scope `Tabs` (kabupaten / provinsi / nasional), and each scope `TabsContent` currently renders `renderTable(items)`. The two-column grid **replaces that single `renderTable` call inside each scope `TabsContent`**. Concretely, inside every `TabsContent` for scope `sc`, render:
+**Integration with the existing tabs (resolves the structural question):** keep both existing tab sets exactly as they are today — the metric `Tabs` (health / growth / membership / impact) and the scope `Tabs` (kabupaten / provinsi / nasional) are **siblings**. The metric `Tabs` drives only the `metric` state (it renders a `TabsList` and no `TabsContent`); the scope `Tabs` holds the `TabsContent` panels, and each scope `TabsContent` currently renders `renderTable(items)`. The two-column grid **replaces that single `renderTable` call inside each scope `TabsContent`**. Concretely, inside every `TabsContent` for scope `sc`, render:
 
 ```
 <div className="grid lg:grid-cols-[42fr_58fr] gap-6">
-  <Podium items={boards[sc][metric].items} ourRank={boards[sc][metric].ourRank} scope={sc} metric={metric} />
-  {renderTable(boards[sc][metric].items)}   {/* upgraded in §4.3 */}
+  <Podium items={boards[sc]?.[metric]?.items} ourRank={boards[sc]?.[metric]?.ourRank} scope={sc} metric={metric} />
+  {renderTable(boards[sc]?.[metric]?.items)}   {/* upgraded in §4.3 */}
 </div>
 ```
 
@@ -102,14 +102,14 @@ Props: `items: RankedCoop[]` (the *current scope+metric* leaderboard), `ourRank:
 
 > **Metric-scoping note:** `useRanking` only pre-computes `ourRank` for the `health` metric, but the screen lets the user switch metrics. Do **not** reuse that memo — always read `ourRank` directly from `boards[scope][metric].ourRank` (it exists per `Leaderboard`) and derive `ourScore` from `items.find(i => i.isOurs)?.score` so the podium stays correct on every metric tab.
 
-- Layout: classic **2-1-3** podium — rank 2 (left) / rank 1 (center, tallest) / rank 3 (right).
+- Layout: classic **2-1-3** podium — rank 2 (left) / rank 1 (center, tallest) / rank 3 (right). Build it from `items.slice(0, 3)` so a board with fewer than 3 coops renders only the cards it has (no empty/undefined slots).
 - Each podium card:
   - Gold / silver / bronze **gradient ring** (`bg-warning`, `slate-300`, bronze tone).
   - **Avatar / crest circle**: deterministic monogram derived from `name`, on a tinted circular badge (no new image assets required). Use the **first two words' initials** (e.g. `KUD Sumber Makmur` → `KS`, `KSU Guyub Rukun` → `KG`) so Indonesian prefixes like `KUD`/`KSU`/`Koperasi` don't collide into identical avatars. Cache nothing — it's a pure function of `name`.
   - `name`, `village`, **animated count-up score** (CSS/keyframe or lightweight `requestAnimationFrame`), RAG chip, trend icon.
   - Subtle **radial glow** behind rank 1.
   - **Micro-animation:** a 1-shot confetti / particle burst on mount. Implement with **pure CSS keyframes** (absolutely-positioned spans translated + faded over ~700ms, then `display:none` via `animationend`), gated behind a single `mounted` state so the effect fires once per mount. No new dependency. If the CSS-only burst proves visually weak, the accepted fallback is a single inline `<canvas>` particle loop with `requestAnimationFrame` and cleanup on unmount — still zero deps.
-  - **"Your Position" card** (pinned beneath podium) when `ourRank` is outside top 3:
+  - **"Your Position" card** (pinned beneath podium) when `ourRank` is outside top 3 **and** `ourRank != null` (the type is `number | null`; hide the card if it is null rather than rendering `#null`):
   - `total` = `items.length`. `ourScore` = `items.find(i => i.isOurs)?.score ?? 0`. Shows `#ourRank`, `total`, and **"X pts from the podium"** gap computed as `podium[2].score - ourScore` to create stakes/motivation. **Guard:** only compute the gap when `podium.length >= 3` (a board with fewer than 3 coops must never index `podium[2]`). (When `isOurs` is absent from `items`, hide this card rather than showing a bogus gap.)
 - **Honorable mentions strip:** ranks 4–5 as two slim rows (avatar + name + score bar).
 
@@ -121,7 +121,7 @@ Keep `renderTable` but:
 - **Fix the bronze medal bug:** `rank === 3` → bronze tone (e.g. `text-amber-700 bg-amber-700/10`), distinct from gold.
 
 ### 4.4 — Scope-reactivity
-Because the grid lives inside `TabsContent`, switching the **scope** tab unmounts/remounts `Podium` automatically — the confetti fires and the podium re-animates with zero extra wiring. **Also key `Podium` on `metric`** (`key={`${scope}-${metric}`}`) so a metric switch triggers the same re-mount/animation; `boards[scope][metric].items` already drives everything, so no service change is needed.
+Because the grid lives inside `TabsContent`, switching the **scope** tab unmounts/remounts `Podium` automatically (Radix unmounts inactive `TabsContent` panels) — the confetti fires and the podium re-animates with zero extra wiring. **Also key `Podium` on `metric`** (`key={`${scope}-${metric}`}`) so a **metric** switch (which re-renders the same already-mounted scope `TabsContent`) triggers the same re-mount/animation. The `scope` segment of the key is included for consistency/robustness but is functionally redundant; the `metric` segment is the load-bearing part. `boards[scope][metric].items` already drives everything, so no service change is needed.
 
 ### 4.5 — Gamification loop tie-in (DEFERRED — not in this pass)
 > **Reality check:** the repo has **no** Leveling/XP/badge engine today (verified across `src/features/Finance`). This section is therefore a *future* seam, **not** part of the current implementation. It is documented here so the podium is built with the right extension point, but no toast/badge/state work is done now.
@@ -158,7 +158,7 @@ No backend / service edits. `MockRankingService` output is sufficient for the po
 | `src/features/Finance/Ranking/Podium.tsx` | **NEW** — podium hero panel (left column) |
 | `src/features/Finance/Ranking/Ranking.css` | Podio glow / confetti keyframes, count-up helper if needed |
 
-No changes to `rankingService.ts` or `useRanking.ts`. i18n: reuse existing `ranking.*` namespaces and **add** these keys (so the translation ticket is complete):
+No changes to `rankingService.ts` or `useRanking.ts`. i18n: reuse existing `ranking.*` namespaces and **add** these keys to **both** `en.json` and `id.json` (so the translation ticket is complete and locale parity is kept):
 - `ranking.podium.title`
 - `ranking.podium.yourPosition`
 - `ranking.podium.gapFromPodium` (interpolates `points`)
