@@ -1,5 +1,7 @@
-import { getRegistryDb, getCoopDb, initCoopDb } from "@/db";
+import { createRegistryRepository, getRegistryDb, getCoopDb, initCoopDb } from "@/db";
 import type { CooperativeProfile, EwsAlert } from "@/types";
+
+const coopRepo = createRegistryRepository<CooperativeProfile>("cooperatives");
 
 export interface CreateCooperativeInput {
   name: string;
@@ -24,7 +26,6 @@ export interface CreateCooperativeInput {
 }
 
 export async function createCooperative(input: CreateCooperativeInput): Promise<CooperativeProfile> {
-  const db = await getRegistryDb();
   const newId = crypto.randomUUID();
 
   const units: string[] = [];
@@ -39,34 +40,27 @@ export async function createCooperative(input: CreateCooperativeInput): Promise<
     supervisor: input.supervisor.trim(),
   });
 
-  await db.execute(
-    `INSERT INTO cooperatives (
-      id, name, legal_id, address, village, district, regency, province,
-      postal_code, phone, email, business_units, officers, health_score, rag_status, xp, founded_date, category
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      newId,
-      input.name.trim(),
-      input.legalId.trim() || null,
-      input.address.trim() || null,
-      input.village.trim() || null,
-      input.district.trim() || null,
-      input.regency.trim(),
-      input.province.trim(),
-      input.postalCode.trim() || null,
-      input.phone.trim() || null,
-      input.email.trim() || null,
-      JSON.stringify(units),
-      officersJson,
-      10.0,
-      "Merah",
-      10,
-      input.foundedDate.trim() || null,
-      input.category,
-    ],
-  );
+  await coopRepo.insert(newId, {
+    name: input.name.trim(),
+    legal_id: input.legalId.trim() || null,
+    address: input.address.trim() || null,
+    village: input.village.trim() || null,
+    district: input.district.trim() || null,
+    regency: input.regency.trim(),
+    province: input.province.trim(),
+    postal_code: input.postalCode.trim() || null,
+    phone: input.phone.trim() || null,
+    email: input.email.trim() || null,
+    business_units: JSON.stringify(units),
+    officers: officersJson,
+    health_score: 10.0,
+    rag_status: "Merah",
+    xp: 10,
+    founded_date: input.foundedDate.trim() || null,
+    category: input.category,
+  });
 
-  const rows = await db.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE id = ?", [newId]);
+  const rows = await coopRepo.select<CooperativeProfile[]>("SELECT * FROM cooperatives WHERE id = ?", [newId]);
   if (rows.length === 0) throw new Error("Failed to verify cooperative creation.");
 
   // Provision this cooperative's own data file before any feature writes to it.

@@ -1,28 +1,15 @@
-import { getRegistryDb, invalidateCoopDb } from "@/db";
+import { createRegistryRepository, getRegistryDb, invalidateCoopDb } from "@/db";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { exists, remove } from "@tauri-apps/plugin-fs";
 import type { CooperativeProfile } from "@/types";
 
+const coopRepo = createRegistryRepository<CooperativeProfile>("cooperatives");
+
 export async function updateCooperative(id: string, data: Partial<CooperativeProfile>): Promise<void> {
-  const db = await getRegistryDb();
-  await db.execute(
-    `UPDATE cooperatives SET name=?, legal_id=?, address=?, village=?, district=?, regency=?, province=?, postal_code=?, phone=?, email=?, business_units=?, officers=?, updated_at=datetime('now') WHERE id=?`,
-    [
-      data.name || null,
-      data.legal_id || null,
-      data.address || null,
-      data.village || null,
-      data.district || null,
-      data.regency || null,
-      data.province || null,
-      data.postal_code || null,
-      data.phone || null,
-      data.email || null,
-      data.business_units || null,
-      data.officers || null,
-      id,
-    ],
-  );
+  // Strip identity/audit columns — `id` would collide with the WHERE clause
+  // and the timestamps are owned by the repository.
+  const { id: _id, created_at: _created_at, updated_at: _updated_at, ...columns } = data;
+  await coopRepo.update(id, columns as Record<string, unknown>);
 }
 
 export async function deleteCooperative(id: string): Promise<void> {

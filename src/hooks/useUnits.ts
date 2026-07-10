@@ -1,8 +1,9 @@
 import { getActiveCoopId } from "@/db/active-coop";
-import { getDb, getRegistryDb } from "@/db";
+import { getDb, getRegistryDb, createRepository, createRegistryRepository } from "@/db";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/useToast";
+import type { CooperativeProfile } from "@/types";
 
 export interface BusinessCategory {
   id: string;
@@ -14,6 +15,10 @@ export interface UnitRevenueRow {
   category_id: string;
   total_revenue: number;
 }
+
+const coopRepo = createRegistryRepository<CooperativeProfile>("cooperatives");
+// `categories` has neither created_at nor updated_at columns.
+const categoriesRepo = createRepository("categories", { createdAt: false, updatedAt: false });
 
 export function useUnits() {
   const { t } = useTranslation();
@@ -83,7 +88,6 @@ export function useUnits() {
   // Toggle activation status
   const toggleUnitStatus = async (unitId: string, currentActive: boolean) => {
     try {
-      const regDb = await getRegistryDb();
       let nextActiveIds: string[] = [];
 
       if (currentActive) {
@@ -94,10 +98,7 @@ export function useUnits() {
         nextActiveIds = [...activeUnitIds, unitId];
       }
 
-      await regDb.execute("UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?", [
-        JSON.stringify(nextActiveIds),
-        coopId,
-      ]);
+      await coopRepo.update(coopId, { business_units: JSON.stringify(nextActiveIds) });
 
       toast.success(t("units.toast.statusChangeSuccess"));
       await loadUnitsData();
@@ -119,23 +120,14 @@ export function useUnits() {
     }
 
     try {
-      const db = await getDb();
-      const regDb = await getRegistryDb();
       const newUnitId = `unit_${Date.now()}`;
 
       // Insert category (coop-scoped file — no cooperative_id column)
-      await db.execute(`INSERT INTO categories (id, name, icon) VALUES (?, ?, ?)`, [
-        newUnitId,
-        name.trim(),
-        icon.trim(),
-      ]);
+      await categoriesRepo.insert(newUnitId, { name: name.trim(), icon: icon.trim() });
 
       // Append to active business units (registry)
       const nextActiveIds = [...activeUnitIds, newUnitId];
-      await regDb.execute("UPDATE cooperatives SET business_units = ?, updated_at = datetime('now') WHERE id = ?", [
-        JSON.stringify(nextActiveIds),
-        coopId,
-      ]);
+      await coopRepo.update(coopId, { business_units: JSON.stringify(nextActiveIds) });
 
       toast.success(t("units.toast.createSuccess", { name }));
       await loadUnitsData();

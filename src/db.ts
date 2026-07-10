@@ -7,5 +7,9 @@ export {
   initCoopDb,
   invalidateCoopDb,
   createRepository,
+  createCoopRepository,
+  createRegistryRepository,
   newId,
+  type Repository,
+  type RepoOptions,
 } from "./db/index";

@@ -1,5 +1,8 @@
-import { getCoopDb } from "@/db";
+import { createRepository, getCoopDb } from "@/db";
 import type { LocalUser } from "@/types";
+
+/** `local_users` has `created_at` but no `updated_at` column. */
+const usersRepo = createRepository<LocalUser>("local_users", { updatedAt: false });
 
 /** Hash a PIN using SHA-256 via Web Crypto API. */
 async function hashPin(pin: string): Promise<string> {
@@ -19,30 +22,31 @@ export interface CreateUserInput {
 }
 
 export async function createUser(input: CreateUserInput): Promise<LocalUser> {
-  const db = await getCoopDb(input.cooperativeId);
   const id = `usr-${crypto.randomUUID().slice(0, 8)}`;
   const pinHash = await hashPin(input.pin);
   const recoveryAnswerHash = input.recoveryAnswer ? await hashPin(input.recoveryAnswer) : null;
 
-  await db.execute(
-    `INSERT INTO local_users (id, name, role, pin_hash, recovery_question, recovery_answer_hash)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [id, input.name.trim(), input.role, pinHash, input.recoveryQuestion || null, recoveryAnswerHash],
-  );
+  await usersRepo.insert(id, {
+    name: input.name.trim(),
+    role: input.role,
+    pin_hash: pinHash,
+    recovery_question: input.recoveryQuestion || null,
+    recovery_answer_hash: recoveryAnswerHash,
+  });
 
-  const rows = await db.select<LocalUser[]>("SELECT * FROM local_users WHERE id = ?", [id]);
+  const rows = await usersRepo.select<LocalUser[]>("SELECT * FROM local_users WHERE id = ?", [id]);
   if (rows.length === 0) throw new Error("Failed to verify user creation.");
   return rows[0];
 }
 
-export async function getUsersByCooperativeId(cooperativeId: string): Promise<LocalUser[]> {
-  const db = await getCoopDb(cooperativeId);
-  return db.select<LocalUser[]>("SELECT * FROM local_users");
+export async function getUsersByCooperativeId(_cooperativeId: string): Promise<LocalUser[]> {
+  // `local_users` lives in the active cooperative's DB file, so the repo
+  // already scopes to the requested cooperative.
+  return usersRepo.list();
 }
 
 export async function getUserById(userId: string): Promise<LocalUser | null> {
-  const db = await getCoopDb();
-  const rows = await db.select<LocalUser[]>("SELECT * FROM local_users WHERE id = ?", [userId]);
+  const rows = await usersRepo.select<LocalUser[]>("SELECT * FROM local_users WHERE id = ?", [userId]);
   return rows.length > 0 ? rows[0] : null;
 }
 
@@ -87,6 +91,5 @@ export async function validatePin(cooperativeId: string, userId: string, pin: st
 }
 
 export async function deleteUser(userId: string): Promise<void> {
-  const db = await getCoopDb();
-  await db.execute("DELETE FROM local_users WHERE id = ?", [userId]);
+  await usersRepo.remove(userId);
 }

@@ -11,4 +11,11 @@
 export { initDb } from "./init";
 export { getRegistryDb, initRegistryDb, REGISTRY_SCHEMA_VERSION } from "./registry";
 export { getCoopDb, initCoopDb, getDb, coopDbPath, invalidateCoopDb } from "./coopDb";
-export { createRepository, newId, type Repository } from "./repository";
+export {
+  createRepository,
+  createCoopRepository,
+  createRegistryRepository,
+  newId,
+  type Repository,
+  type RepoOptions,
+} from "./repository";

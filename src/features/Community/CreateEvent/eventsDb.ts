@@ -4,8 +4,10 @@
 // old `localStorage` "pakde-events" array, so events now survive profile
 // switching and live alongside every other entity.
 
-import { getCoopDb } from "@/db";
+import { createRepository, getCoopDb } from "@/db";
 import { getActiveCoopId } from "@/db/active-coop";
+
+const eventsRepo = createRepository<EventRow>("events");
 
 export type EventType = "member_meeting" | "arisan" | "social" | "training" | "other";
 
@@ -99,8 +101,7 @@ function rowToKegiatan(r: EventRow, coopId: string): Kegiatan {
 }
 
 export async function listEvents(coopId: string = getActiveCoopId()): Promise<Kegiatan[]> {
-  const db = await getCoopDb(coopId);
-  const rows = await db.select<EventRow[]>("SELECT * FROM events ORDER BY date DESC, created_at DESC");
+  const rows = await eventsRepo.list("ORDER BY date DESC, created_at DESC");
   return rows.map((r) => rowToKegiatan(r, coopId));
 }
 
@@ -109,44 +110,31 @@ export async function createEvent(
   data: NewEventInput,
   id: string = `evt-${crypto.randomUUID()}`,
 ): Promise<Kegiatan> {
-  const db = await getCoopDb(coopId);
-  const now = new Date().toISOString();
-  await db.execute(
-    `INSERT INTO events (
-       id, type, title, date, location, duration_min,
-       participant_ids, proposal_path, proposal_name, proposal_mime, proposal_size,
-       report_path, report_name, report_mime, report_size, social_links, description, notes, created_at, updated_at
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      id,
-      data.type,
-      data.title,
-      data.date,
-      data.location,
-      data.duration_min,
-      JSON.stringify(data.participant_ids),
-      data.proposal?.path ?? null,
-      data.proposal?.name ?? null,
-      data.proposal?.mime ?? null,
-      data.proposal?.size ?? null,
-      data.report?.path ?? null,
-      data.report?.name ?? null,
-      data.report?.mime ?? null,
-      data.report?.size ?? null,
-      JSON.stringify(data.social_links),
-      data.description,
-      data.notes,
-      now,
-      now,
-    ],
-  );
-  const rows = await db.select<EventRow[]>("SELECT * FROM events WHERE id = ?", [id]);
+  await eventsRepo.insert(id, {
+    type: data.type,
+    title: data.title,
+    date: data.date,
+    location: data.location,
+    duration_min: data.duration_min,
+    participant_ids: JSON.stringify(data.participant_ids),
+    proposal_path: data.proposal?.path ?? null,
+    proposal_name: data.proposal?.name ?? null,
+    proposal_mime: data.proposal?.mime ?? null,
+    proposal_size: data.proposal?.size ?? null,
+    report_path: data.report?.path ?? null,
+    report_name: data.report?.name ?? null,
+    report_mime: data.report?.mime ?? null,
+    report_size: data.report?.size ?? null,
+    social_links: JSON.stringify(data.social_links),
+    description: data.description,
+    notes: data.notes,
+  });
+  const rows = await eventsRepo.select<EventRow[]>("SELECT * FROM events WHERE id = ?", [id]);
   return rowToKegiatan(rows[0], coopId);
 }
 
-export async function deleteEvent(coopId: string, id: string): Promise<void> {
-  const db = await getCoopDb(coopId);
-  await db.execute("DELETE FROM events WHERE id = ?", [id]);
+export async function deleteEvent(_coopId: string, id: string): Promise<void> {
+  await eventsRepo.remove(id);
 }
 
 /**
@@ -170,14 +158,13 @@ export async function migrateLocalStorageEvents(coopId: string): Promise<boolean
       createdAt: string;
     }>;
     const db = await getCoopDb(coopId);
-    const now = new Date().toISOString();
     for (const e of legacy) {
       await db.execute(
         `INSERT OR IGNORE INTO events (
            id, type, title, date, location, duration_min, participant_ids,
            social_links, description, notes, created_at, updated_at
-         ) VALUES (?, 'other', ?, ?, ?, NULL, '[]', '[]', ?, ?, ?, ?)`,
-        [e.id, e.name, e.date, e.location ?? "", e.description ?? "", "", now, now],
+         ) VALUES (?, 'other', ?, ?, ?, NULL, '[]', '[]', ?, ?, datetime('now'), datetime('now'))`,
+        [e.id, e.name, e.date, e.location ?? "", e.description ?? "", ""],
       );
     }
   } catch (err) {
