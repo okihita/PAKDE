@@ -20,6 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import type { RankedCoop, RankingMetric, RankingScope } from "./rankingService";
 import type { RankingState } from "./useRanking";
+import Podium from "./Podium";
 
 interface Props {
   ranking: RankingState;
@@ -45,7 +46,7 @@ function TrendIcon({ trend }: { trend: "up" | "down" | "stable" }) {
 function rankMedal(rank: number) {
   if (rank === 1) return <TrophyIcon className="h-4 w-4 text-warning" />;
   if (rank === 2) return <MedalIcon className="h-4 w-4 text-slate-300" />;
-  if (rank === 3) return <MedalIcon className="h-4 w-4 text-warning" />;
+  if (rank === 3) return <MedalIcon className="h-4 w-4 text-amber-700" />;
   return <span className="text-xxs font-mono text-muted-foreground w-4 text-center">{rank}</span>;
 }
 
@@ -96,170 +97,220 @@ export default function Ranking({ ranking, onGoSync }: Props) {
     total: boards[sc]?.[metric]?.total ?? 0,
   }));
 
-  function renderTable(data: RankedCoop[]) {
+  // Right-column ranked list. Holds its own "see all" state so it auto-resets to
+  // the collapsed (top 10) view whenever the parent remounts it via `key`.
+  function RankedList({ data }: { data: RankedCoop[] }) {
+    const [showAll, setShowAll] = useState(false);
+    const visible = showAll ? data : data.slice(0, 10);
     return (
-      <Table>
-        <TableHeader>
-          <TableRow className="border-border hover:bg-transparent">
-            <TableHead className="text-xxs font-mono text-muted-foreground w-12">#</TableHead>
-            <TableHead className="text-xxs font-mono text-muted-foreground">{t("ranking.table.coop")}</TableHead>
-            <TableHead className="text-xxs font-mono text-muted-foreground w-20">{t("ranking.table.score")}</TableHead>
-            <TableHead className="text-xxs font-mono text-muted-foreground w-16">{t("ranking.table.rag")}</TableHead>
-            <TableHead className="text-xxs font-mono text-muted-foreground w-10" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((c) => (
-            <TableRow
-              key={`${c.rank}-${c.name}`}
-              className={`border-border transition-colors ${
-                c.isOurs ? "bg-success/5 hover:bg-success/10" : "hover:bg-secondary"
-              }`}
+      <Card className="bg-card border-border">
+        <CardContent className="p-0">
+          <div className="flex items-center justify-between border-b border-border px-4 py-2">
+            <span className="text-xxs font-bold text-muted-foreground uppercase tracking-wider">
+              {t("ranking.podium.promotionZone")}
+            </span>
+            <span className="text-xxxs font-mono text-success">{t("ranking.podium.promotionHint")}</span>
+          </div>
+          <div className="max-h-[460px] overflow-y-auto">
+            <Table>
+              <TableHeader className="sticky top-0 bg-card z-10">
+                <TableRow className="border-border hover:bg-transparent">
+                  <TableHead className="text-xxs font-mono text-muted-foreground w-12">#</TableHead>
+                  <TableHead className="text-xxs font-mono text-muted-foreground">{t("ranking.table.coop")}</TableHead>
+                  <TableHead className="text-xxs font-mono text-muted-foreground w-32">
+                    {t("ranking.table.score")}
+                  </TableHead>
+                  <TableHead className="text-xxs font-mono text-muted-foreground w-16">
+                    {t("ranking.table.rag")}
+                  </TableHead>
+                  <TableHead className="text-xxs font-mono text-muted-foreground w-10" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {visible.map((c) => (
+                  <TableRow
+                    key={`${c.rank}-${c.name}`}
+                    className={`border-border transition-colors ${
+                      c.rank <= 3
+                        ? "bg-success/5"
+                        : c.isOurs
+                          ? "bg-success/10 hover:bg-success/15"
+                          : "hover:bg-secondary"
+                    }`}
+                  >
+                    <TableCell className="py-2">
+                      <div className="flex items-center gap-1.5">{rankMedal(c.rank)}</div>
+                    </TableCell>
+                    <TableCell className="py-2">
+                      <div className="flex items-center gap-2">
+                        {c.isOurs && <StarIcon className="h-3 w-3 text-success shrink-0" />}
+                        <div className="min-w-0">
+                          <p className={`text-xs font-bold truncate ${c.isOurs ? "text-success" : "text-foreground"}`}>
+                            {c.name}
+                          </p>
+                          <p className="text-xxxs font-mono text-muted-foreground">{c.village}</p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-2">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 overflow-hidden rounded-full bg-secondary">
+                          <div className="h-full rounded-full bg-success" style={{ width: `${c.score}%` }} />
+                        </div>
+                        <span className="text-xs font-mono font-bold text-foreground w-9 text-right">{c.score}%</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-2">
+                      <span className={`text-xxxs font-bold px-1.5 py-0.5 rounded ${ragColor(c.ragStatus)}`}>
+                        {c.ragStatus}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-2">
+                      <TrendIcon trend={c.trend} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          {!showAll && data.length > 10 && (
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="w-full border-t border-border py-2 text-xxs font-bold text-brand hover:bg-secondary transition-colors"
             >
-              <TableCell className="py-2">
-                <div className="flex items-center gap-1.5">{rankMedal(c.rank)}</div>
-              </TableCell>
-              <TableCell className="py-2">
-                <div className="flex items-center gap-2">
-                  {c.isOurs && <StarIcon className="h-3 w-3 text-success shrink-0" />}
-                  <div className="min-w-0">
-                    <p className={`text-xs font-bold truncate ${c.isOurs ? "text-success" : "text-foreground"}`}>
-                      {c.name}
-                    </p>
-                    <p className="text-xxxs font-mono text-muted-foreground">{c.village}</p>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell className="py-2">
-                <span className="text-xs font-mono font-bold text-foreground">{c.score}%</span>
-              </TableCell>
-              <TableCell className="py-2">
-                <span className={`text-xxxs font-bold px-1.5 py-0.5 rounded ${ragColor(c.ragStatus)}`}>
-                  {c.ragStatus}
-                </span>
-              </TableCell>
-              <TableCell className="py-2">
-                <TrendIcon trend={c.trend} />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              {t("ranking.seeAll", { total: data.length })}
+            </button>
+          )}
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="flex-1 overflow-auto space-y-4">
-      {/* ── Status / connectivity banner ── */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-2 text-xxs font-mono">
-          <span
-            className={`h-2 w-2 rounded-full ${
-              status === "live"
-                ? "bg-success"
-                : status === "stale"
-                  ? "bg-warning"
-                  : status === "offline"
-                    ? "bg-muted-foreground"
-                    : "bg-info animate-pulse"
-            }`}
-          />
-          <span className="text-muted-foreground uppercase tracking-wider">
-            {t(`ranking.status.${status}`)}
-            {lastUpdatedLabel && ` · ${t("ranking.lastUpdated", { time: lastUpdatedLabel })}`}
-          </span>
-          {isStale && <span className="text-warning">— {t("ranking.staleHint")}</span>}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={refresh}
-            disabled={status === "loading"}
-            className="h-8 text-xs gap-1.5"
-          >
-            <ArrowsClockwise className={status === "loading" ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
-            {t("ranking.refresh")}
-          </Button>
-          <Button
-            onClick={submitStats}
-            disabled={isSubmitting || status === "offline"}
-            className="h-8 bg-brand hover:bg-brand text-brand-foreground text-xs gap-1.5"
-          >
-            {isSubmitting ? (
-              <CircleNotch className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <CloudArrowUp className="h-3.5 w-3.5" />
-            )}
-            {isSubmitting ? t("ranking.submitting") : t("ranking.submit")}
-          </Button>
-        </div>
-      </div>
-
-      {/* ── Rank Summary Cards (per scope) ── */}
-      <div className="grid grid-cols-3 gap-4">
-        {levels.map((lv) => (
-          <Card key={lv.scope} className="bg-card border-border">
-            <CardContent className="p-4 flex flex-col items-center gap-1">
-              <p className="text-xxs font-mono text-muted-foreground uppercase tracking-wider">
-                {t(`ranking.scope.${lv.scope}`)}
-              </p>
-              <span className="text-2xl font-black text-success font-mono">#{lv.rank ?? "—"}</span>
-              <span className="text-xxxs font-mono text-muted-foreground">
-                {t("ranking.summary.from", { total: lv.total })}
-              </span>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* ── Metric + Scope tabs ── */}
-      <Card className="bg-card border-border hover-glow-card">
-        <CardHeader className="pb-0">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-              <TrophyIcon className="h-3 w-3 text-warning" />
-              {t("ranking.title")}
-            </CardTitle>
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-[1120px] mx-auto space-y-4 p-4">
+        {/* ── Status / connectivity banner ── */}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2 text-xxs font-mono">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                status === "live"
+                  ? "bg-success"
+                  : status === "stale"
+                    ? "bg-warning"
+                    : status === "offline"
+                      ? "bg-muted-foreground"
+                      : "bg-info animate-pulse"
+              }`}
+            />
+            <span className="text-muted-foreground uppercase tracking-wider">
+              {t(`ranking.status.${status}`)}
+              {lastUpdatedLabel && ` · ${t("ranking.lastUpdated", { time: lastUpdatedLabel })}`}
+            </span>
+            {isStale && <span className="text-warning">— {t("ranking.staleHint")}</span>}
           </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Tabs value={metric} onValueChange={(v) => setMetric(v as RankingMetric)}>
-            <TabsList className="w-full bg-muted flex-wrap">
-              {METRICS.map((m) => (
-                <TabsTrigger key={m} value={m} className="flex-1 text-xs">
-                  {t(`ranking.metric.${m}`)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refresh}
+              disabled={status === "loading"}
+              className="h-8 text-xs gap-1.5"
+            >
+              <ArrowsClockwise className={status === "loading" ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
+              {t("ranking.refresh")}
+            </Button>
+            <Button
+              onClick={submitStats}
+              disabled={isSubmitting || status === "offline"}
+              className="h-8 bg-brand hover:bg-brand text-brand-foreground text-xs gap-1.5"
+            >
+              {isSubmitting ? (
+                <CircleNotch className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <CloudArrowUp className="h-3.5 w-3.5" />
+              )}
+              {isSubmitting ? t("ranking.submitting") : t("ranking.submit")}
+            </Button>
+          </div>
+        </div>
 
-          <Tabs value={scope} onValueChange={(v) => setScope(v as RankingScope)}>
-            <TabsList className="w-full bg-muted">
-              {SCOPES.map((sc) => (
-                <TabsTrigger key={sc} value={sc} className="flex-1 text-xs">
-                  {t(`ranking.scope.${sc}`)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+        {/* ── Rank Summary Cards (per scope) ── */}
+        <div className="grid grid-cols-3 gap-4">
+          {levels.map((lv) => (
+            <Card key={lv.scope} className="bg-card border-border">
+              <CardContent className="p-4 flex flex-col items-center gap-1">
+                <p className="text-xxs font-mono text-muted-foreground uppercase tracking-wider">
+                  {t(`ranking.scope.${lv.scope}`)}
+                </p>
+                <span className="text-2xl font-black text-success font-mono">#{lv.rank ?? "—"}</span>
+                <span className="text-xxxs font-mono text-muted-foreground">
+                  {t("ranking.summary.from", { total: lv.total })}
+                </span>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-            {SCOPES.map((sc) => {
-              const items = boards[sc]?.[metric]?.items;
-              return (
-                <TabsContent key={sc} value={sc} className="mt-2">
-                  {items ? (
-                    renderTable(items)
-                  ) : (
-                    <div className="py-8 flex justify-center">
-                      <CircleNotch className="h-5 w-5 text-muted-foreground animate-spin" />
-                    </div>
-                  )}
-                </TabsContent>
-              );
-            })}
-          </Tabs>
-        </CardContent>
-      </Card>
+        {/* ── Metric + Scope tabs ── */}
+        <Card className="bg-card border-border hover-glow-card">
+          <CardHeader className="pb-0">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                <TrophyIcon className="h-3 w-3 text-warning" />
+                {t("ranking.title")}
+              </CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Tabs value={metric} onValueChange={(v) => setMetric(v as RankingMetric)}>
+              <TabsList className="w-full bg-muted flex-wrap">
+                {METRICS.map((m) => (
+                  <TabsTrigger key={m} value={m} className="flex-1 text-xs">
+                    {t(`ranking.metric.${m}`)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+
+            <Tabs value={scope} onValueChange={(v) => setScope(v as RankingScope)}>
+              <TabsList className="w-full bg-muted">
+                {SCOPES.map((sc) => (
+                  <TabsTrigger key={sc} value={sc} className="flex-1 text-xs">
+                    {t(`ranking.scope.${sc}`)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {SCOPES.map((sc) => {
+                const board = boards[sc]?.[metric];
+                const items = board?.items;
+                return (
+                  <TabsContent key={sc} value={sc} className="mt-2">
+                    {items ? (
+                      <div className="grid lg:grid-cols-[42fr_58fr] gap-6">
+                        <Podium
+                          key={`${sc}-${metric}`}
+                          items={items}
+                          ourRank={board?.ourRank ?? null}
+                          scope={sc}
+                          metric={metric}
+                        />
+                        <RankedList key={`${sc}-${metric}`} data={items} />
+                      </div>
+                    ) : (
+                      <div className="py-8 flex justify-center">
+                        <CircleNotch className="h-5 w-5 text-muted-foreground animate-spin" />
+                      </div>
+                    )}
+                  </TabsContent>
+                );
+              })}
+            </Tabs>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

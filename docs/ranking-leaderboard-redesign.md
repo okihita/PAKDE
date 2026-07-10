@@ -1,6 +1,6 @@
 # Ranking Leaderboard Redesign — Implementation Plan
 
-**Status:** Planned (not yet implemented)
+**Status:** Implemented
 **Target file:** `src/features/Finance/Ranking/Ranking.tsx`
 **Goal:** Convert the current full-width spreadsheet-style leaderboard into a 10/10 gamified dashboard by introducing a left-side **Podium Hero Panel** and constraining the table into a balanced two-column layout.
 

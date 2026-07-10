@@ -156,6 +156,9 @@
   "members": {
     "title": "Database Anggota",
     "addButton": "Tambah Anggota",
+    "seedButton": "Isi Data Contoh",
+    "deleteTitle": "Hapus Anggota",
+    "deleteConfirm": "Yakin ingin menghapus anggota \"{{name}}\"? Tindakan ini tidak dapat dibatalkan dan akan menghapus seluruh riwayat simpanannya.",
     "searchPlaceholder": "Cari NIK atau Nama Anggota...",
     "filterAll": "Semua Status",
     "filterActive": "Aktif",
@@ -214,7 +217,12 @@
         "savingsSukarela": "Simpanan Sukarela",
         "totalLoan": "Total Pinjaman",
         "outstandingLoan": "Outstanding Pinjaman",
-        "loanStatus": "Status Pinjaman"
+        "loanStatus": "Status Pinjaman",
+        "loanStatusOptions": {
+          "lancar": "Lancar",
+          "diragukan": "Diragukan",
+          "macet": "Macet"
+        }
       },
       "simpanan": {
         "title": "Riwayat Simpanan",
@@ -537,7 +545,16 @@
     "staleHint": "Menampilkan data sinkronisasi terakhir",
     "offlineEmptyTitle": "Peringkat membutuhkan node federasi",
     "offlineEmptyDesc": "Papan peringkat hanya tersedia saat tersinkron ke cloud PAKDE. Hubungkan ke internet dan sinkron untuk berkompetisi dengan koperasi lain.",
-    "goSync": "Buka Sinkronisasi"
+    "goSync": "Buka Sinkronisasi",
+    "seeAll": "Lihat semua {{total}}",
+    "podium": {
+      "title": "Podium",
+      "yourPosition": "Posisi Anda",
+      "gapFromPodium": "{{points}} pts dari podium",
+      "honorableMentions": "Penghargaan",
+      "promotionZone": "Zona Promosi",
+      "promotionHint": "▲ 3 teratas"
+    }
   },
   "event": {
     "typeLabel": "Jenis Kegiatan",

@@ -54,6 +54,19 @@ export async function getCoopDb(coopId?: string): Promise<Database> {
 export const getDb = getCoopDb;
 
 /**
+ * Idempotently add a column. SQLite's `ALTER TABLE ... ADD COLUMN` has no
+ * `IF NOT EXISTS` clause, so re-running the migration block (e.g. on a DB that
+ * was partially migrated) would throw `duplicate column name`. This guards
+ * against that by checking `PRAGMA table_info` first.
+ */
+async function addColumnIfAbsent(db: Database, table: string, column: string, definition: string): Promise<void> {
+  const cols = await db.select<Array<{ name: string }>>(`PRAGMA table_info(${table});`);
+  if (!cols.some((c) => c.name === column)) {
+    await db.execute(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition};`);
+  }
+}
+
+/**
  * Drop any cached connection for a cooperative (e.g. after its DB file is
  * deleted). The next getCoopDb() re-opens a fresh connection instead of
  * writing to a deleted file.
@@ -336,11 +349,11 @@ export async function initCoopDb(coopId: string): Promise<void> {
     await db.execute(`CREATE INDEX IF NOT EXISTS idx_events_date ON events(date);`);
 
     // ── events: add description column for coops created before v4 ──
-    await db.execute(`ALTER TABLE events ADD COLUMN description TEXT;`);
+    await addColumnIfAbsent(db, "events", "description", "TEXT");
 
     // ── members: align with live hackathon_2026 anggota_koperasi ──
-    await db.execute(`ALTER TABLE members ADD COLUMN kode_wilayah TEXT;`);
-    await db.execute(`ALTER TABLE members ADD COLUMN status_keanggotaan TEXT DEFAULT 'anggota_biasa';`);
+    await addColumnIfAbsent(db, "members", "kode_wilayah", "TEXT");
+    await addColumnIfAbsent(db, "members", "status_keanggotaan", "TEXT DEFAULT 'anggota_biasa'");
 
     // ── simpanan_anggota ledger (absent before v5) ──
     await db.execute(`

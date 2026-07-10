@@ -156,6 +156,9 @@
   "members": {
     "title": "Member Database",
     "addButton": "Add Member",
+    "seedButton": "Load Sample Data",
+    "deleteTitle": "Delete Member",
+    "deleteConfirm": "Delete member \"{{name}}\"? This cannot be undone and will remove all of their savings history.",
     "searchPlaceholder": "Search NIK or Member Name...",
     "filterAll": "All Status",
     "filterActive": "Active",
@@ -214,7 +217,12 @@
         "savingsSukarela": "Voluntary Savings",
         "totalLoan": "Total Loan",
         "outstandingLoan": "Outstanding Loan",
-        "loanStatus": "Loan Status"
+        "loanStatus": "Loan Status",
+        "loanStatusOptions": {
+          "lancar": "Current",
+          "diragukan": "Doubtful",
+          "macet": "Non-performing"
+        }
       },
       "simpanan": {
         "title": "Savings History",
@@ -537,7 +545,16 @@
     "staleHint": "Showing last synced data",
     "offlineEmptyTitle": "Ranking needs the federated node",
     "offlineEmptyDesc": "Leaderboards are only available when synced to the PAKDE cloud. Connect to the internet and sync to compete with other cooperatives.",
-    "goSync": "Go to Sync"
+    "goSync": "Go to Sync",
+    "seeAll": "See all {{total}}",
+    "podium": {
+      "title": "Podium",
+      "yourPosition": "Your Position",
+      "gapFromPodium": "{{points}} pts from the podium",
+      "honorableMentions": "Honorable Mentions",
+      "promotionZone": "Promotion Zone",
+      "promotionHint": "▲ top 3"
+    }
   },
   "event": {
     "typeLabel": "Event Type",
