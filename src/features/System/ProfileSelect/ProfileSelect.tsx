@@ -25,6 +25,7 @@ import JoinExistingCoop from "./JoinExistingCoop";
 import { UNIT_CONFIG } from "./unitIcons";
 import { DEMO_TIERS } from "./demoTiers";
 import CampaignBriefingDialog from "./CampaignBriefingDialog";
+import DirectionalTransition, { type SwapDir } from "./DirectionalTransition";
 import { seedDemoCooperativeAtLevel, isDemoSeeded, type DemoLevel } from "@/db/seed-demo";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -215,11 +216,21 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
 
   // A submenu (demo tiers / cooperative list) replaces the three-box hero
   // in-place so the view fits one viewport instead of stacking and scrolling.
-  const inSubmenu = showDemoTiers || (showCoopList && profiles.length > 0);
   const closeSubmenu = () => {
     setShowDemoTiers(false);
     setShowCoopList(false);
   };
+
+  // Which "view" is active, and the edge each submenu enters from.
+  // Demo sits on the right card → slides from right; Real/coop on the left → left.
+  const view: "hero" | "demo" | "coop" | "join" = showJoinExisting
+    ? "join"
+    : showDemoTiers
+      ? "demo"
+      : showCoopList && profiles.length > 0
+        ? "coop"
+        : "hero";
+  const DIR_MAP: Record<string, SwapDir> = { hero: "fade", demo: "right", coop: "left", join: "fade" };
 
   return (
     <div
@@ -275,325 +286,331 @@ export default function ProfileSelect({ onProfileSelect, onDbError }: ProfileSel
         </div>
       </div>
 
-      {/* Middle: Hero + submenus — or JoinExisting overlay */}
+      {/* Middle: directional submenu transition — demo slides from right,
+          coop from left (each from its trigger card), hero/join use a fade. */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-start pt-[10vh] px-6 w-full max-w-5xl mx-auto overflow-y-auto">
-        {showJoinExisting ? (
-          <JoinExistingCoop
-            onJoined={(profile) => {
-              setProfiles((prev) => [profile, ...prev]);
-              setShowJoinExisting(false);
-              onProfileSelect(profile);
-            }}
-            onBack={() => setShowJoinExisting(false)}
-          />
-        ) : (
-          <>
-            {/* ── Three-Box landing (default) — hidden when a submenu replaces it ── */}
-            {!inSubmenu && (
-              <div className="w-full max-w-5xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                    {t("profileSelect.heroTitle")}
-                  </h2>
-                  <p className="text-xs text-slate-500 max-w-md mx-auto">{t("profileSelect.heroSubtitle")}</p>
-                </div>
+        <DirectionalTransition active={view} dirMap={DIR_MAP}>
+          {/* ── HERO (default landing) ── */}
+          <div key="hero" className="w-full max-w-5xl mx-auto text-center space-y-8">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                {t("profileSelect.heroTitle")}
+              </h2>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">{t("profileSelect.heroSubtitle")}</p>
+            </div>
 
-                <div
-                  className={`relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-3 transition-opacity duration-300 ${
-                    loading ? "opacity-60 pointer-events-none" : ""
-                  }`}
-                >
-                  {/* Left: Real Account */}
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setShowCreateModal(true)}
-                    onClick={(e) => {
-                      if ((e.target as HTMLElement).closest("[data-login-link]")) return;
-                      handleUserInteraction();
-                      if (profiles.length > 0) {
-                        sfx.playBleep(600, 0.03);
-                        setShowDemoTiers(false);
-                        setShowCoopList((prev) => !prev);
-                      } else {
-                        sfx.playChime();
-                        setShowCreateModal(true);
-                      }
-                    }}
-                    onMouseEnter={handleRealHover}
-                    className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-slate-700 bg-slate-900/80 backdrop-blur-md p-5 cursor-pointer hover:border-brand/60 hover:bg-slate-900/95 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(16,185,129,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-brand/50"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
-                        <ShieldCheck className="h-4 w-4 text-brand" />
-                      </div>
-                      <div>
-                        <h3 className="text-xs font-bold text-white">{t("profileSelect.realTitle")}</h3>
-                        <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
-                          <TrophyIcon className="h-3 w-3" />
-                          {t("profileSelect.realBadge")}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-xxs text-slate-400 leading-relaxed mb-4">{t("profileSelect.realDesc")}</p>
-                    <div
-                      className="rounded-lg bg-brand/10 border border-brand/25 px-3 py-2 text-xs font-bold text-brand text-center group-hover:bg-brand/20 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleUserInteraction();
-                        sfx.playChime();
-                        setShowCreateModal(true);
-                      }}
-                    >
-                      {t("profileSelect.realRegister")}
-                    </div>
-                    <p className="mt-2.5 text-xxxs text-slate-600 text-center">
-                      {t("profileSelect.realLogin")}{" "}
-                      <span
-                        data-login-link
-                        className="text-slate-500 underline cursor-pointer hover:text-slate-400 transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleUserInteraction();
-                          sfx.playBleep(600, 0.03);
-                          setShowDemoTiers(false);
-                          setShowCoopList((prev) => !prev);
-                        }}
-                      >
-                        {t("profileSelect.loginLink")}
-                      </span>
+            <div
+              className={`relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-3 transition-opacity duration-300 ${
+                loading ? "opacity-60 pointer-events-none" : ""
+              }`}
+            >
+              {/* Left: Real Account */}
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && setShowCreateModal(true)}
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest("[data-login-link]")) return;
+                  handleUserInteraction();
+                  if (profiles.length > 0) {
+                    sfx.playBleep(600, 0.03);
+                    setShowDemoTiers(false);
+                    setShowCoopList((prev) => !prev);
+                  } else {
+                    sfx.playChime();
+                    setShowCreateModal(true);
+                  }
+                }}
+                onMouseEnter={handleRealHover}
+                className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-slate-700 bg-slate-900/80 backdrop-blur-md p-5 cursor-pointer hover:border-brand/60 hover:bg-slate-900/95 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(16,185,129,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-brand/50"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
+                    <ShieldCheck className="h-4 w-4 text-brand" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-white">{t("profileSelect.realTitle")}</h3>
+                    <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
+                      <TrophyIcon className="h-3 w-3" />
+                      {t("profileSelect.realBadge")}
                     </p>
                   </div>
-
-                  {/* "atau" divider */}
-                  <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
-                    {t("profileSelect.orText")}
-                  </span>
-
-                  {/* Middle: Join Existing */}
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setShowJoinExisting(true)}
-                    onClick={() => {
+                </div>
+                <p className="text-xxs text-slate-400 leading-relaxed mb-4">{t("profileSelect.realDesc")}</p>
+                <div
+                  className="rounded-lg bg-brand/10 border border-brand/25 px-3 py-2 text-xs font-bold text-brand text-center group-hover:bg-brand/20 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUserInteraction();
+                    sfx.playChime();
+                    setShowCreateModal(true);
+                  }}
+                >
+                  {t("profileSelect.realRegister")}
+                </div>
+                <p className="mt-2.5 text-xxxs text-slate-600 text-center">
+                  {t("profileSelect.realLogin")}{" "}
+                  <span
+                    data-login-link
+                    className="text-slate-500 underline cursor-pointer hover:text-slate-400 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       handleUserInteraction();
                       sfx.playBleep(600, 0.03);
                       setShowDemoTiers(false);
-                      setShowCoopList(false);
-                      setShowJoinExisting(true);
+                      setShowCoopList((prev) => !prev);
                     }}
-                    onMouseEnter={handleCardHover}
-                    className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-info/50 bg-info/10 backdrop-blur-md p-5 cursor-pointer hover:border-info/60 hover:bg-info/20 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(59,130,246,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-info/50"
                   >
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 rounded-xl bg-info/10 border border-info/30 flex items-center justify-center shrink-0 group-hover:bg-info/20 transition-colors">
-                        <Buildings className="h-4 w-4 text-info" />
-                      </div>
-                      <div>
-                        <h3 className="text-xs font-bold text-white">{JOIN_TITLE}</h3>
-                        <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
-                          <Buildings className="h-3 w-3" />
-                          {JOIN_BADGE}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-xxs text-slate-400 leading-relaxed mb-4">{JOIN_DESC}</p>
-                    <div className="invisible h-[1.5rem]" />
-                    <div className="mt-auto rounded-lg bg-info/10 border border-info/25 px-3 py-2 text-xs font-bold text-info text-center group-hover:bg-info/20 transition-colors">
-                      {JOIN_ACTION}
-                    </div>
-                  </div>
-
-                  {/* "atau" divider */}
-                  <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
-                    {t("profileSelect.orText")}
+                    {t("profileSelect.loginLink")}
                   </span>
+                </p>
+              </div>
 
-                  {/* Right: Demo Account */}
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key !== "Enter") return;
-                      setShowCoopList(false);
-                      setShowJoinExisting(false);
-                      setShowDemoTiers((prev) => !prev);
-                    }}
-                    onClick={() => {
-                      handleUserInteraction();
-                      sfx.playBleep(600, 0.03);
-                      setShowCoopList(false);
-                      setShowJoinExisting(false);
-                      setShowDemoTiers((prev) => !prev);
-                    }}
-                    onMouseEnter={handleCardHover}
-                    className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-amber-800/50 bg-amber-950/30 backdrop-blur-md p-5 cursor-pointer hover:border-amber-600/60 hover:bg-amber-950/50 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(245,158,11,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
-                        <GameController className="h-4 w-4 text-amber-400" />
-                      </div>
-                      <div>
-                        <h3 className="text-xs font-bold text-amber-200">{t("profileSelect.demoTitle")}</h3>
-                        <p className="text-xxxs text-amber-600 mt-0.5 flex items-center gap-1">
-                          <GameController className="h-3 w-3" />
-                          {t("profileSelect.demoBadge")}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-xxs text-amber-300/70 leading-relaxed mb-4">{t("profileSelect.demoDesc")}</p>
-                    <div className="invisible h-[1.5rem]" />
-                    <div className="mt-auto rounded-lg bg-amber-500/10 border border-amber-500/25 px-3 py-2 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
-                      {t("profileSelect.demoAction")}
-                    </div>
+              {/* "atau" divider */}
+              <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
+                {t("profileSelect.orText")}
+              </span>
+
+              {/* Middle: Join Existing */}
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && setShowJoinExisting(true)}
+                onClick={() => {
+                  handleUserInteraction();
+                  sfx.playBleep(600, 0.03);
+                  setShowDemoTiers(false);
+                  setShowCoopList(false);
+                  setShowJoinExisting(true);
+                }}
+                onMouseEnter={handleCardHover}
+                className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-info/50 bg-info/10 backdrop-blur-md p-5 cursor-pointer hover:border-info/60 hover:bg-info/20 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(59,130,246,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-info/50"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-info/10 border border-info/30 flex items-center justify-center shrink-0 group-hover:bg-info/20 transition-colors">
+                    <Buildings className="h-4 w-4 text-info" />
                   </div>
-                  {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center rounded-2xl">
-                      <CircleNotch className="h-7 w-7 text-brand animate-spin" weight="bold" />
-                    </div>
-                  )}
+                  <div>
+                    <h3 className="text-xs font-bold text-white">{JOIN_TITLE}</h3>
+                    <p className="text-xxxs text-slate-500 mt-0.5 flex items-center gap-1">
+                      <Buildings className="h-3 w-3" />
+                      {JOIN_BADGE}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xxs text-slate-400 leading-relaxed mb-4">{JOIN_DESC}</p>
+                <div className="invisible h-[1.5rem]" />
+                <div className="mt-auto rounded-lg bg-info/10 border border-info/25 px-3 py-2 text-xs font-bold text-info text-center group-hover:bg-info/20 transition-colors">
+                  {JOIN_ACTION}
                 </div>
               </div>
-            )}
 
-            {/* ── Submenu area (replaces the hero in-place; back breadcrumb restores it) ── */}
-            <div className="w-full max-w-3xl mx-auto mt-2">
-              {inSubmenu && (
-                <button
-                  onClick={closeSubmenu}
-                  className="mb-4 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700 backdrop-blur-md transition-colors focus:outline-none focus:ring-2 focus:ring-brand/50"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  {t("profileSelect.back")}
-                </button>
-              )}
-              {/* Demo tier cards — dual-path: resume existing or fresh start */}
-              {showDemoTiers && (
-                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  {/* Resume card — only when a demo already exists */}
-                  {demoExists && (
-                    <>
-                      <div
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => e.key === "Enter" && resumeDemo()}
-                        onClick={() => {
-                          handleUserInteraction();
-                          resumeDemo();
-                        }}
-                        onMouseEnter={handleCardHover}
-                        className="group relative w-full rounded-xl border-2 border-amber-500/50 bg-amber-950/60 backdrop-blur-md p-5 cursor-pointer hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.18)] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-amber-400/50 mb-5"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 group-hover:bg-amber-500/30 transition-colors">
-                            <GameController className="h-5 w-5 text-amber-400" weight="fill" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-bold text-amber-200">{t("profileSelect.resumeCardTitle")}</h4>
-                            <p className="text-xxs text-amber-400/60 mt-0.5">{t("profileSelect.resumeCardDesc")}</p>
-                          </div>
-                          <div className="shrink-0 rounded-lg bg-amber-500/20 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-400 group-hover:bg-amber-500/30 transition-colors">
-                            {t("profileSelect.resumeCardAction")}
-                          </div>
-                        </div>
-                      </div>
+              {/* "atau" divider */}
+              <span className="text-xxs font-bold text-slate-600 uppercase tracking-widest">
+                {t("profileSelect.orText")}
+              </span>
 
-                      <div className="text-center mb-4">
-                        <span className="text-xxs text-slate-500 uppercase tracking-widest">
-                          {t("profileSelect.freshStartDivider")}
-                        </span>
-                      </div>
-                    </>
-                  )}
-
-                  <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider text-center mb-4">
-                    {demoExists ? t("profileSelect.freshStartHeading") : t("profileSelect.tierHeading")}
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {DEMO_TIERS.map((tier) => (
-                      <div
-                        key={tier.level}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => e.key === "Enter" && setSelectedTier(tier.level)}
-                        onClick={() => {
-                          handleUserInteraction();
-                          setSelectedTier(tier.level);
-                        }}
-                        onMouseEnter={handleCardHover}
-                        className={`group relative rounded-xl border-2 ${tier.border} ${tier.bg} backdrop-blur-md p-4 cursor-pointer hover:scale-[1.03] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_0_25px_rgba(245,158,11,0.10)] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-amber-500/50`}
-                      >
-                        {/* Image placeholder */}
-                        <div className="w-full h-20 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-center mb-3">
-                          <Camera className="h-5 w-5 text-slate-600" />
-                        </div>
-                        <h4 className={`text-sm font-bold ${tier.text}`}>{tier.title}</h4>
-                        {/* Stats */}
-                        <div className="mt-2 text-xxxs text-slate-500">
-                          <p>
-                            {tier.stats[0].label} <span className="text-slate-300">{tier.stats[0].value}</span>
-                          </p>
-                          <p>
-                            <span className="text-slate-300">{tier.stats[1].value}</span> {tier.stats[1].label}
-                            {tier.stats[2] && (
-                              <>
-                                {" "}
-                                · <span className="text-slate-300">{tier.stats[2].value}</span> {tier.stats[2].label}
-                              </>
-                            )}
-                          </p>
-                        </div>
-                        {/* Location */}
-                        <p className="mt-1.5 text-xxxs text-slate-600">
-                          {tier.village}, {tier.regency}
-                        </p>
-                        {/* Unit icons */}
-                        <div className="flex items-center gap-1.5 mt-2">
-                          {tier.units.map((unitId) => {
-                            const cfg = UNIT_CONFIG[unitId];
-                            if (!cfg) return null;
-                            const Icon = cfg.icon;
-                            return (
-                              <Tooltip key={unitId} label={cfg.label} description={cfg.desc} className="inline-flex">
-                                <div
-                                  className={`flex items-center justify-center h-6 w-6 rounded-md border ${cfg.boxClass}`}
-                                >
-                                  <Icon weight="fill" className={`h-3.5 w-3.5 ${cfg.iconClass}`} />
-                                </div>
-                              </Tooltip>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
+              {/* Right: Demo Account */}
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key !== "Enter") return;
+                  setShowCoopList(false);
+                  setShowJoinExisting(false);
+                  setShowDemoTiers((prev) => !prev);
+                }}
+                onClick={() => {
+                  handleUserInteraction();
+                  sfx.playBleep(600, 0.03);
+                  setShowCoopList(false);
+                  setShowJoinExisting(false);
+                  setShowDemoTiers((prev) => !prev);
+                }}
+                onMouseEnter={handleCardHover}
+                className="group relative w-full md:w-56 min-h-[240px] rounded-2xl border-2 border-amber-800/50 bg-amber-950/30 backdrop-blur-md p-5 cursor-pointer hover:border-amber-600/60 hover:bg-amber-950/50 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(245,158,11,0.12)] transition-all duration-300 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
+                    <GameController className="h-4 w-4 text-amber-400" />
                   </div>
-                  {demoExists && (
-                    <p className="text-xxxs text-amber-500/60 text-center mt-3 flex items-center justify-center gap-1">
-                      ⚠ {t("profileSelect.freshStartWarning")}
+                  <div>
+                    <h3 className="text-xs font-bold text-amber-200">{t("profileSelect.demoTitle")}</h3>
+                    <p className="text-xxxs text-amber-600 mt-0.5 flex items-center gap-1">
+                      <GameController className="h-3 w-3" />
+                      {t("profileSelect.demoBadge")}
                     </p>
-                  )}
-                </div>
-              )}
-
-              {/* ── Cooperative list (shown when "Masuk" clicked) ── */}
-              {showCoopList && profiles.length > 0 && (
-                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      {t("profileSelect.coopListHeading")}
-                    </h3>
                   </div>
-                  <CooperativeCardList
-                    profiles={profiles}
-                    onCardClick={handleCardClick}
-                    onCardHover={handleCardHover}
-                    onCreateClick={() => setShowCreateModal(true)}
-                  />
+                </div>
+                <p className="text-xxs text-amber-300/70 leading-relaxed mb-4">{t("profileSelect.demoDesc")}</p>
+                <div className="invisible h-[1.5rem]" />
+                <div className="mt-auto rounded-lg bg-amber-500/10 border border-amber-500/25 px-3 py-2 text-xs font-bold text-amber-400 text-center group-hover:bg-amber-500/20 transition-colors">
+                  {t("profileSelect.demoAction")}
+                </div>
+              </div>
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-2xl">
+                  <CircleNotch className="h-7 w-7 text-brand animate-spin" weight="bold" />
                 </div>
               )}
             </div>
-          </>
-        )}
+          </div>
+
+          {/* ── DEMO pane (slides in from the right) ── */}
+          <div key="demo" className="w-full max-w-3xl mx-auto mt-2">
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={closeSubmenu}
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700 backdrop-blur-md transition-colors focus:outline-none focus:ring-2 focus:ring-brand/50"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                {t("profileSelect.back")}
+              </button>
+            </div>
+            <div>
+              {/* Resume card — only when a demo already exists */}
+              {demoExists && (
+                <>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && resumeDemo()}
+                    onClick={() => {
+                      handleUserInteraction();
+                      resumeDemo();
+                    }}
+                    onMouseEnter={handleCardHover}
+                    className="group relative w-full rounded-xl border-2 border-amber-500/50 bg-amber-950/60 backdrop-blur-md p-5 cursor-pointer hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.18)] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-amber-400/50 mb-5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 group-hover:bg-amber-500/30 transition-colors">
+                        <GameController className="h-5 w-5 text-amber-400" weight="fill" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-bold text-amber-200">{t("profileSelect.resumeCardTitle")}</h4>
+                        <p className="text-xxs text-amber-400/60 mt-0.5">{t("profileSelect.resumeCardDesc")}</p>
+                      </div>
+                      <div className="shrink-0 rounded-lg bg-amber-500/20 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-400 group-hover:bg-amber-500/30 transition-colors">
+                        {t("profileSelect.resumeCardAction")}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-center mb-4">
+                    <span className="text-xxs text-slate-500 uppercase tracking-widest">
+                      {t("profileSelect.freshStartDivider")}
+                    </span>
+                  </div>
+                </>
+              )}
+
+              <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider text-center mb-4">
+                {demoExists ? t("profileSelect.freshStartHeading") : t("profileSelect.tierHeading")}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {DEMO_TIERS.map((tier) => (
+                  <div
+                    key={tier.level}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setSelectedTier(tier.level)}
+                    onClick={() => {
+                      handleUserInteraction();
+                      setSelectedTier(tier.level);
+                    }}
+                    onMouseEnter={handleCardHover}
+                    className={`group relative rounded-xl border-2 ${tier.border} ${tier.bg} backdrop-blur-md p-4 cursor-pointer hover:scale-[1.03] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_0_25px_rgba(245,158,11,0.10)] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-amber-500/50`}
+                  >
+                    {/* Image placeholder */}
+                    <div className="w-full h-20 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-center mb-3">
+                      <Camera className="h-5 w-5 text-slate-600" />
+                    </div>
+                    <h4 className={`text-sm font-bold ${tier.text}`}>{tier.title}</h4>
+                    {/* Stats */}
+                    <div className="mt-2 text-xxxs text-slate-500">
+                      <p>
+                        {tier.stats[0].label} <span className="text-slate-300">{tier.stats[0].value}</span>
+                      </p>
+                      <p>
+                        <span className="text-slate-300">{tier.stats[1].value}</span> {tier.stats[1].label}
+                        {tier.stats[2] && (
+                          <>
+                            {" "}
+                            · <span className="text-slate-300">{tier.stats[2].value}</span> {tier.stats[2].label}
+                          </>
+                        )}
+                      </p>
+                    </div>
+                    {/* Location */}
+                    <p className="mt-1.5 text-xxxs text-slate-600">
+                      {tier.village}, {tier.regency}
+                    </p>
+                    {/* Unit icons */}
+                    <div className="flex items-center gap-1.5 mt-2">
+                      {tier.units.map((unitId) => {
+                        const cfg = UNIT_CONFIG[unitId];
+                        if (!cfg) return null;
+                        const Icon = cfg.icon;
+                        return (
+                          <Tooltip key={unitId} label={cfg.label} description={cfg.desc} className="inline-flex">
+                            <div
+                              className={`flex items-center justify-center h-6 w-6 rounded-md border ${cfg.boxClass}`}
+                            >
+                              <Icon weight="fill" className={`h-3.5 w-3.5 ${cfg.iconClass}`} />
+                            </div>
+                          </Tooltip>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {demoExists && (
+                <p className="text-xxxs text-amber-500/60 text-center mt-3 flex items-center justify-center gap-1">
+                  ⚠ {t("profileSelect.freshStartWarning")}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* ── COOP pane (slides in from the left) ── */}
+          <div key="coop" className="w-full max-w-3xl mx-auto mt-2">
+            <div className="flex justify-start mb-4">
+              <button
+                onClick={closeSubmenu}
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-900/70 border border-slate-800 hover:border-slate-700 backdrop-blur-md transition-colors focus:outline-none focus:ring-2 focus:ring-brand/50"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                {t("profileSelect.back")}
+              </button>
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  {t("profileSelect.coopListHeading")}
+                </h3>
+              </div>
+              <CooperativeCardList
+                profiles={profiles}
+                onCardClick={handleCardClick}
+                onCardHover={handleCardHover}
+                onCreateClick={() => setShowCreateModal(true)}
+              />
+            </div>
+          </div>
+
+          {/* ── JOIN pane (neutral fade) ── */}
+          <div key="join" className="w-full max-w-5xl mx-auto">
+            <JoinExistingCoop
+              onJoined={(profile) => {
+                setProfiles((prev) => [profile, ...prev]);
+                setShowJoinExisting(false);
+                onProfileSelect(profile);
+              }}
+              onBack={() => setShowJoinExisting(false)}
+            />
+          </div>
+        </DirectionalTransition>
       </div>
 
       {/* Bottom: Footer */}

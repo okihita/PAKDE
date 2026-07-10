@@ -190,6 +190,99 @@
   animation: ken-burns 6.5s ease-out forwards;
 }
 
+/* ── Profile-select directional submenu transitions ────────────────
+   Demo / coop submenus slide in from their trigger's edge and slide back
+   out the same way, so motion reads as "this panel belongs to that card".
+   The hero (base) and Join use a neutral fade. Travel is kept subtle (~1rem)
+   so it feels like an in-place swap rather than a page change. */
+@keyframes ps-slide-in-right {
+  from {
+    transform: translateX(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes ps-slide-in-left {
+  from {
+    transform: translateX(-1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes ps-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(1rem);
+    opacity: 0;
+  }
+}
+@keyframes ps-slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-1rem);
+    opacity: 0;
+  }
+}
+@keyframes ps-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ps-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.ps-anim-in-right {
+  animation: ps-slide-in-right 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ps-anim-in-left {
+  animation: ps-slide-in-left 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ps-anim-out-right {
+  animation: ps-slide-out-right 180ms ease-in both;
+}
+.ps-anim-out-left {
+  animation: ps-slide-out-left 180ms ease-in both;
+}
+.ps-anim-in-fade {
+  animation: ps-fade-in 200ms ease-out both;
+}
+.ps-anim-out-fade {
+  animation: ps-fade-out 160ms ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-anim-in-right,
+  .ps-anim-in-left,
+  .ps-anim-out-right,
+  .ps-anim-out-left,
+  .ps-anim-in-fade,
+  .ps-anim-out-fade {
+    animation-duration: 1ms !important;
+    animation-timing-function: linear !important;
+  }
+}
+
 /* Respect users who opt out of motion: no zoom, no auto-advance feel. */
 @media (prefers-reduced-motion: reduce) {
   .ken-burns {
