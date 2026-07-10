@@ -178,10 +178,10 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border text-foreground text-xs">
-                  <SelectItem value="anggota_biasa">{t("members.form.simpanan.jenisPokok")}</SelectItem>
-                  <SelectItem value="calon_anggota">{t("members.filterActive")}</SelectItem>
-                  <SelectItem value="anggota_luar_biasa">{t("members.filterInactive")}</SelectItem>
-                  <SelectItem value="anggota_kehormatan">{t("members.tableHeaders.membership")}</SelectItem>
+                  <SelectItem value="anggota_biasa">{t("members.membership.anggotaBiasa")}</SelectItem>
+                  <SelectItem value="calon_anggota">{t("members.membership.calonAnggota")}</SelectItem>
+                  <SelectItem value="anggota_luar_biasa">{t("members.membership.anggotaLuarBiasa")}</SelectItem>
+                  <SelectItem value="anggota_kehormatan">{t("members.membership.anggotaKehormatan")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

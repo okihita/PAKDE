@@ -65,7 +65,7 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
           sub={`${i.activeMembers} aktif · ${i.inactiveMembers} nonaktif`}
         />
         <InsightTile label={t("members.insights.totalSimpanan")} value={fmt(i.totalSimpanan)} />
-        <InsightTile label={t("members.insights.piutang")} value={fmt(i.totalPiutang)} danger={i.totalPiutang > 0} />
+        <InsightTile label={t("members.insights.piutang")} value={fmt(i.totalPiutang)} />
         <InsightTile
           label={t("members.insights.simpananPending")}
           value={String(i.simpananPending)}
@@ -174,9 +174,9 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                     </span>
                   </TableCell>
                   <TableCell className="text-xxs font-mono text-foreground">
-                    {t(`members.form.simpanan.${mbr.status_keanggotaan ?? "jenisPokok"}`, {
-                      defaultValue: mbr.status_keanggotaan ?? "-",
-                    })}
+                    {mbr.status_keanggotaan
+                      ? t(`members.membership.${mbr.status_keanggotaan}`, { defaultValue: mbr.status_keanggotaan })
+                      : "-"}
                   </TableCell>
                   <TableCell className="text-xxs font-mono text-muted-foreground">{mbr.kode_wilayah || "-"}</TableCell>
                   <TableCell className="text-xxs font-mono text-success text-right">

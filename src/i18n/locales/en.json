@@ -181,6 +181,12 @@
       "action": "Actions",
       "noData": "No member data."
     },
+    "membership": {
+      "anggotaBiasa": "Regular Member",
+      "calonAnggota": "Prospective Member",
+      "anggotaLuarBiasa": "Associate Member",
+      "anggotaKehormatan": "Honorary Member"
+    },
     "form": {
       "titleAdd": "Add New Member",
       "titleEdit": "Edit Member Data",

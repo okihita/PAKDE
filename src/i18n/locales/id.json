@@ -181,6 +181,12 @@
       "action": "Aksi",
       "noData": "Tidak ada data anggota."
     },
+    "membership": {
+      "anggotaBiasa": "Anggota Biasa",
+      "calonAnggota": "Calon Anggota",
+      "anggotaLuarBiasa": "Anggota Luar Biasa",
+      "anggotaKehormatan": "Anggota Kehormatan"
+    },
     "form": {
       "titleAdd": "Tambah Anggota Baru",
       "titleEdit": "Edit Data Anggota",
