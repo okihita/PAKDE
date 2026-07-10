@@ -10,6 +10,7 @@ import {
 import { getUsersByCooperativeId } from "@/features/System/ProfileSelect/userDb";
 import { isTabUnlocked, type TabId } from "@/features/System/moduleUnlock";
 import { ToastProvider } from "@/hooks/useToast";
+import { useDisableDebugMenu } from "@/hooks/useDisableDebugMenu";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { exit } from "@tauri-apps/plugin-process";
 import { IconProvider } from "@/components/IconContext";
@@ -62,6 +63,7 @@ function quitApp() {
 }
 
 function AppContent() {
+  useDisableDebugMenu();
   const [appState, setAppState] = useState<"profile_select" | "user_signin" | "user_create" | "main" | "db_error">(
     "profile_select",
   );
