@@ -40,6 +40,7 @@ import Sync from "@/features/System/Sync/Sync";
 import Settings from "@/features/System/Settings/Settings";
 import ProfileSelect from "@/features/System/ProfileSelect/ProfileSelect";
 import { useUpdater } from "@/hooks/useUpdater";
+import BackupFileOpenHandler from "@/features/System/Backup/BackupFileOpenHandler";
 import CreateUserProfile from "@/features/System/ProfileSelect/CreateUserProfile";
 import UserSignIn from "@/features/System/ProfileSelect/UserSignIn";
 
@@ -408,6 +409,7 @@ function AppContent() {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {titleBar}
+      <BackupFileOpenHandler />
       <div className="app-container flex flex-1 text-foreground antialiased overflow-hidden">
         <Sidebar
           activeTab={activeTab}

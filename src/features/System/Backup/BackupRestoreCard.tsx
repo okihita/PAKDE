@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DownloadSimpleIcon, UploadSimpleIcon, LockIcon } from "@phosphor-icons/react";
+import { ExportIcon, TrayArrowUpIcon, LockIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,7 +27,7 @@ interface Pending {
   payload: Uint8Array;
 }
 
-const PAKDE_FILTER = [{ name: "PAKDE Backup", extensions: ["pakde"] }];
+const PAKDE_FILTER = [{ name: "PAKDE Backup", extensions: ["pkd"] }];
 
 export default function BackupRestoreCard({ coopId, coopName }: Props) {
   const { t } = useTranslation();
@@ -59,7 +59,7 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
     try {
       const bytes = await buildBackup(coopId, { encrypted: encrypt, passphrase: encrypt ? pass1 : undefined });
       const path = await save({
-        defaultPath: `${coopName || "koperasi"}.pakde`,
+        defaultPath: `${coopName || "koperasi"}.pkd`,
         filters: PAKDE_FILTER,
       });
       if (!path) return; // user cancelled
@@ -136,7 +136,7 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
           disabled={busy || !coopId}
           className="border-border text-muted-foreground hover:text-foreground text-xs h-9"
         >
-          <DownloadSimpleIcon className="h-3.5 w-3.5 mr-1.5" />
+          <ExportIcon className="h-3.5 w-3.5 mr-1.5" />
           {t("backup.export")}
         </Button>
         <Button
@@ -145,7 +145,7 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
           disabled={busy}
           className="border-border text-muted-foreground hover:text-foreground text-xs h-9"
         >
-          <UploadSimpleIcon className="h-3.5 w-3.5 mr-1.5" />
+          <TrayArrowUpIcon className="h-3.5 w-3.5 mr-1.5" />
           {t("backup.import")}
         </Button>
       </div>
@@ -163,7 +163,7 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
         <DialogContent className="bg-card border-border text-foreground max-w-sm">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-sm font-bold">
-              <DownloadSimpleIcon className="h-4 w-4 text-success" />
+              <ExportIcon className="h-4 w-4 text-success" />
               {t("backup.exportTitle")}
             </DialogTitle>
             <DialogDescription className="text-xxs text-muted-foreground">

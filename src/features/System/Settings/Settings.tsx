@@ -23,7 +23,7 @@ import {
   BuildingsIcon,
   ArrowsLeftRightIcon,
   WarningIcon,
-  DownloadSimpleIcon,
+  ArchiveIcon,
 } from "@phosphor-icons/react";
 import BackupRestoreCard from "@/features/System/Backup/BackupRestoreCard";
 
@@ -415,7 +415,7 @@ export default function Settings({
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <DownloadSimpleIcon className="h-3.5 w-3.5 text-brand" />
+                <ArchiveIcon className="h-3.5 w-3.5 text-brand" />
                 {t("settings.backup.title")}
               </CardTitle>
               <CardDescription className="text-xxs text-muted-foreground">

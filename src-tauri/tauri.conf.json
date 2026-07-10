@@ -31,7 +31,16 @@
     "targets": "all",
     "createUpdaterArtifacts": true,
     "icon": ["icons/icon.png", "icons/icon.ico"],
-    "resources": ["resources/wilayah.sqlite"]
+    "resources": ["resources/wilayah.sqlite"],
+    "fileAssociations": [
+      {
+        "ext": ["pkd"],
+        "name": "PAKDE Backup",
+        "description": "PAKDE Cooperative Backup File",
+        "role": "Viewer",
+        "mimeType": "application/octet-stream"
+      }
+    ]
   },
   "plugins": {
     "updater": {
