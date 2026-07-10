@@ -65,13 +65,15 @@ function QuickStat({
   icon: Icon,
   label,
   value,
+  className,
 }: {
   icon: ComponentType<{ className?: string }>;
   label: string;
   value: string;
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-0.5 rounded-lg bg-secondary/40 px-2 py-1.5 min-w-0">
+    <div className={cn("flex flex-col gap-0.5 rounded-lg bg-secondary/40 px-2 py-1.5 min-w-0", className)}>
       <span className="flex items-center gap-1 text-xxxs text-muted-foreground truncate">
         <Icon className="h-3 w-3 shrink-0" />
         {label}
@@ -311,10 +313,15 @@ export default function Sidebar({
             )}
 
             {/* ── Quick stats — members · units · savings ── */}
-            <div className="grid grid-cols-3 gap-2 pt-1">
+            <div className="grid grid-cols-2 gap-2 pt-1">
               <QuickStat icon={UsersIcon} label={t("sidebar.statMembers")} value={memberCount.toString()} />
               <QuickStat icon={BuildingsIcon} label={t("sidebar.statUnits")} value={unitCount.toString()} />
-              <QuickStat icon={Coins} label={t("sidebar.statSavings")} value={formatCompactRupiah(totalSavings)} />
+              <QuickStat
+                icon={Coins}
+                label={t("sidebar.statSavings")}
+                value={formatCompactRupiah(totalSavings)}
+                className="col-span-2"
+              />
             </div>
           </div>
 
