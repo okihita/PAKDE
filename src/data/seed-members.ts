@@ -7,6 +7,13 @@ import { generateNik } from "@/data/nik";
 /** Fallback real village code (Widoro, Pacitan) for coops with a NULL village_code. */
 const FALLBACK_VILLAGE_CODE = "35.01.01.2001";
 
+/**
+ * NIK sequence offset for mock members. Keeps their NIKs disjoint from the
+ * deterministic demo members (seq 1..50) so seeding into the demo coop can't
+ * hit a `members.nik` UNIQUE collision.
+ */
+const SEED_SEQ_OFFSET = 5000;
+
 const FIRST_NAMES_MALE = [
   "Sutrisno",
   "Bambang",
@@ -188,7 +195,12 @@ export async function seedMockMembers(): Promise<number> {
 
     members.push({
       id: `seed-${pad(i, 3)}`,
-      nik: generateNik(villageCode, `${birthYear}-${pad(birthMonth, 2)}-${pad(birthDay, 2)}`, gender, i),
+      nik: generateNik(
+        villageCode,
+        `${birthYear}-${pad(birthMonth, 2)}-${pad(birthDay, 2)}`,
+        gender,
+        i + SEED_SEQ_OFFSET,
+      ),
       name: `${firstName} ${lastName}`,
       place_of_birth: pick(["Mojokerto", "Jombang", "Kediri", "Surabaya", "Malang", "Nganjuk"]),
       date_of_birth: `${birthYear}-${pad(birthMonth, 2)}-${pad(birthDay, 2)}`,

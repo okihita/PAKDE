@@ -1286,6 +1286,8 @@
     "memberSaveFailed": "Failed to save member: {{error}}",
     "nikInvalid": "Error: NIK must be 16 digits.",
     "nikDuplicate": "Error: NIK is already registered to another member.",
+    "regionRequired": "Error: Please select the member's region (village) first.",
+    "seedFailed": "Failed to generate sample data: {{error}}",
     "nameRequired": "Error: Name is required.",
     "memberDeleteBlocked": "Error: Cannot delete member with active loans.",
     "memberDeleteConfirm": "Are you sure you want to delete member {{name}}?",

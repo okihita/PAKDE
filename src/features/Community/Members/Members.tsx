@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMembers, type MemberInsights } from "@/hooks/useMembers";
+import { useToast } from "@/hooks/useToast";
 import { seedMockMembers } from "@/data/seed-members";
 import { resolveWilayah, formatWilayahShort } from "@/db/wilayahLookup";
 import { useEffect, useMemo, useState } from "react";
@@ -34,6 +35,7 @@ function InsightTile({ label, value, sub, danger }: { label: string; value: stri
 export default function Members({ onMembersChanged }: { onMembersChanged?: () => void }) {
   const { t } = useTranslation();
   const m = useMembers(onMembersChanged);
+  const toast = useToast();
   const [seeding, setSeeding] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<Member | null>(null);
   const [regionLabels, setRegionLabels] = useState<Record<string, string>>({});
@@ -77,6 +79,8 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
       await seedMockMembers();
       await m.loadMembersData();
       onMembersChanged?.();
+    } catch (err) {
+      toast.error(t("toast.seedFailed", { error: err instanceof Error ? err.message : String(err) }));
     } finally {
       setSeeding(false);
     }

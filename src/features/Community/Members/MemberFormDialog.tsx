@@ -89,18 +89,21 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
   }, [m.showMemberModal, m.memberFormType, m.memberFormValues.id]);
 
   // Auto-generate a valid NIK in add mode once region + DOB + gender are set,
-  // unless the user has manually edited the field.
+  // unless the user has manually edited the field. The conflict nonce is folded
+  // into the sequence so a duplicate-NIK submit yields a fresh candidate.
   useEffect(() => {
     if (m.memberFormType !== "add" || nikTouched) return;
     const { kode_wilayah, date_of_birth, gender } = m.memberFormValues;
     if (!kode_wilayah || !date_of_birth || !gender) return;
-    const nik = generateNik(kode_wilayah, date_of_birth, gender, nikSeq);
+    const seq = ((nikSeq + m.nikConflictNonce - 1) % 9999) + 1;
+    const nik = generateNik(kode_wilayah, date_of_birth, gender, seq);
     if (nik !== m.memberFormValues.nik) m.setMemberFormValues((prev) => ({ ...prev, nik }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     m.memberFormType,
     nikTouched,
     nikSeq,
+    m.nikConflictNonce,
     m.memberFormValues.kode_wilayah,
     m.memberFormValues.date_of_birth,
     m.memberFormValues.gender,
@@ -266,9 +269,10 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
                   key={regionKey}
                   initial={regionInitial}
                   onChange={(region) => {
-                    if (region.village_code) {
-                      m.setMemberFormValues({ ...m.memberFormValues, kode_wilayah: region.village_code });
-                    }
+                    // Always sync so the saved code matches what the picker shows.
+                    // An incomplete selection yields "" and is caught on submit,
+                    // preventing a stale code from diverging from the displayed region.
+                    m.setMemberFormValues((prev) => ({ ...prev, kode_wilayah: region.village_code }));
                   }}
                 />
               ) : (
