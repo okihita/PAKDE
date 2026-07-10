@@ -542,6 +542,24 @@
       "button": "Hapus Semua Data",
       "confirm": "Klik lagi untuk konfirmasi — ini tidak dapat dibatalkan",
       "reseting": "Menghapus..."
+    },
+    "backup": {
+      "title": "Cadangkan & Pulihkan",
+      "description": "Ekspor koperasi ini (termasuk akun operatornya) ke file .pakde yang portabel, atau pulihkan dari mesin lain.",
+      "export": "Ekspor Cadangan",
+      "import": "Impor Cadanan",
+      "exportTitle": "Ekspor Cadangan Koperasi",
+      "exportDesc": "Simpan \"{{name}}\" ke file .pakde portabel. Akun operator sudah termasuk.",
+      "encrypt": "Enkripsi dengan passphrase",
+      "passphrase": "Passphrase",
+      "confirmPassphrase": "Konfirmasi passphrase",
+      "passphraseMismatch": "Passphrase tidak cocok.",
+      "unlockTitle": "Cadangan Terenkripsi",
+      "unlockDesc": "Masukkan passphrase yang digunakan saat cadangan dibuat.",
+      "exportSuccess": "Cadangan \"{{name}}\" tersimpan.",
+      "exportFailed": "Ekspor gagal: {{error}}",
+      "importSuccess": "Koperasi \"{{name}}\" dipulihkan.",
+      "importFailed": "Impor gagal: {{error}}"
     }
   },
   "palette": {

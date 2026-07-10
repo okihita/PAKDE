@@ -542,6 +542,24 @@
       "button": "Reset All Data",
       "confirm": "Click again to confirm — this cannot be undone",
       "reseting": "Resetting..."
+    },
+    "backup": {
+      "title": "Backup & Restore",
+      "description": "Export this cooperative (including its operator accounts) to a portable .pakde file, or restore one from another machine.",
+      "export": "Export Backup",
+      "import": "Import Backup",
+      "exportTitle": "Export Cooperative Backup",
+      "exportDesc": "Save \"{{name}}\" to a portable .pakde file. Operator accounts are included.",
+      "encrypt": "Encrypt with passphrase",
+      "passphrase": "Passphrase",
+      "confirmPassphrase": "Confirm passphrase",
+      "passphraseMismatch": "Passphrases do not match.",
+      "unlockTitle": "Encrypted Backup",
+      "unlockDesc": "Enter the passphrase used when this backup was created.",
+      "exportSuccess": "Backup for \"{{name}}\" saved.",
+      "exportFailed": "Export failed: {{error}}",
+      "importSuccess": "Cooperative \"{{name}}\" restored.",
+      "importFailed": "Import failed: {{error}}"
     }
   },
   "palette": {

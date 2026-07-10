@@ -23,7 +23,9 @@ import {
   BuildingsIcon,
   ArrowsLeftRightIcon,
   WarningIcon,
+  DownloadSimpleIcon,
 } from "@phosphor-icons/react";
+import BackupRestoreCard from "@/features/System/Backup/BackupRestoreCard";
 
 interface Props {
   coopProfile: CooperativeProfile | null;
@@ -406,6 +408,22 @@ export default function Settings({
               >
                 {t("settings.saveProfile")}
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Backup & Restore */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                <DownloadSimpleIcon className="h-3.5 w-3.5 text-brand" />
+                {t("settings.backup.title")}
+              </CardTitle>
+              <CardDescription className="text-xxs text-muted-foreground">
+                {t("settings.backup.description")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <BackupRestoreCard coopId={coopProfile.id || ""} coopName={coopProfile.name} />
             </CardContent>
           </Card>
         </div>
