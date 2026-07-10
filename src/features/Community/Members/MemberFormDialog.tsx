@@ -21,6 +21,8 @@ const statusSimpananOptions: { value: SimpananStatus; labelKey: string }[] = [
   { value: "terlambat", labelKey: "members.form.simpanan.statusTerlambat" },
 ];
 
+const loanStatusOptions: string[] = ["lancar", "diragukan", "macet"];
+
 export default function MemberFormDialog({ m }: { m: MembersHook }) {
   const { t } = useTranslation();
   const fv = m.memberFormValues;
@@ -228,11 +230,31 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
               <label className="text-muted-foreground font-mono text-xxxs uppercase">
                 {t("members.form.labels.loanStatus")}
               </label>
-              <Input
-                value={fv.loan_status}
-                onChange={(e) => m.setMemberFormValues({ ...fv, loan_status: e.target.value })}
-                className="bg-input border-border text-xs h-8"
-              />
+              <div className="flex gap-2">
+                {loanStatusOptions.map((opt) => {
+                  const active = fv.loan_status === opt;
+                  return (
+                    <label
+                      key={opt}
+                      className={`flex items-center gap-1.5 px-3 h-8 rounded border cursor-pointer text-xs transition-colors ${
+                        active
+                          ? "border-brand bg-brand/10 text-brand font-bold"
+                          : "border-border bg-input text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="loan_status"
+                        value={opt}
+                        checked={active}
+                        onChange={() => m.setMemberFormValues({ ...fv, loan_status: opt })}
+                        className="accent-brand"
+                      />
+                      {t(`members.form.loanStatusOptions.${opt}`)}
+                    </label>
+                  );
+                })}
+              </div>
             </div>
 
             {/* ── Simpanan ledger (live: simpanan_anggota) ── */}

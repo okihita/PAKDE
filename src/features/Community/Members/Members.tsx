@@ -6,6 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useMembers, type MemberInsights } from "@/hooks/useMembers";
 import { seedMockMembers } from "@/data/seed-members";
 import { useEffect, useState } from "react";
@@ -26,6 +34,7 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
   const { t } = useTranslation();
   const m = useMembers(onMembersChanged);
   const [seeding, setSeeding] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<Member | null>(null);
 
   const statusOptions = [
     { value: "semua", label: t("members.filterAll") },
@@ -86,7 +95,7 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
               disabled={seeding}
               className="bg-warning/20 hover:bg-warning/30 text-warning font-bold text-xs h-8 border border-warning/20"
             >
-              <Plant className="h-3 w-3 mr-1" /> {seeding ? "..." : "Mock 50"}
+              <Plant className="h-3 w-3 mr-1" /> {seeding ? "..." : t("members.seedButton")}
             </Button>
             <Button
               onClick={m.openAddMemberModal}
@@ -190,6 +199,8 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                       <Button
                         variant="ghost"
                         size="icon"
+                        title={t("common.edit")}
+                        aria-label={t("common.edit")}
                         className="h-6 w-6 text-muted-foreground hover:text-foreground"
                         onClick={() => m.openEditMemberModal(mbr)}
                       >
@@ -198,8 +209,10 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 text-danger hover:text-foreground"
-                        onClick={() => m.handleDeleteMember(mbr)}
+                        title={t("common.delete")}
+                        aria-label={t("common.delete")}
+                        className="h-6 w-6 text-danger hover:text-danger hover:bg-danger/10"
+                        onClick={() => setPendingDelete(mbr)}
                       >
                         <TrashIcon className="h-3 w-3" />
                       </Button>
@@ -211,6 +224,34 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={pendingDelete !== null} onOpenChange={(o) => !o && setPendingDelete(null)}>
+        <DialogContent className="bg-card border border-border text-foreground max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-sm font-bold text-slate-200">
+              <TrashIcon className="h-4 w-4 text-danger" />
+              {t("members.deleteTitle")}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription className="text-xs text-muted-foreground font-mono">
+            {t("members.deleteConfirm", { name: pendingDelete?.name ?? "" })}
+          </DialogDescription>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setPendingDelete(null)} className="text-xs border-border">
+              {t("common.cancel")}
+            </Button>
+            <Button
+              onClick={() => {
+                if (pendingDelete) m.deleteMember(pendingDelete);
+                setPendingDelete(null);
+              }}
+              className="bg-danger hover:bg-danger/90 text-white font-bold text-xs"
+            >
+              {t("common.delete")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <MemberFormDialog m={m} />
     </div>

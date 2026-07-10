@@ -231,13 +231,11 @@ export function useMembers(onChange?: () => void) {
     }
   };
 
-  const handleDeleteMember = async (member: Member) => {
+  const deleteMember = async (member: Member) => {
     if (member.loan_outstanding > 0) {
       toast.error(t("toast.memberDeleteBlocked"));
       return;
     }
-    const yes = await toast.confirm(t("toast.memberDeleteConfirm", { name: member.name }));
-    if (!yes) return;
     try {
       await simpananRepo.execute("DELETE FROM simpanan_anggota WHERE anggota_ref = ?", [member.id ?? ""]);
       await membersRepo.remove(member.id ?? "");
@@ -276,6 +274,6 @@ export function useMembers(onChange?: () => void) {
     openAddMemberModal,
     openEditMemberModal,
     handleMemberFormSubmit,
-    handleDeleteMember,
+    deleteMember,
   };
 }
