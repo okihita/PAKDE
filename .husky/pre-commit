@@ -1,1 +1,2 @@
 pnpm exec lint-staged
+bash scripts/version-check.sh

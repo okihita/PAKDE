@@ -10,7 +10,31 @@ permissions:
   contents: write
 
 jobs:
+  verify-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify package.json version matches release tag
+        shell: bash
+        run: |
+          # Only enforce on tag pushes; manual workflow_dispatch is unrestricted.
+          if [[ "${GITHUB_REF}" != refs/tags/* ]]; then
+            echo "Not a tag push (${GITHUB_REF}); skipping version-vs-tag check."
+            exit 0
+          fi
+          PKG=$(node -p "require('./package.json').version")
+          TAG="${GITHUB_REF_NAME#v}"
+          echo "package.json version: $PKG"
+          echo "release tag:         $TAG"
+          if [ "$PKG" != "$TAG" ]; then
+            echo "::error::Version mismatch — package.json ($PKG) must equal the git tag ($TAG). Bump all version files before tagging."
+            exit 1
+          fi
+          echo "Version matches tag. Proceeding with build."
+
   publish-tauri:
+    needs: verify-version
     permissions:
       contents: write
     strategy:
