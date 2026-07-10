@@ -1,0 +1,2 @@
+duckdb
+mcp[cli]

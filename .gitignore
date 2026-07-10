@@ -27,7 +27,14 @@ dist-ssr
 src-tauri/target/
 
 # Exported database dumps (contains PII — do not commit)
-hackathon_data/
+hackathon_data/*
+# DuckDB MCP server tooling (tracked) — re-include scripts, keep data/venv/db ignored
+!hackathon_data/mcp/
+!hackathon_data/mcp/*.py
+!hackathon_data/mcp/requirements.txt
+hackathon_data/hackathon.duckdb
+hackathon_data/mcp/.venv/
+hackathon_data/mcp/__pycache__/
 
 # SQLite WAL/SHM transient files (created when a .sqlite db is opened)
 *.sqlite-wal
