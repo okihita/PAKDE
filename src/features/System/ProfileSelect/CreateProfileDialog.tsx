@@ -20,11 +20,11 @@ const CONFIRM_HEADING = "siap diluncurkan!";
 
 const EMBLEM_LABEL = "Emblem Koperasi";
 const EMBLEMS = [
-  "/emblems/Gemini_Generated_Image_4z0p1y4z0p1y4z0p.png",
-  "/emblems/Gemini_Generated_Image_9q6ekf9q6ekf9q6e.png",
-  "/emblems/Gemini_Generated_Image_ciso4wciso4wciso.png",
-  "/emblems/Gemini_Generated_Image_lmwuaxlmwuaxlmwu.png",
-  "/emblems/Gemini_Generated_Image_srz0n5srz0n5srz0.png",
+  "/emblems/Gemini_Generated_Image_4z0p1y4z0p1y4z0p.webp",
+  "/emblems/Gemini_Generated_Image_9q6ekf9q6ekf9q6e.webp",
+  "/emblems/Gemini_Generated_Image_ciso4wciso4wciso.webp",
+  "/emblems/Gemini_Generated_Image_lmwuaxlmwuaxlmwu.webp",
+  "/emblems/Gemini_Generated_Image_srz0n5srz0n5srz0.webp",
 ];
 const CAT_LABELS: Record<string, string> = {
   serba_usaha: "Serba Usaha",

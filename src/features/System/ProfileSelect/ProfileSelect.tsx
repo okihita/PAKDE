@@ -38,11 +38,11 @@ const LOGOTYPE = "PAKDE";
 const FOOTER_COPYRIGHT = "© 2026 PAKDE. pakde.vercel.app";
 
 const SLIDESHOW_IMAGES = [
-  "/slideshow-1.png",
-  "/slideshow-2.png",
-  "/slideshow-3.png",
-  "/slideshow-4.png",
-  "/slideshow-5.png",
+  "/slideshow-1.webp",
+  "/slideshow-2.webp",
+  "/slideshow-3.webp",
+  "/slideshow-4.webp",
+  "/slideshow-5.webp",
 ];
 const SLIDE_INTERVAL_MS = 5000;
 
