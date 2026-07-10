@@ -64,7 +64,7 @@
     },
     "nav": {
       "home": "Beranda",
-      "statistics": "Rangkuman",
+      "statistics": "Ringkasan",
       "ranking": "Peringkat",
       "leveling": "Leveling",
       "anggota": "Anggota",
@@ -635,6 +635,10 @@
       "prepDays": "{{days}}hr persiapan",
       "prepCustom": "Kustom",
       "estCost": "Est. {{cost}}",
+      "category": {
+        "core": "WAJIB",
+        "fun": "SERU"
+      },
       "rat": {
         "label": "RAT — Rapat Anggota Tahunan",
         "legal": "Wajib oleh undang-undang",

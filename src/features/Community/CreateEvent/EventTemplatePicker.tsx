@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ClockIcon, SparkleIcon } from "@phosphor-icons/react";
 import { EVENT_TEMPLATES, computePredictions, formatIdr, type EventTemplate, importanceStars } from "./eventTemplates";
 
@@ -7,6 +6,11 @@ interface Props {
   onSelect: (template: EventTemplate) => void;
   onBack: () => void;
 }
+
+const CATEGORY_STYLE: Record<string, { bg: string; text: string }> = {
+  core: { bg: "from-warning/20 to-warning/5", text: "text-warning" },
+  fun: { bg: "from-violet-500/20 to-violet-500/5", text: "text-violet-400" },
+};
 
 export default function EventTemplatePicker({ onSelect, onBack }: Props) {
   const { t } = useTranslation();
@@ -26,67 +30,65 @@ export default function EventTemplatePicker({ onSelect, onBack }: Props) {
         {t("event.template.heading")}
       </h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {EVENT_TEMPLATES.map((tmpl) => {
           const Icon = tmpl.icon;
           const isCustom = tmpl.id === "custom";
           const stars = importanceStars(tmpl.importance);
+          const cat = CATEGORY_STYLE[tmpl.category];
           const prepLabel =
             tmpl.prepDays > 0 ? t("event.template.prepDays", { days: tmpl.prepDays }) : t("event.template.prepCustom");
 
+          if (isCustom) {
+            return (
+              <div
+                key={tmpl.id}
+                onClick={() => onSelect(tmpl)}
+                className="aspect-[2/3] cursor-pointer transition-all group rounded-xl border-2 border-dashed border-slate-800 bg-slate-950/30 hover:border-success/40 hover:scale-[1.03] hover:shadow-lg hover:shadow-success/5 flex flex-col items-center justify-center p-4 gap-3"
+              >
+                <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:bg-success/10 group-hover:border-success/30 transition-all">
+                  <Icon className="h-6 w-6 text-slate-500 group-hover:text-success transition-colors" />
+                </div>
+                <span className="text-xs font-bold text-slate-500 group-hover:text-success transition-colors text-center">
+                  {t(tmpl.i18nKey)}
+                </span>
+              </div>
+            );
+          }
+
           return (
-            <Card
+            <div
               key={tmpl.id}
               onClick={() => onSelect(tmpl)}
-              className={`cursor-pointer transition-all group ${
-                isCustom
-                  ? "bg-slate-950/30 border-dashed border-2 border-slate-800 hover:border-success/30"
-                  : "bg-slate-950/60 border-slate-900/80 hover:border-warning/20"
-              }`}
+              className="aspect-[2/3] cursor-pointer transition-all group rounded-xl border-2 border-slate-800 bg-slate-950/60 hover:scale-[1.03] hover:shadow-lg hover:shadow-warning/5 hover:border-slate-700 flex flex-col overflow-hidden"
             >
-              <CardContent
-                className={`p-4 space-y-2.5 ${
-                  isCustom ? "flex flex-col items-center justify-center min-h-[140px]" : ""
-                }`}
-              >
-                {isCustom ? (
-                  <>
-                    <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-1 group-hover:bg-success/10 group-hover:border-success/30 transition-all">
-                      <Icon className="h-5 w-5 text-slate-500 group-hover:text-success transition-colors" />
-                    </div>
-                    <span className="text-xs font-bold text-slate-500 group-hover:text-success transition-colors">
-                      {t(tmpl.i18nKey)}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-warning/10 border border-warning/20 flex items-center justify-center shrink-0">
-                        <Icon className="h-4 w-4 text-warning" />
-                      </div>
-                      <span className="text-xxxs font-mono text-warning/70 leading-tight text-right">{stars}</span>
-                    </div>
-                    <h4 className="text-xs font-bold text-foreground leading-snug">{t(tmpl.i18nKey)}</h4>
-                    <div className="flex items-center gap-3 text-xxxs font-mono text-slate-500">
-                      <span className="flex items-center gap-1">
-                        <ClockIcon className="h-3 w-3 text-slate-600" />
-                        {prepLabel}
-                      </span>
-                      {tmpl.legalNoteKey && (
-                        <span className="text-warning/60 truncate" title={t(tmpl.legalNoteKey)}>
-                          {t(tmpl.legalNoteKey)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xxxs font-mono text-slate-500 pt-0.5">
-                      {t("event.template.estCost", {
-                        cost: formatIdr(computePredictions(tmpl, tmpl.defaultAttendees, "").totalCost),
-                      })}
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+              {/* ── Artwork zone ── */}
+              <div className={`relative flex-1 flex items-center justify-center bg-gradient-to-b ${cat.bg}`}>
+                <span className="absolute top-2 left-2 text-xxxs font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/40 text-white/70">
+                  {t(`event.template.category.${tmpl.category}`)}
+                </span>
+                <span className="absolute top-2 right-2 text-xxxs font-mono tracking-wide text-warning/80">
+                  {stars}
+                </span>
+                <div className="w-12 h-12 rounded-xl bg-black/30 border border-white/10 flex items-center justify-center backdrop-blur-sm">
+                  <Icon className={`h-6 w-6 ${cat.text}`} />
+                </div>
+              </div>
+
+              {/* ── Info zone ── */}
+              <div className="p-3 flex flex-col gap-1.5 bg-slate-950/80 border-t border-slate-800/50 flex-[0.55]">
+                <h4 className="text-xxs font-bold text-foreground leading-snug line-clamp-2">{t(tmpl.i18nKey)}</h4>
+                <div className="flex items-center gap-2 text-xxxs font-mono text-slate-500 mt-auto">
+                  <span className="flex items-center gap-0.5">
+                    <ClockIcon className="h-3 w-3 text-slate-600" />
+                    {prepLabel}
+                  </span>
+                  <span className="ml-auto tabular-nums">
+                    {formatIdr(computePredictions(tmpl, tmpl.defaultAttendees, "").totalCost)}
+                  </span>
+                </div>
+              </div>
+            </div>
           );
         })}
       </div>

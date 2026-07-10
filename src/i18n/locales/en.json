@@ -635,6 +635,10 @@
       "prepDays": "{{days}}d prep",
       "prepCustom": "Custom",
       "estCost": "Est. {{cost}}",
+      "category": {
+        "core": "CORE",
+        "fun": "FUN"
+      },
       "rat": {
         "label": "RAT — Annual Member Meeting",
         "legal": "Mandatory by law",
