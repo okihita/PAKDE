@@ -62,7 +62,7 @@ export default function Ranking({ ranking, onGoSync }: Props) {
   // ── Connectivity-gated empty states ──
   if (status === "offline" && !hasCache) {
     return (
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto brand-scroll">
         <Card className="bg-card border-border max-w-md mx-auto mt-16">
           <CardContent className="p-8 flex flex-col items-center text-center gap-3">
             <WifiSlash className="h-10 w-10 text-muted-foreground" />
@@ -82,7 +82,7 @@ export default function Ranking({ ranking, onGoSync }: Props) {
 
   if (status === "loading" && !hasCache) {
     return (
-      <div className="flex-1 overflow-auto flex items-center justify-center">
+      <div className="flex-1 overflow-auto flex items-center justify-center brand-scroll">
         <CircleNotch className="h-6 w-6 text-muted-foreground animate-spin" />
       </div>
     );
@@ -103,15 +103,15 @@ export default function Ranking({ ranking, onGoSync }: Props) {
     const [showAll, setShowAll] = useState(false);
     const visible = showAll ? data : data.slice(0, 10);
     return (
-      <Card className="bg-card border-border">
-        <CardContent className="p-0">
+      <Card className="bg-card border-border h-full flex flex-col">
+        <CardContent className="p-0 h-full flex flex-col">
           <div className="flex items-center justify-between border-b border-border px-4 py-2">
             <span className="text-xxs font-bold text-muted-foreground uppercase tracking-wider">
               {t("ranking.podium.promotionZone")}
             </span>
             <span className="text-xxxs font-mono text-success">{t("ranking.podium.promotionHint")}</span>
           </div>
-          <div className="max-h-[460px] overflow-y-auto">
+          <div className="flex-1 min-h-0 overflow-y-auto brand-scroll">
             <Table>
               <TableHeader className="sticky top-0 bg-card z-10">
                 <TableRow className="border-border hover:bg-transparent">
@@ -188,8 +188,8 @@ export default function Ranking({ ranking, onGoSync }: Props) {
   }
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="max-w-[1120px] mx-auto space-y-4 p-4">
+    <div className="flex-1 overflow-auto flex flex-col brand-scroll">
+      <div className="h-full w-full space-y-4 p-4 flex flex-col">
         {/* ── Status / connectivity banner ── */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-xxs font-mono">
@@ -254,7 +254,7 @@ export default function Ranking({ ranking, onGoSync }: Props) {
         </div>
 
         {/* ── Metric + Scope tabs ── */}
-        <Card className="bg-card border-border hover-glow-card">
+        <Card className="bg-card border-border hover-glow-card flex flex-col">
           <CardHeader className="pb-0">
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
@@ -263,7 +263,7 @@ export default function Ranking({ ranking, onGoSync }: Props) {
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 flex-1 flex flex-col min-h-0">
             <Tabs value={metric} onValueChange={(v) => setMetric(v as RankingMetric)}>
               <TabsList className="w-full bg-muted flex-wrap">
                 {METRICS.map((m) => (
@@ -274,7 +274,11 @@ export default function Ranking({ ranking, onGoSync }: Props) {
               </TabsList>
             </Tabs>
 
-            <Tabs value={scope} onValueChange={(v) => setScope(v as RankingScope)}>
+            <Tabs
+              value={scope}
+              onValueChange={(v) => setScope(v as RankingScope)}
+              className="flex-1 flex flex-col min-h-0"
+            >
               <TabsList className="w-full bg-muted">
                 {SCOPES.map((sc) => (
                   <TabsTrigger key={sc} value={sc} className="flex-1 text-xs">
@@ -287,9 +291,9 @@ export default function Ranking({ ranking, onGoSync }: Props) {
                 const board = boards[sc]?.[metric];
                 const items = board?.items;
                 return (
-                  <TabsContent key={sc} value={sc} className="mt-2">
+                  <TabsContent key={sc} value={sc} className="mt-2 flex-1 min-h-0">
                     {items ? (
-                      <div className="grid lg:grid-cols-[42fr_58fr] gap-6">
+                      <div className="grid lg:grid-cols-[42fr_58fr] gap-6 lg:flex-1 lg:min-h-0">
                         <Podium
                           key={`${sc}-${metric}`}
                           items={items}

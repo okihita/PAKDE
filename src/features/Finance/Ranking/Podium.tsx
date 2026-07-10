@@ -135,14 +135,14 @@ const MEDAL_STYLE: Record<number, { ring: string; text: string; label: string }>
 function PodiumCard({ coop, position }: { coop: RankedCoop; position: 1 | 2 | 3 }) {
   const m = MEDAL_STYLE[position];
   // 2-1-3 layout: rank 2 (left, short), rank 1 (center, tall), rank 3 (right, short).
-  const height = position === 1 ? "h-40" : "h-32";
+  const height = position === 1 ? "h-44" : "h-40";
   const order = position === 2 ? "order-1" : position === 1 ? "order-2" : "order-3";
   return (
     <div className={`podium-card relative flex flex-col items-center justify-end ${order}`}>
       <div
         className={`flex w-full ${height} flex-col items-center justify-center gap-1 rounded-xl bg-linear-to-br ${m.ring} p-[2px] shadow-lg`}
       >
-        <div className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-[10px] bg-card px-2">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-[10px] bg-card px-2">
           <span className={`text-base ${m.text}`}>{m.label}</span>
           <span
             className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black font-mono ${avatarTint(coop.name)}`}

@@ -406,7 +406,7 @@ function AppContent() {
           rankingUnlocked={isTabUnlocked("ranking", coopProfile?.xp ?? 0)}
         />
 
-        <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6">
+        <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6 brand-scroll">
           {activeTab === "home" && (
             <>
               {coopProfile && (

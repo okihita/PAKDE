@@ -197,23 +197,32 @@
   }
 }
 
-/* ── Playful sidebar scrollbar ──────────────────────────── */
+/* ── Brand scrollbar (shared by sidebar + content) ──────── */
+.brand-scroll,
 .nav-scroll {
   scrollbar-width: thin;
-  scrollbar-color: hsl(var(--brand)) transparent;
+  scrollbar-color: hsl(var(--brand) / 0.4) transparent;
+  scrollbar-gutter: stable;
 }
+.brand-scroll::-webkit-scrollbar,
 .nav-scroll::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
+  height: 12px;
 }
+.brand-scroll::-webkit-scrollbar-track,
 .nav-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
+.brand-scroll::-webkit-scrollbar-thumb,
 .nav-scroll::-webkit-scrollbar-thumb {
   background: hsl(var(--brand) / 0.4);
   border-radius: 9999px;
   transition: background 0.2s ease;
 }
-.nav-scroll::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--brand) / 0.85);
-  box-shadow: 0 0 8px hsl(var(--brand) / 0.4);
+@media (prefers-reduced-motion: no-preference) {
+  .brand-scroll::-webkit-scrollbar-thumb:hover,
+  .nav-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--brand) / 0.85);
+    box-shadow: 0 0 8px hsl(var(--brand) / 0.4);
+  }
 }
