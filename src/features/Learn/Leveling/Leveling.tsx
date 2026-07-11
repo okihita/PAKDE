@@ -1,12 +1,10 @@
 import "./Leveling.css";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data/leveling";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getActiveCoopId } from "@/db/active-coop";
 import { getTierBand, XP_SOURCES } from "@/data/xp-core";
 import XpFeed from "./XpFeed";
-import { CaretDownIcon, CaretUpIcon, TrophyIcon, StarIcon, LockIcon } from "@phosphor-icons/react";
+import { TrophyIcon, StarIcon, LockIcon } from "@phosphor-icons/react";
 
 interface Props {
   xp?: number;
@@ -27,7 +25,6 @@ function LevelCard({
   t: (key: string, opts?: Record<string, unknown>) => string;
   xp: number;
 }) {
-  const [open, setOpen] = useState(false);
   const Icon = TrophyIcon;
   const isId = lang.startsWith("id");
   const label = isId ? level.labelId : level.labelEn;
@@ -38,83 +35,83 @@ function LevelCard({
   const isCurrent = currentLevel.id === level.id;
 
   return (
-    <Card
-      className={`bg-card border-border text-foreground overflow-hidden transition-all hover-glow-card ${
-        isCurrent ? "ring-1 ring-brand/30" : ""
-      } ${!isUnlocked ? "opacity-60" : ""}`}
+    <div
+      className={`banner w-44 shrink-0 snap-start ${isCurrent ? "banner--current" : ""} ${!isUnlocked ? "banner--locked" : ""}`}
+      style={{ ["--banner" as string]: level.color } as React.CSSProperties}
     >
-      <CardHeader className="pb-3 cursor-pointer select-none" onClick={() => setOpen(!open)}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Level badge */}
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${level.bgClass}`}>
-              {isUnlocked ? (
-                <Icon className={`h-5 w-5 ${level.textClass}`} />
-              ) : (
-                <LockIcon className="h-4 w-4 text-muted-foreground" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-foreground">{t("leveling.level", { n: level.tier })}</span>
-                <span
-                  className={`text-xxxs font-mono font-bold px-2 py-0.5 rounded-full border-0 ${level.bgClass} ${level.textClass}`}
-                >
-                  {label}
-                </span>
-                {isCurrent && <span className="text-xxxs font-mono text-brand font-bold">{t("leveling.active")}</span>}
-              </div>
-              <p className="text-xxs text-muted-foreground mt-0.5 truncate">{desc}</p>
-            </div>
+      {/* Colored field behind the card = the banner's border */}
+      <div className="banner__field bg-card" />
+
+      {/* Top finial — the ring the banner hangs from */}
+      <div className="banner__finial">
+        <span className="banner__finial-ring" />
+        <span className="banner__finial-rod" />
+      </div>
+
+      {/* Heraldic cap with the level emblem */}
+      <div className="banner__cap">
+        <div className="banner__emblem">
+          {isUnlocked ? (
+            <Icon className="h-6 w-6 text-[var(--banner)]" weight="fill" />
+          ) : (
+            <LockIcon className="h-4 w-4 text-muted-foreground" />
+          )}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="banner__body">
+        <div className="banner__title">
+          <span className="banner__tier">{t("leveling.level", { n: level.tier })}</span>
+          {isCurrent && <span className="banner__active">{t("leveling.active")}</span>}
+        </div>
+
+        <span
+          className="banner__label"
+          style={{ color: "var(--banner)", background: "color-mix(in srgb, var(--banner) 14%, transparent)" }}
+        >
+          {label}
+        </span>
+
+        <p className="banner__desc">{desc}</p>
+
+        {/* XP progress */}
+        <div className="banner__progress">
+          <div className="flex justify-between text-xxxs font-mono mb-1">
+            <span className="text-muted-foreground">
+              XP {earned}/{maxXp}
+            </span>
+            <span style={{ color: "var(--banner)" }}>{percent}%</span>
           </div>
-          <div className="flex items-center gap-3 shrink-0">
-            {/* XP progress */}
-            <div className="hidden sm:block w-24">
-              <div className="flex justify-between text-xxxs font-mono mb-0.5">
-                <span className="text-muted-foreground">
-                  {isId ? `XP ${earned}/${maxXp}` : `XP ${earned}/${maxXp}`}
-                </span>
-                <span className={level.textClass}>{percent}%</span>
-              </div>
-              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    isCurrent ? "bg-brand" : isUnlocked ? level.color : "bg-muted"
-                  }`}
-                  style={{ width: `${isUnlocked ? percent : 0}%` }}
-                />
-              </div>
-            </div>
-            {open ? (
-              <CaretUpIcon className="h-3.5 w-3.5 text-muted-foreground" />
-            ) : (
-              <CaretDownIcon className="h-3.5 w-3.5 text-muted-foreground" />
-            )}
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${isUnlocked ? percent : 0}%`, background: "var(--banner)" }}
+            />
           </div>
         </div>
-      </CardHeader>
 
-      {open && (
-        <CardContent className="pt-0 pb-4">
-          <div className="bg-input/50 rounded-lg p-3 border border-border">
-            <div className="flex items-center gap-2 mb-2">
-              <StarIcon className="h-3.5 w-3.5 text-brand" />
-              <span className="text-xxxs font-mono font-bold text-muted-foreground uppercase tracking-wider">
-                {t("leveling.earnXp")}
-              </span>
-            </div>
-            <ul className="space-y-1">
-              {XP_ACTIONS.map((a, i) => (
-                <li key={i} className="flex items-center gap-2 text-xxs text-muted-foreground">
-                  <span className="text-brand font-mono font-bold">+{a.xp} XP</span>
-                  <span>{isId ? a.labelId : a.labelEn}</span>
-                </li>
-              ))}
-            </ul>
+        {/* Always-visible XP actions */}
+        <div className="banner__actions">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <StarIcon className="h-3 w-3" style={{ color: "var(--banner)" }} />
+            <span className="text-xxxs font-mono font-bold uppercase tracking-wider text-muted-foreground">
+              {t("leveling.earnXp")}
+            </span>
           </div>
-        </CardContent>
-      )}
-    </Card>
+          <ul className="space-y-1">
+            {XP_ACTIONS.map((a, i) => (
+              <li key={i} className="flex items-center gap-2 text-xxs text-muted-foreground">
+                <span className="font-mono font-bold shrink-0" style={{ color: "var(--banner)" }}>
+                  +{a.xp}
+                </span>
+                <span className="leading-tight">{isId ? a.labelId : a.labelEn}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -147,8 +144,8 @@ export default function Leveling({ xp = 0 }: Props) {
       {/* Level strip = XP progress bar.
           Fixed, palette-independent fill + a scrimmed label pill keep the
           tier text legible in light/dark and across every theme palette. */}
-      <Card className="bg-card border-border text-foreground">
-        <CardContent className="p-4 space-y-2">
+      <div className="bg-card border-border text-foreground rounded-xl border">
+        <div className="p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-foreground flex items-center gap-2">
               <TrophyIcon className="h-4 w-4 text-warning" />
@@ -181,11 +178,11 @@ export default function Leveling({ xp = 0 }: Props) {
             <span>{isId ? "Rintisan" : "Pioneer"}</span>
             <span>{isId ? "Teladan" : "Exemplary"}</span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Level cards */}
-      <div className="space-y-3">
+      {/* Level banners — single horizontal row, scrollable */}
+      <div className="-mx-6 px-6 pt-6 pb-4 flex gap-4 overflow-x-auto snap-x snap-mandatory">
         {LEVELS.map((level: LevelDef) => (
           <LevelCard key={level.id} level={level} lang={i18n.language} t={t} xp={xp} />
         ))}
