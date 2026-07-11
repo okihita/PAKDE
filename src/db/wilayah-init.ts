@@ -1,6 +1,6 @@
 import Database from "@tauri-apps/plugin-sql";
 import { resolveResource, appDataDir, join } from "@tauri-apps/api/path";
-import { copyFile, exists } from "@tauri-apps/plugin-fs";
+import { copyFile, exists, stat } from "@tauri-apps/plugin-fs";
 
 let _wilayahDb: Database | null = null;
 let _loadPromise: Promise<Database> | null = null;
@@ -8,8 +8,21 @@ let _loadPromise: Promise<Database> | null = null;
 async function ensureWilayahInAppData(): Promise<void> {
   const appData = await appDataDir();
   const targetPath = await join(appData, "wilayah.sqlite");
-  const alreadyExists = await exists(targetPath);
-  if (alreadyExists) return;
+
+  let isValid = false;
+  try {
+    if (await exists(targetPath)) {
+      const info = await stat(targetPath);
+      // The real database file is around 7.2MB. If it's less than 1MB, it's corrupt or empty.
+      if (info.size > 1024 * 1024) {
+        isValid = true;
+      }
+    }
+  } catch {
+    isValid = false;
+  }
+
+  if (isValid) return;
 
   try {
     const resourcePath = await resolveResource("resources/wilayah.sqlite");

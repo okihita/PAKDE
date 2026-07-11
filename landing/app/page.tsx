@@ -468,7 +468,7 @@ function Download() {
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Unduh Sekarang</h2>
-          <p className="mt-3 text-sm text-slate-500">{"Versi Terbaru 1.0.1 — Gratis, Ringan, & Open Source"}</p>
+          <p className="mt-3 text-sm text-slate-500">{"Versi Terbaru 1.0.2 — Gratis, Ringan, & Open Source"}</p>
 
           <div className="mt-12 grid gap-8 sm:grid-cols-2 text-left">
             {/* Windows Download Card */}
@@ -499,7 +499,7 @@ function Download() {
               </div>
               <div className="mt-8">
                 <a
-                  href="https://github.com/okihita/PAKDE-tauri/releases/latest"
+                  href="https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.2/PAKDE_1.0.2_x64-setup.exe"
                   className="group/btn relative block overflow-hidden rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 hover:bg-emerald-500 transition-colors"
                 >
                   <span className="absolute inset-y-0 left-0 w-1/3 -skew-x-12 bg-white/20 blur-md group-hover/btn:animate-shine" />
@@ -536,7 +536,7 @@ function Download() {
               </div>
               <div className="mt-8">
                 <a
-                  href="https://github.com/okihita/PAKDE-tauri/releases/latest"
+                  href="https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.2/PAKDE_1.0.2_universal.dmg"
                   className="block text-center rounded-lg border border-slate-700 bg-slate-900/50 px-6 py-3 text-sm font-semibold text-slate-300 hover:border-slate-500 hover:text-white transition-colors"
                 >
                   Unduh untuk macOS (.dmg)

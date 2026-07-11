@@ -2791,7 +2791,7 @@ dependencies = [
 
 [[package]]
 name = "pakde-tauri"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "serde",
  "serde_json",
