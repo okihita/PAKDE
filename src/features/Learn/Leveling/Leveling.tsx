@@ -123,15 +123,17 @@ export default function Leveling({ xp = 0 }: Props) {
     <div className="flex-1 overflow-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center shrink-0">
           <TrophyIcon className="h-5 w-5 text-warning" />
         </div>
-        <div>
-          <h1 className="text-sm font-bold text-foreground">{isId ? "Leveling Koperasi" : "Cooperative Leveling"}</h1>
-          <span className={`text-xxxs font-mono font-bold px-2 py-0.5 rounded-full border ${band.cls}`}>
-            {isId ? band.id : band.en}
-          </span>
-          <p className="text-xxs text-muted-foreground">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-sm font-bold text-foreground">{isId ? "Leveling Koperasi" : "Cooperative Leveling"}</h1>
+            <span className={`text-xxxs font-mono font-bold px-2 py-0.5 rounded-full border ${band.cls}`}>
+              {isId ? band.id : band.en}
+            </span>
+          </div>
+          <p className="text-xxs text-muted-foreground mt-0.5">
             {isId
               ? "Selesaikan quest untuk naik level dan tingkatkan kesehatan koperasi"
               : "Complete quests to level up and improve cooperative health"}
