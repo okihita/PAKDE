@@ -4,7 +4,7 @@
   --banner-shape: polygon(0% 0%, 100% 0%, 100% 86%, 64% 94%, 50% 86%, 36% 94%, 0% 86%);
   position: relative;
   isolation: isolate;
-  min-height: 32rem;
+  min-height: 29rem;
   color: #fff;
   background: var(--banner-outline, #d4af37);
   clip-path: var(--banner-shape);
@@ -36,7 +36,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  padding-top: 0.5rem;
+  padding-top: 0.55rem;
 }
 
 .banner__finial-rod {
@@ -53,14 +53,14 @@
   border-radius: 9999px;
   border: 2px solid rgba(255, 255, 255, 0.7);
   background: color-mix(in srgb, var(--banner) 72%, #000 28%);
-  margin-top: 0.35rem;
+  margin-top: 0.3rem;
 }
 
 /* Heraldic cap with the level emblem */
 .banner__cap {
   display: flex;
   justify-content: center;
-  padding: 0.5rem 0.75rem 0.75rem;
+  padding: 0.4rem 0.75rem 0.55rem;
 }
 
 .banner__emblem {
@@ -79,7 +79,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.25rem 0.85rem 1.75rem;
+  padding: 0.4rem 0.9rem 2rem;
 }
 
 .banner__title {
@@ -137,9 +137,10 @@
 }
 
 .banner__actions {
-  margin-top: 0.25rem;
-  padding-top: 0.5rem;
-  border-top: 1px dashed rgba(255, 255, 255, 0.35);
+  margin-top: 0.35rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.6rem 0.5rem;
 }
 
 /* States */
