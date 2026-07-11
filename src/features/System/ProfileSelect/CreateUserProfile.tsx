@@ -6,6 +6,7 @@ import { UserPlus, ShieldCheck, Key, Question, Eye, EyeSlash } from "@phosphor-i
 import { createUser } from "./userDb";
 import type { LocalUser } from "@/types";
 import { sfx } from "./sfx";
+import { useAppVersion } from "@/hooks/useAppVersion";
 
 const LBL_TITLE = "Buat Profil Pengguna";
 const LBL_SUBTITLE_PREFIX = "Anda akan menjadi administrator untuk";
@@ -37,6 +38,7 @@ interface CreateUserProfileProps {
 
 export default function CreateUserProfile({ cooperativeId, cooperativeName, onComplete }: CreateUserProfileProps) {
   const { t } = useTranslation();
+  const appVersion = useAppVersion();
   const [name, setName] = useState("");
   const [role, setRole] = useState<"admin" | "operator" | "pengawas">("admin");
   const [pin, setPin] = useState("");
@@ -207,7 +209,7 @@ export default function CreateUserProfile({ cooperativeId, cooperativeName, onCo
           {creating ? <span className="animate-pulse">{LBL_SAVING}</span> : <>{LBL_START}</>}
         </Button>
 
-        <p className="text-xxs text-slate-600 text-center">{t("splash.version")}</p>
+        <p className="text-xxs text-slate-600 text-center">{t("splash.version", { version: appVersion })}</p>
       </div>
     </div>
   );

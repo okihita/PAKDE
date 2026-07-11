@@ -29,6 +29,7 @@ import CampaignBriefingDialog from "./CampaignBriefingDialog";
 import DirectionalTransition, { type SwapDir } from "./DirectionalTransition";
 import { seedDemoCooperativeAtLevel, isDemoSeeded, type DemoLevel } from "@/db/seed-demo";
 import type { UpdaterApi } from "@/hooks/useUpdater";
+import { useAppVersion } from "@/hooks/useAppVersion";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -59,6 +60,7 @@ interface ProfileSelectProps {
 
 export default function ProfileSelect({ onProfileSelect, onDbError, updater }: ProfileSelectProps) {
   const { t } = useTranslation();
+  const appVersion = useAppVersion();
   const [devResult, setDevResult] = useState<{ open: boolean; ok: boolean; message: string }>({
     open: false,
     ok: true,
@@ -618,7 +620,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError, updater }: P
 
       {/* Bottom: Footer */}
       <div className="relative z-10 flex flex-col items-center pb-8 space-y-1.5 animate-in fade-in duration-500">
-        <span className="text-xxs text-slate-500">{t("splash.version")}</span>
+        <span className="text-xxs text-slate-500">{t("splash.version", { version: appVersion })}</span>
 
         {/* Update entry — visible on the title screen (no login required) */}
         <div className="flex flex-col items-center gap-1.5">

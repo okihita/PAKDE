@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { UserCheck, Key, WarningCircle, ArrowLeft, Eye, EyeSlash } from "@phosphor-icons/react";
 import { getUsersByCooperativeId, validatePin } from "./userDb";
 import type { LocalUser } from "@/types";
+import { useAppVersion } from "@/hooks/useAppVersion";
 
 const LBL_LOADING = "Memuat...";
 const LBL_NO_USERS = "Tidak ada pengguna terdaftar";
@@ -25,6 +26,7 @@ interface UserSignInProps {
 
 export default function UserSignIn({ cooperativeId, cooperativeName, onSuccess, onBack }: UserSignInProps) {
   const { t } = useTranslation();
+  const appVersion = useAppVersion();
   const [users, setUsers] = useState<LocalUser[]>([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [pin, setPin] = useState("");
@@ -189,7 +191,7 @@ export default function UserSignIn({ cooperativeId, cooperativeName, onSuccess, 
           {LBL_BACK}
         </Button>
 
-        <p className="text-xxs text-slate-600 text-center">{t("splash.version")}</p>
+        <p className="text-xxs text-slate-600 text-center">{t("splash.version", { version: appVersion })}</p>
       </div>
     </div>
   );

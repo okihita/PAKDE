@@ -39,7 +39,7 @@
     "title": "PAKDE",
     "subtitle": "SQLite Local Node Initialization",
     "status": ["Menyiapkan database lokal…", "Memuat pengaturan…", "Menyiapkan antarmuka…"],
-    "version": "VER 0.5.0 • SAK EP COMPLIANT"
+    "version": "VER {{version}} • SAK EP COMPLIANT"
   },
   "dbError": {
     "title": "Koneksi Database Gagal",
