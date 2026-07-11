@@ -2,17 +2,17 @@ import "./Leveling.css";
 import { useTranslation } from "react-i18next";
 import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { getActiveCoopId } from "@/db/active-coop";
-import { getTierBand, XP_SOURCES } from "@/data/xp-core";
+import { getTierBand } from "@/data/xp-core";
+import { getErlForTier } from "@/data/readiness";
 import XpFeed from "./XpFeed";
-import { TrophyIcon, StarIcon, LockIcon } from "@phosphor-icons/react";
+import { TrophyIcon, LockIcon } from "@phosphor-icons/react";
 
 interface Props {
   xp?: number;
 }
 
-/** The real, wired XP sources — rendered so the menu can never lie about
- *  what raises XP. Derived from `XP_SOURCES` (the single source of truth). */
-const XP_ACTIONS = Object.values(XP_SOURCES).map((s) => ({ xp: s.xp, labelEn: s.labelEn, labelId: s.labelId }));
+/** Static framework abbreviations for the ERL anchor panel (same in en/id). */
+const ERL_LABELS = { erl: "ERL", irl: "IRL", trlMrl: "TRL·MRL", cmm: "CMM" } as const;
 
 function LevelCard({
   level,
@@ -33,6 +33,7 @@ function LevelCard({
   const isUnlocked = xp >= level.minXp;
   const currentLevel = getCurrentLevel(xp);
   const isCurrent = currentLevel.id === level.id;
+  const erl = getErlForTier(level.tier);
 
   return (
     <div
@@ -99,22 +100,29 @@ function LevelCard({
           </div>
         </div>
 
-        {/* Always-visible XP actions */}
-        <div className="banner__actions">
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <StarIcon className="h-3 w-3 text-white" />
-            <span className="text-xxxs font-mono font-bold uppercase tracking-wider text-white/80">
-              {t("leveling.earnXp")}
+        {/* ERL knowledge base — how this tier maps to ERL 1–9 & anchor frameworks */}
+        <div className="banner__erl">
+          <div className="banner__erl-head">
+            <span className="banner__erl-badge">
+              {ERL_LABELS.erl} {erl.level}
             </span>
+            <span className="banner__erl-name">{isId ? erl.nameId : erl.nameEn}</span>
           </div>
-          <ul className="space-y-1">
-            {XP_ACTIONS.map((a, i) => (
-              <li key={i} className="flex items-center gap-2 text-xxs text-white/85">
-                <span className="font-mono font-bold shrink-0 text-white">+{a.xp}</span>
-                <span className="leading-tight">{isId ? a.labelId : a.labelEn}</span>
-              </li>
-            ))}
+          <ul className="banner__erl-anchors">
+            <li>
+              <span className="banner__erl-key">{ERL_LABELS.irl}</span>
+              <span className="banner__erl-val">{erl.irl}</span>
+            </li>
+            <li>
+              <span className="banner__erl-key">{ERL_LABELS.trlMrl}</span>
+              <span className="banner__erl-val">{erl.trlMrl}</span>
+            </li>
+            <li>
+              <span className="banner__erl-key">{ERL_LABELS.cmm}</span>
+              <span className="banner__erl-val">{erl.cmm}</span>
+            </li>
           </ul>
+          <p className="banner__erl-desc">{isId ? erl.descId : erl.descEn}</p>
         </div>
       </div>
     </div>
