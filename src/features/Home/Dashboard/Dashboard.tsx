@@ -57,7 +57,11 @@ function useTodoList(key: string, defaults: Todo[] = []) {
   };
   const doneCount = items.filter((t) => t.done).length;
 
-  return { items, addItem, toggleItem, removeDone, doneCount };
+  // Display view: undone first (in stored order), done pushed to the bottom.
+  // Non-destructive — the stored array keeps manual order within each group.
+  const sortedItems = [...items.filter((t) => !t.done), ...items.filter((t) => t.done)];
+
+  return { items, sortedItems, addItem, toggleItem, removeDone, doneCount };
 }
 
 function useNewsRead() {
@@ -326,7 +330,7 @@ export default function Dashboard({ healthScore = 0, xp = 0 }: { healthScore?: n
             {activeList.items.length === 0 && (
               <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.noTasks")}</p>
             )}
-            {activeList.items.map((todo) => (
+            {activeList.sortedItems.map((todo) => (
               <div
                 key={todo.id}
                 className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-secondary cursor-pointer group"
