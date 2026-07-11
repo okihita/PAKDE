@@ -109,12 +109,13 @@ export async function seedDemoCooperative(): Promise<void> {
 export async function clearDemoCooperative(): Promise<void> {
   const reg = await getRegistryDb();
 
+  // Drop any cached connection FIRST so the .db file is not locked on Windows.
+  await invalidateCoopDb(DEMO_COOP.id);
+
   // Delete the demo coop's data file directly (children are inside it).
   const dataDir = await appDataDir();
   const coopFile = await join(dataDir, "coops", `${DEMO_COOP.id}.db`);
   if (await exists(coopFile)) await remove(coopFile);
-  // Drop any cached connection so the re-seed re-opens a fresh file.
-  await invalidateCoopDb(DEMO_COOP.id);
 
   // Drop the registry row (no-op if absent).
   await reg.execute("DELETE FROM cooperatives WHERE id = ?", [DEMO_COOP.id]);
