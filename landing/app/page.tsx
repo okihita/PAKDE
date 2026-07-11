@@ -1,4 +1,5 @@
 import Reveal from "./reveal";
+import InstallGuide from "./install-guide";
 
 export default function HomePage() {
   return (
@@ -490,24 +491,14 @@ function Download() {
                 {/* Windows Installation Steps */}
                 <div className="mt-8 border-t border-slate-800/80 pt-6">
                   <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Langkah Instalasi:</h4>
-                  <ol className="list-decimal list-inside space-y-2.5 text-xs text-slate-500">
-                    <li>
-                      <span className="text-slate-400">Unduh installer</span> dengan mengklik tombol di bawah.
-                    </li>
-                    <li>
-                      <span className="text-slate-400">Jalankan file `.exe`</span> hasil unduhan.
-                    </li>
-                    <li>
-                      Jika muncul peringatan Windows SmartScreen (*"Windows protected your PC"*), klik{" "}
-                      <span className="text-slate-300 font-medium">"More info"</span> lalu pilih{" "}
-                      <span className="text-emerald-400 font-medium">"Run anyway"</span>.
-                    </li>
-                  </ol>
+                  <InstallGuide className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 transition-colors hover:text-emerald-300">
+                    Lihat panduan instalasi →
+                  </InstallGuide>
                 </div>
               </div>
               <div className="mt-8">
                 <a
-                  href="https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.1/PAKDE_1.0.1_x64-setup.exe"
+                  href="https://github.com/okihita/PAKDE-tauri/releases/latest"
                   className="group/btn relative block overflow-hidden rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 hover:bg-emerald-500 transition-colors"
                 >
                   <span className="absolute inset-y-0 left-0 w-1/3 -skew-x-12 bg-white/20 blur-md group-hover/btn:animate-shine" />
@@ -537,29 +528,14 @@ function Download() {
                 {/* macOS Installation Steps */}
                 <div className="mt-8 border-t border-slate-800/80 pt-6">
                   <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Langkah Instalasi:</h4>
-                  <ol className="list-decimal list-inside space-y-2.5 text-xs text-slate-500">
-                    <li>
-                      <span className="text-slate-400">Unduh file `.dmg`</span> dengan mengklik tombol di bawah.
-                    </li>
-                    <li>
-                      Buka file `.dmg` dan <span className="text-slate-400">tarik ikon PAKDE</span> ke dalam folder{" "}
-                      <span className="text-slate-300">Applications</span>.
-                    </li>
-                    <li>
-                      Bypass Gatekeeper: <span className="text-slate-300 font-medium">Klik kanan</span> aplikasi di
-                      Applications, pilih <span className="text-slate-300 font-medium">Open</span>, lalu konfirmasi{" "}
-                      <span className="text-emerald-400 font-medium">Open</span>. (Atau jalankan{" "}
-                      <code className="bg-slate-950 px-1 py-0.5 rounded text-red-400 text-xxs font-mono">
-                        xattr -cr /Applications/PAKDE.app
-                      </code>{" "}
-                      di Terminal).
-                    </li>
-                  </ol>
+                  <InstallGuide className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 transition-colors hover:text-emerald-300">
+                    Lihat panduan instalasi →
+                  </InstallGuide>
                 </div>
               </div>
               <div className="mt-8">
                 <a
-                  href="https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.1/PAKDE_1.0.1_universal.dmg"
+                  href="https://github.com/okihita/PAKDE-tauri/releases/latest"
                   className="block text-center rounded-lg border border-slate-700 bg-slate-900/50 px-6 py-3 text-sm font-semibold text-slate-300 hover:border-slate-500 hover:text-white transition-colors"
                 >
                   Unduh untuk macOS (.dmg)
