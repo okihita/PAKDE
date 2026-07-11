@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Member } from "@/types";
 import MemberFormDialog from "./MemberFormDialog";
 import MemberDetailDialog from "./MemberDetailDialog";
+import { getCoopDb } from "@/db";
 
 function InsightTile({ label, value, sub, danger }: { label: string; value: string; sub?: string; danger?: boolean }) {
   return (
@@ -30,7 +31,7 @@ function InsightTile({ label, value, sub, danger }: { label: string; value: stri
   );
 }
 
-type SortKey = "id" | "name" | "simpanan" | "outstanding";
+type SortKey = "id" | "name" | "simpanan" | "outstanding" | "shu";
 
 function SortableHeader({
   label,
@@ -158,6 +159,44 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
   const totalSimpananMember = (mbr: Member) =>
     (mbr.savings_pokok || 0) + (mbr.savings_wajib || 0) + (mbr.savings_sukarela || 0);
 
+  // ── SHU (Sisa Hasil Usaha) ──
+  // Jasa modal: 25% of net coop surplus, distributed proportionally to each
+  // member's pokok + wajib savings. (Per RUU Koperasi; jasa usaha layer TBD.)
+  const [shuPool, setShuPool] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const db = await getCoopDb();
+        const rows = await db.select<Array<{ r: number; e: number }>>(
+          `SELECT
+            COALESCE(SUM(CASE WHEN type = 'pendapatan' AND is_active = 1 THEN balance ELSE 0 END), 0) as r,
+            COALESCE(SUM(CASE WHEN type = 'beban' AND is_active = 1 THEN balance ELSE 0 END), 0) as e
+          FROM coa_accounts`,
+        );
+        const gross = Math.max(0, rows[0].r - rows[0].e);
+        setShuPool(Math.round(gross * 0.25)); // 25% jasa modal portion
+      } catch {
+        /* non-critical */
+      }
+    })();
+  }, [m.membersList]);
+
+  const totalPokokWajib = useMemo(
+    () => m.membersList.reduce((s, mbr) => s + (mbr.savings_pokok || 0) + (mbr.savings_wajib || 0), 0),
+    [m.membersList],
+  );
+
+  const shuJatah = useMemo(() => {
+    if (totalPokokWajib === 0 || shuPool === 0) return {} as Record<string, number>;
+    const map: Record<string, number> = {};
+    for (const mbr of m.membersList) {
+      const pokokWajib = (mbr.savings_pokok || 0) + (mbr.savings_wajib || 0);
+      map[mbr.id ?? ""] = Math.round((pokokWajib / totalPokokWajib) * shuPool);
+    }
+    return map;
+  }, [m.membersList, shuPool, totalPokokWajib]);
+
   const displayMembers = useMemo(() => {
     const dir = sortDir === "asc" ? 1 : -1;
     return [...m.filteredMembers].sort((a, b) => {
@@ -177,10 +216,13 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
         case "outstanding":
           cmp = a.loan_outstanding - b.loan_outstanding;
           break;
+        case "shu":
+          cmp = (shuJatah[a.id ?? ""] ?? 0) - (shuJatah[b.id ?? ""] ?? 0);
+          break;
       }
       return cmp * dir;
     });
-  }, [m.filteredMembers, m.memberSequence, sortKey, sortDir]);
+  }, [m.filteredMembers, m.memberSequence, sortKey, sortDir, shuJatah]);
 
   const pagedMembers = useMemo(
     () => displayMembers.slice((m.page - 1) * m.pageSize, m.page * m.pageSize),
@@ -324,12 +366,19 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                     align="right"
                     onClick={() => toggleSort("outstanding")}
                   />
+                  <SortableHeader
+                    label={t("members.tableHeaders.shu")}
+                    active={sortKey === "shu"}
+                    dir={sortDir}
+                    align="right"
+                    onClick={() => toggleSort("shu")}
+                  />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {displayMembers.length === 0 ? (
                   <TableRow className="border-border">
-                    <TableCell colSpan={4} className="text-center py-8 text-muted-foreground text-xs">
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground text-xs">
                       {t("members.tableHeaders.noData")}
                     </TableCell>
                   </TableRow>
@@ -355,6 +404,9 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                         {fmt(totalSimpananMember(mbr))}
                       </TableCell>
                       <TableCell className="text-xxs text-danger text-right">{fmt(mbr.loan_outstanding)}</TableCell>
+                      <TableCell className="text-xxs text-success text-right">
+                        {fmt(shuJatah[mbr.id ?? ""] ?? 0)}
+                      </TableCell>
                     </TableRow>
                   ))
                 )}

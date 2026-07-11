@@ -220,7 +220,8 @@
       "membership": "Keanggotaan",
       "region": "Desa / Kec.",
       "simpanan": "Total Simpanan",
-      "outstanding": "Outstanding",
+      "outstanding": "Piutang",
+      "shu": "Jatah SHU",
       "action": "Aksi",
       "noData": "Tidak ada data anggota.",
       "pagination": {
