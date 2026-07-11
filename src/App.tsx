@@ -487,77 +487,83 @@ function AppContent() {
           rankingUnlocked={isTabUnlocked("ranking", coopProfile?.xp ?? 0)}
         />
 
-        <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6 brand-scroll">
-          {activeTab === "home" && (
-            <>
-              {/* ── User-profile top strip (Beranda only, inside content) ── */}
-              <TopBar
-                activeTab={activeTab}
-                onNavigate={(tab) => {
-                  if (tab === "settings" || tab === "home") setActiveTab(tab);
-                  else guardedSetActiveTab(tab);
-                }}
-                currentUser={currentUser}
-                appTheme={appTheme}
-                onThemeToggle={() => setAppTheme((t) => (t === "dark" ? "light" : "dark"))}
-                onSwitchProfile={requestSwitchProfile}
-                onQuit={() => setShowQuitConfirm(true)}
-              />
-
-              {/* ── Critical alert banner: below the strip, before content ── */}
-              {ewsAlerts.filter((a) => a.level === "critical").length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => guardedSetActiveTab("home")}
-                  className="w-full mt-4 mb-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-danger/10 border border-danger/30 text-left hover:bg-danger/15 transition-colors"
-                >
-                  <WarningIcon className="h-4 w-4 text-danger shrink-0 animate-pulse" />
-                  <span className="text-xxs font-bold text-danger">
-                    {t("sidebar.criticalAlerts", { count: ewsAlerts.filter((a) => a.level === "critical").length })}
-                  </span>
-                  <span className="text-xxs text-danger/70 ml-auto">{LBL_ALERT_ATTENTION} &rarr;</span>
-                </button>
-              )}
-
-              <Dashboard healthScore={coopProfile?.health_score ?? 0} xp={coopProfile?.xp ?? 0} />
-            </>
-          )}
-          {activeTab === "statistics" && <Statistics coopProfile={coopProfile} />}
-          {activeTab === "ranking" && <Ranking ranking={ranking} onGoSync={() => guardedSetActiveTab("sync")} />}
-          {activeTab === "leveling" && <Leveling xp={coopProfile?.xp ?? 0} />}
-          {activeTab === "units" && <Units onTabChange={setActiveTab} />}
-          {activeTab === "asetFisik" && <Assets />}
-          {activeTab === "sales" && <Sales />}
-          {activeTab === "development" && <Development onTabChange={setActiveTab} />}
-          {activeTab === "learn" && <Learn />}
-          {activeTab === "anggota" && <Members onMembersChanged={refreshMemberCount} />}
-          {activeTab === "kegiatan" && <CreateEvent coopId={coopProfile?.id ?? getActiveCoopId()} />}
-          {activeTab === "dampak" && <Dampak />}
-          {activeTab === "accounting" && (
-            <Accounting
-              financeTier={financeTier}
-              onTierChange={(t) => {
-                setFinanceTier(t);
-                localStorage.setItem("pakde-finance-tier", t);
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          {/* ── Persistent top bar: profile, sync, theme, settings, quit (all tabs) ── */}
+          <div className="pt-4 shrink-0">
+            <TopBar
+              activeTab={activeTab}
+              onNavigate={(tab) => {
+                if (tab === "settings" || tab === "home") setActiveTab(tab);
+                else guardedSetActiveTab(tab);
               }}
-            />
-          )}
-          {activeTab === "feasibility" && <Feasibility />}
-          {activeTab === "hibah" && <Hibah />}
-          {activeTab === "sync" && <Sync />}
-          {activeTab === "settings" && (
-            <Settings
-              coopProfile={coopProfile}
-              setCoopProfile={setCoopProfile}
-              fontSizeSetting={fontSizeSetting}
-              setFontSizeSetting={setFontSizeSetting}
+              currentUser={currentUser}
               appTheme={appTheme}
-              setAppTheme={setAppTheme}
-              currentUser={currentUser ? { id: currentUser.id, name: currentUser.name, role: currentUser.role } : null}
+              onThemeToggle={() => setAppTheme((t) => (t === "dark" ? "light" : "dark"))}
               onSwitchProfile={requestSwitchProfile}
+              onQuit={() => setShowQuitConfirm(true)}
             />
+          </div>
+
+          {/* ── Critical alert banner: global, below the top bar ── */}
+          {ewsAlerts.filter((a) => a.level === "critical").length > 0 && (
+            <div className="px-6 pt-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => guardedSetActiveTab("home")}
+                className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl bg-danger/10 border border-danger/30 text-left hover:bg-danger/15 transition-colors"
+              >
+                <WarningIcon className="h-4 w-4 text-danger shrink-0 animate-pulse" />
+                <span className="text-xxs font-bold text-danger">
+                  {t("sidebar.criticalAlerts", { count: ewsAlerts.filter((a) => a.level === "critical").length })}
+                </span>
+                <span className="text-xxs text-danger/70 ml-auto">{LBL_ALERT_ATTENTION} &rarr;</span>
+              </button>
+            </div>
           )}
-        </main>
+
+          <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6 brand-scroll">
+            {activeTab === "home" && (
+              <Dashboard healthScore={coopProfile?.health_score ?? 0} xp={coopProfile?.xp ?? 0} />
+            )}
+            {activeTab === "statistics" && <Statistics coopProfile={coopProfile} />}
+            {activeTab === "ranking" && <Ranking ranking={ranking} onGoSync={() => guardedSetActiveTab("sync")} />}
+            {activeTab === "leveling" && <Leveling xp={coopProfile?.xp ?? 0} />}
+            {activeTab === "units" && <Units onTabChange={setActiveTab} />}
+            {activeTab === "asetFisik" && <Assets />}
+            {activeTab === "sales" && <Sales />}
+            {activeTab === "development" && <Development onTabChange={setActiveTab} />}
+            {activeTab === "learn" && <Learn />}
+            {activeTab === "anggota" && <Members onMembersChanged={refreshMemberCount} />}
+            {activeTab === "kegiatan" && <CreateEvent coopId={coopProfile?.id ?? getActiveCoopId()} />}
+            {activeTab === "dampak" && <Dampak />}
+            {activeTab === "accounting" && (
+              <Accounting
+                financeTier={financeTier}
+                onTierChange={(t) => {
+                  setFinanceTier(t);
+                  localStorage.setItem("pakde-finance-tier", t);
+                }}
+              />
+            )}
+            {activeTab === "feasibility" && <Feasibility />}
+            {activeTab === "hibah" && <Hibah />}
+            {activeTab === "sync" && <Sync />}
+            {activeTab === "settings" && (
+              <Settings
+                coopProfile={coopProfile}
+                setCoopProfile={setCoopProfile}
+                fontSizeSetting={fontSizeSetting}
+                setFontSizeSetting={setFontSizeSetting}
+                appTheme={appTheme}
+                setAppTheme={setAppTheme}
+                currentUser={
+                  currentUser ? { id: currentUser.id, name: currentUser.name, role: currentUser.role } : null
+                }
+                onSwitchProfile={requestSwitchProfile}
+              />
+            )}
+          </main>
+        </div>
       </div>
 
       {/* Quit confirmation dialog (main view). Mirrors the title-screen quit

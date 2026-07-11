@@ -23,23 +23,25 @@ export default function TopBar({
 }: TopBarProps) {
   const { t } = useTranslation();
 
-  const ctrlBtn = "p-1.5 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground";
+  const ctrlBtn = "p-2 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground";
 
   return (
-    <div className="bg-sidebar border-b border-border flex items-center justify-end gap-1 px-4 h-12 shrink-0 select-none print:hidden z-40 relative">
-      {/* ── Session controls ── */}
-      <div className="flex items-center gap-0.5">
+    <div className="bg-sidebar border-b border-border flex items-center justify-end gap-1 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
+      {/* ── Preferences ── */}
+      <div className="flex items-center gap-1">
         <button
           onClick={() => onNavigate("settings")}
-          className={`${ctrlBtn} ${activeTab === "settings" ? "text-foreground bg-sidebar-ring" : ""}`}
+          aria-label={t("sidebar.nav.settings")}
           title={t("sidebar.nav.settings")}
+          className={`${ctrlBtn} ${activeTab === "settings" ? "text-foreground bg-sidebar-ring" : ""}`}
         >
           <Gear className="h-4 w-4" />
         </button>
         <button
           onClick={onThemeToggle}
-          className={ctrlBtn}
+          aria-label={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           title={appTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          className={ctrlBtn}
         >
           {appTheme === "dark" ? (
             <SunIcon className="h-4 w-4 hover:text-warning transition-colors" />
@@ -47,25 +49,21 @@ export default function TopBar({
             <MoonIcon className="h-4 w-4 hover:text-info transition-colors" />
           )}
         </button>
-        <button
-          onClick={onSwitchProfile}
-          className={`${ctrlBtn} hover:text-danger`}
-          title={t("profileSelect.switchProfile")}
-        >
-          <SignOut className="h-4 w-4" />
-        </button>
-        <button
-          onClick={onQuit}
-          className="p-1.5 rounded-lg hover:bg-danger/10 transition-colors shrink-0 text-muted-foreground hover:text-danger"
-          title={LBL_QUIT}
-        >
-          <XCircle className="h-4 w-4" />
-        </button>
       </div>
 
-      <span className="h-6 w-px bg-border mx-1 shrink-0" />
+      <span className="h-6 w-px bg-border mx-2 shrink-0" />
 
-      {/* ── User profile ── */}
+      {/* ── Primary action + identity anchor ── */}
+      <button
+        onClick={() => onNavigate("sync")}
+        aria-label={t("sidebar.nav.sync")}
+        title={t("sidebar.nav.sync")}
+        className={`${ctrlBtn} hover:text-info ${activeTab === "sync" ? "text-foreground bg-sidebar-ring" : ""}`}
+      >
+        <CloudCheck className="h-4 w-4" />
+      </button>
+
+      {/* ── User profile (near-right anchor) ── */}
       <div className="flex items-center gap-2.5 shrink-0">
         <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center ring-1 ring-brand/30">
           <UserCheck className="h-3.5 w-3.5 text-success" />
@@ -76,9 +74,27 @@ export default function TopBar({
         </div>
       </div>
 
-      <button onClick={() => onNavigate("sync")} className={`${ctrlBtn} hover:text-info`} title={t("sidebar.nav.sync")}>
-        <CloudCheck className="h-4 w-4" />
-      </button>
+      <span className="h-6 w-px bg-border mx-2 shrink-0" />
+
+      {/* ── Session exit ── */}
+      <div className="flex items-center gap-1">
+        <button
+          onClick={onSwitchProfile}
+          aria-label={t("profileSelect.switchProfile")}
+          title={t("profileSelect.switchProfile")}
+          className={`${ctrlBtn} hover:text-danger`}
+        >
+          <SignOut className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onQuit}
+          aria-label={LBL_QUIT}
+          title={LBL_QUIT}
+          className="p-2 rounded-lg hover:bg-danger/10 transition-colors shrink-0 text-muted-foreground hover:text-danger"
+        >
+          <XCircle className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 }
