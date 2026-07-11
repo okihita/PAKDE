@@ -50,8 +50,8 @@ function LevelCard({
       {/* Large, faint downward-chevron watermark spanning the banner */}
       <div className="banner__chevron" aria-hidden="true">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="banner__chevron-svg">
-          <path d="M0 6 L50 38 L100 6" />
-          <path d="M0 44 L50 76 L100 44" />
+          <path d="M0 4 L50 34 L100 4" />
+          <path d="M0 54 L50 84 L100 54" />
         </svg>
       </div>
 

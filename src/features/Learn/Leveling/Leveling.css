@@ -67,13 +67,13 @@
 .banner__chevron-svg {
   width: 100%;
   height: auto;
-  color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.05);
 }
 
 .banner__chevron-svg path {
   fill: none;
   stroke: currentColor;
-  stroke-width: 9;
+  stroke-width: 40;
   stroke-linecap: butt;
   stroke-linejoin: miter;
   vector-effect: non-scaling-stroke;
