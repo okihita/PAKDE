@@ -1,3 +1,29 @@
+/* ── Leveling page ────────────────────────────────────────────────── */
+
+/* Persistent, always-visible horizontal scrollbar for the banner row */
+.leveling-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.leveling-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.leveling-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.leveling-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.45);
+  border-radius: 9999px;
+}
+
+.leveling-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
 /* ── Leveling banners: tall medieval kingdom pennants ──────────────── */
 
 .banner {
@@ -24,6 +50,16 @@
     color-mix(in srgb, var(--banner) 82%, #000 18%),
     color-mix(in srgb, var(--banner) 62%, #000 38%)
   );
+}
+
+/* Decorative downward chevrons near the tail */
+.banner__chevron {
+  position: absolute;
+  left: 50%;
+  bottom: 3rem;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
 }
 
 .banner:hover {

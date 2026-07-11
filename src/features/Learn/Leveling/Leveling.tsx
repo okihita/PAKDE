@@ -4,7 +4,7 @@ import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data
 import { getActiveCoopId } from "@/db/active-coop";
 import { getTierBand, XP_SOURCES } from "@/data/xp-core";
 import XpFeed from "./XpFeed";
-import { TrophyIcon, StarIcon, LockIcon } from "@phosphor-icons/react";
+import { TrophyIcon, StarIcon, LockIcon, CaretDoubleDownIcon } from "@phosphor-icons/react";
 
 interface Props {
   xp?: number;
@@ -46,6 +46,11 @@ function LevelCard({
     >
       {/* Color fill — sits 3px inside the gold outline */}
       <div className="banner__field" />
+
+      {/* Decorative downward chevrons near the tail */}
+      <div className="banner__chevron" aria-hidden="true">
+        <CaretDoubleDownIcon className="h-4 w-4" weight="bold" />
+      </div>
 
       {/* Top finial — the ring the banner hangs from */}
       <div className="banner__finial">
@@ -122,7 +127,7 @@ export default function Leveling({ xp = 0 }: Props) {
   return (
     <div className="flex-1 overflow-auto p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center shrink-0">
           <TrophyIcon className="h-5 w-5 text-warning" />
         </div>
@@ -182,7 +187,7 @@ export default function Leveling({ xp = 0 }: Props) {
       </div>
 
       {/* Level banners — single horizontal row, scrollable */}
-      <div className="-mx-6 px-6 pt-6 pb-4 flex gap-4 overflow-x-auto snap-x snap-mandatory">
+      <div className="leveling-scroll -mx-6 px-6 pt-6 pb-6 flex gap-4 overflow-x-scroll snap-x snap-mandatory">
         {LEVELS.map((level: LevelDef) => (
           <LevelCard key={level.id} level={level} lang={i18n.language} t={t} xp={xp} />
         ))}
