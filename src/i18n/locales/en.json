@@ -560,7 +560,16 @@
       "exportSuccess": "Backup for \"{{name}}\" saved.",
       "exportFailed": "Export failed: {{error}}",
       "importSuccess": "Cooperative \"{{name}}\" restored.",
-      "importFailed": "Import failed: {{error}}"
+      "importFailed": "Import failed: {{error}}",
+      "autoTitle": "Automatic local backup",
+      "autoDesc": "Silently saves snapshots of this cooperative to a private app folder on a schedule, so a crash or bad restore can't wipe its history.",
+      "autoNone": "No snapshots yet — one is taken automatically while the app is open.",
+      "autoCount": "{{count}} snapshots stored locally.",
+      "autoRestore": "Restore snapshot",
+      "autoRestoreTitle": "Restore automatic snapshot",
+      "autoRestoreDesc": "Pick a snapshot to restore. This replaces the current cooperative data.",
+      "autoRestorePick": "Restore",
+      "autoRestoreSuccess": "Restored snapshot for \"{{name}}\"."
     }
   },
   "palette": {

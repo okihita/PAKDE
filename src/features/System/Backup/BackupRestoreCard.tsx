@@ -1,6 +1,12 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ExportIcon, TrayArrowUpIcon, LockIcon } from "@phosphor-icons/react";
+import {
+  ExportIcon,
+  TrayArrowUpIcon,
+  LockIcon,
+  CloudArrowDownIcon,
+  ArrowCounterClockwiseIcon,
+} from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,6 +22,13 @@ import { save, open } from "@tauri-apps/plugin-dialog";
 import { readFile, writeFile } from "@tauri-apps/plugin-fs";
 import { buildBackup } from "./pack";
 import { readEnvelope, decryptAndUnzip, applyBackup, type ParsedBackup } from "./restore";
+import {
+  isAutoBackupEnabled,
+  setAutoBackupEnabled,
+  listAutoBackups,
+  restoreAutoBackup,
+  type AutoBackupEntry,
+} from "./autoBackup";
 
 interface Props {
   coopId: string;
@@ -34,6 +47,61 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
   const toast = useToast();
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState<null | "export-options" | "import-passphrase">(null);
+
+  // Unattended local auto-backup UI
+  const [autoEnabled, setAutoEnabled] = useState(isAutoBackupEnabled());
+  const [autoBackups, setAutoBackups] = useState<AutoBackupEntry[]>([]);
+  const [restoreOpen, setRestoreOpen] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+
+  const refreshAutoBackups = async () => {
+    if (!coopId) return setAutoBackups([]);
+    try {
+      setAutoBackups(await listAutoBackups(coopId));
+    } catch {
+      setAutoBackups([]);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      if (!autoEnabled || !coopId) {
+        setAutoBackups([]);
+        return;
+      }
+      try {
+        const list = await listAutoBackups(coopId);
+        if (!cancelled) setAutoBackups(list);
+      } catch {
+        if (!cancelled) setAutoBackups([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [autoEnabled, coopId]);
+
+  const handleToggleAuto = (value: boolean) => {
+    setAutoEnabled(value);
+    setAutoBackupEnabled(value);
+    if (value) void refreshAutoBackups();
+    else setAutoBackups([]);
+  };
+
+  const handleRestoreAuto = async (entry: AutoBackupEntry) => {
+    setRestoring(true);
+    try {
+      await restoreAutoBackup(entry.path);
+      setRestoreOpen(false);
+      toast.success(t("backup.autoRestoreSuccess", { name: coopName }));
+      setTimeout(() => window.location.reload(), 600);
+    } catch (err) {
+      toast.error(t("backup.importFailed", { error: String(err) }));
+    } finally {
+      setRestoring(false);
+    }
+  };
 
   // Export form
   const [encrypt, setEncrypt] = useState(false);
@@ -150,6 +218,43 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
         </Button>
       </div>
 
+      {/* Automatic local backup */}
+      <div className="mt-3 pt-3 border-t border-border space-y-2">
+        <label className="flex items-start gap-2 text-xs text-foreground cursor-pointer select-none">
+          <input
+            type="checkbox"
+            className="mt-0.5"
+            checked={autoEnabled}
+            disabled={!coopId}
+            onChange={(e) => handleToggleAuto(e.target.checked)}
+          />
+          <span>
+            <span className="flex items-center gap-1.5 font-semibold">
+              <CloudArrowDownIcon className="h-3.5 w-3.5 text-success" />
+              {t("backup.autoTitle")}
+            </span>
+            <span className="block text-xxs text-muted-foreground font-normal mt-0.5">{t("backup.autoDesc")}</span>
+          </span>
+        </label>
+
+        {autoEnabled && (
+          <div className="flex items-center justify-between gap-2 pl-5">
+            <span className="text-xxs text-muted-foreground">
+              {autoBackups.length > 0 ? t("backup.autoCount", { count: autoBackups.length }) : t("backup.autoNone")}
+            </span>
+            <Button
+              variant="outline"
+              disabled={autoBackups.length === 0}
+              onClick={() => setRestoreOpen(true)}
+              className="border-border text-muted-foreground hover:text-foreground text-xxs h-8"
+            >
+              <ArrowCounterClockwiseIcon className="h-3.5 w-3.5 mr-1.5" />
+              {t("backup.autoRestore")}
+            </Button>
+          </div>
+        )}
+      </div>
+
       {/* Export options dialog */}
       <Dialog
         open={mode === "export-options"}
@@ -264,6 +369,44 @@ export default function BackupRestoreCard({ coopId, coopName }: Props) {
               className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs"
             >
               {busy ? t("common.processing") : t("backup.import")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Auto-backup restore dialog */}
+      <Dialog open={restoreOpen} onOpenChange={setRestoreOpen}>
+        <DialogContent className="bg-card border-border text-foreground max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-sm font-bold">
+              <ArrowCounterClockwiseIcon className="h-4 w-4 text-success" />
+              {t("backup.autoRestoreTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-xxs text-muted-foreground">
+              {t("backup.autoRestoreDesc")}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-1.5 max-h-64 overflow-y-auto brand-scroll">
+            {autoBackups.map((entry) => (
+              <button
+                key={entry.path}
+                disabled={restoring}
+                onClick={() => handleRestoreAuto(entry)}
+                className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-border bg-muted/40 hover:bg-muted/70 text-left transition-colors disabled:opacity-50"
+              >
+                <span className="text-xxs font-mono text-foreground">{entry.date.toLocaleString()}</span>
+                <span className="text-xxxs text-muted-foreground font-bold">{t("backup.autoRestorePick")}</span>
+              </button>
+            ))}
+            {autoBackups.length === 0 && (
+              <p className="text-xxs text-muted-foreground text-center py-4">{t("backup.autoNone")}</p>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRestoreOpen(false)} className="text-xs border-border">
+              {t("common.cancel")}
             </Button>
           </DialogFooter>
         </DialogContent>

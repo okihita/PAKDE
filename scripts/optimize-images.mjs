@@ -1,3 +1,4 @@
+// eslint-env node
 // Optimize bundled raster images for release size.
 //
 // Scans public/ for *.png, re-encodes each to WebP (capped width, alpha

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "@/i18n"; // initialize i18next before render
 import { useTranslation } from "react-i18next";
 import {
@@ -42,6 +42,7 @@ import Settings from "@/features/System/Settings/Settings";
 import ProfileSelect from "@/features/System/ProfileSelect/ProfileSelect";
 import { useUpdater } from "@/hooks/useUpdater";
 import BackupFileOpenHandler from "@/features/System/Backup/BackupFileOpenHandler";
+import { takeAutoBackup, isAutoBackupEnabled, AUTO_BACKUP_INTERVAL_MS } from "@/features/System/Backup/autoBackup";
 import CreateUserProfile from "@/features/System/ProfileSelect/CreateUserProfile";
 import UserSignIn from "@/features/System/ProfileSelect/UserSignIn";
 
@@ -188,6 +189,38 @@ function AppContent() {
         console.error(e);
       }
     })();
+  }, [appState, coopProfile?.id]);
+
+  // Unattended local auto-backup: snapshot the active coop on a schedule so a
+  // crash or bad restore can't wipe its history. Reuses the manual-export writer.
+  // Best-effort only — failures are logged and ignored, never surfaced.
+  const autoBackupRunning = useRef(false);
+  useEffect(() => {
+    if (appState !== "main") return;
+    const coopId = coopProfile?.id || getActiveCoopId();
+    if (!coopId || !isAutoBackupEnabled()) return;
+
+    const run = async () => {
+      if (autoBackupRunning.current) return;
+      autoBackupRunning.current = true;
+      try {
+        await takeAutoBackup(coopId);
+      } catch (e) {
+        console.error("auto-backup failed", e);
+      } finally {
+        autoBackupRunning.current = false;
+      }
+    };
+
+    void run();
+    const handle = setInterval(run, AUTO_BACKUP_INTERVAL_MS);
+    // Final snapshot on quit (best-effort; async may not flush on every platform).
+    const onUnload = () => void takeAutoBackup(coopId);
+    window.addEventListener("beforeunload", onUnload);
+    return () => {
+      clearInterval(handle);
+      window.removeEventListener("beforeunload", onUnload);
+    };
   }, [appState, coopProfile?.id]);
 
   const refreshMemberCount = useCallback(async () => {

@@ -560,7 +560,16 @@
       "exportSuccess": "Cadangan \"{{name}}\" tersimpan.",
       "exportFailed": "Ekspor gagal: {{error}}",
       "importSuccess": "Koperasi \"{{name}}\" dipulihkan.",
-      "importFailed": "Impor gagal: {{error}}"
+      "importFailed": "Impor gagal: {{error}}",
+      "autoTitle": "Cadangan otomatis lokal",
+      "autoDesc": "Menyimpan snapshot koperasi ini ke folder privat aplikasi secara berkala, agar kerusakan atau pemulihan yang salah tidak menghapus riwayatnya.",
+      "autoNone": "Belum ada snapshot — satu dibuat otomatis saat aplikasi terbuka.",
+      "autoCount": "{{count}} snapshot tersimpan di lokal.",
+      "autoRestore": "Pulihkan snapshot",
+      "autoRestoreTitle": "Pulihkan snapshot otomatis",
+      "autoRestoreDesc": "Pilih snapshot untuk dipulihkan. Ini menggantikan data koperasi saat ini.",
+      "autoRestorePick": "Pulihkan",
+      "autoRestoreSuccess": "Snapshot \"{{name}}\" dipulihkan."
     }
   },
   "palette": {

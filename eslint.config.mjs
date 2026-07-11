@@ -16,6 +16,7 @@ export default tseslint.config(
       "src-tauri/target/",
       "src/components/ui/", // shadcn/ui generated code
       "landing/",
+      "hackathon_data/", // datasets + vendored Python venv, not app source
     ],
   },
 
@@ -77,6 +78,20 @@ export default tseslint.config(
 
       // React quality
       "react-hooks/exhaustive-deps": "warn",
+    },
+  },
+
+  // ── Build/utility scripts (Node, not app source) ────────────────
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        console: "readonly",
+        __dirname: "readonly",
+        module: "readonly",
+        require: "readonly",
+      },
     },
   },
 
