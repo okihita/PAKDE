@@ -40,6 +40,12 @@ export interface RepoOptions {
   /** DB connection provider. Defaults to the active cooperative DB. */
   dbProvider?: DbProvider;
   /**
+   * Name of the primary-key column. Defaults to `"id"`, but some tables use a
+   * different key (e.g. `simpanan_anggota.simpanan_ref`, `coa_accounts.code`),
+   * and the generic CRUD must target the real column.
+   */
+  idColumn?: string;
+  /**
    * Column stamped on insert. Pass `false` for tables without one
    * (e.g. `categories`). Defaults to `"created_at"`.
    */
@@ -58,7 +64,7 @@ export interface RepoOptions {
  * so every write shares the same clock convention.
  */
 export function createRepository<T extends object>(table: string, options: RepoOptions = {}): Repository<T> {
-  const { dbProvider = getDb, createdAt = "created_at", updatedAt = "updated_at" } = options;
+  const { dbProvider = getDb, idColumn = "id", createdAt = "created_at", updatedAt = "updated_at" } = options;
 
   return {
     list: async (where = "") => {
@@ -68,7 +74,7 @@ export function createRepository<T extends object>(table: string, options: RepoO
 
     insert: async (id, columns) => {
       const db = await dbProvider();
-      const cols = ["id"];
+      const cols = [idColumn];
       const placeholders = ["?"];
       const values: unknown[] = [id];
       if (createdAt) {
@@ -91,12 +97,15 @@ export function createRepository<T extends object>(table: string, options: RepoO
       const db = await dbProvider();
       const setParts = Object.keys(patch).map((c) => `${c} = ?`);
       if (updatedAt) setParts.push(`${updatedAt} = datetime('now')`);
-      await db.execute(`UPDATE ${table} SET ${setParts.join(", ")} WHERE id = ?`, [...Object.values(patch), id]);
+      await db.execute(`UPDATE ${table} SET ${setParts.join(", ")} WHERE ${idColumn} = ?`, [
+        ...Object.values(patch),
+        id,
+      ]);
     },
 
     remove: async (id) => {
       const db = await dbProvider();
-      await db.execute(`DELETE FROM ${table} WHERE id = ?`, [id]);
+      await db.execute(`DELETE FROM ${table} WHERE ${idColumn} = ?`, [id]);
     },
 
     select: async <R = unknown>(sql: string, params: unknown[] = []) => {

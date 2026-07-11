@@ -15,12 +15,6 @@ export const isDemoCooperative = (p?: { is_demo?: number } | null): boolean => !
 
 const DEMO_COOP = {
   id: DEMO_COOP_UUID,
-  officers: JSON.stringify({
-    chairman: "Slamet Riyadi",
-    secretary: "Siti Rahmawati",
-    treasurer: "Ahmad Hidayat",
-    supervisor: "Drs. Suparman",
-  }),
   status: "aktif",
   level: "desa",
   category: "serba_usaha",
@@ -56,8 +50,8 @@ export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void
   // registry, tier metadata, and narrative agree. Fall back to tier literals.
   const wil = await resolveWilayah(tier.villageCode);
   await reg.execute(
-    `INSERT INTO cooperatives (id, name, regency, province, village, district, village_code, level, business_units, officers, status, founded_date, category, xp, health_score, rag_status, is_demo)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+    `INSERT INTO cooperatives (id, name, regency, province, village, district, village_code, level, business_units, status, founded_date, category, xp, health_score, rag_status, is_demo)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
     [
       DEMO_COOP.id,
       tier.coopName,
@@ -68,7 +62,6 @@ export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void
       tier.villageCode,
       DEMO_COOP.level,
       units,
-      DEMO_COOP.officers,
       DEMO_COOP.status,
       foundedDate,
       DEMO_COOP.category,
@@ -103,6 +96,10 @@ export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void
 
   // 8. Seed members to match the tier's "Anggota" stat
   await seedDemoMembers(db, tier);
+
+  // 9. Seed the board (pengurus) referencing real demo members — consolidates
+  //    the old free-text officers string. Each position must be an anggota.
+  await seedDemoPengurus(db);
 }
 
 export async function seedDemoCooperative(): Promise<void> {
@@ -423,5 +420,25 @@ async function seedDemoMembers(db: Awaited<ReturnType<typeof getCoopDb>>, tier: 
         [`svn-${id}-${jenis}`, id, jenis, ym, jumlah],
       );
     }
+  }
+}
+
+/**
+ * Seed the board for the demo coop. The first three seeded members become
+ * ketua / sekretaris / bendahara. `pengurus` references real `members` rows,
+ * per cooperative law (pengurus must be anggota).
+ */
+async function seedDemoPengurus(db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> {
+  const board: Array<{ member_id: string; jabatan: "ketua" | "sekretaris" | "bendahara" }> = [
+    { member_id: "mem-demo-0", jabatan: "ketua" },
+    { member_id: "mem-demo-1", jabatan: "sekretaris" },
+    { member_id: "mem-demo-2", jabatan: "bendahara" },
+  ];
+  for (const p of board) {
+    await db.execute(
+      `INSERT INTO pengurus (id, member_id, jabatan, periode, status)
+       VALUES (?, ?, ?, ?, 'aktif')`,
+      [`pgr-demo-${p.jabatan}`, p.member_id, p.jabatan, "2024-2027"],
+    );
   }
 }

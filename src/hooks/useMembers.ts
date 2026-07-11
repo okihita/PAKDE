@@ -1,17 +1,18 @@
 import { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { createRepository, newId } from "@/db";
+import { createRepository, newId, getCoopDb, addColumnIfAbsent } from "@/db";
 import { getActiveCoopId } from "@/db/active-coop";
 import { awardXp, removeMemberXp } from "@/data/xp";
 import { isValidNik } from "@/data/nik";
-import type { Member, Simpanan } from "@/types";
+import type { Jabatan, Member, Simpanan } from "@/types";
 import { useToast } from "@/hooks/useToast";
+import { getMemberJabatanMap, setMemberJabatan } from "@/hooks/usePengurus";
 
 // `members` has no `created_at` column (it uses `registered_at`), so the
 // repository must not auto-stamp one — otherwise INSERT fails with
 // "no such column: created_at".
 const membersRepo = createRepository<Member>("members", { createdAt: false });
-const simpananRepo = createRepository<Simpanan>("simpanan_anggota");
+const simpananRepo = createRepository<Simpanan>("simpanan_anggota", { idColumn: "simpanan_ref" });
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -88,6 +89,9 @@ export function useMembers(onChange?: () => void) {
   const [memberFormType, setMemberFormType] = useState<"add" | "edit">("add");
   const [currentMemberId, setCurrentMemberId] = useState("");
   const [memberFormValues, setMemberFormValues] = useState<Member>(MEMBER_DEFAULT);
+  // Board position assigned to the member being edited/added ("" = none).
+  const [memberFormJabatan, setMemberFormJabatan] = useState<Jabatan | "">("");
+  const [jabatanMap, setJabatanMap] = useState<Record<string, Jabatan>>({});
   const [simpananRows, setSimpananRows] = useState<Simpanan[]>([]);
   const [insights, setInsights] = useState<MemberInsights>(EMPTY_INSIGHTS);
   // Incremented on a duplicate-NIK submit so the form can re-roll its auto-gen seq.
@@ -129,6 +133,9 @@ export function useMembers(onChange?: () => void) {
       const res = await membersRepo.list("ORDER BY name ASC");
       setMembersList(res);
       await loadInsights(res);
+      // Reflect current board assignments (pengurus table) on the roster.
+      const map = await getMemberJabatanMap();
+      setJabatanMap(map);
     } catch (e) {
       console.error(e);
     }
@@ -137,6 +144,7 @@ export function useMembers(onChange?: () => void) {
   const openAddMemberModal = () => {
     setMemberFormType("add");
     setMemberFormValues(MEMBER_DEFAULT);
+    setMemberFormJabatan("");
     setSimpananRows([]);
     setShowMemberModal(true);
   };
@@ -154,6 +162,7 @@ export function useMembers(onChange?: () => void) {
     setMemberFormType("edit");
     setCurrentMemberId(member.id ?? "");
     setMemberFormValues({ ...member });
+    setMemberFormJabatan((member.id && jabatanMap[member.id]) || "");
     if (member.id) void loadSimpananForMember(member.id);
     setShowMemberModal(true);
   };
@@ -256,6 +265,11 @@ export function useMembers(onChange?: () => void) {
         await simpananRepo.execute("DELETE FROM simpanan_anggota WHERE anggota_ref = ?", [currentMemberId]);
       }
 
+      // Lazy schema migration: ensure simpanan_anggota has updated_at before
+      // inserting (initCoopDb may not re-run on hot-reload for a live session).
+      const cdb = await getCoopDb();
+      await addColumnIfAbsent(cdb, "simpanan_anggota", "updated_at", "TEXT");
+
       for (const row of simpananRows) {
         if (!row.jumlah_simpanan) continue;
         await simpananRepo.insert(newId("svn"), {
@@ -267,6 +281,10 @@ export function useMembers(onChange?: () => void) {
           dibayar_pada: row.dibayar_pada,
         });
       }
+
+      // Assign (or clear) this member's board position — consolidates the
+      // pengurus structure into the member record rather than a separate flow.
+      await setMemberJabatan(id, memberFormJabatan || null);
 
       setShowMemberModal(false);
       loadMembersData();
@@ -292,6 +310,13 @@ export function useMembers(onChange?: () => void) {
     try {
       await simpananRepo.execute("DELETE FROM simpanan_anggota WHERE anggota_ref = ?", [member.id ?? ""]);
       await membersRepo.remove(member.id ?? "");
+      // Cascade removes the pengurus row; emit so the Dashboard readiness
+      // quest reflects the change even though no explicit assignment ran.
+      try {
+        await setMemberJabatan(member.id ?? "", null);
+      } catch {
+        /* signal best-effort; ignore */
+      }
       // Revert XP via a negative ledger event (R3); failure here
       // must not mask a successful member deletion.
       try {
@@ -354,6 +379,9 @@ export function useMembers(onChange?: () => void) {
     memberFormType,
     memberFormValues,
     setMemberFormValues,
+    memberFormJabatan,
+    setMemberFormJabatan,
+    jabatanMap,
     nikConflictNonce,
     simpananRows,
     addSimpananRow,

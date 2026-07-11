@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { Member, SimpananJenis, SimpananStatus } from "@/types";
+import type { Jabatan, Member, SimpananJenis, SimpananStatus } from "@/types";
 import type { useMembers } from "@/hooks/useMembers";
 import RegionPicker from "@/features/System/ProfileSelect/RegionPicker";
 import type { WilayahRow } from "@/features/System/ProfileSelect/wilayahDb";
@@ -314,6 +314,26 @@ export default function MemberFormDialog({ m }: { m: MembersHook }) {
                 <SelectContent className="bg-card border-border text-foreground text-xs">
                   <SelectItem value="aktif">{t("members.filterActive")}</SelectItem>
                   <SelectItem value="nonaktif">{t("members.filterInactive")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-muted-foreground font-mono text-xxxs uppercase">
+                {t("pengurus.form.jabatan")}
+              </label>
+              <Select
+                value={m.memberFormJabatan || "none"}
+                onValueChange={(val) => m.setMemberFormJabatan(val === "none" ? "" : (val as Jabatan))}
+              >
+                <SelectTrigger className="w-full bg-input border-border text-xs h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border text-foreground text-xs">
+                  <SelectItem value="none">{t("pengurus.jabatan.none")}</SelectItem>
+                  <SelectItem value="ketua">{t("pengurus.jabatan.ketua")}</SelectItem>
+                  <SelectItem value="sekretaris">{t("pengurus.jabatan.sekretaris")}</SelectItem>
+                  <SelectItem value="bendahara">{t("pengurus.jabatan.bendahara")}</SelectItem>
+                  <SelectItem value="pengawas">{t("pengurus.jabatan.pengawas")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

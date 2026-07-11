@@ -10,7 +10,7 @@
 
 export { initDb } from "./init";
 export { getRegistryDb, initRegistryDb, REGISTRY_SCHEMA_VERSION } from "./registry";
-export { getCoopDb, initCoopDb, getDb, coopDbPath, invalidateCoopDb } from "./coopDb";
+export { getCoopDb, initCoopDb, getDb, coopDbPath, invalidateCoopDb, addColumnIfAbsent } from "./coopDb";
 export {
   createRepository,
   createCoopRepository,

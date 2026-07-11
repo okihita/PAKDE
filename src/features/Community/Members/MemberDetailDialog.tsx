@@ -103,6 +103,11 @@ export default function MemberDetailDialog({ m, member, onClose, onRequestDelete
                 <Row label={t("members.form.labels.memberStatus")}>
                   {member.status === "aktif" ? t("members.filterActive") : t("members.filterInactive")}
                 </Row>
+                <Row label={t("pengurus.form.jabatan")}>
+                  {member.id && m.jabatanMap[member.id]
+                    ? t(`pengurus.jabatan.${m.jabatanMap[member.id]}`)
+                    : t("pengurus.jabatan.none")}
+                </Row>
               </Section>
 
               <Section title={t("members.detail.section.savings")}>

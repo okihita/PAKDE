@@ -1,6 +1,6 @@
 import "./Members.css";
 import { useTranslation } from "react-i18next";
-import { MagnifyingGlassIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, PlusIcon, TrashIcon, CheckCircleIcon, WarningIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -135,6 +135,26 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
   const fmt = (n: number) => `Rp ${Math.round(n).toLocaleString()}`;
   const i: MemberInsights = m.insights;
 
+  // Board readiness: count of members holding an active position (the pengurus
+  // table). Mirrors the Leveling governance quest "Struktur pengurus minimal 3 orang".
+  const activeBoard = Object.keys(m.jabatanMap).length;
+  const readinessMet = activeBoard >= 3;
+
+  // Invert jabatanMap → per-position member lookup for the pengurus panel.
+  const pengurusRoster = useMemo(() => {
+    const blocked: Record<string, { name: string; id: string } | null> = {
+      ketua: null,
+      sekretaris: null,
+      bendahara: null,
+      pengawas: null,
+    };
+    for (const [memberId, jabatan] of Object.entries(m.jabatanMap)) {
+      const mbr = m.membersList.find((x) => x.id === memberId);
+      if (mbr) blocked[jabatan] = { name: mbr.name, id: memberId };
+    }
+    return blocked;
+  }, [m.jabatanMap, m.membersList]);
+
   const totalSimpananMember = (mbr: Member) =>
     (mbr.savings_pokok || 0) + (mbr.savings_wajib || 0) + (mbr.savings_sukarela || 0);
 
@@ -171,6 +191,25 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
       {/* ── Left column: summary KPIs (sticky on desktop) ── */}
       <aside className="lg:w-80 shrink-0 lg:sticky lg:top-6 space-y-3">
+        {/* ── Pengurus roster ── */}
+        <div className="rounded-xl bg-card border border-border p-3 space-y-2">
+          <p className="text-xxs font-bold uppercase tracking-wider text-muted-foreground">{t("pengurus.title")}</p>
+          <div className="space-y-1">
+            {(["ketua", "sekretaris", "bendahara", "pengawas"] as const).map((j) => (
+              <div key={j} className="flex items-center justify-between text-xxs">
+                <span className="text-muted-foreground w-20 shrink-0">{t(`pengurus.jabatan.${j}`)}</span>
+                <span
+                  className={
+                    pengurusRoster[j] ? "text-foreground font-medium truncate ml-1" : "text-muted-foreground/50 italic"
+                  }
+                >
+                  {pengurusRoster[j]?.name ?? t("pengurus.emptySlot")}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
           {t("members.summaryTitle")}
         </h2>
@@ -200,6 +239,18 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
               {t("members.title")}
             </CardTitle>
             <div className="flex items-center gap-2">
+              {/* Readiness chip — reflects the board structure at a glance. */}
+              <div
+                className={`flex items-center gap-1.5 rounded-lg px-2 h-8 border text-xxs font-semibold ${
+                  readinessMet
+                    ? "bg-success/10 border-success/30 text-success"
+                    : "bg-warning/10 border-warning/30 text-warning"
+                }`}
+                title={t("pengurus.readinessHint")}
+              >
+                {readinessMet ? <CheckCircleIcon className="h-3.5 w-3.5" /> : <WarningIcon className="h-3.5 w-3.5" />}
+                <span>{t("pengurus.readiness", { n: activeBoard })}</span>
+              </div>
               <Button
                 onClick={m.openAddMemberModal}
                 className="bg-brand hover:bg-brand text-brand-foreground font-bold text-xs h-8"
@@ -292,7 +343,14 @@ export default function Members({ onMembersChanged }: { onMembersChanged?: () =>
                       <TableCell className="text-xxs text-muted-foreground">
                         {m.memberSequence[mbr.id ?? ""] ?? "-"}
                       </TableCell>
-                      <TableCell className="text-xs text-foreground font-semibold">{mbr.name}</TableCell>
+                      <TableCell className="text-xs font-semibold">
+                        <span className="text-foreground">{mbr.name}</span>
+                        {m.jabatanMap[mbr.id ?? ""] && (
+                          <span className="ml-1.5 inline-flex rounded border border-brand/30 bg-brand/10 px-1 py-0.5 text-xxxs font-semibold text-brand">
+                            {t(`pengurus.jabatan.${m.jabatanMap[mbr.id ?? ""]}`)}
+                          </span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-xxs text-success text-right">
                         {fmt(totalSimpananMember(mbr))}
                       </TableCell>

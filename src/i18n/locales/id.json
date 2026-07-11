@@ -81,7 +81,8 @@
       "sales": "Penjualan & Vendor",
       "storeLayout": "Gedung & Tata Letak",
       "development": "Potensi",
-      "learn": "Belajar & Kuis"
+      "learn": "Belajar & Kuis",
+      "pengurus": "Pengurus"
     },
     "healthScore": "HEALTH SCORE",
     "rag": "RAG",
@@ -1437,5 +1438,43 @@
   },
   "hibah": {
     "placeholder": "Phase 1 placeholder."
+  },
+  "pengurus": {
+    "title": "Struktur Pengurus",
+    "subtitle": "Pengurus & pengawas diambil dari anggota koperasi Anda.",
+    "add": "Tambah Pengurus",
+    "readiness": "Struktur: {n}/3",
+    "readinessHint": "Isi ketua, sekretaris, dan bendahara (min. 3 orang).",
+    "readinessDone": "Struktur pengurus lengkap",
+    "emptySlot": "Belum ditetapkan",
+    "jabatan": {
+      "ketua": "Ketua",
+      "sekretaris": "Sekretaris",
+      "bendahara": "Bendahara",
+      "pengawas": "Pengawas",
+      "none": "—"
+    },
+    "periode": "Periode",
+    "status": {
+      "aktif": "Aktif",
+      "nonaktif": "Nonaktif"
+    },
+    "edit": "Edit",
+    "remove": "Hapus",
+    "selectMember": "Anggota",
+    "selectMemberRequired": "Silakan pilih anggota.",
+    "memberAlreadyAssigned": "Anggota ini sudah menduduki jabatan aktif.",
+    "saveFailed": "Gagal menyimpan: {error}",
+    "deleteFailed": "Gagal menghapus: {error}",
+    "form": {
+      "titleAdd": "Tambah Jabatan",
+      "titleEdit": "Edit Jabatan",
+      "jabatan": "Jabatan",
+      "periode": "Periode (mis. 2024-2027)",
+      "status": "Status",
+      "selectMemberPlaceholder": "Pilih anggota…",
+      "saveAdd": "Tambah",
+      "saveEdit": "Simpan"
+    }
   }
 }

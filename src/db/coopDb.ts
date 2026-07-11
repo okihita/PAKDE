@@ -14,7 +14,7 @@ import { mkdir } from "@tauri-apps/plugin-fs";
 import { getActiveCoopId } from "./active-coop";
 
 const COOPS_DIR = "coops";
-const COOP_SCHEMA_VERSION = 7;
+const COOP_SCHEMA_VERSION = 8;
 
 let coopDirEnsured: Promise<void> | null = null;
 const coopPromises = new Map<string, Promise<Database>>();
@@ -59,7 +59,12 @@ export const getDb = getCoopDb;
  * was partially migrated) would throw `duplicate column name`. This guards
  * against that by checking `PRAGMA table_info` first.
  */
-async function addColumnIfAbsent(db: Database, table: string, column: string, definition: string): Promise<void> {
+export async function addColumnIfAbsent(
+  db: Database,
+  table: string,
+  column: string,
+  definition: string,
+): Promise<void> {
   const cols = await db.select<Array<{ name: string }>>(`PRAGMA table_info(${table});`);
   if (!cols.some((c) => c.name === column)) {
     await db.execute(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition};`);
@@ -157,6 +162,7 @@ export async function initCoopDb(coopId: string): Promise<void> {
         status TEXT DEFAULT 'lunas' CHECK(status IN ('lunas','belum','terlambat')),
         dibayar_pada TEXT,
         created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now')),
         FOREIGN KEY (anggota_ref) REFERENCES members(id) ON DELETE CASCADE
       );
     `);
@@ -395,6 +401,7 @@ export async function initCoopDb(coopId: string): Promise<void> {
         status TEXT DEFAULT 'lunas' CHECK(status IN ('lunas','belum','terlambat')),
         dibayar_pada TEXT,
         created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now')),
         FOREIGN KEY (anggota_ref) REFERENCES members(id) ON DELETE CASCADE
       );
     `);
@@ -446,4 +453,25 @@ export async function initCoopDb(coopId: string): Promise<void> {
       );
     }
   }
+
+  // ── pengurus: board positions, each held by a real member (consolidates the
+  //    old free-text `officers` string). Created outside the version gate with
+  //    IF NOT EXISTS so existing coops pick it up on next launch without a
+  //    forced schema migration. ──
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS pengurus (
+      id TEXT PRIMARY KEY,
+      member_id TEXT NOT NULL,
+      jabatan TEXT NOT NULL CHECK(jabatan IN ('ketua','sekretaris','bendahara','pengawas')),
+      periode TEXT,
+      status TEXT DEFAULT 'aktif' CHECK(status IN ('aktif','nonaktif')),
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
+    );
+  `);
+  await db.execute("CREATE INDEX IF NOT EXISTS idx_pengurus_member ON pengurus(member_id);");
+
+  // ── simpanan_anggota: ensure updated_at exists (added post-v5, repo stamps it) ──
+  await addColumnIfAbsent(db, "simpanan_anggota", "updated_at", "TEXT");
 }

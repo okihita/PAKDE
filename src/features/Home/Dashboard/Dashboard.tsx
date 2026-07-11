@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,8 @@ import CalendarWidget from "./DashboardCalendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getInitialTasksForCoop } from "./dashboardTasks";
 import { getCurrentLevel, type LevelDef } from "@/data/leveling";
+import { countActivePengurus } from "@/hooks/usePengurus";
+import { onPengurusChanged } from "@/lib/pengurusEvents";
 import "./Dashboard.css";
 
 interface Todo {
@@ -166,7 +168,7 @@ function SortableCard({ id, children, className }: { id: string; children: React
 
 const MAIN_QUEST_DONE_KEY = "pakde-mainquest-done";
 
-function useMainQuests(level: LevelDef) {
+function useMainQuests(level: LevelDef, autoDone: Set<string>) {
   const questIds = level.aspects.flatMap((a) => a.quests.map((q) => q.id));
 
   const [doneMap, setDoneMap] = useState<Record<string, boolean>>(() => {
@@ -182,7 +184,10 @@ function useMainQuests(level: LevelDef) {
     localStorage.setItem(MAIN_QUEST_DONE_KEY, JSON.stringify(doneMap));
   }, [doneMap]);
 
-  const items: Todo[] = questIds.map((id) => ({ id, text: id, done: !!doneMap[id] }));
+  // Quests satisfied by live data (e.g. "Struktur pengurus minimal 3 orang"
+  // once at least 3 board positions are filled) are shown done regardless of
+  // the manual toggle — the cooperative genuinely meets the subgoal.
+  const items: Todo[] = questIds.map((id) => ({ id, text: id, done: !!doneMap[id] || autoDone.has(id) }));
   const toggleItem = (id: string) => setDoneMap((m) => ({ ...m, [id]: !m[id] }));
   const removeDone = () =>
     setDoneMap((m) => {
@@ -207,7 +212,33 @@ export default function Dashboard({ healthScore = 0, xp = 0 }: { healthScore?: n
 
   const daily = useTodoList("pakde-todos-daily");
   const weekly = useTodoList("pakde-todos-weekly", taskDefaults.weeklyQuests);
-  const main = useMainQuests(currentLevel);
+
+  // Live readiness: the governance quest "Struktur pengurus minimal 3 orang"
+  // is satisfied once at least 3 board positions are filled. Re-checked on
+  // mount and whenever the Board tab mutates a position (via the shared signal).
+  const [pengurusReady, setPengurusReady] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    const refresh = () =>
+      countActivePengurus()
+        .then((n) => {
+          if (alive) setPengurusReady(n >= 3);
+        })
+        .catch(() => {});
+    refresh();
+    const unsubscribe = onPengurusChanged(() => {
+      if (alive) refresh();
+    });
+    return () => {
+      alive = false;
+      unsubscribe();
+    };
+  }, []);
+  const autoDone = useMemo(
+    () => (pengurusReady ? new Set(["Struktur pengurus minimal 3 orang"]) : new Set<string>()),
+    [pengurusReady],
+  );
+  const main = useMainQuests(currentLevel, autoDone);
   const { readIds, markRead, markAllRead } = useNewsRead();
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [newTask, setNewTask] = useState("");

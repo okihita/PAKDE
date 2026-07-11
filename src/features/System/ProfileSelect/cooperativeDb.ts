@@ -15,10 +15,6 @@ export interface CreateCooperativeInput {
   postalCode: string;
   phone: string;
   email: string;
-  chairman: string;
-  secretary: string;
-  treasurer: string;
-  supervisor: string;
   unitPupuk: boolean;
   unitSimpanPinjam: boolean;
   unitToko: boolean;
@@ -34,13 +30,6 @@ export async function createCooperative(input: CreateCooperativeInput): Promise<
   if (input.unitSimpanPinjam) units.push("unit_simpan_pinjam");
   if (input.unitToko) units.push("unit_toko_desa");
 
-  const officersJson = JSON.stringify({
-    chairman: input.chairman.trim(),
-    secretary: input.secretary.trim(),
-    treasurer: input.treasurer.trim(),
-    supervisor: input.supervisor.trim(),
-  });
-
   await coopRepo.insert(newId, {
     name: input.name.trim(),
     legal_id: input.legalId.trim() || null,
@@ -54,7 +43,6 @@ export async function createCooperative(input: CreateCooperativeInput): Promise<
     phone: input.phone.trim() || null,
     email: input.email.trim() || null,
     business_units: JSON.stringify(units),
-    officers: officersJson,
     health_score: 10.0,
     rag_status: "Merah",
     xp: 10,

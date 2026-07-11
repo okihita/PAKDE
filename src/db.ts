@@ -6,6 +6,7 @@ export {
   initRegistryDb,
   initCoopDb,
   invalidateCoopDb,
+  addColumnIfAbsent,
   createRepository,
   createCoopRepository,
   createRegistryRepository,

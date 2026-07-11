@@ -176,7 +176,6 @@ export default function Settings({
         phone: coopProfile?.phone,
         email: coopProfile?.email,
         business_units: coopProfile?.business_units,
-        officers: coopProfile?.officers,
       });
       toast.success(t("toast.profileSaveSuccess"));
     } catch (err) {

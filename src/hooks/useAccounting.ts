@@ -12,7 +12,7 @@ import type {
 } from "@/types";
 import { useToast } from "@/hooks/useToast";
 
-const coaRepo = createRepository<CoaAccount>("coa_accounts");
+const coaRepo = createRepository<CoaAccount>("coa_accounts", { idColumn: "code" });
 const journalEntriesRepo = createRepository<JournalEntryRow>("journal_entries");
 const journalLinesRepo = createRepository<JournalLineRow>("journal_lines");
 

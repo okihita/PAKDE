@@ -81,7 +81,8 @@
       "sales": "Sales & Vendor",
       "storeLayout": "Buildings & Layout",
       "development": "Potential",
-      "learn": "Learn & Quiz"
+      "learn": "Learn & Quiz",
+      "pengurus": "Board"
     },
     "healthScore": "HEALTH SCORE",
     "rag": "RAG",
@@ -1437,5 +1438,43 @@
   },
   "hibah": {
     "placeholder": "Phase 1 placeholder."
+  },
+  "pengurus": {
+    "title": "Board of Management",
+    "subtitle": "Pengurus & pengawas are drawn from your members.",
+    "add": "Add Position",
+    "readiness": "Structure: {n}/3",
+    "readinessHint": "Fill ketua, sekretaris, and bendahara (min. 3 people).",
+    "readinessDone": "Board structure complete",
+    "emptySlot": "Not yet assigned",
+    "jabatan": {
+      "ketua": "Chairperson",
+      "sekretaris": "Secretary",
+      "bendahara": "Treasurer",
+      "pengawas": "Supervisor",
+      "none": "—"
+    },
+    "periode": "Term",
+    "status": {
+      "aktif": "Active",
+      "nonaktif": "Inactive"
+    },
+    "edit": "Edit",
+    "remove": "Remove",
+    "selectMember": "Member",
+    "selectMemberRequired": "Please select a member.",
+    "memberAlreadyAssigned": "This member already holds an active position.",
+    "saveFailed": "Failed to save: {error}",
+    "deleteFailed": "Failed to remove: {error}",
+    "form": {
+      "titleAdd": "Add Board Position",
+      "titleEdit": "Edit Board Position",
+      "jabatan": "Position",
+      "periode": "Term (e.g. 2024-2027)",
+      "status": "Status",
+      "selectMemberPlaceholder": "Select a member…",
+      "saveAdd": "Add",
+      "saveEdit": "Save"
+    }
   }
 }

@@ -39,6 +39,19 @@ export interface Member {
   registered_at?: string;
 }
 
+/** Board position a member can hold. Pengawas is kept here too (also an anggota). */
+export type Jabatan = "ketua" | "sekretaris" | "bendahara" | "pengawas";
+
+/** A board position held by a member (consolidates the old free-text `officers`). */
+export interface Pengurus {
+  id?: string;
+  /** FK → members.id. Pengurus MUST be an anggota. */
+  member_id: string;
+  jabatan: Jabatan;
+  periode?: string;
+  status: "aktif" | "nonaktif";
+}
+
 export type SimpananJenis = "pokok" | "wajib" | "sukarela";
 export type SimpananStatus = "lunas" | "belum" | "terlambat";
 
@@ -98,7 +111,6 @@ export interface CooperativeProfile {
   phone: string;
   email: string;
   business_units: string;
-  officers: string;
   logo_path?: string;
   rag_status: string;
   health_score: number;
