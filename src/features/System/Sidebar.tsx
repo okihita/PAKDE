@@ -222,11 +222,11 @@ export default function Sidebar({
         type="button"
         onClick={() => onTabChange("home")}
         className={cn(
-          "flex items-center gap-2 w-full text-left px-4 py-2 rounded-lg text-xxs font-bold uppercase tracking-wider transition-colors",
+          "flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg text-xxs font-bold uppercase tracking-wider transition-colors",
           isActive ? "bg-amber/10 text-amber" : "text-amber/80 hover:bg-secondary hover:text-amber",
         )}
       >
-        <SquaresFour className="h-3.5 w-3.5 shrink-0" />
+        <SquaresFour className="h-4 w-4 shrink-0" />
         <span>{t("sidebar.nav.home")}</span>
       </button>
     );
@@ -239,14 +239,14 @@ export default function Sidebar({
     const a = ACCENT_CLASSES[accent];
 
     const inner = !unlocked ? (
-      <div className="flex items-center gap-3 rounded-lg px-4 py-2 transition-all text-xs font-semibold border-[0.5px] opacity-40 cursor-not-allowed text-muted-foreground border-transparent">
+      <div className="flex items-center gap-3 rounded-lg px-4 py-2 transition-all text-xs font-semibold border opacity-40 cursor-not-allowed text-muted-foreground border-transparent">
         <LockSimple className="h-4 w-4 shrink-0" />
         <span>{item.label}</span>
       </div>
     ) : (
       <div
         className={cn(
-          "flex items-center gap-3 rounded-lg px-4 py-2 cursor-pointer transition-all text-xs font-semibold border-[0.5px]",
+          "flex items-center gap-3 rounded-lg px-4 py-2 cursor-pointer transition-all text-xs font-semibold border",
           isActive ? a.active : "text-muted-foreground hover:bg-secondary hover:text-foreground border-transparent",
         )}
         onClick={() => onTabChange(item.id)}
@@ -273,10 +273,10 @@ export default function Sidebar({
     <aside className="w-72 border-r border-border bg-sidebar flex flex-col print:hidden">
       <div className="flex flex-col flex-1 min-h-0">
         {/* ── Guild Header ── */}
-        <div className="px-5 pt-4 pb-3 border-b border-border space-y-3">
+        <div className="px-3 pt-4 pb-3 border-b border-border space-y-3">
           <div className="rounded-xl bg-card border border-border p-4 space-y-3">
             {/* ── Identity: emblem + name (wraps, never cut off) ── */}
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-success/15 ring-1 ring-brand/30 flex items-center justify-center shrink-0 overflow-hidden">
                 {coopProfile?.logo_path && !logoFailed ? (
                   <img
@@ -293,9 +293,6 @@ export default function Sidebar({
                 <h2 className="text-sm font-bold text-foreground leading-tight break-words">
                   {coopProfile?.name ?? "..."}
                 </h2>
-                {coopProfile?.village && (
-                  <p className="text-xxs text-muted-foreground truncate mt-0.5">{coopProfile.village}</p>
-                )}
               </div>
             </div>
 
@@ -323,7 +320,7 @@ export default function Sidebar({
 
             {/* ── Health — single-row RAG pill ── */}
             {healthScore > 0 && (
-              <div className="flex items-center gap-2 rounded-lg px-2.5 py-1 bg-secondary/40">
+              <div className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 bg-secondary/40 border border-border">
                 <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${rag.dotClass}`} />
                 <span className={`text-xxs font-semibold truncate ${rag.textClass}`}>{t(rag.ratingKey)}</span>
                 <span className={`text-xxs font-mono font-bold shrink-0 ${rag.textClass}`}>{healthScore}%</span>
@@ -337,7 +334,7 @@ export default function Sidebar({
             )}
 
             {/* ── Quick stats — clickable cooperative scorecard ── */}
-            <div className="grid grid-cols-2 gap-2 pt-1">
+            <div className="grid grid-cols-2 gap-2">
               <QuickStat
                 icon={UsersIcon}
                 label={t("sidebar.statMembers")}
@@ -378,8 +375,6 @@ export default function Sidebar({
               />
             </div>
           </div>
-
-          {/* Sync control moved to the TopBar (next to the user profile) */}
         </div>
 
         {/* ── Navigation ── */}

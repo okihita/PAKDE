@@ -21,7 +21,7 @@ export function QuickStat({
 }) {
   const interactive = !!onClick && !disabled;
   const cls = cn(
-    "flex flex-col gap-0.5 rounded-lg bg-secondary/40 px-2 py-1.5 min-w-0 text-left transition-colors",
+    "flex flex-col gap-0.5 rounded-lg bg-secondary/40 px-2.5 py-1.5 min-w-0 text-left transition-colors",
     interactive && "cursor-pointer hover:bg-secondary",
     disabled && "opacity-50 cursor-not-allowed",
     className,
