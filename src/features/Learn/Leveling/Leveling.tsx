@@ -65,9 +65,9 @@ function LevelCard({
       <div className="banner__cap">
         <div className="banner__emblem">
           {isUnlocked ? (
-            <Icon className="h-6 w-6 text-[var(--banner)]" weight="fill" />
+            <Icon className="h-8 w-8 text-[var(--banner)]" weight="fill" />
           ) : (
-            <LockIcon className="h-4 w-4 text-muted-foreground" />
+            <LockIcon className="h-6 w-6 text-muted-foreground" />
           )}
         </div>
       </div>
