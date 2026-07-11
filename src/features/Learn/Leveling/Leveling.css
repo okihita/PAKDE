@@ -52,12 +52,15 @@
   );
 }
 
-/* Decorative downward chevrons under the XP panel */
+/* Large, faint downward-chevron watermark spanning the banner */
 .banner__chevron {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 0.5rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.13);
   pointer-events: none;
 }
 

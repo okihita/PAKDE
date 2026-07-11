@@ -47,6 +47,11 @@ function LevelCard({
       {/* Color fill — sits 3px inside the gold outline */}
       <div className="banner__field" />
 
+      {/* Large, faint downward-chevron watermark spanning the banner */}
+      <div className="banner__chevron" aria-hidden="true">
+        <CaretDoubleDownIcon className="h-44 w-44" weight="bold" />
+      </div>
+
       {/* Top finial — the ring the banner hangs from */}
       <div className="banner__finial">
         <span className="banner__finial-ring" />
@@ -107,11 +112,6 @@ function LevelCard({
               </li>
             ))}
           </ul>
-        </div>
-
-        {/* Decorative downward chevrons */}
-        <div className="banner__chevron" aria-hidden="true">
-          <CaretDoubleDownIcon className="h-5 w-5" weight="bold" />
         </div>
       </div>
     </div>
