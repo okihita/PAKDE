@@ -1,6 +1,8 @@
 # 💼 PAKDE (Pengelolaan dan Akselerasi Koperasi Desa Elektronik)
 
 [![Live Website](https://img.shields.io/badge/Live_Demo-pakde.vercel.app-emerald?style=for-the-badge)](https://pakde.vercel.app)
+[![Download for Windows](https://img.shields.io/badge/Download_for_Windows-EXE-blue?style=for-the-badge&logo=windows)](https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.0/PAKDE_1.0.0_x64-setup.exe)
+[![Download for macOS](https://img.shields.io/badge/Download_for_macOS-DMG-black?style=for-the-badge&logo=apple)](https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.0/PAKDE_1.0.0_universal.dmg)
 [![Tauri](https://img.shields.io/badge/Tauri-2.0-blue?style=for-the-badge&logo=tauri)](https://tauri.app/)
 [![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)](https://react.dev/)
 [![Rust](https://img.shields.io/badge/Rust-2021-orange?style=for-the-badge&logo=rust)](https://www.rust-lang.org/)
@@ -202,4 +204,9 @@ Seluruh aturan hukum koperasi di Indonesia telah diintegrasikan langsung ke dala
 
 ## 🚀 Quickstart & Setup
 
-Please refer to [INSTALLATION.md](INSTALLATION.md) for pre-built desktop installer files (Windows, macOS, and Linux setup instructions) and guidance on running the development environment from source.
+### 📦 Pre-built Installers (v1.0.0)
+*   **[Download for Windows (.exe)](https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.0/PAKDE_1.0.0_x64-setup.exe)**
+*   **[Download for macOS (.dmg)](https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.0/PAKDE_1.0.0_universal.dmg)**
+*   For other targets or versions, see the [GitHub Releases](https://github.com/okihita/PAKDE-tauri/releases) page.
+
+Please refer to [INSTALLATION.md](INSTALLATION.md) for full Windows, macOS, and Linux setup instructions, Gatekeeper workarounds, and guidance on running the development environment from source.
