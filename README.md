@@ -10,6 +10,17 @@
 
 ---
 
+## ⚡ Quickstart
+
+Get up and running with PAKDE immediately:
+
+1. **Download the installer:**
+   * **[Download for Windows (.exe)](https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.0/PAKDE_1.0.0_x64-setup.exe)**
+   * **[Download for macOS (.dmg)](https://github.com/okihita/PAKDE-tauri/releases/download/v1.0.0/PAKDE_1.0.0_universal.dmg)**
+2. **Follow the setup instructions:** Check the [INSTALLATION.md](INSTALLATION.md) for OS-specific steps (such as macOS Gatekeeper workarounds) and building from source.
+
+---
+
 ## 🌐 English Version
 
 > [!IMPORTANT]
