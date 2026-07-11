@@ -42,17 +42,31 @@ PAKDE treats them like a guild leader in an RPG: the app surfaces the next actio
 
 ---
 
-### 🎮 Gamified Quests & Built-in Compliance
+### 🎮 Gamification Pillars & Built-in Compliance
 
 > **Duolingo Streaks + Habitica Quests + TickTick Focus Timers — for Cooperatives.**
 
-Rural managers don't need more complex settings; they need to know *what to do next, right now*. PAKDE translates complex cooperative management into a **Quest Hub**:
+PAKDE is structured around four core gamification pillars designed to make cooperative management engaging, intuitive, and rewarding:
 
-*   **Daily Quests:** Habit-forming micro-tasks ("Assign 3 inventory items to shelf bins").
-*   **Weekly Quests:** Recurring operational tasks ("Log this week's POS sales journal").
-*   **Main Quests:** Milestones that require structural planning ("Reach Level 3 by completing a financial feasibility study").
+#### 1. Demo Exploration (Zero-Friction Onboarding)
+Experience the complete operational suite immediately. Managers can choose between starting fresh or loading pre-seeded demo accounts at various difficulty levels to explore data-rich features.
 
-Every quest card is a **one-click link** that navigates directly to the page and focuses the input. Completing the quest *is* learning the software.
+![Demo Exploration](docs/images/demo-exploration.png)
+
+#### 2. Sense of Direction (The Quest Hub)
+Rural managers don't need complex manuals; they need to know *what to do next, right now*. Dry compliance tasks are translated into Daily, Weekly, and Main Quests. Every quest card is a **one-click link** that navigates directly to the relevant action item.
+
+![Sense of Direction](docs/images/sense-of-direction.png)
+
+#### 3. Sense of Progress (Aspect Levels & XP)
+Track and level up the cooperative's health across 6 core operational aspects (Finance, Membership, Waserda Retail, and more). Completing tasks awards XP, unlocking new milestones and visual upgrades.
+
+![Sense of Progress](docs/images/sense-of-progress.png)
+
+#### 4. Social Competition (Regional Leaderboard & Podium)
+Spark friendly competition and collaboration. Regional dashboards rank local cooperatives by overall health, featuring an interactive podium celebrating top-performing groups.
+
+![Social Competition](docs/images/social-competition.png)
 
 #### Hardcoded Indonesian Compliance (UU No. 25/1992)
 All Indonesian cooperative governance requirements are directly hardcoded into the questlines and aspect levels:
@@ -120,13 +134,29 @@ PAKDE memperlakukan Ketua seperti pemimpin kelompok dalam game RPG: dashboard me
 
 ---
 
-### 🎮 Misi Gamifikasi & Kepatuhan Regulasi Terintegrasi
+### 🎮 Pilar Gamifikasi & Kepatuhan Regulasi Terintegrasi
 
-PAKDE menyederhanakan manajemen koperasi menjadi sebuah **Quest Hub**:
+PAKDE dirancang berdasarkan empat pilar gamifikasi untuk membuat manajemen koperasi terasa interaktif, jelas, dan memotivasi:
 
-*   **Misi Harian (Daily Quests):** Tindakan kecil pembentuk kebiasaan ("Tautkan 3 barang ke dalam rak toko").
-*   **Misi Mingguan (Weekly Quests):** Pekerjaan rutin mingguan ("Catat penjualan POS minggu ini ke jurnal").
-*   **Misi Utama (Main Quests):** Pencapaian besar koperasi ("Mencapai Level 3 dengan membuat analisis kelayakan usaha").
+#### 1. Eksplorasi Demo (Onboarding Tanpa Hambatan)
+Merasakan seluruh fitur operasional secara langsung. Pengurus dapat memilih untuk memulai dari nol atau memuat akun demo simulasi dengan tingkat kesulitan berbeda untuk mempelajari fitur yang kaya data.
+
+![Demo Exploration](docs/images/demo-exploration.png)
+
+#### 2. Arah Tindakan / Sense of Direction (Quest Hub)
+Pengurus koperasi tidak butuh buku panduan yang tebal; mereka hanya perlu tahu *apa yang harus dilakukan sekarang*. Tugas harian dan kepatuhan hukum diterjemahkan menjadi Misi Harian, Mingguan, dan Utama. Setiap misi memiliki tautan satu klik langsung ke form pengisian terkait.
+
+![Sense of Direction](docs/images/sense-of-direction.png)
+
+#### 3. Progres & Leveling / Sense of Progress (Aspek Koperasi & XP)
+Pantau peningkatan kelas koperasi Anda secara real-time di 6 aspek operasional (Keuangan, Anggota, Ritel Waserda, dll.). Setiap penyelesaian misi memberikan XP yang menaikkan level kesehatan koperasi.
+
+![Sense of Progress](docs/images/sense-of-progress.png)
+
+#### 4. Kompetisi Sosial / Social Competition (Papan Peringkat & Podium)
+Memicu motivasi pengurus dengan membandingkan skor kesehatan koperasi dengan desa/kecamatan lain melalui papan peringkat interaktif dan sistem podium juara regional.
+
+![Social Competition](docs/images/social-competition.png)
 
 #### Kepatuhan Hukum UU Koperasi No. 25/1992
 Seluruh aturan hukum koperasi di Indonesia telah diintegrasikan langsung ke dalam sistem misi dan level:
