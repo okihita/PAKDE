@@ -67,7 +67,7 @@ function Hero() {
 
       <div className="relative z-10 max-w-2xl">
         <span className="inline-block rounded-full border border-emerald-800/50 bg-emerald-950/30 px-3 py-1 text-xxs font-medium text-emerald-400 mb-6">
-          Offline-first Desktop App
+          Panduan Harian • 100% Offline
         </span>
         <h1 className="animate-gradient bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-400 bg-clip-text text-6xl font-black tracking-tight text-transparent sm:text-7xl">
           PAKDE
@@ -76,8 +76,9 @@ function Hero() {
           Pengelolaan dan Akselerasi Koperasi Desa Elektronik
         </p>
         <p className="mt-8 text-base leading-relaxed text-slate-400 max-w-lg mx-auto text-balance">
-          Aplikasi desktop untuk mengelola koperasi secara offline. Anggota, akuntansi, inventaris, penjualan, dan
-          analisis keuangan — semua di perangkat Anda, tanpa internet.
+          Koperasi desa sering kehilangan jejak karena sinyal buruk, PC tua, dan pengurus yang sibuk. PAKDE menjalankan
+          100% offline, memandu pengurus tiap hari, dan menyimpan seluruh data ke Flashdisk — akuntansi, anggota, &amp;
+          laporan RAT otomatis.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
           <a
@@ -113,9 +114,14 @@ function Hero() {
 function Features() {
   const items = [
     {
-      icon: "🏢",
-      title: "Multi-Koperasi",
-      desc: "Kelola beberapa koperasi dalam satu aplikasi. Setiap koperasi punya data terpisah — anggota, akun, transaksi masing-masing.",
+      icon: "💾",
+      title: "Simpan & Muat (Flashdisk)",
+      desc: "Bawa seluruh database koperasi ke Flashdisk. Backup, pindah antar PC, dan lanjutkan kerja di mana saja — 100% offline, tanpa server.",
+    },
+    {
+      icon: "🧭",
+      title: "Panduan Harian",
+      desc: "Gamifikasi yang memandu pengurus tiap hari: tahu harus apa, ada progress, dan naik level kesehatan koperasi secara konsisten.",
     },
     {
       icon: "📊",
@@ -133,24 +139,19 @@ function Features() {
       desc: "Unit usaha pupuk, apotek, pemasaran — kelola stok, harga pokok, harga jual, dan riwayat transaksi penjualan.",
     },
     {
-      icon: "📈",
-      title: "Analisis Kelayakan",
-      desc: "Hitung NPV, IRR, BCR untuk proyek unit usaha. Proyeksi arus kas multi-tahun dengan analisis sensitivitas.",
-    },
-    {
-      icon: "🏪",
-      title: "Tata Letak Toko",
-      desc: "Desain layout toko secara visual — rak, zona, penempatan barang. Seret & lepas untuk atur ulang.",
-    },
-    {
       icon: "🎓",
       title: "Modul Edukasi",
       desc: "Materi pembelajaran perkoperasian. Panduan RAT, manajemen keuangan, dan pengembangan usaha.",
     },
     {
-      icon: "🔔",
-      title: "EWS Alert",
-      desc: "Early Warning System — deteksi dini masalah keuangan. Indikator kesehatan koperasi real-time.",
+      icon: "📈",
+      title: "Analisis Kelayakan",
+      desc: "Hitung NPV, IRR, BCR untuk proyek unit usaha. Proyeksi arus kas multi-tahun dengan analisis sensitivitas.",
+    },
+    {
+      icon: "🏢",
+      title: "Multi-Koperasi",
+      desc: "Kelola beberapa koperasi dalam satu aplikasi. Setiap koperasi punya data terpisah — anggota, akun, transaksi masing-masing.",
     },
   ];
 
