@@ -7,6 +7,7 @@ export default function HomePage() {
       <HowItWorks />
       <Modules />
       <OfflineFirst />
+      <EngineeringPhilosophy />
       <Download />
       <Footer />
     </div>
@@ -54,29 +55,29 @@ function Hero() {
           <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">PAKDE</span>
         </h1>
         <p className="mt-1 text-sm font-medium text-emerald-500/70 tracking-widest uppercase">
-          Pengelola Administrasi Koperasi Desa
+          Pengelolaan dan Akselerasi Koperasi Desa Elektronik
         </p>
         <p className="mt-8 text-base leading-relaxed text-slate-400 max-w-lg mx-auto">
           Aplikasi desktop untuk mengelola koperasi secara offline. Anggota, akuntansi, inventaris, penjualan, dan
           analisis keuangan — semua di perangkat Anda, tanpa internet.
         </p>
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
           <a
             href="#download"
-            className="w-full sm:w-auto rounded-lg bg-emerald-600 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-colors"
+            className="w-full sm:w-1/2 rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2"
           >
-            Download untuk macOS
+            <span>💻 Download Windows</span>
           </a>
           <a
-            href="https://github.com/okihita/PAKDE-tauri"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto rounded-lg border border-slate-700 px-8 py-3 text-sm font-semibold text-slate-300 hover:border-slate-500 hover:text-white transition-colors"
+            href="#download"
+            className="w-full sm:w-1/2 rounded-lg border border-slate-700 bg-slate-900/50 px-6 py-3 text-sm font-semibold text-slate-300 hover:border-slate-500 hover:text-white transition-colors flex items-center justify-center gap-2"
           >
-            Source Code
+            <span>🍎 Download macOS</span>
           </a>
         </div>
-        <p className="mt-4 text-xxs text-slate-600">Windows & Linux coming soon</p>
+        <p className="mt-4 text-xxs text-slate-500">
+          {"Installer hanya ~10MB • File data <1MB • Bisa diinstal & dijalankan lewat Flashdisk"}
+        </p>
       </div>
     </section>
   );
@@ -273,33 +274,119 @@ function OfflineFirst() {
   );
 }
 
+function EngineeringPhilosophy() {
+  return (
+    <section className="px-6 py-24 border-t border-slate-800/50 bg-[#0c0c0c]/50 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(239,68,68,0.03),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.03),transparent_60%)]" />
+      <div className="mx-auto max-w-3xl text-center relative z-10">
+        <span className="inline-block rounded-full border border-red-950/50 bg-red-950/20 px-3 py-1 text-xxs font-medium text-red-400 mb-6">
+          {"Pilihan Arsitektur vs. Kenyamanan Developer"}
+        </span>
+        <h2 className="text-3xl font-black tracking-tight sm:text-4xl text-white">
+          {"Mengapa Kami Menolak Tren Web & Mobile?"}
+        </h2>
+        <p className="mt-2 text-sm font-semibold text-red-500/70 tracking-widest uppercase">
+          {"Sengaja Offline-First & Desktop, Bukan Sekadar CRUD Template Hackathon"}
+        </p>
+        <p className="mt-6 text-sm leading-relaxed text-slate-400 max-w-xl mx-auto">
+          Banyak tim hackathon secara instan membangun aplikasi web cloud atau mobile app karena itu adalah satu-satunya
+          template teknologi yang biasa/nyaman mereka gunakan. Mereka mendesain untuk kenyamanan pengembang, bukan
+          kebutuhan nyata pengguna di lapangan.
+        </p>
+        <p className="mt-4 text-sm leading-relaxed text-slate-400 max-w-xl mx-auto">
+          Tetapi koperasi desa tidak peduli dengan apa yang nyaman bagi kami. Mereka butuh keandalan saat sinyal 3G
+          mati, memori HP penuh, dan komputer yang tersedia adalah PC lama dengan layar lebar.
+        </p>
+
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 text-left">
+          <div className="rounded-xl border border-red-900/20 bg-red-950/5 p-6 hover:border-red-900/40 transition-colors">
+            <div className="text-xl mb-3">🛠️</div>
+            <h4 className="text-sm font-bold text-red-400">Arsitektur Mainstream (Default Developer)</h4>
+            <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              Membuat web SaaS online / React Native instan karena gampang di-copy-paste. Hasilnya? Aplikasi macet total
+              di loading spinner saat sinyal hilang, membebani memori HP pengurus, dan tidak memiliki audit trail yang
+              terpercaya.
+            </p>
+          </div>
+          <div className="rounded-xl border border-emerald-900/30 bg-emerald-950/5 p-6 hover:border-emerald-900/50 transition-colors">
+            <div className="text-xl mb-3">⚡</div>
+            <h4 className="text-sm font-bold text-emerald-400">{"Arsitektur PAKDE (User-First & Kokoh)"}</h4>
+            <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              Menempuh jalur engineering yang lebih matang: desktop-first native berukuran ~10MB berbasis Rust/Tauri
+              dengan SQLite lokal terenkripsi. Bisa dijalankan sepenuhnya dari Flashdisk tanpa perlu instalasi rumit,
+              100% offline, dan sangat ringan.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Download() {
   return (
     <section id="download" className="px-6 py-24 border-t border-slate-800/50">
-      <div className="mx-auto max-w-2xl text-center">
+      <div className="mx-auto max-w-4xl text-center">
         <h2 className="text-3xl font-bold tracking-tight">Unduh Sekarang</h2>
-        <p className="mt-3 text-sm text-slate-500">Tersedia untuk macOS. Windows dan Linux segera hadir.</p>
-        <div className="mt-10 rounded-2xl border border-slate-800 bg-slate-900/50 p-8">
-          <div className="flex items-center justify-center gap-3 text-4xl mb-4">🍎</div>
-          <h3 className="text-lg font-semibold">macOS</h3>
-          <p className="mt-1 text-xs text-slate-500">Apple Silicon & Intel • macOS 12+</p>
-          <a
-            href="https://github.com/okihita/PAKDE-tauri/releases/latest"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-colors"
-          >
-            Download .dmg
-          </a>
-          <p className="mt-3 text-xxs text-slate-600">Versi 0.5.0 — Gratis, open source</p>
-        </div>
-        <div className="mt-8 flex justify-center gap-8 text-xs text-slate-600">
-          <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-slate-700" />
-            Windows (coming soon)
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-slate-700" />
-            Linux (coming soon)
-          </span>
+        <p className="mt-3 text-sm text-slate-500">{"Versi Terbaru 0.8.1 — Gratis, Ringan, & Open Source"}</p>
+
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 text-left">
+          {/* Windows Download Card */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-8 flex flex-col justify-between hover:border-emerald-850/40 transition-colors">
+            <div>
+              <div className="text-4xl mb-4">💻</div>
+              <h3 className="text-lg font-bold text-white">Windows</h3>
+              <p className="mt-1 text-xs text-slate-500">{"Windows 7, 8, 10, 11 • 32-bit & 64-bit"}</p>
+              <ul className="mt-6 space-y-2 text-xs text-slate-400">
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-500">✓</span> Installer ringan (.exe / .msi)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-500">✓</span> {"Bisa disalin & diinstal offline via USB"}
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-500">✓</span> Optimal untuk PC berspesifikasi rendah
+                </li>
+              </ul>
+            </div>
+            <div className="mt-8">
+              <a
+                href="https://github.com/okihita/PAKDE-tauri/releases/latest"
+                className="block text-center rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-colors"
+              >
+                Unduh .exe / .msi
+              </a>
+            </div>
+          </div>
+
+          {/* macOS Download Card */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-8 flex flex-col justify-between hover:border-emerald-850/40 transition-colors">
+            <div>
+              <div className="text-4xl mb-4">🍎</div>
+              <h3 className="text-lg font-bold text-white">macOS</h3>
+              <p className="mt-1 text-xs text-slate-500">{"Apple Silicon & Intel • macOS 12+"}</p>
+              <ul className="mt-6 space-y-2 text-xs text-slate-400">
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-500">✓</span> Universal Binary (.dmg)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-500">✓</span> Dukungan penuh untuk chip M1/M2/M3
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-500">✓</span> UI performa tinggi berbasis Tauri v2
+                </li>
+              </ul>
+            </div>
+            <div className="mt-8">
+              <a
+                href="https://github.com/okihita/PAKDE-tauri/releases/latest"
+                className="block text-center rounded-lg border border-slate-700 bg-slate-900/50 px-6 py-3 text-sm font-semibold text-slate-300 hover:border-slate-500 hover:text-white transition-colors"
+              >
+                Unduh .dmg
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -314,7 +401,7 @@ function Footer() {
           <span className="font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
             PAKDE
           </span>
-          <span>— Pengelola Administrasi Koperasi Desa</span>
+          <span>— Pengelolaan dan Akselerasi Koperasi Desa Elektronik</span>
         </div>
         <div className="flex gap-6">
           <a href="https://github.com/okihita/PAKDE-tauri" className="hover:text-slate-400 transition-colors">
