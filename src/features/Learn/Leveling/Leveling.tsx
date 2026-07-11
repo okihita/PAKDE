@@ -4,7 +4,7 @@ import { LEVELS, getLevelProgress, getCurrentLevel, type LevelDef } from "@/data
 import { getActiveCoopId } from "@/db/active-coop";
 import { getTierBand, XP_SOURCES } from "@/data/xp-core";
 import XpFeed from "./XpFeed";
-import { TrophyIcon, StarIcon, LockIcon, CaretDoubleDownIcon } from "@phosphor-icons/react";
+import { TrophyIcon, StarIcon, LockIcon } from "@phosphor-icons/react";
 
 interface Props {
   xp?: number;
@@ -49,7 +49,10 @@ function LevelCard({
 
       {/* Large, faint downward-chevron watermark spanning the banner */}
       <div className="banner__chevron" aria-hidden="true">
-        <CaretDoubleDownIcon className="h-44 w-44" weight="bold" />
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="banner__chevron-svg">
+          <path d="M0 6 L50 38 L100 6" />
+          <path d="M0 44 L50 76 L100 44" />
+        </svg>
       </div>
 
       {/* Top finial — the ring the banner hangs from */}

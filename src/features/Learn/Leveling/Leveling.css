@@ -55,13 +55,28 @@
 /* Large, faint downward-chevron watermark spanning the banner */
 .banner__chevron {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: -1;
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.13);
   pointer-events: none;
+}
+
+.banner__chevron-svg {
+  width: 100%;
+  height: auto;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.banner__chevron-svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 9;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+  vector-effect: non-scaling-stroke;
 }
 
 .banner:hover {
