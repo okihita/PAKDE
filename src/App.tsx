@@ -47,6 +47,7 @@ import ProfileSelect from "@/features/System/ProfileSelect/ProfileSelect";
 import { useUpdater } from "@/hooks/useUpdater";
 import BackupFileOpenHandler from "@/features/System/Backup/BackupFileOpenHandler";
 import { takeAutoBackup, isAutoBackupEnabled, AUTO_BACKUP_INTERVAL_MS } from "@/features/System/Backup/autoBackup";
+import { reportError } from "@/lib/reportError";
 import CreateUserProfile from "@/features/System/ProfileSelect/CreateUserProfile";
 import UserSignIn from "@/features/System/ProfileSelect/UserSignIn";
 
@@ -230,7 +231,7 @@ function AppContent() {
           }
         }
       } catch (e) {
-        console.error(e);
+        reportError(e, "loadDashboard");
       }
     })();
   }, [appState, coopProfile?.id]);
@@ -250,7 +251,7 @@ function AppContent() {
       try {
         await takeAutoBackup(coopId);
       } catch (e) {
-        console.error("auto-backup failed", e);
+        reportError(e, "autoBackup");
       } finally {
         autoBackupRunning.current = false;
       }
@@ -278,7 +279,7 @@ function AppContent() {
         setCoopProfile((prev) => (prev?.id === profile.id ? { ...prev, ...profile } : profile));
       }
     } catch (e) {
-      console.error(e);
+      reportError(e, "refreshMemberCount");
     }
   }, [coopProfile?.id]);
 
@@ -291,7 +292,7 @@ function AppContent() {
     try {
       setTopStats(await getTopBarStats(id));
     } catch (e) {
-      console.error(e);
+      reportError(e, "refreshTopStats");
     }
   }, [coopProfile?.id]);
 
@@ -327,7 +328,7 @@ function AppContent() {
         }
         setAppState(users.length === 0 ? "user_create" : "user_signin");
       } catch (e) {
-        console.error(e);
+        reportError(e, "bootResume");
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

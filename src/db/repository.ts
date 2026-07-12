@@ -34,6 +34,13 @@ export interface Repository<T extends object> {
   select: <R = unknown>(sql: string, params?: unknown[]) => Promise<R>;
   /** Ad-hoc execute for multi-step operations that stay in this table's DB. */
   execute: (sql: string, params?: unknown[]) => Promise<void>;
+  /**
+   * Run `fn` inside a SQLite transaction on this table's DB. The transaction is
+   * committed on success and rolled back if `fn` throws, so a multi-statement
+   * write (e.g. post a journal + update COA balances) can never partially
+   * commit and corrupt the double-entry ledger.
+   */
+  transaction: <R>(fn: (db: Database) => Promise<R>) => Promise<R>;
 }
 
 export interface RepoOptions {
@@ -116,6 +123,19 @@ export function createRepository<T extends object>(table: string, options: RepoO
     execute: async (sql: string, params: unknown[] = []) => {
       const db = await dbProvider();
       await db.execute(sql, params);
+    },
+
+    transaction: async <R>(fn: (db: Database) => Promise<R>): Promise<R> => {
+      const db = await dbProvider();
+      await db.execute("BEGIN");
+      try {
+        const result = await fn(db);
+        await db.execute("COMMIT");
+        return result;
+      } catch (e) {
+        await db.execute("ROLLBACK");
+        throw e;
+      }
     },
   };
 }

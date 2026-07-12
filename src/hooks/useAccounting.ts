@@ -11,6 +11,7 @@ import type {
   CoaBalanceRow,
 } from "@/types";
 import { useToast } from "@/hooks/useToast";
+import { reportError } from "@/lib/reportError";
 
 const coaRepo = createRepository<CoaAccount>("coa_accounts", { idColumn: "code" });
 const journalEntriesRepo = createRepository<JournalEntryRow>("journal_entries");
@@ -60,7 +61,7 @@ export function useAccounting() {
       const res = await coaRepo.list("ORDER BY code ASC");
       setCoaAccounts(res);
     } catch (e) {
-      console.error(e);
+      reportError(e, "loadAccounts");
     }
   }, []);
 
@@ -79,7 +80,7 @@ export function useAccounting() {
       }
       setJournalEntries(mapped);
     } catch (e) {
-      console.error(e);
+      reportError(e, "loadJournal");
     }
   }, []);
 
@@ -121,7 +122,7 @@ export function useAccounting() {
       });
       setLedgerEntries(computedLines);
     } catch (e) {
-      console.error(e);
+      reportError(e, "loadLedger");
     }
   }, [ledgerSelectedCode]);
 
@@ -186,9 +187,11 @@ export function useAccounting() {
       return;
     }
 
+    const db = await getDb();
     try {
-      const db = await getDb();
       const newEntryId = `je-${Date.now()}`;
+      await db.execute("BEGIN");
+
       await db.execute(
         `INSERT INTO journal_entries (id, number, date, description, reference, category, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
@@ -220,6 +223,8 @@ export function useAccounting() {
         }
       }
 
+      await db.execute("COMMIT");
+
       toast.success(t("toast.journalSaveSuccess"));
       setShowJournalModal(false);
       setJournalForm(JOURNAL_FORM_DEFAULT);
@@ -227,6 +232,7 @@ export function useAccounting() {
       loadAccountsData();
       loadLedgerData();
     } catch (err) {
+      await db.execute("ROLLBACK").catch(() => {});
       toast.error(t("toast.journalSaveFailed", { error: err instanceof Error ? err.message : String(err) }));
     }
   };

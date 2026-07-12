@@ -1,9 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircleIcon, XCircleIcon, WarningIcon, CopyIcon, XIcon } from "@phosphor-icons/react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { registerErrorReporter } from "@/lib/reportError";
 
 type ConfirmResolver = (value: boolean) => void;
 
@@ -63,6 +64,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const success = useCallback((message: string) => addToast(message, "success"), [addToast]);
 
   const toastError = useCallback((message: string) => addToast(message, "error"), [addToast]);
+
+  // Let reportError() (called from non-component async/DB code) reach the UI.
+  useEffect(() => {
+    registerErrorReporter(toastError);
+    return () => registerErrorReporter(null);
+  }, [toastError]);
 
   const confirm = useCallback((message: string): Promise<boolean> => {
     setConfirmMessage(message);

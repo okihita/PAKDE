@@ -390,22 +390,6 @@ export async function initCoopDb(coopId: string): Promise<void> {
     await addColumnIfAbsent(db, "members", "kode_wilayah", "TEXT");
     await addColumnIfAbsent(db, "members", "status_keanggotaan", "TEXT DEFAULT 'anggota_biasa'");
 
-    // ── simpanan_anggota ledger (absent before v5) ──
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS simpanan_anggota (
-        simpanan_ref TEXT PRIMARY KEY,
-        anggota_ref TEXT NOT NULL,
-        jenis_simpanan TEXT NOT NULL CHECK(jenis_simpanan IN ('pokok','wajib','sukarela')),
-        periode_pembayaran TEXT,
-        jumlah_simpanan REAL DEFAULT 0,
-        status TEXT DEFAULT 'lunas' CHECK(status IN ('lunas','belum','terlambat')),
-        dibayar_pada TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT DEFAULT (datetime('now')),
-        FOREIGN KEY (anggota_ref) REFERENCES members(id) ON DELETE CASCADE
-      );
-    `);
-
     await db.execute("INSERT OR REPLACE INTO _schema_meta (key, value) VALUES ('schema_version', ?);", [
       String(COOP_SCHEMA_VERSION),
     ]);
@@ -471,7 +455,4 @@ export async function initCoopDb(coopId: string): Promise<void> {
     );
   `);
   await db.execute("CREATE INDEX IF NOT EXISTS idx_pengurus_member ON pengurus(member_id);");
-
-  // ── simpanan_anggota: ensure updated_at exists (added post-v5, repo stamps it) ──
-  await addColumnIfAbsent(db, "simpanan_anggota", "updated_at", "TEXT");
 }

@@ -139,11 +139,16 @@ export function useSales() {
     }
 
     setIsProcessing(true);
+    const db = await getDb();
     try {
-      const db = await getDb();
       const txId = `tx-${Date.now()}`;
       const jeId = `je-sales-${Date.now()}`;
       const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+
+      // All writes below run inside one transaction so a mid-checkout failure
+      // (e.g. COA balance update throws) rolls back the whole sale instead of
+      // leaving a partially-committed, unbalanced double-entry record.
+      await db.execute("BEGIN");
 
       // 1. Calculate totals and check stock availability
       let totalAmount = 0;
@@ -241,6 +246,8 @@ export function useSales() {
         ]);
       }
 
+      await db.execute("COMMIT");
+
       toast.success(t("sales.toast.checkoutSuccess"));
       setCart([]);
       await loadInventory();
@@ -248,6 +255,7 @@ export function useSales() {
       await loadMembers();
       return true;
     } catch (e) {
+      await db.execute("ROLLBACK").catch(() => {});
       console.error("Checkout failed:", e);
       toast.error(e instanceof Error ? e.message : String(e));
       return false;
@@ -283,7 +291,7 @@ export function useSales() {
       await loadInventory();
       return true;
     } catch (e) {
-      console.error(e);
+      console.error("inventory.create failed:", e);
       toast.error(t("sales.toast.saveFailed"));
       return false;
     }
@@ -305,7 +313,7 @@ export function useSales() {
       await loadInventory();
       return true;
     } catch (e) {
-      console.error(e);
+      console.error("inventory.restock failed:", e);
       toast.error(t("sales.toast.saveFailed"));
       return false;
     }
@@ -320,7 +328,7 @@ export function useSales() {
       await loadInventory();
       return true;
     } catch (e) {
-      console.error(e);
+      console.error("inventory.delete failed:", e);
       toast.error(t("sales.toast.deleteFailed"));
       return false;
     }
