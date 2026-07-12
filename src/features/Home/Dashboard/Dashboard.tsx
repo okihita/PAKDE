@@ -11,7 +11,6 @@ import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@d
 import { CSS } from "@dnd-kit/utilities";
 import CalendarWidget from "./DashboardCalendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getInitialTasksForCoop } from "./dashboardTasks";
 import { getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { countActivePengurus } from "@/hooks/usePengurus";
 import { onPengurusChanged } from "@/lib/pengurusEvents";
@@ -202,16 +201,14 @@ function useMainQuests(level: LevelDef, autoDone: Set<string>) {
 
 // ── Main ──────────────────────────────────────────────────────────
 
-export default function Dashboard({ healthScore = 0, xp = 0 }: { healthScore?: number; xp?: number }) {
+export default function Dashboard({ xp = 0 }: { xp?: number }) {
   const { t } = useTranslation();
   const { items: cardOrder, onDragEnd } = useCardOrder();
 
-  // Compute level-aware task defaults
-  const taskDefaults = getInitialTasksForCoop(healthScore, []);
   const currentLevel = getCurrentLevel(xp);
 
   const daily = useTodoList("pakde-todos-daily");
-  const weekly = useTodoList("pakde-todos-weekly", taskDefaults.weeklyQuests);
+  const weekly = useTodoList("pakde-todos-weekly");
 
   // Live readiness: the governance quest "Struktur pengurus minimal 3 orang"
   // is satisfied once at least 3 board positions are filled. Re-checked on
