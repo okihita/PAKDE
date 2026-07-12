@@ -5,6 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Today's date as `YYYY-MM-DD`. Pass a Date to format any date the same way. */
+export function todayISO(d: Date = new Date()): string {
+  return d.toISOString().slice(0, 10);
+}
+
 /** Compact Indonesian Rupiah formatter for tight spaces (e.g. "Rp 1,2 jt"). */
 export function formatCompactRupiah(value: number): string {
   const abs = Math.abs(value);

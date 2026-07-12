@@ -6,6 +6,7 @@ import { exists, remove } from "@tauri-apps/plugin-fs";
 import { DEMO_TIERS, type DemoTier } from "@/features/System/ProfileSelect/demoTiers";
 import { resolveWilayah } from "@/db/wilayahLookup";
 import { generateNik, type Gender } from "@/data/nik";
+import { todayISO } from "@/lib/utils";
 
 /** Well-known UUID for the demo cooperative — referenced by both seed logic and UI. */
 export const DEMO_COOP_UUID = "00000000-0000-0000-0000-000000000001";
@@ -357,7 +358,7 @@ function computeFoundedDate(tier: DemoTier): string {
   const berjalan = tier.stats.find((s) => s.label === "Berjalan")?.value ?? "1 tahun";
   const d = new Date();
   d.setDate(d.getDate() - parseDurationToDays(berjalan));
-  return d.toISOString().slice(0, 10);
+  return todayISO(d);
 }
 
 /** Seed enough members to match the tier's "Anggota" stat. */

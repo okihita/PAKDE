@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { WrenchIcon, PlusIcon, TrashIcon, PencilIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { useEquipment } from "@/hooks/useEquipment";
 import { sfx } from "@/features/System/ProfileSelect/sfx";
+import { todayISO } from "@/lib/utils";
 import type { EquipmentCondition, EquipmentItem } from "@/types";
 
 const CONDITIONS: EquipmentCondition[] = ["Baik", "Rusak Ringan", "Perlu Perbaikan"];
@@ -69,8 +70,6 @@ export default function Equipment() {
       setShowDialog(false);
     }
   };
-
-  const today = new Date().toISOString().slice(0, 10);
 
   return (
     <div className="flex-1 overflow-auto p-6">
@@ -254,7 +253,7 @@ export default function Equipment() {
                 </label>
                 <Input
                   type="date"
-                  value={form.lastMaintenance || today}
+                  value={form.lastMaintenance || todayISO()}
                   onChange={(ev) => setForm({ ...form, lastMaintenance: ev.target.value })}
                   className="bg-input border-border text-xs h-8.5"
                 />

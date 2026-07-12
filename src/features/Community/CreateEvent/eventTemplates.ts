@@ -1,5 +1,6 @@
 import type React from "react";
 import { EVENT_TEMPLATES } from "@/data/eventTemplates";
+import { todayISO } from "@/lib/utils";
 
 export { EVENT_TEMPLATES };
 
@@ -71,7 +72,7 @@ export function computePredictions(template: EventTemplate, attendeeCount: numbe
     const d = new Date(eventDate + "T00:00:00");
     if (!isNaN(d.getTime())) {
       d.setDate(d.getDate() - prepDays);
-      recommendedStartDate = d.toISOString().slice(0, 10);
+      recommendedStartDate = todayISO(d);
     }
   }
 

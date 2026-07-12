@@ -8,14 +8,13 @@ import { detectLevelUp, type LevelDef } from "@/data/leveling";
 import type { Jabatan, Member, Simpanan } from "@/types";
 import { useToast } from "@/hooks/useToast";
 import { getMemberJabatanMap, setMemberJabatan } from "@/hooks/usePengurus";
+import { todayISO } from "@/lib/utils";
 
 // `members` has no `created_at` column (it uses `registered_at`), so the
 // repository must not auto-stamp one — otherwise INSERT fails with
 // "no such column: created_at".
 const membersRepo = createRepository<Member>("members", { createdAt: false });
 const simpananRepo = createRepository<Simpanan>("simpanan_anggota", { idColumn: "simpanan_ref" });
-
-const today = () => new Date().toISOString().slice(0, 10);
 
 // Order by join date (registered_at) ascending, empty dates last, then NIK.
 // Done in JS (not SQL) so empty/legacy dates don't sort before real dates and
@@ -49,7 +48,7 @@ const MEMBER_DEFAULT: Member = {
   loan_total: 0,
   loan_outstanding: 0,
   loan_status: "lancar",
-  registered_at: today(),
+  registered_at: todayISO(),
 };
 
 export interface MemberInsights {
@@ -184,7 +183,7 @@ export function useMembers(onChange?: () => void, xpSignal = 0) {
         periode_pembayaran: new Date().toISOString().slice(0, 7),
         jumlah_simpanan: 0,
         status: "lunas",
-        dibayar_pada: today(),
+        dibayar_pada: todayISO(),
       },
     ]);
   };
@@ -249,7 +248,7 @@ export function useMembers(onChange?: () => void, xpSignal = 0) {
         loan_total: Number(fv.loan_total),
         loan_outstanding: Number(fv.loan_outstanding),
         loan_status: fv.loan_status,
-        registered_at: fv.registered_at || today(),
+        registered_at: fv.registered_at || todayISO(),
       };
 
       if (memberFormType === "add") {

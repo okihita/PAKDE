@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { createRepository, newId } from "@/db";
 import { useToast } from "@/hooks/useToast";
+import { todayISO } from "@/lib/utils";
 import type { EquipmentItem, EquipmentCondition } from "@/types";
 
 const equipmentRepo = createRepository<EquipmentItem>("equipment");
@@ -81,8 +82,7 @@ export function useEquipment() {
 
   const recordMaintenance = async (id: string): Promise<boolean> => {
     try {
-      const today = new Date().toISOString().slice(0, 10);
-      await equipmentRepo.update(id, { last_maintenance: today, condition: "Baik" });
+      await equipmentRepo.update(id, { last_maintenance: todayISO(), condition: "Baik" });
       toast.success(t("equipment.toast.maintenanceDone"));
       await loadEquipment();
       return true;

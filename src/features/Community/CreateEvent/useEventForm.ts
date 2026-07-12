@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { getDb } from "@/db";
 import { createEvent, type Kegiatan, type EventType, type EventFileMeta, type NewEventInput } from "./eventsDb";
 import { storeEventFile } from "./fileStore";
+import { todayISO } from "@/lib/utils";
 import type { Member } from "@/types";
 import type { EventTemplate } from "./eventTemplates";
 
@@ -55,7 +56,7 @@ export function useEventForm(
 
   const [title, setTitle] = useState(() => (tmpl?.suggestedNameKey ? t(tmpl.suggestedNameKey) : ""));
   const [type, setType] = useState<EventType>("other");
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => todayISO());
   const [location, setLocation] = useState(() => (tmpl?.suggestedLocationKey ? t(tmpl.suggestedLocationKey) : ""));
   const [durationMin, setDurationMin] = useState<number | "">("");
   const [attendees, setAttendees] = useState(() => (tmpl ? tmpl.defaultAttendees : 0));
