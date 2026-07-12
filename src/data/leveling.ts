@@ -57,14 +57,6 @@ export function getCurrentLevel(xp: number): LevelDef {
   return current;
 }
 
-export function getLevelById(id: LevelId): LevelDef | undefined {
-  return LEVELS.find((l) => l.id === id);
-}
-
-export function getLevelByTier(tier: number): LevelDef | undefined {
-  return LEVELS.find((l) => l.tier === tier);
-}
-
 /** Detect if XP crossed a level threshold upward. Returns the new level, or null. */
 export function detectLevelUp(oldXp: number, newXp: number): LevelDef | null {
   const oldLevel = getCurrentLevel(oldXp);
