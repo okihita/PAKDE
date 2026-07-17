@@ -200,6 +200,19 @@ Seluruh aturan hukum koperasi di Indonesia telah diintegrasikan langsung ke dala
 
 ---
 
+## 📂 Repository Layout
+
+This repository is the **desktop app** (Tauri v2 + React). It also contains one intentional sibling project:
+
+| Path | What it is |
+| :--- | :--- |
+| `src/`, `src-tauri/` | The PAKDE desktop application (Rust backend + React frontend). |
+| `docs/` | Architecture, installation, and legal reference docs. |
+| **`landing/`** | **Standalone Next.js landing site** ([pakde.vercel.app](https://pakde.vercel.app)), independently versioned (`pakde-landing`) and deployed to Vercel. It is **not** part of the desktop build or release pipeline — develop it from within `landing/` (`pnpm --filter pakde-landing dev`). |
+| `hackathon_data/` | Local-only analysis dataset (gitignored). Not shipped. |
+
+---
+
 ## 🛠️ Technology Stack (All Languages)
 
 | Layer | Technology |
