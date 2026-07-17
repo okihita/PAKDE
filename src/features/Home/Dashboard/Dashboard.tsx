@@ -10,6 +10,7 @@ import { DndContext, type DragEndEvent, closestCenter, PointerSensor, useSensor,
 import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CalendarWidget from "./DashboardCalendar";
+import CampaignStrip from "./CampaignStrip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { countActivePengurus } from "@/hooks/usePengurus";
@@ -448,6 +449,7 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
 
   return (
     <div className="flex-1 overflow-auto p-6">
+      <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <SortableContext items={cardOrder} strategy={rectSortingStrategy}>
           <div className="grid grid-cols-12 gap-4 auto-rows-min">

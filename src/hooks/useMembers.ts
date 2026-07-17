@@ -8,6 +8,7 @@ import { detectLevelUp, type LevelDef } from "@/data/leveling";
 import type { Jabatan, Member, Simpanan } from "@/types";
 import { useToast } from "@/hooks/useToast";
 import { getMemberJabatanMap, setMemberJabatan } from "@/hooks/usePengurus";
+import { emitMembersChanged } from "@/lib/memberEvents";
 import { todayISO } from "@/lib/utils";
 
 // `members` has no `created_at` column (it uses `registered_at`), so the
@@ -71,6 +72,16 @@ const EMPTY_INSIGHTS: MemberInsights = {
   newThisMonth: 0,
 };
 
+/** Count of members in the active coop — used by the Beranda campaign scene. */
+export async function getCoopMemberCount(): Promise<number> {
+  try {
+    const rows = await membersRepo.select<Array<{ c: number }>>("SELECT COUNT(*) as c FROM members");
+    return rows[0]?.c ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 export function useMembers(onChange?: () => void, xpSignal = 0) {
   const { t } = useTranslation();
   const toast = useToast();
@@ -133,6 +144,9 @@ export function useMembers(onChange?: () => void, xpSignal = 0) {
       simpananPending,
       newThisMonth,
     });
+    // Notify listeners (e.g. the Beranda campaign scene) the roster changed so
+    // the living crowd reflects the real member count without prop coupling.
+    emitMembersChanged();
   }, []);
 
   const loadMembersData = useCallback(async () => {
