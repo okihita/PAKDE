@@ -448,7 +448,7 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-6">
+    <div className="flex-1 overflow-auto">
       <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <SortableContext items={cardOrder} strategy={rectSortingStrategy}>
