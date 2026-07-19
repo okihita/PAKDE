@@ -37,17 +37,16 @@ const idr = new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0,
 });
 
-// Shared right-rail width: the settings/utility cluster reserves exactly this
-// horizontal band, mirroring the Beranda "Berita" column so they align. The
-// TopBar stays a global component — it just blocks out a fixed-width right rail.
-const RIGHT_RAIL = "w-[360px]";
+// Shared right-rail width: matches the left Sidebar (w-72) so the settings
+// cluster aligns with the Beranda "Berita" column. The TopBar stays a global
+// component — it just blocks out a fixed-width right rail.
+const RIGHT_RAIL = "w-72";
 
 const statSlot = "flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0";
 
 export default function TopBar({
   activeTab,
   onNavigate,
-  currentUser,
   appTheme,
   onThemeToggle,
   onSwitchProfile,
@@ -198,10 +197,6 @@ export default function TopBar({
         >
           <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:ring-brand/60 transition-colors">
             <UserCheck className="h-3.5 w-3.5 text-success" />
-          </div>
-          <div className="min-w-0 leading-tight text-left">
-            <p className="text-xs font-bold text-foreground truncate max-w-[140px]">{currentUser?.name}</p>
-            <p className="text-xxs text-muted-foreground truncate max-w-[140px]">{currentUser?.role}</p>
           </div>
           <PencilSimple className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
         </button>

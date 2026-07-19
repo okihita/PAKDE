@@ -399,8 +399,8 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
         </div>
 
         {/* ── Right rail: Berita column (fixed width, full height, top-aligned).
-            Mirrors the TopBar settings right rail (w-[360px]). ── */}
-        <div className="w-[360px] shrink-0">{cardContents[NEWS_ID]}</div>
+            Mirrors the left Sidebar / TopBar settings right rail (w-72). ── */}
+        <div className="w-72 shrink-0">{cardContents[NEWS_ID]}</div>
       </div>
 
       {/* News Detail Dialog */}
