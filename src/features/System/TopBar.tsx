@@ -75,7 +75,7 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <Coins className="h-4 w-4 text-success shrink-0" />
                   <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                    <span className="hidden md:inline">Rp </span>
+                    <span className="hidden lg:inline">Rp </span>
                     {formatCompactRupiah(topStats.netWorth, true)}
                   </span>
                 </div>
@@ -106,14 +106,14 @@ export default function TopBar({
                   <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
                   <span className={`text-xs font-bold tabular-nums whitespace-nowrap ${sevClass}`}>
                     {topStats.alertCount}
-                    <span className="hidden md:inline"> {t("topbar.alerts")}</span>
+                    <span className="hidden lg:inline"> {t("topbar.alerts")}</span>
                   </span>
                 </button>
               </Tooltip>
             </div>
 
-            {/* 🔥 Morale — Community Liveliness (Secondary metric - visible on md+) */}
-            <div className="hidden md:flex items-center">
+            {/* 🔥 Morale — Community Liveliness (Secondary metric - visible on lg+) */}
+            <div className="hidden lg:flex items-center">
               <span className="h-4 w-px bg-border/60 mx-1 shrink-0" />
               <Tooltip
                 label={t("topbar.liveliness")}
@@ -127,7 +127,7 @@ export default function TopBar({
                   <Fire className="h-4 w-4 text-warning shrink-0" />
                   <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
                     {topStats.eventCount}
-                    <span className="hidden md:inline"> {t("topbar.events")}</span>
+                    <span className="hidden lg:inline"> {t("topbar.events")}</span>
                   </span>
                 </div>
               </Tooltip>
@@ -140,7 +140,7 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <ChartBar className="h-4 w-4 text-info shrink-0" />
                   <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                    <span className="hidden md:inline">Rp </span>
+                    <span className="hidden lg:inline">Rp </span>
                     {formatCompactRupiah(topStats.avgShu, true)}
                   </span>
                 </div>
@@ -159,7 +159,7 @@ export default function TopBar({
       >
         <MagnifyingGlassIcon className="h-3.5 w-3.5 shrink-0 group-hover:text-brand transition-colors" />
         <span className="text-xs truncate">{t("commandPalette.placeholder")}</span>
-        <kbd className="ml-auto text-xxxs font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5 shrink-0 group-hover:border-brand/30 transition-colors hidden md:inline-block">
+        <kbd className="ml-auto text-xxxs font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5 shrink-0 group-hover:border-brand/30 transition-colors hidden lg:inline-block">
           {isMac ? "⌘K" : "Ctrl+K"}
         </kbd>
       </button>
