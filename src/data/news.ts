@@ -8,4 +8,5 @@ export interface NewsItem {
   source: "kabupaten" | "provinsi" | "kementerian" | "internal";
   sourceName: string;
   timestamp: string;
+  pinned?: boolean;
 }

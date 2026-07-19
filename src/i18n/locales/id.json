@@ -199,12 +199,24 @@
     "news": {
       "title": "Berita & Info Terbaru",
       "markRead": "Tandai sudah dibaca",
+      "markUnread": "Tandai belum dibaca",
       "unread": "{{n}} belum dibaca",
       "noNews": "Belum ada berita terbaru",
       "loading": "Memuat berita…",
       "sourceKementerian": "Kementerian Koperasi",
       "sourceProvinsi": "Dinas Provinsi",
-      "sourceKabupaten": "Dinas Kabupaten"
+      "sourceKabupaten": "Dinas Kabupaten",
+      "filterAll": "Semua",
+      "filterInternal": "Internal",
+      "filterGovernment": "Pemerintah",
+      "searchPlaceholder": "Cari berita…",
+      "noResults": "Tidak ada berita yang cocok",
+      "pinned": "Disematkan",
+      "copy": "Salin Teks",
+      "copied": "Tersalin!",
+      "prevItem": "Sebelumnya",
+      "nextItem": "Berikutnya",
+      "itemOf": "{{current}} dari {{total}}"
     }
   },
   "members": {

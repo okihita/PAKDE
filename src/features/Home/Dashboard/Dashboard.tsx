@@ -1,25 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  CheckCircleIcon,
-  CircleIcon,
-  PlusIcon,
-  NewspaperIcon,
-  Buildings,
-  MapPin,
-  Flag,
-  Megaphone,
-  CaretRight,
-} from "@phosphor-icons/react";
-import { type NewsItem } from "@/data/news";
-import { getNewsItems } from "@/db/news";
+import { CheckCircleIcon, CircleIcon, PlusIcon } from "@phosphor-icons/react";
 
 import CalendarWidget from "./DashboardCalendar";
 import CampaignStrip from "./CampaignStrip";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import NewsWidget from "./NewsWidget";
 import { getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { countActivePengurus } from "@/hooks/usePengurus";
 import { onPengurusChanged } from "@/lib/pengurusEvents";
@@ -31,33 +19,7 @@ interface Todo {
   done: boolean;
 }
 
-const NEWS_READ_KEY = "pakde-news-read";
-
-// Fixed card layout — drag-and-drop removed. The Beranda now uses a fixed
-// 3-column campaign row (mainquest, tugas, calendar) plus a right-rail "news"
-// column. `NEWS_ID` is pulled out so it can be rendered separately from the
-// campaign grid.
 const CAMPAIGN_CARDS = ["mainquest", "tugas", "calendar"] as const;
-const NEWS_ID = "news";
-
-const SOURCE_BADGE: Record<NewsItem["source"], string> = {
-  kementerian: "bg-purple-500/10 text-purple-400",
-  provinsi: "bg-info/10 text-info",
-  kabupaten: "bg-cyan-500/10 text-cyan-400",
-  internal: "bg-brand/10 text-brand",
-};
-
-// Per-source icon for the left "icon rail" — gives instant scannability in the
-// narrow right rail without a wordy source tag.
-const SOURCE_ICON: Record<NewsItem["source"], typeof Buildings> = {
-  kementerian: Buildings,
-  provinsi: MapPin,
-  kabupaten: Flag,
-  internal: Megaphone,
-};
-
-const fmtDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
 // ── Helpers ───────────────────────────────────────────────────────
 
@@ -92,32 +54,6 @@ function useTodoList(key: string, defaults: Todo[] = []) {
   const sortedItems = [...items.filter((t) => !t.done), ...items.filter((t) => t.done)];
 
   return { items, sortedItems, addItem, toggleItem, removeDone, doneCount };
-}
-
-function useNewsRead(items: NewsItem[], coopId: string) {
-  const [readIds, setReadIds] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem(`${NEWS_READ_KEY}:${coopId}`);
-      return new Set(saved ? JSON.parse(saved) : []);
-    } catch {
-      return new Set();
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem(`${NEWS_READ_KEY}:${coopId}`, JSON.stringify([...readIds]));
-  }, [readIds, coopId]);
-
-  const markRead = useCallback((id: string) => {
-    setReadIds((prev) => new Set(prev).add(id));
-  }, []);
-
-  const markAllRead = useCallback(() => {
-    const allIds = items.map((n) => n.id);
-    setReadIds(new Set(allIds));
-  }, [items]);
-
-  return { readIds, markRead, markAllRead };
 }
 
 // ── Main quest (reflects the cooperative's actual level quests) ──
@@ -198,33 +134,8 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
   );
   const main = useMainQuests(currentLevel, autoDone);
 
-  // News is coop-scoped — loaded from the cooperative's own `news` table.
-  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [newsLoading, setNewsLoading] = useState(true);
-  useEffect(() => {
-    let alive = true;
-    getNewsItems(coopId)
-      .then((items) => {
-        if (alive) {
-          setNewsItems(items);
-          setNewsLoading(false);
-        }
-      })
-      .catch(() => {
-        if (alive) {
-          setNewsItems([]);
-          setNewsLoading(false);
-        }
-      });
-    return () => {
-      alive = false;
-    };
-  }, [coopId]);
-  const { readIds, markRead, markAllRead } = useNewsRead(newsItems, coopId);
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [newTask, setNewTask] = useState("");
-  const unreadCount = newsItems.filter((n) => !readIds.has(n.id)).length;
-  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   const activeList = tab === "daily" ? daily : weekly;
 
@@ -361,77 +272,6 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
       </Card>
     ),
     calendar: <CalendarWidget t={t} />,
-    news: (
-      <Card className="bg-card border-border text-foreground hover-glow-card">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between gap-2">
-            <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2 min-w-0">
-              <NewspaperIcon className="h-3 w-3 text-info shrink-0" />
-              <span className="truncate">{t("beranda.news.title")}</span>
-              {unreadCount > 0 && (
-                <span className="shrink-0 text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/10 text-info">
-                  {t("beranda.news.unread", { n: unreadCount })}
-                </span>
-              )}
-            </CardTitle>
-            {unreadCount > 0 && (
-              <button
-                onClick={markAllRead}
-                className="shrink-0 text-xxxs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t("beranda.news.markRead")}
-              </button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {newsLoading ? (
-              <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.news.loading")}</p>
-            ) : newsItems.length === 0 ? (
-              <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.news.noNews")}</p>
-            ) : null}
-            {newsItems.map((item) => {
-              const isUnread = !readIds.has(item.id);
-              const SourceIcon = SOURCE_ICON[item.source];
-              return (
-                <div
-                  key={item.id}
-                  className={`group flex gap-2.5 border-b border-border pb-3 last:border-b-0 last:pb-0 cursor-pointer py-2 px-2 -mx-2 rounded-lg transition-colors ${
-                    isUnread ? "bg-info/5 border-l-2 border-l-info pl-1.5" : "hover:bg-secondary"
-                  }`}
-                  onClick={() => {
-                    setSelectedNews(item);
-                    if (isUnread) markRead(item.id);
-                  }}
-                >
-                  {/* Left icon rail — source glyph for instant scannability */}
-                  <SourceIcon
-                    className={`h-4 w-4 shrink-0 mt-0.5 ${isUnread ? "text-info" : "text-muted-foreground/60"}`}
-                    weight={isUnread ? "fill" : "regular"}
-                  />
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4
-                        className={`text-xs font-bold leading-snug ${isUnread ? "text-foreground" : "text-muted-foreground"}`}
-                      >
-                        {item.title}
-                      </h4>
-                      <CaretRight className="h-3.5 w-3.5 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors shrink-0 mt-0.5" />
-                    </div>
-                    <p className="text-xxs text-muted-foreground leading-relaxed mt-1 line-clamp-2">{item.content}</p>
-                    <p className="text-xxxs text-muted-foreground/70 mt-1.5">
-                      {item.sourceName} · {fmtDate(item.timestamp)}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-    ),
   };
 
   return (
@@ -453,36 +293,10 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
 
         {/* ── Right rail: Berita column (fixed width, full height, top-aligned).
             Mirrors the left Sidebar / TopBar settings right rail (w-72). ── */}
-        <div className="w-72 shrink-0">{cardContents[NEWS_ID]}</div>
+        <div className="w-72 shrink-0 h-full">
+          <NewsWidget coopId={coopId} />
+        </div>
       </div>
-
-      {/* News Detail Dialog */}
-      <Dialog open={!!selectedNews} onOpenChange={(o) => !o && setSelectedNews(null)}>
-        <DialogContent
-          className="bg-card border-border text-foreground max-w-md"
-          // Escape closes the news popup first (before any global handler).
-          onEscapeKeyDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setSelectedNews(null);
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle className="text-sm font-bold text-foreground">{selectedNews?.title}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span
-                className={`text-xxxs px-1.5 py-0.5 rounded ${selectedNews ? SOURCE_BADGE[selectedNews.source] : ""}`}
-              >
-                {selectedNews?.sourceName ?? ""}
-              </span>
-              <span className="text-xxxs">{selectedNews ? fmtDate(selectedNews.timestamp) : ""}</span>
-            </div>
-            <p className="leading-relaxed">{selectedNews?.content}</p>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

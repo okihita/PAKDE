@@ -14,6 +14,7 @@ export interface NewsItem {
   source: "kabupaten" | "provinsi" | "kementerian" | "internal";
   sourceName: string;
   timestamp: string;
+  pinned?: boolean;
 }
 
 /** Lightweight row coming straight out of the `news` table. */
@@ -23,6 +24,7 @@ interface NewsRow {
   content: string;
   source: NewsItem["source"];
   source_name: string;
+  pinned?: number;
   created_at: string;
 }
 
@@ -179,7 +181,7 @@ export async function ensureDemoNews(db: Awaited<ReturnType<typeof getCoopDb>>):
 export async function getNewsItems(coopId: string): Promise<NewsItem[]> {
   const db = await getCoopDb(coopId);
   const rows = await db.select<NewsRow[]>(
-    `SELECT id, title, content, source, source_name, created_at
+    `SELECT id, title, content, source, source_name, pinned, created_at
        FROM news
       ORDER BY pinned DESC, datetime(created_at) DESC`,
   );
@@ -190,5 +192,6 @@ export async function getNewsItems(coopId: string): Promise<NewsItem[]> {
     source: r.source,
     sourceName: r.source_name,
     timestamp: r.created_at,
+    pinned: Boolean(r.pinned),
   }));
 }

@@ -199,12 +199,24 @@
     "news": {
       "title": "Updates & News",
       "markRead": "Mark as read",
+      "markUnread": "Mark as unread",
       "unread": "{{n}} unread",
       "noNews": "No updates at this time",
       "loading": "Loading updates…",
       "sourceKementerian": "Ministry of Cooperatives",
       "sourceProvinsi": "Provincial Office",
-      "sourceKabupaten": "District Office"
+      "sourceKabupaten": "District Office",
+      "filterAll": "All",
+      "filterInternal": "Internal",
+      "filterGovernment": "Government",
+      "searchPlaceholder": "Search news…",
+      "noResults": "No matching news found",
+      "pinned": "Pinned",
+      "copy": "Copy Text",
+      "copied": "Copied!",
+      "prevItem": "Previous",
+      "nextItem": "Next",
+      "itemOf": "{{current}} of {{total}}"
     }
   },
   "members": {
