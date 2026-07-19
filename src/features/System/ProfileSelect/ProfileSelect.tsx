@@ -89,6 +89,13 @@ export default function ProfileSelect({ onProfileSelect, onDbError, updater }: P
     return () => clearInterval(timer);
   }, []);
 
+  // Music pause on unmount
+  useEffect(() => {
+    return () => {
+      bgMusic.pause();
+    };
+  }, []);
+
   const loadProfiles = async () => {
     const list = await listCooperatives();
     setProfiles(list);
