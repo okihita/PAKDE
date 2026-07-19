@@ -368,7 +368,7 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
 
       {/* ── Right snapped News Sidebar (flush to right border, w-80 <-> w-12) ── */}
       <aside
-        className={`border-l border-border bg-sidebar shrink-0 h-full transition-all duration-300 select-none ${
+        className={`border-l border-border bg-sidebar shrink-0 h-full select-none ${
           newsCollapsed ? "w-12 overflow-visible" : "w-80 overflow-hidden"
         }`}
       >

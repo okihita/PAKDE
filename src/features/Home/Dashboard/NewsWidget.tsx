@@ -206,7 +206,7 @@ export default function NewsWidget({ coopId, isCollapsed, onToggleCollapse }: Ne
       <Tooltip label={LBL_OPEN_NEWS} side="left" className="h-full block">
         <div
           onClick={onToggleCollapse}
-          className="bg-sidebar text-foreground hover:bg-secondary/40 flex flex-col h-full items-center justify-between p-2 cursor-pointer select-none transition-all w-12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+          className="bg-sidebar text-foreground hover:bg-secondary/40 flex flex-col h-full items-center justify-between p-2 cursor-pointer select-none w-12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         >
           <div className="flex flex-col items-center gap-2 pt-1">
             <button

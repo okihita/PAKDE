@@ -338,7 +338,7 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        "relative border-r border-border bg-sidebar flex flex-col print:hidden transition-all duration-300 shrink-0 select-none",
+        "relative border-r border-border bg-sidebar flex flex-col print:hidden shrink-0 select-none",
         isCollapsed ? "w-16 overflow-visible" : "w-72 max-w-[280px] overflow-x-hidden",
       )}
     >
