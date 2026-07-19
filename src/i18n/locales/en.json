@@ -112,6 +112,8 @@
     "alerts": "Risk Alerts",
     "alertsDesc": "{{count}} active early-warning signal(s).",
     "alertsNone": "No active alerts",
+    "avgShu": "Avg SHU",
+    "avgShuDesc": "Net SHU divided by active member count.",
     "openProfile": "Open user profile"
   },
   "dashboard": {

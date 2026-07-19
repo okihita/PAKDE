@@ -3,12 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CheckCircleIcon, CircleIcon, PlusIcon, NewspaperIcon, DotsSixVerticalIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon, CircleIcon, PlusIcon, NewspaperIcon } from "@phosphor-icons/react";
 import { NEWS_ITEMS, type NewsItem } from "@/data/news";
 
-import { DndContext, type DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import CalendarWidget from "./DashboardCalendar";
 import CampaignStrip from "./CampaignStrip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -24,6 +21,13 @@ interface Todo {
 }
 
 const NEWS_READ_KEY = "pakde-news-read";
+
+// Fixed card layout — drag-and-drop removed. The Beranda now uses a fixed
+// 3-column campaign row (mainquest, tugas, calendar) plus a right-rail "news"
+// column. `NEWS_ID` is pulled out so it can be rendered separately from the
+// campaign grid.
+const CAMPAIGN_CARDS = ["mainquest", "tugas", "calendar"] as const;
+const NEWS_ID = "news";
 
 const SOURCE_BADGE: Record<NewsItem["source"], string> = {
   kementerian: "bg-purple-500/10 text-purple-400",
@@ -92,73 +96,6 @@ function useNewsRead() {
   return { readIds, markRead, markAllRead };
 }
 
-// ── Card order (drag-and-drop) ───────────────────────────────────
-
-const CARD_ORDER_KEY = "pakde-card-order";
-const DEFAULT_CARDS = ["mainquest", "tugas", "calendar", "news"];
-
-function useCardOrder() {
-  const [items, setItems] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem(CARD_ORDER_KEY);
-      if (saved) {
-        const parsed: string[] = JSON.parse(saved);
-        // Merge any new default cards not yet in stored order
-        for (const id of DEFAULT_CARDS) {
-          if (!parsed.includes(id)) parsed.push(id);
-        }
-        // Remove obsolete cards no longer in DEFAULT_CARDS
-        return parsed.filter((id) => DEFAULT_CARDS.includes(id));
-      }
-      return DEFAULT_CARDS;
-    } catch {
-      return DEFAULT_CARDS;
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem(CARD_ORDER_KEY, JSON.stringify(items));
-  }, [items]);
-
-  const onDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      setItems((prev) => {
-        const oldIndex = prev.indexOf(active.id as string);
-        const newIndex = prev.indexOf(over.id as string);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-    }
-  }, []);
-
-  return { items, onDragEnd };
-}
-
-function SortableCard({ id, children, className }: { id: string; children: React.ReactNode; className?: string }) {
-  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id });
-
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.4 : undefined,
-    zIndex: isDragging ? 50 : undefined,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} className={`${className} relative group`}>
-      {children}
-      {/* Drag handle — grab cursor only on this grip icon */}
-      <div
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-grab active:cursor-grabbing p-1 rounded hover:bg-sidebar-ring"
-        {...attributes}
-        {...listeners}
-      >
-        <DotsSixVerticalIcon className="h-3.5 w-3.5 text-muted-foreground" />
-      </div>
-    </div>
-  );
-}
-
 // ── Main quest (reflects the cooperative's actual level quests) ──
 //
 // Unlike daily/weekly todos, the main quest list is derived from the real
@@ -204,7 +141,6 @@ function useMainQuests(level: LevelDef, autoDone: Set<string>) {
 
 export default function Dashboard({ xp = 0 }: { xp?: number }) {
   const { t } = useTranslation();
-  const { items: cardOrder, onDragEnd } = useCardOrder();
 
   const currentLevel = getCurrentLevel(xp);
 
@@ -244,8 +180,6 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   const activeList = tab === "daily" ? daily : weekly;
-
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const handleAdd = () => {
     const text = newTask.trim();
@@ -449,18 +383,25 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
 
   return (
     <div className="flex-1 overflow-auto">
-      <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <SortableContext items={cardOrder} strategy={rectSortingStrategy}>
-          <div className="grid grid-cols-12 gap-4 auto-rows-min">
-            {cardOrder.map((id) => (
-              <SortableCard key={id} id={id} className="col-span-12 sm:col-span-6 xl:col-span-3">
-                {cardContents[id]}
-              </SortableCard>
+      {/* Campaign strip is capped to the 3-column campaign area (not full width). */}
+      <div className="flex gap-4 items-start">
+        {/* ── Left: campaign strip + 3-column campaign row ── */}
+        <div className="flex-1 min-w-0 flex flex-col gap-4">
+          <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
+
+          {/* Fixed 3-column campaign row: mainquest · tugas · calendar.
+              Drag-and-drop removed — order is fixed. */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-min">
+            {CAMPAIGN_CARDS.map((id) => (
+              <div key={id}>{cardContents[id]}</div>
             ))}
           </div>
-        </SortableContext>
-      </DndContext>
+        </div>
+
+        {/* ── Right rail: Berita column (fixed width, full height, top-aligned).
+            Mirrors the TopBar settings right rail (w-[360px]). ── */}
+        <div className="w-[360px] shrink-0">{cardContents[NEWS_ID]}</div>
+      </div>
 
       {/* News Detail Dialog */}
       <Dialog open={!!selectedNews} onOpenChange={(o) => !o && setSelectedNews(null)}>

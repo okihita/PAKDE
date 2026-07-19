@@ -11,6 +11,7 @@ import {
   Fire,
   Warning,
   PencilSimple,
+  ChartBar,
 } from "@phosphor-icons/react";
 import type { TabId } from "@/features/System/moduleUnlock";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -35,6 +36,11 @@ const idr = new Intl.NumberFormat("id-ID", {
   currency: "IDR",
   maximumFractionDigits: 0,
 });
+
+// Shared right-rail width: the settings/utility cluster reserves exactly this
+// horizontal band, mirroring the Beranda "Berita" column so they align. The
+// TopBar stays a global component — it just blocks out a fixed-width right rail.
+const RIGHT_RAIL = "w-[360px]";
 
 const statSlot = "flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0";
 
@@ -63,8 +69,9 @@ export default function TopBar({
 
   return (
     <div className="bg-sidebar border-b border-border flex items-center justify-between gap-3 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
-      {/* ── Live stat cluster (left): the co-op's "tavern status bar" ── */}
-      <div className="flex items-center gap-1 min-w-0">
+      {/* ── Live stat cluster (left): grows to fill up to the right rail.
+            Vitals are distributed uniformly across this space. ── */}
+      <div className="flex items-center justify-between gap-1 min-w-0 flex-1">
         {topStats && (
           <>
             {/* 💰 Resource — Net Worth (Assets − Liabilities) */}
@@ -126,12 +133,26 @@ export default function TopBar({
                 </div>
               </button>
             </Tooltip>
+
+            <span className="h-6 w-px bg-border mx-0.5 shrink-0" />
+
+            {/* 📊 Resource — Average SHU per member (net SHU ÷ members) */}
+            <Tooltip label={t("topbar.avgShu")} description={t("topbar.avgShuDesc")} className="inline-flex">
+              <div className={statSlot}>
+                <ChartBar className="h-4 w-4 text-info shrink-0" />
+                <div className="leading-none">
+                  <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.avgShu)}</p>
+                  <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.avgShu")}</p>
+                </div>
+              </div>
+            </Tooltip>
           </>
         )}
       </div>
 
-      {/* ── Utility controls (right) ── */}
-      <div className="flex items-center gap-1 shrink-0">
+      {/* ── Utility controls (right rail) ──
+          Fixed-width block that mirrors the Beranda "Berita" column. */}
+      <div className={`${RIGHT_RAIL} flex items-center gap-1 shrink-0 justify-end`}>
         {/* ── Preferences ── */}
         <div className="flex items-center gap-1">
           <button

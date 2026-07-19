@@ -112,6 +112,8 @@
     "alerts": "Peringatan Risiko",
     "alertsDesc": "{{count}} sinyal peringatan dini aktif.",
     "alertsNone": "Tidak ada peringatan aktif",
+    "avgShu": "Rata-rata SHU",
+    "avgShuDesc": "SHU bersih dibagi jumlah anggota aktif.",
     "openProfile": "Buka profil pengguna"
   },
   "dashboard": {
