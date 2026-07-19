@@ -197,100 +197,110 @@ export default function NewsWidget({ coopId }: NewsWidgetProps) {
 
   return (
     <Card className="bg-card border-border text-foreground hover-glow-card flex flex-col h-full">
-      <CardHeader className="pb-2 space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2 min-w-0">
-            <NewspaperIcon className="h-3.5 w-3.5 text-info shrink-0" weight="duotone" />
-            <span className="truncate">{t("beranda.news.title")}</span>
-            {unreadCount > 0 && (
-              <span className="shrink-0 text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/15 text-info animate-pulse">
-                {t("beranda.news.unread", { n: unreadCount })}
-              </span>
-            )}
-          </CardTitle>
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => {
-                setShowSearch((prev) => !prev);
-                if (showSearch) setSearchQuery("");
-              }}
-              className={`p-1 rounded transition-colors ${
-                showSearch || searchQuery
-                  ? "text-foreground bg-secondary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title={t("beranda.news.searchPlaceholder")}
-            >
-              <MagnifyingGlass className="h-3.5 w-3.5" />
-            </button>
+      <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
+        {/* Standalone illustrated title bar strip */}
+        <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
+          <div
+            className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+            style={{ backgroundImage: 'url("/banners/news-banner.webp")' }}
+          />
+          <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
 
-            {unreadCount > 0 && (
+          <div className="relative z-10 flex items-center justify-between w-full gap-2">
+            <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2 min-w-0">
+              <NewspaperIcon className="h-3.5 w-3.5 text-info shrink-0" weight="duotone" />
+              <span className="truncate">{t("beranda.news.title")}</span>
+              {unreadCount > 0 && (
+                <span className="shrink-0 text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/15 text-info animate-pulse">
+                  {t("beranda.news.unread", { n: unreadCount })}
+                </span>
+              )}
+            </CardTitle>
+            <div className="flex items-center gap-1.5">
               <button
-                onClick={markAllRead}
-                className="text-xxxs text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                onClick={() => {
+                  setShowSearch((prev) => !prev);
+                  if (showSearch) setSearchQuery("");
+                }}
+                className={`p-1 rounded transition-colors ${
+                  showSearch || searchQuery
+                    ? "text-foreground bg-secondary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                title={t("beranda.news.searchPlaceholder")}
               >
-                {t("beranda.news.markRead")}
+                <MagnifyingGlass className="h-3.5 w-3.5" />
               </button>
-            )}
+
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllRead}
+                  className="text-xxxs text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                >
+                  {t("beranda.news.markRead")}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Expandable Search Input */}
-        {showSearch && (
-          <div className="relative">
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t("beranda.news.searchPlaceholder")}
-              className="h-7 text-xs bg-input border-border text-foreground pr-7 placeholder:text-muted-foreground"
-              autoFocus
-            />
-            {searchQuery && (
+        {/* Controls sub-row below title illustration */}
+        <div className="p-2.5 bg-card/50 border-t border-border/20">
+          {showSearch ? (
+            <div className="relative">
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("beranda.news.searchPlaceholder")}
+                className="h-6 text-xs bg-input border-border text-foreground pr-7 placeholder:text-muted-foreground"
+                autoFocus
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2 top-1 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 bg-secondary/60 p-0.5 rounded-md text-xxxs">
               <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1.5 text-muted-foreground hover:text-foreground"
+                onClick={() => setActiveTab("all")}
+                className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
+                  activeTab === "all"
+                    ? "bg-card text-foreground shadow-xs font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
-                <X className="h-3.5 w-3.5" />
+                <span>{t("beranda.news.filterAll")}</span>
+                {unreadByTab.all > 0 && <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0" />}
               </button>
-            )}
-          </div>
-        )}
-
-        {/* Source Category Filter Chips */}
-        <div className="flex items-center gap-1 bg-secondary/60 p-0.5 rounded-md text-xxxs">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
-              activeTab === "all"
-                ? "bg-card text-foreground shadow-xs font-semibold"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <span>{t("beranda.news.filterAll")}</span>
-            {unreadByTab.all > 0 && <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0" />}
-          </button>
-          <button
-            onClick={() => setActiveTab("internal")}
-            className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
-              activeTab === "internal"
-                ? "bg-card text-foreground shadow-xs font-semibold"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <span>{t("beranda.news.filterInternal")}</span>
-            {unreadByTab.internal > 0 && <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />}
-          </button>
-          <button
-            onClick={() => setActiveTab("government")}
-            className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
-              activeTab === "government"
-                ? "bg-card text-foreground shadow-xs font-semibold"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <span>{t("beranda.news.filterGovernment")}</span>
-            {unreadByTab.government > 0 && <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0" />}
-          </button>
+              <button
+                onClick={() => setActiveTab("internal")}
+                className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
+                  activeTab === "internal"
+                    ? "bg-card text-foreground shadow-xs font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <span>{t("beranda.news.filterInternal")}</span>
+                {unreadByTab.internal > 0 && <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />}
+              </button>
+              <button
+                onClick={() => setActiveTab("government")}
+                className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
+                  activeTab === "government"
+                    ? "bg-card text-foreground shadow-xs font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <span>{t("beranda.news.filterGovernment")}</span>
+                {unreadByTab.government > 0 && <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0" />}
+              </button>
+            </div>
+          )}
         </div>
       </CardHeader>
 

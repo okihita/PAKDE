@@ -195,6 +195,9 @@
     "sun": "Sun",
     "today": "Today",
     "clearDone": "Clear {{n}} done",
+    "questProgress": "Quest Progress",
+    "completed": "completed",
+    "eventsCount": "{{n}} Events",
     "eventsTitle": "Events",
     "news": {
       "title": "Updates & News",

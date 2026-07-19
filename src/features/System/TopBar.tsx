@@ -11,6 +11,7 @@ import {
   Warning,
   PencilSimple,
   ChartBar,
+  CaretRight,
 } from "@phosphor-icons/react";
 import type { TabId } from "@/features/System/moduleUnlock";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -35,16 +36,35 @@ const idr = new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0,
 });
 
-// Shared right-rail width: matches the left Sidebar (w-72) so the settings
-// cluster aligns with the Beranda "Berita" column. The TopBar stays a global
-// component — it just blocks out a fixed-width right rail.
 const RIGHT_RAIL = "w-72";
 
-const statSlot = "flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0";
+const statSlot =
+  "flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-sidebar-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand transition-colors shrink-0 cursor-default";
+
+const TAB_BREADCRUMBS: Record<TabId, { groupKey?: string; navKey: string }> = {
+  home: { navKey: "sidebar.nav.home" },
+  anggota: { groupKey: "sidebar.groups.komunitas", navKey: "sidebar.nav.anggota" },
+  kegiatan: { groupKey: "sidebar.groups.komunitas", navKey: "sidebar.nav.kegiatan" },
+  dampak: { groupKey: "sidebar.groups.komunitas", navKey: "sidebar.nav.dampak" },
+  units: { groupKey: "sidebar.groups.bisnis", navKey: "sidebar.nav.units" },
+  sales: { groupKey: "sidebar.groups.bisnis", navKey: "sidebar.nav.sales" },
+  asetFisik: { groupKey: "sidebar.groups.bisnis", navKey: "sidebar.nav.asetFisik" },
+  development: { groupKey: "sidebar.groups.bisnis", navKey: "sidebar.nav.development" },
+  accounting: { groupKey: "sidebar.groups.keuangan", navKey: "sidebar.nav.accounting" },
+  statistics: { groupKey: "sidebar.groups.keuangan", navKey: "sidebar.nav.statistics" },
+  feasibility: { groupKey: "sidebar.groups.keuangan", navKey: "sidebar.nav.feasibility" },
+  hibah: { groupKey: "sidebar.groups.keuangan", navKey: "sidebar.nav.hibah" },
+  ranking: { groupKey: "sidebar.groups.keuangan", navKey: "sidebar.nav.ranking" },
+  leveling: { groupKey: "sidebar.groups.learn", navKey: "sidebar.nav.leveling" },
+  learn: { groupKey: "sidebar.groups.learn", navKey: "sidebar.nav.learn" },
+  sync: { groupKey: "sidebar.groups.sistem", navKey: "sidebar.nav.sync" },
+  settings: { groupKey: "sidebar.groups.sistem", navKey: "sidebar.nav.settings" },
+};
 
 export default function TopBar({
   activeTab,
   onNavigate,
+  currentUser,
   appTheme,
   onThemeToggle,
   onOpenProfile,
@@ -54,7 +74,8 @@ export default function TopBar({
 }: TopBarProps) {
   const { t } = useTranslation();
 
-  const ctrlBtn = "p-2 rounded-lg hover:bg-sidebar-ring transition-colors shrink-0 text-muted-foreground";
+  const ctrlBtn =
+    "p-2 rounded-lg hover:bg-sidebar-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand transition-colors shrink-0 text-muted-foreground";
 
   const sevClass =
     topStats?.worstSeverity === "critical"
@@ -63,93 +84,119 @@ export default function TopBar({
         ? "text-warning"
         : "text-muted-foreground";
 
+  const crumb = TAB_BREADCRUMBS[activeTab] || { navKey: "sidebar.nav.home" };
+
   return (
-    <div className="bg-sidebar border-b border-border flex items-center justify-between gap-3 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
-      {/* ── Live stat cluster (left): grows to fill up to the right rail.
-            Vitals are distributed uniformly across this space. ── */}
-      <div className="flex items-center justify-between gap-1 min-w-0 flex-1">
-        {topStats && (
-          <>
-            {/* 💰 Resource — Net Worth (Assets − Liabilities) */}
-            <Tooltip label={t("topbar.netWorth")} description={t("topbar.netWorthDesc")} className="inline-flex">
-              <div className={statSlot}>
-                <Coins className="h-4 w-4 text-success shrink-0" />
-                <div className="leading-none">
-                  <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.netWorth)}</p>
-                  <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.netWorth")}</p>
-                </div>
+    <div className="bg-sidebar border-b border-border flex items-center justify-between gap-4 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
+      {/* ── Active Module Breadcrumb + Live stat cluster (left) ── */}
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        {/* Active View Location Indicator */}
+        <div className="flex items-center gap-1 text-xs font-semibold text-foreground/90 shrink-0 pr-2 border-r border-border/60">
+          {crumb.groupKey && (
+            <>
+              <span className="text-muted-foreground font-normal">{t(crumb.groupKey)}</span>
+              <CaretRight className="h-3 w-3 text-muted-foreground/50 shrink-0" />
+            </>
+          )}
+          <span className="font-bold text-foreground">{t(crumb.navKey)}</span>
+        </div>
+
+        {/* Live Vitals Cluster */}
+        <div className="flex items-center gap-1 min-w-0 flex-1">
+          {topStats && (
+            <>
+              {/* 💰 Resource — Net Worth */}
+              <div className="flex-1 flex justify-center items-center min-w-0">
+                <Tooltip label={t("topbar.netWorth")} description={t("topbar.netWorthDesc")} className="inline-flex">
+                  <div className={statSlot} tabIndex={0}>
+                    <Coins className="h-4 w-4 text-success shrink-0" />
+                    <div className="leading-none">
+                      <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.netWorth)}</p>
+                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.netWorth")}</p>
+                    </div>
+                  </div>
+                </Tooltip>
               </div>
-            </Tooltip>
 
-            <span className="h-6 w-px bg-border mx-0.5 shrink-0" />
+              <span className="h-5 w-px bg-border/60 shrink-0" />
 
-            {/* 🔥 Morale — Community Liveliness (events + turnout, 30d) */}
-            <Tooltip
-              label={t("topbar.liveliness")}
-              description={t("topbar.livelinessDesc", {
-                count: topStats.eventCount,
-                avg: topStats.avgParticipants.toFixed(1),
-              })}
-              className="inline-flex"
-            >
-              <div className={statSlot}>
-                <Fire className="h-4 w-4 text-warning shrink-0" />
-                <div className="leading-none">
-                  <p className="text-xs font-bold text-foreground tabular-nums">
-                    {topStats.eventCount}
-                    <span className="text-xxxs font-normal text-muted-foreground ml-1">{t("topbar.events")}</span>
-                  </p>
-                  <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.liveliness")}</p>
-                </div>
+              {/* 🔥 Morale — Community Liveliness */}
+              <div className="flex-1 flex justify-center items-center min-w-0">
+                <Tooltip
+                  label={t("topbar.liveliness")}
+                  description={t("topbar.livelinessDesc", {
+                    count: topStats.eventCount,
+                    avg: topStats.avgParticipants.toFixed(1),
+                  })}
+                  className="inline-flex"
+                >
+                  <div className={statSlot} tabIndex={0}>
+                    <Fire className="h-4 w-4 text-warning shrink-0" />
+                    <div className="leading-none">
+                      <p className="text-xs font-bold text-foreground tabular-nums">
+                        {topStats.eventCount}
+                        <span className="text-xxxs font-normal text-muted-foreground ml-1">{t("topbar.events")}</span>
+                      </p>
+                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.liveliness")}</p>
+                    </div>
+                  </div>
+                </Tooltip>
               </div>
-            </Tooltip>
 
-            <span className="h-6 w-px bg-border mx-0.5 shrink-0" />
+              <span className="h-5 w-px bg-border/60 shrink-0" />
 
-            {/* ⚔️ Threat — Active Risk Alerts (EWS), colored by severity */}
-            <Tooltip
-              label={t("topbar.alerts")}
-              description={
-                topStats.alertCount > 0
-                  ? t("topbar.alertsDesc", { count: topStats.alertCount })
-                  : t("topbar.alertsNone")
-              }
-              className="inline-flex"
-            >
-              <button
-                type="button"
-                onClick={onAlertsClick}
-                disabled={topStats.alertCount === 0}
-                className={`${statSlot} ${topStats.alertCount === 0 ? "cursor-default" : "hover:bg-sidebar-ring"}`}
-              >
-                <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
-                <div className="leading-none text-left">
-                  <p className={`text-xs font-bold tabular-nums ${sevClass}`}>{topStats.alertCount}</p>
-                  <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.alerts")}</p>
-                </div>
-              </button>
-            </Tooltip>
-
-            <span className="h-6 w-px bg-border mx-0.5 shrink-0" />
-
-            {/* 📊 Resource — Average SHU per member (net SHU ÷ members) */}
-            <Tooltip label={t("topbar.avgShu")} description={t("topbar.avgShuDesc")} className="inline-flex">
-              <div className={statSlot}>
-                <ChartBar className="h-4 w-4 text-info shrink-0" />
-                <div className="leading-none">
-                  <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.avgShu)}</p>
-                  <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.avgShu")}</p>
-                </div>
+              {/* ⚔️ Threat — Risk Alerts */}
+              <div className="flex-1 flex justify-center items-center min-w-0">
+                <Tooltip
+                  label={t("topbar.alerts")}
+                  description={
+                    topStats.alertCount > 0
+                      ? t("topbar.alertsDesc", { count: topStats.alertCount })
+                      : t("topbar.alertsNone")
+                  }
+                  className="inline-flex"
+                >
+                  <button
+                    type="button"
+                    onClick={onAlertsClick}
+                    disabled={topStats.alertCount === 0}
+                    className={`${statSlot} ${
+                      topStats.alertCount > 0
+                        ? "bg-warning/10 border border-warning/30 hover:bg-warning/20 cursor-pointer animate-pulse"
+                        : "opacity-75 cursor-default"
+                    }`}
+                  >
+                    <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
+                    <div className="leading-none text-left">
+                      <p className={`text-xs font-bold tabular-nums ${sevClass}`}>{topStats.alertCount}</p>
+                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.alerts")}</p>
+                    </div>
+                  </button>
+                </Tooltip>
               </div>
-            </Tooltip>
-          </>
-        )}
+
+              <span className="h-5 w-px bg-border/60 shrink-0" />
+
+              {/* 📊 Resource — Average SHU */}
+              <div className="flex-1 flex justify-center items-center min-w-0">
+                <Tooltip label={t("topbar.avgShu")} description={t("topbar.avgShuDesc")} className="inline-flex">
+                  <div className={statSlot} tabIndex={0}>
+                    <ChartBar className="h-4 w-4 text-info shrink-0" />
+                    <div className="leading-none">
+                      <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.avgShu)}</p>
+                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.avgShu")}</p>
+                    </div>
+                  </div>
+                </Tooltip>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* ── Utility controls (right rail) ──
-          Fixed-width block that mirrors the Beranda "Berita" column. */}
-      <div className={`${RIGHT_RAIL} flex items-center gap-1 shrink-0 justify-end`}>
-        {/* ── Preferences ── */}
+      {/* ── Utility controls (right rail) ── */}
+      <div className={`${RIGHT_RAIL} flex items-center justify-between shrink-0 pl-1`}>
+        {/* Preferences */}
         <div className="flex items-center gap-1">
           <button
             onClick={() => onNavigate("settings")}
@@ -173,42 +220,57 @@ export default function TopBar({
           </button>
         </div>
 
-        <span className="h-6 w-px bg-border mx-2 shrink-0" />
+        <div className="flex items-center gap-1">
+          {/* Sync Action */}
+          <button
+            onClick={() => onNavigate("sync")}
+            aria-label={t("sidebar.nav.sync")}
+            title={t("sidebar.nav.sync")}
+            className={`${ctrlBtn} hover:text-info ${activeTab === "sync" ? "text-foreground bg-sidebar-ring" : ""}`}
+          >
+            <CloudCheck className="h-4 w-4" />
+          </button>
 
-        {/* ── Primary action + identity anchor ── */}
-        <button
-          onClick={() => onNavigate("sync")}
-          aria-label={t("sidebar.nav.sync")}
-          title={t("sidebar.nav.sync")}
-          className={`${ctrlBtn} hover:text-info ${activeTab === "sync" ? "text-foreground bg-sidebar-ring" : ""}`}
-        >
-          <CloudCheck className="h-4 w-4" />
-        </button>
+          <span className="h-5 w-px bg-border/60 mx-1 shrink-0" />
 
-        {/* ── User profile (near-right anchor) ── */}
-        <button
-          type="button"
-          onClick={onOpenProfile}
-          aria-label={t("topbar.openProfile")}
-          className="group flex items-center gap-2.5 rounded-lg px-1.5 py-1 -my-1 shrink-0 transition-colors hover:bg-sidebar-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-        >
-          <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:ring-brand/60 transition-colors">
-            <UserCheck className="h-3.5 w-3.5 text-success" />
-          </div>
-          <PencilSimple className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-        </button>
+          {/* User Profile Identity Pill */}
+          <button
+            type="button"
+            onClick={onOpenProfile}
+            aria-label={t("topbar.openProfile")}
+            title={currentUser?.name ? `${currentUser.name} (${currentUser.role ?? "User"})` : t("topbar.openProfile")}
+            className="group flex items-center gap-2 rounded-lg px-2 py-1 -my-1 shrink-0 transition-colors hover:bg-sidebar-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand"
+          >
+            <div className="w-7 h-7 rounded-full bg-success/20 flex items-center justify-center ring-1 ring-brand/30 group-hover:ring-brand/60 transition-colors text-xs font-bold text-success">
+              {currentUser?.name ? (
+                currentUser.name.charAt(0).toUpperCase()
+              ) : (
+                <UserCheck className="h-3.5 w-3.5 text-success" />
+              )}
+            </div>
+            <div className="text-left hidden xl:block max-w-[85px] leading-tight min-w-0">
+              <p className="text-xxs font-bold text-foreground truncate font-sans">
+                {currentUser?.name ?? t("topbar.openProfile")}
+              </p>
+              <p className="text-xxxs text-muted-foreground uppercase tracking-wider truncate font-sans">
+                {currentUser?.role ?? "User"}
+              </p>
+            </div>
+            <PencilSimple className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+          </button>
 
-        <span className="h-6 w-px bg-border mx-2 shrink-0" />
+          <span className="h-5 w-px bg-border/60 mx-1 shrink-0" />
 
-        {/* ── Session: single entry point → merged logout/quit dialog ── */}
-        <button
-          onClick={onOpenSession}
-          aria-label={t("session.title")}
-          title={t("session.title")}
-          className={`${ctrlBtn} hover:text-danger`}
-        >
-          <SignOut className="h-4 w-4" />
-        </button>
+          {/* Session Control */}
+          <button
+            onClick={onOpenSession}
+            aria-label={t("session.title")}
+            title={t("session.title")}
+            className={`${ctrlBtn} hover:text-danger`}
+          >
+            <SignOut className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

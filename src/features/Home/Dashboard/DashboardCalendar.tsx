@@ -43,7 +43,7 @@ const DAYS_SHORT = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 
 // ── Component ──────────────────────────────────────────────────────
 
-export default function CalendarWidget({ t }: { t: (key: string) => string }) {
+export default function CalendarWidget({ t }: { t: (key: string, options?: Record<string, unknown>) => string }) {
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [viewYear, setViewYear] = useState(today.getFullYear());
@@ -97,28 +97,37 @@ export default function CalendarWidget({ t }: { t: (key: string) => string }) {
   return (
     <>
       <Card className="bg-card border-border text-foreground hover-glow-card">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-            <CalendarIcon className="h-3 w-3" />
-            {t("beranda.calendar")}
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            <span className="text-xxs text-muted-foreground">
-              {monthName(viewYear, viewMonth)} {viewYear}
-            </span>
-            <div className="flex gap-0.5">
-              <button
-                onClick={prevMonth}
-                className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <CaretLeftIcon className="h-3 w-3" />
-              </button>
-              <button
-                onClick={nextMonth}
-                className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <CaretRightIcon className="h-3 w-3" />
-              </button>
+        <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
+          <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
+            <div
+              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+              style={{ backgroundImage: 'url("/banners/calendar-banner.webp")' }}
+            />
+            <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
+            <div className="relative z-10 flex items-center justify-between w-full">
+              <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+                <CalendarIcon className="h-3 w-3" />
+                {t("beranda.calendar")}
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                <span className="text-xxs text-muted-foreground font-semibold">
+                  {monthName(viewYear, viewMonth)} {viewYear}
+                </span>
+                <div className="flex gap-0.5">
+                  <button
+                    onClick={prevMonth}
+                    className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <CaretLeftIcon className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={nextMonth}
+                    className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <CaretRightIcon className="h-3 w-3" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </CardHeader>

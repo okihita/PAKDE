@@ -195,6 +195,9 @@
     "sun": "Min",
     "today": "Hari Ini",
     "clearDone": "Hapus {{n}} selesai",
+    "questProgress": "Kemajuan Quest",
+    "completed": "selesai",
+    "eventsCount": "{{n}} Acara",
     "eventsTitle": "Acara",
     "news": {
       "title": "Berita & Info Terbaru",

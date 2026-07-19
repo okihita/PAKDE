@@ -149,28 +149,42 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
   const cardContents: Record<string, React.ReactNode> = {
     mainquest: (
       <Card className="bg-card border-border text-foreground hover-glow-card">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircleIcon className="h-3 w-3 text-success" />
-              {t("beranda.todoMain")}
-              <span
-                className={`ml-1 px-1.5 py-0.5 rounded text-xxxs ${currentLevel.bgClass} ${currentLevel.textClass}`}
-              >
-                {currentLevel.labelId}
-              </span>
-            </CardTitle>
-            {main.doneCount > 0 && (
-              <button
-                onClick={main.removeDone}
-                className="text-xxxs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t("beranda.clearDone", { n: main.doneCount })}
-              </button>
-            )}
+        <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
+          <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
+            <div
+              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+              style={{ backgroundImage: 'url("/banners/mainquest-banner.webp")' }}
+            />
+            <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
+            <div className="relative z-10 flex items-center justify-between w-full">
+              <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+                <CheckCircleIcon className="h-3 w-3 text-success" />
+                {t("beranda.todoMain")}
+                <span
+                  className={`ml-1 px-1.5 py-0.5 rounded text-xxxs ${currentLevel.bgClass} ${currentLevel.textClass}`}
+                >
+                  {currentLevel.labelId}
+                </span>
+              </CardTitle>
+              {main.doneCount > 0 && (
+                <button
+                  onClick={main.removeDone}
+                  className="text-xxxs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("beranda.clearDone", { n: main.doneCount })}
+                </button>
+              )}
+            </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-3 space-y-2">
+          {/* Progress summary pill */}
+          <div className="flex items-center justify-between bg-secondary/50 px-2 py-1 rounded text-xxxs">
+            <span className="text-muted-foreground font-medium">{t("beranda.questProgress")}</span>
+            <span className="font-semibold text-foreground">
+              {main.doneCount}/{main.items.length} {t("beranda.completed")}
+            </span>
+          </div>
           <div className="space-y-1 max-h-64 overflow-y-auto">
             {main.items.length === 0 && (
               <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.noTasks")}</p>
@@ -197,34 +211,52 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
     ),
     tugas: (
       <Card className="bg-card border-border text-foreground hover-glow-card">
-        <CardHeader className="pb-3 space-y-0">
-          <div className="flex items-center justify-between mb-2">
-            <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <CheckCircleIcon className="h-3 w-3 text-success" />
-              {tab === "daily" ? t("beranda.todo") : t("beranda.todoWeekly")}
-            </CardTitle>
-            {activeList.doneCount > 0 && (
-              <button
-                onClick={activeList.removeDone}
-                className="text-xxxs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t("beranda.clearDone", { n: activeList.doneCount })}
-              </button>
-            )}
+        <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
+          <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
+            <div
+              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+              style={{ backgroundImage: 'url("/banners/tasks-banner.webp")' }}
+            />
+            <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
+            <div className="relative z-10 flex items-center justify-between w-full">
+              <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+                <CheckCircleIcon className="h-3 w-3 text-success" />
+                {tab === "daily" ? t("beranda.todo") : t("beranda.todoWeekly")}
+              </CardTitle>
+              {activeList.doneCount > 0 && (
+                <button
+                  onClick={activeList.removeDone}
+                  className="text-xxxs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("beranda.clearDone", { n: activeList.doneCount })}
+                </button>
+              )}
+            </div>
           </div>
-          <div className="flex gap-1 rounded-lg bg-secondary p-0.5">
-            <button
-              onClick={() => setTab("daily")}
-              className={`flex-1 text-xxxs font-bold py-1 rounded-md transition-all ${tab === "daily" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              {t("beranda.harian")}
-            </button>
-            <button
-              onClick={() => setTab("weekly")}
-              className={`flex-1 text-xxxs font-bold py-1 rounded-md transition-all ${tab === "weekly" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              {t("beranda.mingguan")}
-            </button>
+          {/* Controls sub-row below title illustration */}
+          <div className="p-2.5 bg-card/50 border-t border-border/20">
+            <div className="flex items-center gap-1 bg-secondary/60 p-0.5 rounded-md text-xxxs">
+              <button
+                onClick={() => setTab("daily")}
+                className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
+                  tab === "daily"
+                    ? "bg-card text-foreground shadow-xs font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <span>{t("beranda.harian")}</span>
+              </button>
+              <button
+                onClick={() => setTab("weekly")}
+                className={`flex-1 py-1 px-1.5 rounded font-medium transition-all flex items-center justify-center gap-1 ${
+                  tab === "weekly"
+                    ? "bg-card text-foreground shadow-xs font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <span>{t("beranda.mingguan")}</span>
+              </button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
