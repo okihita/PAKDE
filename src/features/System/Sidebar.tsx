@@ -66,8 +66,10 @@ interface NavGroupDef {
 
 type Accent = "sky" | "brand" | "violet" | "warning" | "amber";
 
-const LBL_EXPAND_SIDEBAR = "Buka Sidebar";
-const LBL_COLLAPSE_SIDEBAR = "Tutup Sidebar";
+const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
+const shortcutText = isMac ? "⌘B" : "Ctrl+B";
+const LBL_EXPAND_SIDEBAR = `Buka Sidebar (${shortcutText})`;
+const LBL_COLLAPSE_SIDEBAR = `Tutup Sidebar (${shortcutText})`;
 
 /** Static class strings so Tailwind's content scanner picks them up. */
 const ACCENT_CLASSES: Record<Accent, { label: string; icon: string; active: string }> = {

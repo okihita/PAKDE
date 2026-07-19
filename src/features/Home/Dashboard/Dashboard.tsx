@@ -330,13 +330,27 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
     return () => window.removeEventListener("resize", handleResize);
   }, [computeNewsCollapsed]);
 
-  const toggleNewsCollapse = () => {
+  const toggleNewsCollapse = useCallback(() => {
     setNewsCollapsed((prev) => {
       const next = !prev;
       localStorage.setItem("pakde-news-collapsed", String(next));
       return next;
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    const handleToggleEvent = (e: Event) => {
+      const custom = e as CustomEvent<{ collapse?: boolean }>;
+      if (custom.detail?.collapse !== undefined) {
+        setNewsCollapsed(custom.detail.collapse);
+        localStorage.setItem("pakde-news-collapsed", String(custom.detail.collapse));
+      } else {
+        toggleNewsCollapse();
+      }
+    };
+    window.addEventListener("pakde:toggle-news", handleToggleEvent);
+    return () => window.removeEventListener("pakde:toggle-news", handleToggleEvent);
+  }, [toggleNewsCollapse]);
 
   return (
     <div className="flex h-[calc(100%+3rem)] -m-6 overflow-hidden">

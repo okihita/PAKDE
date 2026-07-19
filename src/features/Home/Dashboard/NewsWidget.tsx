@@ -20,8 +20,10 @@ import NewsDetailModal from "./NewsDetailModal";
 import { Tooltip } from "@/components/ui/tooltip";
 
 const NEWS_READ_KEY = "pakde-news-read";
-const LBL_OPEN_NEWS = "Buka Berita & Info";
-const LBL_CLOSE_NEWS = "Tutup Berita & Info";
+const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
+const newsShortcut = isMac ? "⌘⇧B" : "Ctrl+Shift+B";
+const LBL_OPEN_NEWS = `Buka Berita & Info (${newsShortcut})`;
+const LBL_CLOSE_NEWS = `Tutup Berita & Info (${newsShortcut})`;
 
 type FilterTab = "all" | "internal" | "government";
 
