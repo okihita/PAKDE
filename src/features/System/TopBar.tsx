@@ -75,7 +75,8 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <Coins className="h-4 w-4 text-success shrink-0" />
                   <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                    {formatCompactRupiah(topStats.netWorth)}
+                    <span className="hidden sm:inline">Rp </span>
+                    {formatCompactRupiah(topStats.netWorth, true)}
                   </span>
                 </div>
               </Tooltip>
@@ -104,7 +105,8 @@ export default function TopBar({
                 >
                   <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
                   <span className={`text-xs font-bold tabular-nums whitespace-nowrap ${sevClass}`}>
-                    {topStats.alertCount} {t("topbar.alerts")}
+                    {topStats.alertCount}
+                    <span className="hidden sm:inline"> {t("topbar.alerts")}</span>
                   </span>
                 </button>
               </Tooltip>
@@ -124,7 +126,8 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <Fire className="h-4 w-4 text-warning shrink-0" />
                   <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                    {topStats.eventCount} {t("topbar.events")}
+                    {topStats.eventCount}
+                    <span className="hidden sm:inline"> {t("topbar.events")}</span>
                   </span>
                 </div>
               </Tooltip>
@@ -137,7 +140,8 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <ChartBar className="h-4 w-4 text-info shrink-0" />
                   <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                    {formatCompactRupiah(topStats.avgShu)}
+                    <span className="hidden sm:inline">Rp </span>
+                    {formatCompactRupiah(topStats.avgShu, true)}
                   </span>
                 </div>
               </Tooltip>
