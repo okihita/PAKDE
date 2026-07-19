@@ -339,28 +339,27 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
   };
 
   return (
-    <div className="flex-1 overflow-auto">
-      {/* Campaign strip is capped to the 3-column campaign area (not full width). */}
-      <div className="flex gap-4 items-stretch">
-        {/* ── Left: campaign strip + 3-column campaign row ── */}
-        <div className="flex-1 min-w-0 flex flex-col gap-4">
-          <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
+    <div className="flex h-[calc(100%+3rem)] -m-6 overflow-hidden">
+      {/* ── Left workspace: campaign strip + campaign cards ── */}
+      <div className="flex-1 min-w-0 overflow-y-auto p-6 brand-scroll space-y-4">
+        <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
 
-          {/* Fixed campaign row: stacks vertically on <2xl screens so tasks & calendar remain spacious. */}
-          <div className="grid grid-cols-1 2xl:grid-cols-3 gap-4 auto-rows-min">
-            {CAMPAIGN_CARDS.map((id) => (
-              <div key={id}>{cardContents[id]}</div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Right rail: Berita column (collapsible w-72 <-> w-12). ── */}
-        <div
-          className={`shrink-0 h-full transition-all duration-300 ${newsCollapsed ? "w-12 overflow-visible" : "w-72 max-w-[280px] overflow-hidden"}`}
-        >
-          <NewsWidget coopId={coopId} isCollapsed={newsCollapsed} onToggleCollapse={toggleNewsCollapse} />
+        {/* Fixed campaign row: stacks vertically on <2xl screens so tasks & calendar remain spacious. */}
+        <div className="grid grid-cols-1 2xl:grid-cols-3 gap-4 auto-rows-min">
+          {CAMPAIGN_CARDS.map((id) => (
+            <div key={id}>{cardContents[id]}</div>
+          ))}
         </div>
       </div>
+
+      {/* ── Right snapped News Sidebar (flush to right border, w-80 <-> w-12) ── */}
+      <aside
+        className={`border-l border-border bg-sidebar shrink-0 h-full transition-all duration-300 select-none ${
+          newsCollapsed ? "w-12 overflow-visible" : "w-80 overflow-hidden"
+        }`}
+      >
+        <NewsWidget coopId={coopId} isCollapsed={newsCollapsed} onToggleCollapse={toggleNewsCollapse} />
+      </aside>
     </div>
   );
 }

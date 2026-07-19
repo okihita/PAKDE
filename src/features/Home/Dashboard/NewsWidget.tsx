@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   NewspaperIcon,
@@ -201,9 +201,9 @@ export default function NewsWidget({ coopId, isCollapsed, onToggleCollapse }: Ne
   if (isCollapsed) {
     return (
       <Tooltip label={LBL_OPEN_NEWS} side="left" className="h-full block">
-        <Card
+        <div
           onClick={onToggleCollapse}
-          className="bg-card border-border text-foreground hover-glow-card flex flex-col h-full items-center justify-between p-2 cursor-pointer select-none transition-all w-12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+          className="bg-sidebar text-foreground hover:bg-secondary/40 flex flex-col h-full items-center justify-between p-2 cursor-pointer select-none transition-all w-12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         >
           <div className="flex flex-col items-center gap-2 pt-1">
             <button
@@ -235,14 +235,14 @@ export default function NewsWidget({ coopId, isCollapsed, onToggleCollapse }: Ne
           <div className="pb-1">
             <CaretLeft className="h-4 w-4 text-muted-foreground" />
           </div>
-        </Card>
+        </div>
       </Tooltip>
     );
   }
 
   return (
-    <Card className="bg-card border-border text-foreground hover-glow-card flex flex-col h-full">
-      <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
+    <div className="bg-sidebar text-foreground flex flex-col h-full select-none">
+      <div className="p-0 space-y-0 relative border-b border-border/40 shrink-0">
         <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
           <div
             className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
@@ -361,9 +361,9 @@ export default function NewsWidget({ coopId, isCollapsed, onToggleCollapse }: Ne
             </div>
           )}
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="flex-1 overflow-y-auto min-h-0 pt-1 pb-3 px-3">
+      <div className="flex-1 overflow-y-auto min-h-0 pt-1 pb-3 px-3 nav-scroll">
         <div className="space-y-1.5">
           {newsLoading ? (
             <p className="text-xxs text-muted-foreground text-center py-6">{t("beranda.news.loading")}</p>
@@ -439,7 +439,7 @@ export default function NewsWidget({ coopId, isCollapsed, onToggleCollapse }: Ne
             );
           })}
         </div>
-      </CardContent>
+      </div>
 
       <NewsDetailModal
         selectedNews={selectedNews}
@@ -455,6 +455,6 @@ export default function NewsWidget({ coopId, isCollapsed, onToggleCollapse }: Ne
         formatRelativeTimestamp={formatRelativeTimestamp}
         sourceBadgeClass={selectedNews ? SOURCE_BADGE[selectedNews.source] : ""}
       />
-    </Card>
+    </div>
   );
 }
