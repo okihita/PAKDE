@@ -37,7 +37,7 @@ const idr = new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0,
 });
 
-const RIGHT_RAIL = "w-72";
+const RIGHT_RAIL = "w-auto flex items-center justify-end gap-2 shrink-0 pl-1";
 
 const statSlot =
   "flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-sidebar-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand transition-colors shrink-0 cursor-default";
@@ -71,7 +71,7 @@ export default function TopBar({
   return (
     <div className="bg-sidebar border-b border-border flex items-center justify-between gap-4 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
       {/* ── Live stat cluster (left) ── */}
-      <div className="flex items-center gap-1 min-w-0 flex-1">
+      <div className="flex items-center gap-1 min-w-0 flex-1 overflow-x-auto no-scrollbar">
         {topStats && (
           <>
             {/* 💰 Resource — Net Worth (hugs left side) */}
@@ -80,8 +80,12 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <Coins className="h-4 w-4 text-success shrink-0" />
                   <div className="leading-none">
-                    <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.netWorth)}</p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.netWorth")}</p>
+                    <p className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
+                      {idr.format(topStats.netWorth)}
+                    </p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
+                      {t("topbar.netWorth")}
+                    </p>
                   </div>
                 </div>
               </Tooltip>
@@ -102,11 +106,13 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <Fire className="h-4 w-4 text-warning shrink-0" />
                   <div className="leading-none">
-                    <p className="text-xs font-bold text-foreground tabular-nums">
+                    <p className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
                       {topStats.eventCount}
                       <span className="text-xxxs font-normal text-muted-foreground ml-1">{t("topbar.events")}</span>
                     </p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.liveliness")}</p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
+                      {t("topbar.liveliness")}
+                    </p>
                   </div>
                 </div>
               </Tooltip>
@@ -137,8 +143,12 @@ export default function TopBar({
                 >
                   <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
                   <div className="leading-none text-left">
-                    <p className={`text-xs font-bold tabular-nums ${sevClass}`}>{topStats.alertCount}</p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.alerts")}</p>
+                    <p className={`text-xs font-bold tabular-nums whitespace-nowrap ${sevClass}`}>
+                      {topStats.alertCount}
+                    </p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
+                      {t("topbar.alerts")}
+                    </p>
                   </div>
                 </button>
               </Tooltip>
@@ -152,8 +162,12 @@ export default function TopBar({
                 <div className={statSlot} tabIndex={0}>
                   <ChartBar className="h-4 w-4 text-info shrink-0" />
                   <div className="leading-none">
-                    <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.avgShu)}</p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.avgShu")}</p>
+                    <p className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
+                      {idr.format(topStats.avgShu)}
+                    </p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
+                      {t("topbar.avgShu")}
+                    </p>
                   </div>
                 </div>
               </Tooltip>
@@ -177,7 +191,7 @@ export default function TopBar({
       </button>
 
       {/* ── Utility controls (right rail) ── */}
-      <div className={`${RIGHT_RAIL} flex items-center justify-between shrink-0 pl-1`}>
+      <div className={RIGHT_RAIL}>
         {/* Preferences */}
         <div className="flex items-center gap-1">
           <button

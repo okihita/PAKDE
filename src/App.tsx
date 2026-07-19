@@ -131,23 +131,29 @@ function AppContent() {
   const [showQuitConfirm, setShowQuitConfirm] = useState(false);
   const [showSessionDialog, setShowSessionDialog] = useState(false);
 
-  // Sidebar auto-collapse on resize (< 1280px), with manual override preference.
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
-    const userPref = localStorage.getItem("pakde-sidebar-collapsed");
+  // Helper for responsive sidebar collapse with a hard viewport safety floor (< 1024px).
+  const computeSidebarCollapsed = useCallback((width: number, userPref: string | null): boolean => {
+    if (width < 1024) return true;
     if (userPref !== null) return userPref === "true";
-    return typeof window !== "undefined" ? window.innerWidth < 1280 : false;
+    return width < 1280;
+  }, []);
+
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    const userPref = typeof window !== "undefined" ? localStorage.getItem("pakde-sidebar-collapsed") : null;
+    const width = typeof window !== "undefined" ? window.innerWidth : 1400;
+    if (width < 1024) return true;
+    if (userPref !== null) return userPref === "true";
+    return width < 1280;
   });
 
   useEffect(() => {
     const handleResize = () => {
       const userPref = localStorage.getItem("pakde-sidebar-collapsed");
-      if (userPref === null) {
-        setSidebarCollapsed(window.innerWidth < 1280);
-      }
+      setSidebarCollapsed(computeSidebarCollapsed(window.innerWidth, userPref));
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [computeSidebarCollapsed]);
 
   const toggleSidebarCollapse = useCallback(() => {
     setSidebarCollapsed((prev) => {

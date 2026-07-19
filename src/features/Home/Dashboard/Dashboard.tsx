@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -306,22 +306,29 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
     calendar: <CalendarWidget t={t} />,
   };
 
-  const [newsCollapsed, setNewsCollapsed] = useState<boolean>(() => {
-    const userPref = localStorage.getItem("pakde-news-collapsed");
+  // Helper for responsive news rail collapse with a hard viewport safety floor (< 1200px).
+  const computeNewsCollapsed = useCallback((width: number, userPref: string | null): boolean => {
+    if (width < 1200) return true;
     if (userPref !== null) return userPref === "true";
-    return typeof window !== "undefined" ? window.innerWidth < 1400 : false;
+    return width < 1400;
+  }, []);
+
+  const [newsCollapsed, setNewsCollapsed] = useState<boolean>(() => {
+    const userPref = typeof window !== "undefined" ? localStorage.getItem("pakde-news-collapsed") : null;
+    const width = typeof window !== "undefined" ? window.innerWidth : 1600;
+    if (width < 1200) return true;
+    if (userPref !== null) return userPref === "true";
+    return width < 1400;
   });
 
   useEffect(() => {
     const handleResize = () => {
       const userPref = localStorage.getItem("pakde-news-collapsed");
-      if (userPref === null) {
-        setNewsCollapsed(window.innerWidth < 1400);
-      }
+      setNewsCollapsed(computeNewsCollapsed(window.innerWidth, userPref));
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [computeNewsCollapsed]);
 
   const toggleNewsCollapse = () => {
     setNewsCollapsed((prev) => {
@@ -349,7 +356,7 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
 
         {/* ── Right rail: Berita column (collapsible w-72 <-> w-12). ── */}
         <div
-          className={`shrink-0 h-full transition-all duration-300 ${newsCollapsed ? "w-12 overflow-visible" : "w-72 overflow-hidden"}`}
+          className={`shrink-0 h-full transition-all duration-300 ${newsCollapsed ? "w-12 overflow-visible" : "w-72 max-w-[280px] overflow-hidden"}`}
         >
           <NewsWidget coopId={coopId} isCollapsed={newsCollapsed} onToggleCollapse={toggleNewsCollapse} />
         </div>
