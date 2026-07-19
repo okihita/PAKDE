@@ -13,6 +13,7 @@ import {
   ChartBar,
   MagnifyingGlassIcon,
 } from "@phosphor-icons/react";
+import { formatCompactRupiah } from "@/lib/utils";
 import type { TabId } from "@/features/System/moduleUnlock";
 import { Tooltip } from "@/components/ui/tooltip";
 import type { TopBarStats } from "@/features/System/ProfileSelect/cooperativeDb";
@@ -30,12 +31,6 @@ interface TopBarProps {
   onAlertsClick?: () => void;
   onOpenPalette: () => void;
 }
-
-const idr = new Intl.NumberFormat("id-ID", {
-  style: "currency",
-  currency: "IDR",
-  maximumFractionDigits: 0,
-});
 
 const RIGHT_RAIL = "w-auto flex items-center justify-end gap-2 shrink-0 pl-1";
 
@@ -69,59 +64,25 @@ export default function TopBar({
         : "text-muted-foreground";
 
   return (
-    <div className="bg-sidebar border-b border-border flex items-center justify-between gap-4 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
+    <div className="bg-sidebar border-b border-border flex items-center justify-between gap-3 px-4 xl:px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
       {/* ── Live stat cluster (left) ── */}
-      <div className="flex items-center gap-1 min-w-0 flex-1 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-1 min-w-0 shrink-0">
         {topStats && (
           <>
-            {/* 💰 Resource — Net Worth (hugs left side) */}
-            <div className="flex-1 flex justify-start items-center min-w-0">
+            {/* 💰 Resource — Net Worth (Primary vital) */}
+            <div className="flex items-center">
               <Tooltip label={t("topbar.netWorth")} description={t("topbar.netWorthDesc")} className="inline-flex">
                 <div className={statSlot} tabIndex={0}>
                   <Coins className="h-4 w-4 text-success shrink-0" />
-                  <div className="leading-none">
-                    <p className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                      {idr.format(topStats.netWorth)}
-                    </p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
-                      {t("topbar.netWorth")}
-                    </p>
-                  </div>
+                  <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
+                    {formatCompactRupiah(topStats.netWorth)}
+                  </span>
                 </div>
               </Tooltip>
             </div>
 
-            <span className="h-5 w-px bg-border/60 shrink-0" />
-
-            {/* 🔥 Morale — Community Liveliness */}
-            <div className="flex-1 flex justify-center items-center min-w-0">
-              <Tooltip
-                label={t("topbar.liveliness")}
-                description={t("topbar.livelinessDesc", {
-                  count: topStats.eventCount,
-                  avg: topStats.avgParticipants.toFixed(1),
-                })}
-                className="inline-flex"
-              >
-                <div className={statSlot} tabIndex={0}>
-                  <Fire className="h-4 w-4 text-warning shrink-0" />
-                  <div className="leading-none">
-                    <p className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                      {topStats.eventCount}
-                      <span className="text-xxxs font-normal text-muted-foreground ml-1">{t("topbar.events")}</span>
-                    </p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
-                      {t("topbar.liveliness")}
-                    </p>
-                  </div>
-                </div>
-              </Tooltip>
-            </div>
-
-            <span className="h-5 w-px bg-border/60 shrink-0" />
-
-            {/* ⚔️ Threat — Risk Alerts */}
-            <div className="flex-1 flex justify-center items-center min-w-0">
+            {/* ⚔️ Threat — Risk Alerts (Primary vital) */}
+            <div className="flex items-center">
               <Tooltip
                 label={t("topbar.alerts")}
                 description={
@@ -142,33 +103,42 @@ export default function TopBar({
                   }`}
                 >
                   <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
-                  <div className="leading-none text-left">
-                    <p className={`text-xs font-bold tabular-nums whitespace-nowrap ${sevClass}`}>
-                      {topStats.alertCount}
-                    </p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
-                      {t("topbar.alerts")}
-                    </p>
-                  </div>
+                  <span className={`text-xs font-bold tabular-nums whitespace-nowrap ${sevClass}`}>
+                    {topStats.alertCount} {t("topbar.alerts")}
+                  </span>
                 </button>
               </Tooltip>
             </div>
 
-            <span className="h-5 w-px bg-border/60 shrink-0" />
+            {/* 🔥 Morale — Community Liveliness (Secondary metric - visible on md+) */}
+            <div className="hidden md:flex items-center">
+              <span className="h-4 w-px bg-border/60 mx-1 shrink-0" />
+              <Tooltip
+                label={t("topbar.liveliness")}
+                description={t("topbar.livelinessDesc", {
+                  count: topStats.eventCount,
+                  avg: topStats.avgParticipants.toFixed(1),
+                })}
+                className="inline-flex"
+              >
+                <div className={statSlot} tabIndex={0}>
+                  <Fire className="h-4 w-4 text-warning shrink-0" />
+                  <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
+                    {topStats.eventCount} {t("topbar.events")}
+                  </span>
+                </div>
+              </Tooltip>
+            </div>
 
-            {/* 📊 Resource — Average SHU */}
-            <div className="flex-1 flex justify-center items-center min-w-0">
+            {/* 📊 Resource — Average SHU (Secondary metric - visible on xl+) */}
+            <div className="hidden xl:flex items-center">
+              <span className="h-4 w-px bg-border/60 mx-1 shrink-0" />
               <Tooltip label={t("topbar.avgShu")} description={t("topbar.avgShuDesc")} className="inline-flex">
                 <div className={statSlot} tabIndex={0}>
                   <ChartBar className="h-4 w-4 text-info shrink-0" />
-                  <div className="leading-none">
-                    <p className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
-                      {idr.format(topStats.avgShu)}
-                    </p>
-                    <p className="text-xxxs text-muted-foreground mt-0.5 hidden sm:block whitespace-nowrap">
-                      {t("topbar.avgShu")}
-                    </p>
-                  </div>
+                  <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">
+                    {formatCompactRupiah(topStats.avgShu)}
+                  </span>
                 </div>
               </Tooltip>
             </div>
@@ -181,11 +151,11 @@ export default function TopBar({
         type="button"
         onClick={onOpenPalette}
         aria-label={t("commandPalette.placeholder")}
-        className="group flex items-center gap-2 min-w-0 max-w-md flex-1 mx-4 px-3 py-1.5 rounded-lg border border-slate-800/80 bg-slate-950/70 text-slate-400 hover:border-brand/40 hover:text-slate-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand shrink-0"
+        className="group flex items-center gap-2 min-w-0 max-w-[200px] xl:max-w-md flex-1 mx-2 px-3 py-1.5 rounded-lg border border-slate-800/80 bg-slate-950/70 text-slate-400 hover:border-brand/40 hover:text-slate-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand shrink-0"
       >
         <MagnifyingGlassIcon className="h-3.5 w-3.5 shrink-0 group-hover:text-brand transition-colors" />
         <span className="text-xs truncate">{t("commandPalette.placeholder")}</span>
-        <kbd className="ml-auto text-xxxs font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5 shrink-0 group-hover:border-brand/30 transition-colors">
+        <kbd className="ml-auto text-xxxs font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5 shrink-0 group-hover:border-brand/30 transition-colors hidden sm:inline-block">
           {isMac ? "⌘K" : "Ctrl+K"}
         </kbd>
       </button>

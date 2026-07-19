@@ -346,8 +346,8 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           <CampaignStrip xp={xp} pengurusReady={pengurusReady} />
 
-          {/* Fixed 3-column campaign row: mainquest · tugas · calendar. */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-min">
+          {/* Fixed campaign row: stacks vertically on <2xl screens so tasks & calendar remain spacious. */}
+          <div className="grid grid-cols-1 2xl:grid-cols-3 gap-4 auto-rows-min">
             {CAMPAIGN_CARDS.map((id) => (
               <div key={id}>{cardContents[id]}</div>
             ))}
