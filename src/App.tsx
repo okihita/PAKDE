@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import "@/i18n"; // initialize i18next before render
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 import {
   listCooperatives,
   getCooperativeById,
@@ -18,8 +19,36 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { exit } from "@tauri-apps/plugin-process";
 import { IconProvider } from "@/components/IconContext";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import CommandPaletteDialog, { type CommandAction } from "@/components/ui/command-palette/CommandPaletteDialog";
+import { useCommandPalette } from "@/hooks/useCommandPalette";
+import { requestOpenMember, requestAddMember } from "@/lib/commandPaletteEvents";
 import { Button } from "@/components/ui/button";
-import { SignOut, XCircle, WarningIcon } from "@phosphor-icons/react";
+import {
+  SignOut,
+  XCircle,
+  WarningIcon,
+  CalendarPlus,
+  UserPlusIcon,
+  SunIcon,
+  MoonIcon,
+  TranslateIcon,
+  CloudCheck,
+  Gear,
+  UserCircleIcon,
+  SquaresFour,
+  UsersIcon,
+  ChartBarIcon,
+  Note,
+  WarehouseIcon,
+  BuildingsIcon,
+  HandshakeIcon,
+  TrendUpIcon,
+  HandCoins,
+  TrophyIcon,
+  BookOpenIcon,
+  RocketLaunchIcon,
+  Coins,
+} from "@phosphor-icons/react";
 import DbErrorScreen from "@/features/System/DbErrorScreen/DbErrorScreen";
 import Sidebar from "@/features/System/Sidebar";
 import TopBar from "@/features/System/TopBar";
@@ -105,6 +134,9 @@ function AppContent() {
   // Update lifecycle — owned at the app root so the title screen can surface an
   // "Update available" banner and a manual check button without a login gate.
   const updater = useUpdater();
+
+  // Global command palette (Cmd/Ctrl+K, "/").
+  const palette = useCommandPalette();
 
   // Sync font-size setting to <html> and persist
   useEffect(() => {
@@ -350,6 +382,111 @@ function AppContent() {
     [coopProfile?.xp],
   );
 
+  // Command Palette action registry. Rebuilt when language/theme change so the
+  // labels stay in sync; `guardedSetActiveTab` is stable so it doesn't churn.
+  const paletteActions = useMemo<CommandAction[]>(() => {
+    const nav = (id: TabId, title: string, icon: CommandAction["icon"], keywords: string) => ({
+      id: `nav-${id}`,
+      group: "navigation" as const,
+      title,
+      subtitle: t("commandPalette.groupNavigation"),
+      icon,
+      keywords,
+      run: () => guardedSetActiveTab(id),
+    });
+    return [
+      // ── Quick Actions ──
+      {
+        id: "qa-deposit",
+        group: "quickActions",
+        title: t("commandPalette.newDeposit"),
+        subtitle: t("sidebar.nav.anggota"),
+        icon: Coins,
+        keywords: "deposit simpanan setor savings",
+        run: () => guardedSetActiveTab("anggota"),
+      },
+      {
+        id: "qa-event",
+        group: "quickActions",
+        title: t("commandPalette.newEvent"),
+        subtitle: t("sidebar.nav.kegiatan"),
+        icon: CalendarPlus,
+        keywords: "event kegiatan baru create",
+        run: () => guardedSetActiveTab("kegiatan"),
+      },
+      {
+        id: "qa-member",
+        group: "quickActions",
+        title: t("commandPalette.newMember"),
+        subtitle: t("sidebar.nav.anggota"),
+        icon: UserPlusIcon,
+        keywords: "member anggota baru register daftar",
+        run: () => {
+          guardedSetActiveTab("anggota");
+          requestAddMember();
+        },
+      },
+      // ── Navigation ──
+      nav("home", t("sidebar.nav.home"), SquaresFour, "beranda dashboard home"),
+      nav("anggota", t("sidebar.nav.anggota"), UsersIcon, "members anggota"),
+      nav("kegiatan", t("sidebar.nav.kegiatan"), CalendarPlus, "event kegiatan"),
+      nav("dampak", t("sidebar.nav.dampak"), HandshakeIcon, "impact dampak"),
+      nav("units", t("sidebar.nav.units"), BuildingsIcon, "units bisnis"),
+      nav("sales", t("sidebar.nav.sales"), HandshakeIcon, "sales penjualan"),
+      nav("asetFisik", t("sidebar.nav.asetFisik"), WarehouseIcon, "assets aset"),
+      nav("development", t("sidebar.nav.development"), RocketLaunchIcon, "development pengembangan"),
+      nav("statistics", t("sidebar.nav.statistics"), ChartBarIcon, "statistics statistik"),
+      nav("accounting", t("sidebar.nav.accounting"), Note, "accounting ledger buku besar"),
+      nav("feasibility", t("sidebar.nav.feasibility"), TrendUpIcon, "feasibility kelayakan"),
+      nav("hibah", t("sidebar.nav.hibah"), HandCoins, "grant hibah"),
+      nav("leveling", t("sidebar.nav.leveling"), TrophyIcon, "leveling level"),
+      nav("learn", t("sidebar.nav.learn"), BookOpenIcon, "learn belajar"),
+      // ── System ──
+      {
+        id: "sys-theme",
+        group: "system",
+        title: t("commandPalette.toggleTheme"),
+        icon: appTheme === "dark" ? SunIcon : MoonIcon,
+        keywords: "theme dark light mode",
+        run: () => setAppTheme((p) => (p === "dark" ? "light" : "dark")),
+      },
+      {
+        id: "sys-lang",
+        group: "system",
+        title: t("commandPalette.toggleLanguage"),
+        icon: TranslateIcon,
+        keywords: "language bahasa en id",
+        run: () => i18next.changeLanguage(i18next.language.startsWith("id") ? "en" : "id"),
+      },
+      {
+        id: "sys-sync",
+        group: "system",
+        title: t("commandPalette.openSync"),
+        subtitle: t("sidebar.nav.sync"),
+        icon: CloudCheck,
+        keywords: "sync sinkronisasi",
+        run: () => guardedSetActiveTab("sync"),
+      },
+      {
+        id: "sys-settings",
+        group: "system",
+        title: t("commandPalette.openSettings"),
+        subtitle: t("sidebar.nav.settings"),
+        icon: Gear,
+        keywords: "settings pengaturan",
+        run: () => guardedSetActiveTab("settings"),
+      },
+      {
+        id: "sys-profile",
+        group: "system",
+        title: t("commandPalette.openProfile"),
+        icon: UserCircleIcon,
+        keywords: "profile profil user",
+        run: () => setShowUserModal(true),
+      },
+    ];
+  }, [t, appTheme, guardedSetActiveTab, setAppTheme, setShowUserModal]);
+
   const ranking = useRanking(coopProfile);
 
   const handleTitlebarMouseDown = (e: React.MouseEvent) => {
@@ -536,6 +673,7 @@ function AppContent() {
               onOpenSession={openSessionDialog}
               topStats={topStats}
               onAlertsClick={() => guardedSetActiveTab("home")}
+              onOpenPalette={palette.openPalette}
             />
           </div>
 
@@ -716,6 +854,16 @@ function AppContent() {
         onOpenChange={setShowProfileModal}
         coopProfile={coopProfile}
         setCoopProfile={setCoopProfile}
+      />
+
+      <CommandPaletteDialog
+        open={palette.open}
+        onOpenChange={palette.setOpen}
+        actions={paletteActions}
+        onOpenMember={(member) => {
+          guardedSetActiveTab("anggota");
+          requestOpenMember(member);
+        }}
       />
 
       <UserProfileModal

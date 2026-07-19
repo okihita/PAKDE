@@ -11,6 +11,7 @@ import {
   Warning,
   PencilSimple,
   ChartBar,
+  MagnifyingGlassIcon,
 } from "@phosphor-icons/react";
 import type { TabId } from "@/features/System/moduleUnlock";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -27,6 +28,7 @@ interface TopBarProps {
   onOpenSession: () => void;
   topStats?: TopBarStats | null;
   onAlertsClick?: () => void;
+  onOpenPalette: () => void;
 }
 
 const idr = new Intl.NumberFormat("id-ID", {
@@ -50,8 +52,11 @@ export default function TopBar({
   onOpenSession,
   topStats,
   onAlertsClick,
+  onOpenPalette,
 }: TopBarProps) {
   const { t } = useTranslation();
+
+  const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 
   const ctrlBtn =
     "p-2 rounded-lg hover:bg-sidebar-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand transition-colors shrink-0 text-muted-foreground";
@@ -156,6 +161,20 @@ export default function TopBar({
           </>
         )}
       </div>
+
+      {/* ── Command palette trigger (center) ── */}
+      <button
+        type="button"
+        onClick={onOpenPalette}
+        aria-label={t("commandPalette.placeholder")}
+        className="group flex items-center gap-2 min-w-0 max-w-md flex-1 mx-4 px-3 py-1.5 rounded-lg border border-slate-800/80 bg-slate-950/70 text-slate-400 hover:border-brand/40 hover:text-slate-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand shrink-0"
+      >
+        <MagnifyingGlassIcon className="h-3.5 w-3.5 shrink-0 group-hover:text-brand transition-colors" />
+        <span className="text-xs truncate">{t("commandPalette.placeholder")}</span>
+        <kbd className="ml-auto text-xxxs font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5 shrink-0 group-hover:border-brand/30 transition-colors">
+          {isMac ? "⌘K" : "Ctrl+K"}
+        </kbd>
+      </button>
 
       {/* ── Utility controls (right rail) ── */}
       <div className={`${RIGHT_RAIL} flex items-center justify-between shrink-0 pl-1`}>

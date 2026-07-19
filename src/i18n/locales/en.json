@@ -116,6 +116,26 @@
     "avgShuDesc": "Net SHU divided by active member count.",
     "openProfile": "Open user profile"
   },
+  "commandPalette": {
+    "placeholder": "Type a command or search...",
+    "noResults": "No results found.",
+    "groupNavigation": "Navigation",
+    "groupQuickActions": "Quick Actions",
+    "groupMembers": "Members",
+    "groupSystem": "System",
+    "newDeposit": "Record Savings Deposit",
+    "newEvent": "Create New Event",
+    "newMember": "Register New Member",
+    "openMember": "Open Member",
+    "toggleTheme": "Toggle Theme",
+    "toggleLanguage": "Switch Language",
+    "openSync": "Open Sync",
+    "openSettings": "Open Settings",
+    "openProfile": "Open Profile",
+    "footerNav": "Navigate",
+    "footerSelect": "Select",
+    "footerClose": "Close"
+  },
   "session": {
     "title": "End Session",
     "desc": "Choose the action you want to take.",

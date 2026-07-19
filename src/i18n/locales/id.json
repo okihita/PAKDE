@@ -116,6 +116,26 @@
     "avgShuDesc": "SHU bersih dibagi jumlah anggota aktif.",
     "openProfile": "Buka profil pengguna"
   },
+  "commandPalette": {
+    "placeholder": "Ketik perintah atau cari...",
+    "noResults": "Tidak ada hasil ditemukan.",
+    "groupNavigation": "Navigasi",
+    "groupQuickActions": "Tindakan Cepat",
+    "groupMembers": "Anggota",
+    "groupSystem": "Sistem",
+    "newDeposit": "Catat Setoran Simpanan",
+    "newEvent": "Buat Kegiatan Baru",
+    "newMember": "Daftarkan Anggota Baru",
+    "openMember": "Buka Anggota",
+    "toggleTheme": "Ubah Tema",
+    "toggleLanguage": "Ganti Bahasa",
+    "openSync": "Buka Sinkronisasi",
+    "openSettings": "Buka Pengaturan",
+    "openProfile": "Buka Profil",
+    "footerNav": "Navigasi",
+    "footerSelect": "Pilih",
+    "footerClose": "Tutup"
+  },
   "session": {
     "title": "Keluar Sesi",
     "desc": "Pilih tindakan yang ingin Anda lakukan.",
