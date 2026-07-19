@@ -65,104 +65,96 @@ export default function TopBar({
 
   return (
     <div className="bg-sidebar border-b border-border flex items-center justify-between gap-4 px-6 h-12 shrink-0 select-none print:hidden z-40 relative">
-      {/* ── Active Module Breadcrumb + Live stat cluster (left) ── */}
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        {/* Active View Location Indicator — fixed width on all tabs to prevent vitals layout shift */}
-        <div className="w-24 shrink-0 flex items-center pr-2 border-r border-border/60 text-xs font-semibold">
-          {activeTab === "home" && <span className="font-bold text-foreground">{t("sidebar.nav.home")}</span>}
-        </div>
-
-        {/* Live Vitals Cluster */}
-        <div className="flex items-center gap-1 min-w-0 flex-1">
-          {topStats && (
-            <>
-              {/* 💰 Resource — Net Worth */}
-              <div className="flex-1 flex justify-center items-center min-w-0">
-                <Tooltip label={t("topbar.netWorth")} description={t("topbar.netWorthDesc")} className="inline-flex">
-                  <div className={statSlot} tabIndex={0}>
-                    <Coins className="h-4 w-4 text-success shrink-0" />
-                    <div className="leading-none">
-                      <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.netWorth)}</p>
-                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.netWorth")}</p>
-                    </div>
+      {/* ── Live stat cluster (left) ── */}
+      <div className="flex items-center gap-1 min-w-0 flex-1">
+        {topStats && (
+          <>
+            {/* 💰 Resource — Net Worth (hugs left side) */}
+            <div className="flex-1 flex justify-start items-center min-w-0">
+              <Tooltip label={t("topbar.netWorth")} description={t("topbar.netWorthDesc")} className="inline-flex">
+                <div className={statSlot} tabIndex={0}>
+                  <Coins className="h-4 w-4 text-success shrink-0" />
+                  <div className="leading-none">
+                    <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.netWorth)}</p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.netWorth")}</p>
                   </div>
-                </Tooltip>
-              </div>
+                </div>
+              </Tooltip>
+            </div>
 
-              <span className="h-5 w-px bg-border/60 shrink-0" />
+            <span className="h-5 w-px bg-border/60 shrink-0" />
 
-              {/* 🔥 Morale — Community Liveliness */}
-              <div className="flex-1 flex justify-center items-center min-w-0">
-                <Tooltip
-                  label={t("topbar.liveliness")}
-                  description={t("topbar.livelinessDesc", {
-                    count: topStats.eventCount,
-                    avg: topStats.avgParticipants.toFixed(1),
-                  })}
-                  className="inline-flex"
-                >
-                  <div className={statSlot} tabIndex={0}>
-                    <Fire className="h-4 w-4 text-warning shrink-0" />
-                    <div className="leading-none">
-                      <p className="text-xs font-bold text-foreground tabular-nums">
-                        {topStats.eventCount}
-                        <span className="text-xxxs font-normal text-muted-foreground ml-1">{t("topbar.events")}</span>
-                      </p>
-                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.liveliness")}</p>
-                    </div>
+            {/* 🔥 Morale — Community Liveliness */}
+            <div className="flex-1 flex justify-center items-center min-w-0">
+              <Tooltip
+                label={t("topbar.liveliness")}
+                description={t("topbar.livelinessDesc", {
+                  count: topStats.eventCount,
+                  avg: topStats.avgParticipants.toFixed(1),
+                })}
+                className="inline-flex"
+              >
+                <div className={statSlot} tabIndex={0}>
+                  <Fire className="h-4 w-4 text-warning shrink-0" />
+                  <div className="leading-none">
+                    <p className="text-xs font-bold text-foreground tabular-nums">
+                      {topStats.eventCount}
+                      <span className="text-xxxs font-normal text-muted-foreground ml-1">{t("topbar.events")}</span>
+                    </p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.liveliness")}</p>
                   </div>
-                </Tooltip>
-              </div>
+                </div>
+              </Tooltip>
+            </div>
 
-              <span className="h-5 w-px bg-border/60 shrink-0" />
+            <span className="h-5 w-px bg-border/60 shrink-0" />
 
-              {/* ⚔️ Threat — Risk Alerts */}
-              <div className="flex-1 flex justify-center items-center min-w-0">
-                <Tooltip
-                  label={t("topbar.alerts")}
-                  description={
+            {/* ⚔️ Threat — Risk Alerts */}
+            <div className="flex-1 flex justify-center items-center min-w-0">
+              <Tooltip
+                label={t("topbar.alerts")}
+                description={
+                  topStats.alertCount > 0
+                    ? t("topbar.alertsDesc", { count: topStats.alertCount })
+                    : t("topbar.alertsNone")
+                }
+                className="inline-flex"
+              >
+                <button
+                  type="button"
+                  onClick={onAlertsClick}
+                  disabled={topStats.alertCount === 0}
+                  className={`${statSlot} ${
                     topStats.alertCount > 0
-                      ? t("topbar.alertsDesc", { count: topStats.alertCount })
-                      : t("topbar.alertsNone")
-                  }
-                  className="inline-flex"
+                      ? "bg-warning/10 border border-warning/30 hover:bg-warning/20 cursor-pointer animate-pulse"
+                      : "opacity-75 cursor-default"
+                  }`}
                 >
-                  <button
-                    type="button"
-                    onClick={onAlertsClick}
-                    disabled={topStats.alertCount === 0}
-                    className={`${statSlot} ${
-                      topStats.alertCount > 0
-                        ? "bg-warning/10 border border-warning/30 hover:bg-warning/20 cursor-pointer animate-pulse"
-                        : "opacity-75 cursor-default"
-                    }`}
-                  >
-                    <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
-                    <div className="leading-none text-left">
-                      <p className={`text-xs font-bold tabular-nums ${sevClass}`}>{topStats.alertCount}</p>
-                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.alerts")}</p>
-                    </div>
-                  </button>
-                </Tooltip>
-              </div>
-
-              <span className="h-5 w-px bg-border/60 shrink-0" />
-
-              {/* 📊 Resource — Average SHU */}
-              <div className="flex-1 flex justify-center items-center min-w-0">
-                <Tooltip label={t("topbar.avgShu")} description={t("topbar.avgShuDesc")} className="inline-flex">
-                  <div className={statSlot} tabIndex={0}>
-                    <ChartBar className="h-4 w-4 text-info shrink-0" />
-                    <div className="leading-none">
-                      <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.avgShu)}</p>
-                      <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.avgShu")}</p>
-                    </div>
+                  <Warning className={`h-4 w-4 shrink-0 ${sevClass}`} />
+                  <div className="leading-none text-left">
+                    <p className={`text-xs font-bold tabular-nums ${sevClass}`}>{topStats.alertCount}</p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.alerts")}</p>
                   </div>
-                </Tooltip>
-              </div>
-            </>
-          )}
-        </div>
+                </button>
+              </Tooltip>
+            </div>
+
+            <span className="h-5 w-px bg-border/60 shrink-0" />
+
+            {/* 📊 Resource — Average SHU */}
+            <div className="flex-1 flex justify-center items-center min-w-0">
+              <Tooltip label={t("topbar.avgShu")} description={t("topbar.avgShuDesc")} className="inline-flex">
+                <div className={statSlot} tabIndex={0}>
+                  <ChartBar className="h-4 w-4 text-info shrink-0" />
+                  <div className="leading-none">
+                    <p className="text-xs font-bold text-foreground tabular-nums">{idr.format(topStats.avgShu)}</p>
+                    <p className="text-xxxs text-muted-foreground mt-0.5">{t("topbar.avgShu")}</p>
+                  </div>
+                </div>
+              </Tooltip>
+            </div>
+          </>
+        )}
       </div>
 
       {/* ── Utility controls (right rail) ── */}
