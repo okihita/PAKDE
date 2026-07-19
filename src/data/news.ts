@@ -7,6 +7,20 @@ export interface NewsItem {
   timestamp: string;
 }
 
+/** Single mock item shown for the easy-campaign demo cooperative. */
+export const DEMO_NEWS_ITEM: NewsItem = {
+  id: "demo-launch",
+  title: "Koperasi Desa Ini Telah Resmi Diluncurkan",
+  content:
+    "Selamat! Koperasi desa Anda telah resmi beroperasi lewat mode demo kampanye mudah. Jelajahi fitur PAKDE, catat keuangan, dan kumpulkan warga untuk menaikkan level koperasi.",
+  source: "kementerian",
+  sourceName: "PAKDE",
+  timestamp: "2026-07-19T08:00:00Z",
+};
+
+/** Returns the news feed — for the demo cooperative, just the launch item. */
+export const getNewsItems = (isDemo: boolean): NewsItem[] => (isDemo ? [DEMO_NEWS_ITEM] : NEWS_ITEMS);
+
 export const NEWS_ITEMS: NewsItem[] = [
   {
     id: "n1",

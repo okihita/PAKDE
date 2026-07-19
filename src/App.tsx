@@ -557,7 +557,7 @@ function AppContent() {
           )}
 
           <main className="flex-1 max-h-full overscroll-contain overflow-y-auto p-6 brand-scroll">
-            {activeTab === "home" && <Dashboard xp={coopProfile?.xp ?? 0} />}
+            {activeTab === "home" && <Dashboard xp={coopProfile?.xp ?? 0} isDemo={isDemoCooperative(coopProfile)} />}
             {activeTab === "statistics" && <Statistics coopProfile={coopProfile} />}
             {activeTab === "ranking" && <Ranking ranking={ranking} onGoSync={() => guardedSetActiveTab("sync")} />}
             {activeTab === "leveling" && <Leveling xp={coopProfile?.xp ?? 0} />}

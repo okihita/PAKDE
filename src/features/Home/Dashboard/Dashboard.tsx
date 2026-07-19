@@ -13,7 +13,7 @@ import {
   Flag,
   CaretRight,
 } from "@phosphor-icons/react";
-import { NEWS_ITEMS, type NewsItem } from "@/data/news";
+import { getNewsItems, type NewsItem } from "@/data/news";
 
 import CalendarWidget from "./DashboardCalendar";
 import CampaignStrip from "./CampaignStrip";
@@ -90,7 +90,7 @@ function useTodoList(key: string, defaults: Todo[] = []) {
   return { items, sortedItems, addItem, toggleItem, removeDone, doneCount };
 }
 
-function useNewsRead() {
+function useNewsRead(items: NewsItem[]) {
   const [readIds, setReadIds] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem(NEWS_READ_KEY);
@@ -109,9 +109,9 @@ function useNewsRead() {
   }, []);
 
   const markAllRead = useCallback(() => {
-    const allIds = NEWS_ITEMS.map((n) => n.id);
+    const allIds = items.map((n) => n.id);
     setReadIds(new Set(allIds));
-  }, []);
+  }, [items]);
 
   return { readIds, markRead, markAllRead };
 }
@@ -159,7 +159,7 @@ function useMainQuests(level: LevelDef, autoDone: Set<string>) {
 
 // ── Main ──────────────────────────────────────────────────────────
 
-export default function Dashboard({ xp = 0 }: { xp?: number }) {
+export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isDemo?: boolean }) {
   const { t } = useTranslation();
 
   const currentLevel = getCurrentLevel(xp);
@@ -193,10 +193,11 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
     [pengurusReady],
   );
   const main = useMainQuests(currentLevel, autoDone);
-  const { readIds, markRead, markAllRead } = useNewsRead();
+  const newsItems = getNewsItems(isDemo);
+  const { readIds, markRead, markAllRead } = useNewsRead(newsItems);
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [newTask, setNewTask] = useState("");
-  const unreadCount = NEWS_ITEMS.filter((n) => !readIds.has(n.id)).length;
+  const unreadCount = newsItems.filter((n) => !readIds.has(n.id)).length;
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   const activeList = tab === "daily" ? daily : weekly;
@@ -359,10 +360,10 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {NEWS_ITEMS.length === 0 && (
+            {newsItems.length === 0 && (
               <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.news.noNews")}</p>
             )}
-            {NEWS_ITEMS.map((item) => {
+            {newsItems.map((item) => {
               const isUnread = !readIds.has(item.id);
               const SourceIcon = SOURCE_ICON[item.source];
               return (
