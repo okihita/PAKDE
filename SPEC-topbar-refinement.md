@@ -146,3 +146,15 @@ Notes:
    and top-aligned; CampaignStrip is ~3-col wide; no drag handles on cards.
 4. Other tabs (e.g. `anggota`, `settings`) still render the TopBar correctly
    with the right-rail settings block.
+
+## News data source (implemented)
+- Berita is **coop-scoped**, stored in each coop's own `coops/<id>.db` `news`
+  table (no `coop_id` column — tenant implied by file). Added to `initCoopDb`'s
+  version-gated block so existing coops migrate on next launch.
+- `{DEMO_NEWS_ITEM, DEFAULT_NEWS_ITEMS, seedNews, seedDefaultNews,
+  seedDemoNews, getNewsItems}` live in `src/db/news.ts`.
+- Demo coop seeds a single welcome item (`seedDemoNews`); real coops seed six
+  default items on creation (`seedDefaultNews` in `createCooperative`).
+- `Dashboard` now accepts `coopId` (replacing `isDemo`), loads `getNewsItems`
+  async with a loading state, and tracks read state per-coop
+  (`pakde-news-read:<coopId>`). `source` union extended with `"internal"`.

@@ -11,9 +11,11 @@ import {
   Buildings,
   MapPin,
   Flag,
+  Megaphone,
   CaretRight,
 } from "@phosphor-icons/react";
-import { getNewsItems, type NewsItem } from "@/data/news";
+import { type NewsItem } from "@/data/news";
+import { getNewsItems } from "@/db/news";
 
 import CalendarWidget from "./DashboardCalendar";
 import CampaignStrip from "./CampaignStrip";
@@ -42,6 +44,7 @@ const SOURCE_BADGE: Record<NewsItem["source"], string> = {
   kementerian: "bg-purple-500/10 text-purple-400",
   provinsi: "bg-info/10 text-info",
   kabupaten: "bg-cyan-500/10 text-cyan-400",
+  internal: "bg-brand/10 text-brand",
 };
 
 // Per-source icon for the left "icon rail" — gives instant scannability in the
@@ -50,6 +53,7 @@ const SOURCE_ICON: Record<NewsItem["source"], typeof Buildings> = {
   kementerian: Buildings,
   provinsi: MapPin,
   kabupaten: Flag,
+  internal: Megaphone,
 };
 
 const fmtDate = (iso: string) =>
@@ -90,10 +94,10 @@ function useTodoList(key: string, defaults: Todo[] = []) {
   return { items, sortedItems, addItem, toggleItem, removeDone, doneCount };
 }
 
-function useNewsRead(items: NewsItem[]) {
+function useNewsRead(items: NewsItem[], coopId: string) {
   const [readIds, setReadIds] = useState<Set<string>>(() => {
     try {
-      const saved = localStorage.getItem(NEWS_READ_KEY);
+      const saved = localStorage.getItem(`${NEWS_READ_KEY}:${coopId}`);
       return new Set(saved ? JSON.parse(saved) : []);
     } catch {
       return new Set();
@@ -101,8 +105,8 @@ function useNewsRead(items: NewsItem[]) {
   });
 
   useEffect(() => {
-    localStorage.setItem(NEWS_READ_KEY, JSON.stringify([...readIds]));
-  }, [readIds]);
+    localStorage.setItem(`${NEWS_READ_KEY}:${coopId}`, JSON.stringify([...readIds]));
+  }, [readIds, coopId]);
 
   const markRead = useCallback((id: string) => {
     setReadIds((prev) => new Set(prev).add(id));
@@ -159,7 +163,7 @@ function useMainQuests(level: LevelDef, autoDone: Set<string>) {
 
 // ── Main ──────────────────────────────────────────────────────────
 
-export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isDemo?: boolean }) {
+export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: string }) {
   const { t } = useTranslation();
 
   const currentLevel = getCurrentLevel(xp);
@@ -193,8 +197,30 @@ export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isD
     [pengurusReady],
   );
   const main = useMainQuests(currentLevel, autoDone);
-  const newsItems = getNewsItems(isDemo);
-  const { readIds, markRead, markAllRead } = useNewsRead(newsItems);
+
+  // News is coop-scoped — loaded from the cooperative's own `news` table.
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
+  useEffect(() => {
+    let alive = true;
+    getNewsItems(coopId)
+      .then((items) => {
+        if (alive) {
+          setNewsItems(items);
+          setNewsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (alive) {
+          setNewsItems([]);
+          setNewsLoading(false);
+        }
+      });
+    return () => {
+      alive = false;
+    };
+  }, [coopId]);
+  const { readIds, markRead, markAllRead } = useNewsRead(newsItems, coopId);
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [newTask, setNewTask] = useState("");
   const unreadCount = newsItems.filter((n) => !readIds.has(n.id)).length;
@@ -338,12 +364,12 @@ export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isD
     news: (
       <Card className="bg-card border-border text-foreground hover-glow-card">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-              <NewspaperIcon className="h-3 w-3 text-info" />
-              {t("beranda.news.title")}
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2 min-w-0">
+              <NewspaperIcon className="h-3 w-3 text-info shrink-0" />
+              <span className="truncate">{t("beranda.news.title")}</span>
               {unreadCount > 0 && (
-                <span className="text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/10 text-info">
+                <span className="shrink-0 text-xxxs font-bold px-1.5 py-0.5 rounded-full bg-info/10 text-info">
                   {t("beranda.news.unread", { n: unreadCount })}
                 </span>
               )}
@@ -351,7 +377,7 @@ export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isD
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
-                className="text-xxxs text-muted-foreground hover:text-foreground transition-colors"
+                className="shrink-0 text-xxxs text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("beranda.news.markRead")}
               </button>
@@ -360,9 +386,11 @@ export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isD
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {newsItems.length === 0 && (
+            {newsLoading ? (
+              <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.news.loading")}</p>
+            ) : newsItems.length === 0 ? (
               <p className="text-xxs text-muted-foreground text-center py-4">{t("beranda.news.noNews")}</p>
-            )}
+            ) : null}
             {newsItems.map((item) => {
               const isUnread = !readIds.has(item.id);
               const SourceIcon = SOURCE_ICON[item.source];
@@ -430,7 +458,15 @@ export default function Dashboard({ xp = 0, isDemo = false }: { xp?: number; isD
 
       {/* News Detail Dialog */}
       <Dialog open={!!selectedNews} onOpenChange={(o) => !o && setSelectedNews(null)}>
-        <DialogContent className="bg-card border-border text-foreground max-w-md">
+        <DialogContent
+          className="bg-card border-border text-foreground max-w-md"
+          // Escape closes the news popup first (before any global handler).
+          onEscapeKeyDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setSelectedNews(null);
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="text-sm font-bold text-foreground">{selectedNews?.title}</DialogTitle>
           </DialogHeader>

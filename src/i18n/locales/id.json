@@ -201,6 +201,7 @@
       "markRead": "Tandai sudah dibaca",
       "unread": "{{n}} belum dibaca",
       "noNews": "Belum ada berita terbaru",
+      "loading": "Memuat berita…",
       "sourceKementerian": "Kementerian Koperasi",
       "sourceProvinsi": "Dinas Provinsi",
       "sourceKabupaten": "Dinas Kabupaten"

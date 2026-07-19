@@ -201,6 +201,7 @@
       "markRead": "Mark as read",
       "unread": "{{n}} unread",
       "noNews": "No updates at this time",
+      "loading": "Loading updates…",
       "sourceKementerian": "Ministry of Cooperatives",
       "sourceProvinsi": "Provincial Office",
       "sourceKabupaten": "District Office"
