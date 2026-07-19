@@ -3,7 +3,16 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CheckCircleIcon, CircleIcon, PlusIcon, NewspaperIcon } from "@phosphor-icons/react";
+import {
+  CheckCircleIcon,
+  CircleIcon,
+  PlusIcon,
+  NewspaperIcon,
+  Buildings,
+  MapPin,
+  Flag,
+  CaretRight,
+} from "@phosphor-icons/react";
 import { NEWS_ITEMS, type NewsItem } from "@/data/news";
 
 import CalendarWidget from "./DashboardCalendar";
@@ -34,6 +43,17 @@ const SOURCE_BADGE: Record<NewsItem["source"], string> = {
   provinsi: "bg-info/10 text-info",
   kabupaten: "bg-cyan-500/10 text-cyan-400",
 };
+
+// Per-source icon for the left "icon rail" — gives instant scannability in the
+// narrow right rail without a wordy source tag.
+const SOURCE_ICON: Record<NewsItem["source"], typeof Buildings> = {
+  kementerian: Buildings,
+  provinsi: MapPin,
+  kabupaten: Flag,
+};
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
 // ── Helpers ───────────────────────────────────────────────────────
 
@@ -344,34 +364,38 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
             )}
             {NEWS_ITEMS.map((item) => {
               const isUnread = !readIds.has(item.id);
+              const SourceIcon = SOURCE_ICON[item.source];
               return (
                 <div
                   key={item.id}
-                  className="border-b border-border pb-2 last:border-b-0 last:pb-0 cursor-pointer py-1.5 px-2 rounded hover:bg-secondary transition-colors -mx-2"
+                  className={`group flex gap-2.5 border-b border-border pb-3 last:border-b-0 last:pb-0 cursor-pointer py-2 px-2 -mx-2 rounded-lg transition-colors ${
+                    isUnread ? "bg-info/5 border-l-2 border-l-info pl-1.5" : "hover:bg-secondary"
+                  }`}
                   onClick={() => {
                     setSelectedNews(item);
                     if (isUnread) markRead(item.id);
                   }}
                 >
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-info shrink-0 mt-1.5" />}
-                      <h4 className={`text-xs font-bold ${isUnread ? "text-foreground" : "text-muted-foreground"}`}>
+                  {/* Left icon rail — source glyph for instant scannability */}
+                  <SourceIcon
+                    className={`h-4 w-4 shrink-0 mt-0.5 ${isUnread ? "text-info" : "text-muted-foreground/60"}`}
+                    weight={isUnread ? "fill" : "regular"}
+                  />
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h4
+                        className={`text-xs font-bold leading-snug ${isUnread ? "text-foreground" : "text-muted-foreground"}`}
+                      >
                         {item.title}
                       </h4>
+                      <CaretRight className="h-3.5 w-3.5 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors shrink-0 mt-0.5" />
                     </div>
-                    <span className={`text-xxxs font-mono px-1.5 py-0.5 rounded shrink-0 ${SOURCE_BADGE[item.source]}`}>
-                      {t(`beranda.news.source${item.source.charAt(0).toUpperCase() + item.source.slice(1)}`)}
-                    </span>
+                    <p className="text-xxs text-muted-foreground leading-relaxed mt-1 line-clamp-2">{item.content}</p>
+                    <p className="text-xxxs font-mono text-muted-foreground/70 mt-1.5">
+                      {item.sourceName} · {fmtDate(item.timestamp)}
+                    </p>
                   </div>
-                  <p className="text-xxs text-muted-foreground leading-relaxed ml-4 line-clamp-2">{item.content}</p>
-                  <p className="text-xxxs font-mono text-muted-foreground mt-1 ml-4">
-                    {new Date(item.timestamp).toLocaleDateString(undefined, {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </p>
                 </div>
               );
             })}
@@ -414,21 +438,9 @@ export default function Dashboard({ xp = 0 }: { xp?: number }) {
               <span
                 className={`text-xxxs font-mono px-1.5 py-0.5 rounded ${selectedNews ? SOURCE_BADGE[selectedNews.source] : ""}`}
               >
-                {selectedNews
-                  ? t(
-                      `beranda.news.source${selectedNews.source.charAt(0).toUpperCase() + selectedNews.source.slice(1)}`,
-                    )
-                  : ""}
+                {selectedNews?.sourceName ?? ""}
               </span>
-              <span className="text-xxxs font-mono">
-                {selectedNews
-                  ? new Date(selectedNews.timestamp).toLocaleDateString(undefined, {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })
-                  : ""}
-              </span>
+              <span className="text-xxxs font-mono">{selectedNews ? fmtDate(selectedNews.timestamp) : ""}</span>
             </div>
             <p className="leading-relaxed">{selectedNews?.content}</p>
           </div>
