@@ -2,12 +2,12 @@
 //
 // News is coop-scoped: each cooperative owns its own `news` table inside its
 // `coops/<id>.db` file. There is no `coop_id` column — the tenant is implied
-// by the file. The `NewsItem` shape mirrors the UI contract in `@/data/news`.
+// by the file. The `MessageItem` shape mirrors the UI contract in `@/data/message`.
 
 import { getCoopDb } from "@/db";
 
-/** UI-facing news item shape (kept in sync with `@/data/news`). */
-export interface NewsItem {
+/** UI-facing news item shape (kept in sync with `@/data/message`). */
+export interface MessageItem {
   id: string;
   title: string;
   content: string;
@@ -18,18 +18,18 @@ export interface NewsItem {
 }
 
 /** Lightweight row coming straight out of the `news` table. */
-interface NewsRow {
+interface MessageRow {
   id: string;
   title: string;
   content: string;
-  source: NewsItem["source"];
+  source: MessageItem["source"];
   source_name: string;
   pinned?: number;
   created_at: string;
 }
 
 /** Default seed items for a freshly-created (real) cooperative. */
-export const DEFAULT_NEWS_ITEMS: ReadonlyArray<Omit<NewsItem, "timestamp">> = [
+export const DEFAULT_MESSAGES: ReadonlyArray<Omit<MessageItem, "timestamp">> = [
   {
     id: "default-kab-bantuan-pupuk",
     title: "Bantuan Pupuk Subsidi Tahap II Telah Dibuka",
@@ -81,7 +81,7 @@ export const DEFAULT_NEWS_ITEMS: ReadonlyArray<Omit<NewsItem, "timestamp">> = [
 ];
 
 /** Richer mock feed seeded into the demo cooperative so Beranda shows content. */
-export const DEMO_NEWS_ITEMS: ReadonlyArray<Omit<NewsItem, "timestamp">> = [
+export const DEMO_MESSAGES: ReadonlyArray<Omit<MessageItem, "timestamp">> = [
   {
     id: "demo-selamat-datang",
     title: "Selamat Datang di Koperasi Desa Makmur",
@@ -128,9 +128,9 @@ export const DEMO_NEWS_ITEMS: ReadonlyArray<Omit<NewsItem, "timestamp">> = [
  * Insert seed news items only if the table is currently empty (idempotent).
  * Safe to call on every coop (re)provisioning pass.
  */
-export async function seedNews(
+export async function seedMessages(
   db: Awaited<ReturnType<typeof getCoopDb>>,
-  items: ReadonlyArray<Omit<NewsItem, "timestamp">>,
+  items: ReadonlyArray<Omit<MessageItem, "timestamp">>,
 ): Promise<void> {
   const existing = await db.select<Array<{ id: string }>>("SELECT id FROM news LIMIT 1");
   if (existing.length > 0) return;
@@ -145,20 +145,21 @@ export async function seedNews(
 }
 
 /** Default six items for a real (non-demo) cooperative. */
-export const seedDefaultNews = (db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> =>
-  seedNews(db, DEFAULT_NEWS_ITEMS);
+export const seedDefaultMessages = (db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> =>
+  seedMessages(db, DEFAULT_MESSAGES);
 
 /** Mock feed for the demo cooperative (used on fresh seed). */
-export const seedDemoNews = (db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> => seedNews(db, DEMO_NEWS_ITEMS);
+export const seedDemoMessages = (db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> =>
+  seedMessages(db, DEMO_MESSAGES);
 
 /**
- * Ensure the demo cooperative's mock feed is present. Unlike `seedDemoNews`
+ * Ensure the demo cooperative's mock feed is present. Unlike `seedDemoMessages`
  * (which bails when the table already has rows), this UPSERTs each demo item by
  * id — so an existing account whose `news` table predates the multi-item feed
  * still gets the full set on launch/resume, without wiping user data.
  */
-export async function ensureDemoNews(db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> {
-  for (const item of DEMO_NEWS_ITEMS) {
+export async function ensureDemoMessages(db: Awaited<ReturnType<typeof getCoopDb>>): Promise<void> {
+  for (const item of DEMO_MESSAGES) {
     await db.execute(
       `INSERT OR REPLACE INTO news (id, title, content, source, source_name, audience, created_by, pinned)
        VALUES (?, ?, ?, ?, ?, COALESCE((SELECT audience FROM news WHERE id = ?), 'all'), NULL, 0)`,
@@ -168,9 +169,9 @@ export async function ensureDemoNews(db: Awaited<ReturnType<typeof getCoopDb>>):
 }
 
 /** Load the coop's news, newest first (pinned items float to the top). */
-export async function getNewsItems(coopId: string): Promise<NewsItem[]> {
+export async function getMessages(coopId: string): Promise<MessageItem[]> {
   const db = await getCoopDb(coopId);
-  const rows = await db.select<NewsRow[]>(
+  const rows = await db.select<MessageRow[]>(
     `SELECT id, title, content, source, source_name, pinned, created_at
        FROM news
       ORDER BY pinned DESC, datetime(created_at) DESC`,

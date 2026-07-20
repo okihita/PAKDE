@@ -1,5 +1,5 @@
 import { createRegistryRepository, getRegistryDb, getCoopDb, initCoopDb } from "@/db";
-import { seedDefaultNews } from "@/db/news";
+import { seedDefaultMessages } from "@/db/message";
 import { getCoopMemberCount } from "@/hooks/useMembers";
 import type { CooperativeProfile, EwsAlert } from "@/types";
 
@@ -60,7 +60,7 @@ export async function createCooperative(input: CreateCooperativeInput): Promise<
   const coopDb = await getCoopDb(newId);
 
   // Seed default news/announcements so the Beranda Berita column is populated.
-  await seedDefaultNews(coopDb);
+  await seedDefaultMessages(coopDb);
 
   return rows[0];
 }

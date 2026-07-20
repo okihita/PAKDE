@@ -18,7 +18,7 @@ import {
 import type { CooperativeProfile } from "@/types";
 import { initDb } from "@/db";
 import { getCoopDb } from "@/db/coopDb";
-import { ensureDemoNews } from "@/db/news";
+import { ensureDemoMessages } from "@/db/message";
 import { listCooperatives, getDemoCooperative } from "./cooperativeDb";
 import { sfx } from "./sfx";
 import { bgMusic } from "./music";
@@ -196,7 +196,7 @@ export default function ProfileSelect({ onProfileSelect, onDbError, updater }: P
         // Beranda always shows content even on a pre-existing account.
         if (isDemoCooperative(coop)) {
           const db = await getCoopDb(coop.id);
-          await ensureDemoNews(db);
+          await ensureDemoMessages(db);
         }
         sfx.playChime();
         setTimeout(() => {

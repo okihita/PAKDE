@@ -7,7 +7,7 @@ import { CheckCircleIcon, CircleIcon, PlusIcon } from "@phosphor-icons/react";
 
 import CalendarWidget from "./DashboardCalendar";
 import CampaignStrip from "./CampaignStrip";
-import NewsWidget from "./NewsWidget";
+import MessageWidget from "./MessageWidget";
 import { getCurrentLevel, type LevelDef } from "@/data/leveling";
 import { countActivePengurus } from "@/hooks/usePengurus";
 import { onPengurusChanged } from "@/lib/pengurusEvents";
@@ -152,10 +152,10 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
         <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
           <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
             <div
-              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity [transform:scaleX(-1)]"
               style={{ backgroundImage: 'url("/banners/mainquest-banner.webp")' }}
             />
-            <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
+            <div className="absolute inset-0 bg-linear-to-l from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
             <div className="relative z-10 flex items-center justify-between w-full">
               <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                 <CheckCircleIcon className="h-3 w-3 text-success" />
@@ -214,10 +214,10 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
         <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
           <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
             <div
-              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity [transform:scaleX(-1)]"
               style={{ backgroundImage: 'url("/banners/tasks-banner.webp")' }}
             />
-            <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
+            <div className="absolute inset-0 bg-linear-to-l from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
             <div className="relative z-10 flex items-center justify-between w-full">
               <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                 <CheckCircleIcon className="h-3 w-3 text-success" />
@@ -306,15 +306,15 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
     calendar: <CalendarWidget t={t} />,
   };
 
-  // Helper for responsive news rail collapse with a hard viewport safety floor (< 1200px).
-  const computeNewsCollapsed = useCallback((width: number, userPref: string | null): boolean => {
+  // Helper for responsive message rail collapse with a hard viewport safety floor (< 1200px).
+  const computeMessageCollapsed = useCallback((width: number, userPref: string | null): boolean => {
     if (width < 1200) return true;
     if (userPref !== null) return userPref === "true";
     return width < 1400;
   }, []);
 
-  const [newsCollapsed, setNewsCollapsed] = useState<boolean>(() => {
-    const userPref = typeof window !== "undefined" ? localStorage.getItem("pakde-news-collapsed") : null;
+  const [messageCollapsed, setMessageCollapsed] = useState<boolean>(() => {
+    const userPref = typeof window !== "undefined" ? localStorage.getItem("pakde-message-collapsed") : null;
     const width = typeof window !== "undefined" ? window.innerWidth : 1600;
     if (width < 1200) return true;
     if (userPref !== null) return userPref === "true";
@@ -323,17 +323,17 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
 
   useEffect(() => {
     const handleResize = () => {
-      const userPref = localStorage.getItem("pakde-news-collapsed");
-      setNewsCollapsed(computeNewsCollapsed(window.innerWidth, userPref));
+      const userPref = localStorage.getItem("pakde-message-collapsed");
+      setMessageCollapsed(computeMessageCollapsed(window.innerWidth, userPref));
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [computeNewsCollapsed]);
+  }, [computeMessageCollapsed]);
 
-  const toggleNewsCollapse = useCallback(() => {
-    setNewsCollapsed((prev) => {
+  const toggleMessageCollapse = useCallback(() => {
+    setMessageCollapsed((prev) => {
       const next = !prev;
-      localStorage.setItem("pakde-news-collapsed", String(next));
+      localStorage.setItem("pakde-message-collapsed", String(next));
       return next;
     });
   }, []);
@@ -342,15 +342,15 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
     const handleToggleEvent = (e: Event) => {
       const custom = e as CustomEvent<{ collapse?: boolean }>;
       if (custom.detail?.collapse !== undefined) {
-        setNewsCollapsed(custom.detail.collapse);
-        localStorage.setItem("pakde-news-collapsed", String(custom.detail.collapse));
+        setMessageCollapsed(custom.detail.collapse);
+        localStorage.setItem("pakde-message-collapsed", String(custom.detail.collapse));
       } else {
-        toggleNewsCollapse();
+        toggleMessageCollapse();
       }
     };
-    window.addEventListener("pakde:toggle-news", handleToggleEvent);
-    return () => window.removeEventListener("pakde:toggle-news", handleToggleEvent);
-  }, [toggleNewsCollapse]);
+    window.addEventListener("pakde:toggle-message", handleToggleEvent);
+    return () => window.removeEventListener("pakde:toggle-message", handleToggleEvent);
+  }, [toggleMessageCollapse]);
 
   return (
     <div className="flex h-[calc(100%+3rem)] -m-6 overflow-hidden">
@@ -366,13 +366,13 @@ export default function Dashboard({ xp = 0, coopId }: { xp?: number; coopId: str
         </div>
       </div>
 
-      {/* ── Right snapped News Sidebar (flush to right border, w-80 <-> w-12) ── */}
+      {/* ── Right snapped Message Sidebar (flush to right border, w-80 <-> w-12) ── */}
       <aside
         className={`border-l border-border bg-sidebar shrink-0 h-full select-none ${
-          newsCollapsed ? "w-12 overflow-visible" : "w-80 overflow-hidden"
+          messageCollapsed ? "w-12 overflow-visible" : "w-80 overflow-hidden"
         }`}
       >
-        <NewsWidget coopId={coopId} isCollapsed={newsCollapsed} onToggleCollapse={toggleNewsCollapse} />
+        <MessageWidget coopId={coopId} isCollapsed={messageCollapsed} onToggleCollapse={toggleMessageCollapse} />
       </aside>
     </div>
   );

@@ -1,7 +1,7 @@
 // UI-facing news item shape. The data itself now lives per-cooperative in the
-// `news` table (see `@/db/news`); this module is the shared type contract only.
+// `news` table (see `@/db/message`); this module is the shared type contract only.
 
-export interface NewsItem {
+export interface MessageItem {
   id: string;
   title: string;
   content: string;

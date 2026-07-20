@@ -254,7 +254,7 @@ function AppContent() {
         }
       }
 
-      // Cmd/Ctrl + B → toggle left sidebar; Cmd/Ctrl + Shift + B → toggle right news panel
+      // Cmd/Ctrl + B → toggle left sidebar; Cmd/Ctrl + Shift + B → toggle right message panel
       const mod = e.metaKey || e.ctrlKey;
       if (mod && !e.shiftKey && (e.key === "b" || e.key === "B")) {
         e.preventDefault();
@@ -263,7 +263,7 @@ function AppContent() {
       }
       if (mod && e.shiftKey && (e.key === "b" || e.key === "B")) {
         e.preventDefault();
-        window.dispatchEvent(new CustomEvent("pakde:toggle-news"));
+        window.dispatchEvent(new CustomEvent("pakde:toggle-message"));
         return;
       }
 
@@ -540,14 +540,14 @@ function AppContent() {
         run: toggleSidebarCollapse,
       },
       {
-        id: "sys-news",
+        id: "sys-message",
         group: "system",
-        title: "Buka / Tutup Panel Berita",
+        title: "Buka / Tutup Panel Pesan",
         subtitle: isMac ? "⌘⇧B" : "Ctrl+Shift+B",
         icon: Note,
-        keywords: "news berita panel right collapse expand buka tutup",
+        keywords: "pesan message panel right collapse expand buka tutup",
         shortcut: isMac ? "⌘⇧B" : "Ctrl+Shift+B",
-        run: () => window.dispatchEvent(new CustomEvent("pakde:toggle-news")),
+        run: () => window.dispatchEvent(new CustomEvent("pakde:toggle-message")),
       },
       {
         id: "sys-focus-mode",
@@ -559,7 +559,7 @@ function AppContent() {
         run: () => {
           setSidebarCollapsed(true);
           localStorage.setItem("pakde-sidebar-collapsed", "true");
-          window.dispatchEvent(new CustomEvent("pakde:toggle-news", { detail: { collapse: true } }));
+          window.dispatchEvent(new CustomEvent("pakde:toggle-message", { detail: { collapse: true } }));
         },
       },
       {

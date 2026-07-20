@@ -100,34 +100,35 @@ export default function CalendarWidget({ t }: { t: (key: string, options?: Recor
         <CardHeader className="p-0 space-y-0 relative border-b border-border/40">
           <div className="relative overflow-hidden rounded-t-xl px-3 h-11 flex items-center justify-between shrink-0">
             <div
-              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity"
+              className="absolute inset-0 bg-cover bg-left bg-no-repeat pointer-events-none opacity-30 dark:opacity-40 transition-opacity [transform:scaleX(-1)]"
               style={{ backgroundImage: 'url("/banners/calendar-banner.webp")' }}
             />
-            <div className="absolute inset-0 bg-linear-to-r from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
+            <div className="absolute inset-0 bg-linear-to-l from-card/85 via-card/50 to-transparent pointer-events-none z-1" />
             <div className="relative z-10 flex items-center justify-between w-full">
               <CardTitle className="text-xs tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                 <CalendarIcon className="h-3 w-3" />
                 {t("beranda.calendar")}
               </CardTitle>
-              <div className="flex items-center gap-2">
-                <span className="text-xxs text-muted-foreground font-semibold">
-                  {monthName(viewYear, viewMonth)} {viewYear}
-                </span>
-                <div className="flex gap-0.5">
-                  <button
-                    onClick={prevMonth}
-                    className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <CaretLeftIcon className="h-3 w-3" />
-                  </button>
-                  <button
-                    onClick={nextMonth}
-                    className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <CaretRightIcon className="h-3 w-3" />
-                  </button>
-                </div>
-              </div>
+            </div>
+          </div>
+          {/* Month / year + nav controls below the illustrated strip */}
+          <div className="p-2.5 bg-card/50 border-t border-border/20 flex items-center justify-between">
+            <span className="text-xxs text-muted-foreground font-semibold">
+              {monthName(viewYear, viewMonth)} {viewYear}
+            </span>
+            <div className="flex gap-0.5">
+              <button
+                onClick={prevMonth}
+                className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <CaretLeftIcon className="h-3 w-3" />
+              </button>
+              <button
+                onClick={nextMonth}
+                className="p-0.5 rounded hover:bg-sidebar-ring text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <CaretRightIcon className="h-3 w-3" />
+              </button>
             </div>
           </div>
         </CardHeader>

@@ -5,7 +5,7 @@ import { appDataDir, join } from "@tauri-apps/api/path";
 import { exists, remove } from "@tauri-apps/plugin-fs";
 import { DEMO_TIERS, type DemoTier } from "@/features/System/ProfileSelect/demoTiers";
 import { resolveWilayah } from "@/db/wilayahLookup";
-import { seedDemoNews, ensureDemoNews } from "@/db/news";
+import { seedDemoMessages, ensureDemoMessages } from "@/db/message";
 import { generateNik, type Gender } from "@/data/nik";
 import { todayISO } from "@/lib/utils";
 
@@ -113,9 +113,9 @@ export async function seedDemoCooperativeAtLevel(level: DemoLevel): Promise<void
   await seedDemoPengurus(db);
 
   // 10. Seed the demo's mock news feed (full set, idempotent).
-  await seedDemoNews(db);
+  await seedDemoMessages(db);
   // Defensive: guarantee every demo item is present even on a reused file.
-  await ensureDemoNews(db);
+  await ensureDemoMessages(db);
 }
 
 export async function seedDemoCooperative(): Promise<void> {
